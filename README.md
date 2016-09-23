@@ -1,0 +1,2 @@
+# justredirect
+Firefox webextension
