@@ -1,0 +1,20 @@
+{
+    "name": "Just Redirect!",
+    "description": "Get to the destination url without any page in the middle attacks.",
+    "version": "1.0",
+    "manifest_version": 2,
+
+    "permissions": [
+        "storage",
+        "webRequest",
+        "webRequestBlocking"
+    ],
+
+    "options_ui": {
+        "page": "options/options.html"
+    },
+
+    "background": {
+        "scripts": ["options/OptionsManager.js", "justRedirect.js"]
+    }
+}

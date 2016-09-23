@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="chrome://global/skin/global.css" type="text/css" />
+    <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" type="text/css" />
+    <link rel="stylesheet" href="options.css" type="text/css" />
+    <script src="OptionsManager.js"></script>
+    <script src="options.js"></script>
+</head>
+
+<body>
+    <h2>Options</h2>
+    <form>
+        <h3>Redirection url match rules</h3>
+        <p>Define patterns for redirection links. HTTP request that match a pattern rule, will be intercepted redirecting the request to the parsed destination url. Rules follow the structure of <a target="_blank" href="https://developer.mozilla.org/Add-ons/WebExtensions/Match_patterns">Match patterns</a>.</p>
+        <div id="urls"></div>
+        <p><button id="addNewUrl">Add new match rule</button></p>
+        <p><button id="saveUrls">Save</button><button id="restoreUrls">Restore</button></p>
+        <h3>Filtered out query parameters</h3>
+        <p>Query parameters that are used for redirection tracking, will be removed from the destination url.</p>
+        <div id="queryParams"></div>
+        <p><button id="addNewParam">Add new query parameter</button></p>
+        <p><button id="saveParams">Save</button><button id="restoreParams">Restore</button></p>
+    </form>
+</body>
+
+</html>

@@ -1,0 +1,12 @@
+#urls input {
+    width: 60%;
+}
+
+button {
+    transition: border-color 0.4s, color 0.4s;
+}
+
+button.done {
+    border-color: green;
+    color: green;
+}
