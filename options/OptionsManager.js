@@ -5,6 +5,7 @@ OptionsManager.prototype.defaultOptions = {
         "*://*.deviantart.com/users/outgoing?*",
         "*://clk.tradedoubler.com/*url=*",
         "*://outgoing.prod.mozaws.net/*",
+        "*://out.reddit.com/*?url=*",
         "*://steamcommunity.com/linkfilter/?url=*"
     ],
     queryParams: [

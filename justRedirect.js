@@ -6,7 +6,7 @@ function redirectUrlReplacer(match, p1, p2, p3, offset, string) {
     if (p2[0] == "%") {
         p2 = unescape(p2);
     }
-    if (p3.indexOf(escape("&")) != -1) {
+    if (/(%26|%2F)/.test(p3)) {
         p3 = p3.replace(/&.+/, "");
     }
     return p1 + p2 + filterNonwantedQueryParams(unescape(p3));
