@@ -1,13 +1,15 @@
 var myOptionsManager = new OptionsManager();
 var options;
-const redirectUrlPattern = /https?:\/\/.+(https?)(:\/\/|%3A%2F%2F)(.+)/;
+const redirectUrlPattern = /https?:\/\/.+(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)/;
 
 function redirectUrlReplacer(match, p1, p2, p3, offset, string) {
     if (p2[0] == "%") {
         p2 = unescape(p2);
-        p3 = filterNonwantedQueryParams(unescape(p3.replace(/&.+/, "")));
     }
-    return p1 + p2 + p3;
+    if (p3.indexOf(escape("&")) != -1) {
+        p3 = p3.replace(/&.+/, "");
+    }
+    return p1 + p2 + filterNonwantedQueryParams(unescape(p3));
 }
 
 function parseRedirectUrl(url) {
@@ -21,10 +23,13 @@ function filterQuery(query) {
 
 function filterNonwantedQueryParams(url) {
     let urlParts = url.split("?");
-    for (let i = 1; i < urlParts.length; i++) {
-        urlParts[i] = urlParts[i].split("&").filter(filterQuery).join("");
+    for (let i = urlParts.length - 1; i >= 1; i--) {
+        urlParts[i] = urlParts[i].split("&").filter(filterQuery).join("&");
+        if (urlParts[i].length == 0) {
+            urlParts.splice(i, 1);
+        }
     }
-    return urlParts.join("");
+    return urlParts.join("?");
 }
 
 function redirect(request) {

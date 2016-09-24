@@ -2,9 +2,10 @@ function OptionsManager() {}
 
 OptionsManager.prototype.defaultOptions = {
     urls: [
+        "*://*.deviantart.com/users/outgoing?*",
         "*://clk.tradedoubler.com/*url=*",
-        "*://steamcommunity.com/linkfilter/?url=*",
-        "*://*.deviantart.com/users/outgoing?*"
+        "*://outgoing.prod.mozaws.net/*",
+        "*://steamcommunity.com/linkfilter/?url=*"
     ],
     queryParams: [
         "utm_source",
