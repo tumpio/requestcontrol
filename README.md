@@ -1,4 +1,4 @@
-Firefox webextension
+## Firefox webextension
 
 ### Description
 Skip confirmation pages for outgoing links, annoying advertisements or other nasty page in the middle attacks and remove query parameters used for redirection tracking.
