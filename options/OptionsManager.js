@@ -1,9 +1,10 @@
-function OptionsManager() {}
+function OptionsManager() {
+}
 
 OptionsManager.prototype.defaultOptions = {
     urls: [
         "*://*.deviantart.com/users/outgoing?*",
-        "*://*.google.com/url?*",
+        "*://*.google.*/url?*",
         "*://clk.tradedoubler.com/*url=*",
         "*://outgoing.prod.mozaws.net/*",
         "*://out.reddit.com/*?url=*",
@@ -16,16 +17,30 @@ OptionsManager.prototype.defaultOptions = {
     ]
 };
 
-OptionsManager.prototype.saveOptions = function(options) {
+OptionsManager.prototype.saveOptions = function (options) {
     return browser.storage.local.set(options);
 };
 
-OptionsManager.prototype.loadOptions = function(callback) {
+OptionsManager.prototype.loadOptions = function (callback) {
     browser.storage.local.get(Object.keys(this.defaultOptions)).then(result => {
-        let options = {};
+        this.options = {};
         for (let option in this.defaultOptions) {
-            options[option] = result[option] || this.defaultOptions[option];
+            this.options[option] = result[option] || this.defaultOptions[option];
         }
-        callback(options);
+        callback();
+    });
+};
+
+OptionsManager.prototype.update = function (changes) {
+    for (let change of Object.keys(changes)) {
+        this.options[change] = changes[change].newValue;
+    }
+};
+
+OptionsManager.prototype.onChanged = function (callback) {
+    let _self = this;
+    browser.storage.onChanged.addListener(function (changes) {
+        _self.update(changes);
+        callback();
     });
 };

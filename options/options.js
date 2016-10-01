@@ -52,12 +52,12 @@ function toggleDone(btn) {
     }, 1500);
 }
 
-myOptionsManager.loadOptions(function (options) {
+function init() {
     document.addEventListener("DOMContentLoaded", function () {
         let inputFormUrls = document.getElementById("urls");
         let inputFormParams = document.getElementById("queryParams");
-        createOptions(inputFormUrls, options.urls, newUrlInput);
-        createOptions(inputFormParams, options.queryParams, newParamInput);
+        createOptions(inputFormUrls, myOptionsManager.options.urls, newUrlInput);
+        createOptions(inputFormParams, myOptionsManager.options.queryParams, newParamInput);
 
         document.getElementById("addNewUrl").addEventListener("click", function (e) {
             e.preventDefault();
@@ -106,4 +106,6 @@ myOptionsManager.loadOptions(function (options) {
             });
         });
     });
-});
+}
+
+myOptionsManager.loadOptions(init);
