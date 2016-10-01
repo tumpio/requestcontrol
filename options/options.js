@@ -1,4 +1,5 @@
 var myOptionsManager = new OptionsManager();
+const matchPattern = /(https?|\*):\/\/((\*\.)?([\w-]+\.)*([\w]+|\*)|\*)\/.*/;
 
 function newInput(target, value) {
     let div = document.createElement("div");
@@ -7,6 +8,7 @@ function newInput(target, value) {
     input.setAttribute("type", "text");
     removeBtn.innerHTML = "×";
     removeBtn.addEventListener("click", removeInput);
+    input.addEventListener("keypress", preventEnter);
     div.appendChild(input);
     div.appendChild(removeBtn);
     target.appendChild(div);
@@ -52,10 +54,30 @@ function toggleDone(btn) {
     }, 1500);
 }
 
+function preventEnter(e) {
+    if (e.keyCode == 13) {
+        e.preventDefault();
+    }
+}
+
+function validateInputs(target, validationPattern) {
+    let valid = true;
+    for (let input of target.querySelectorAll("input")) {
+        if (!validationPattern.test(input.value)) {
+            input.classList.add("error");
+            valid = false;
+        } else {
+            input.classList.remove("error");
+        }
+    }
+    return valid;
+}
+
 function init() {
     document.addEventListener("DOMContentLoaded", function () {
         let inputFormUrls = document.getElementById("urls");
         let inputFormParams = document.getElementById("queryParams");
+
         createOptions(inputFormUrls, myOptionsManager.options.urls, newUrlInput);
         createOptions(inputFormParams, myOptionsManager.options.queryParams, newParamInput);
 
@@ -69,13 +91,15 @@ function init() {
         });
         document.getElementById("saveUrls").addEventListener("click", function (e) {
             e.preventDefault();
-            let urls = getInputValues(inputFormUrls);
-            myOptionsManager.saveOptions({
-                urls: urls
-            }).then(function () {
-                createOptions(inputFormUrls, urls, newUrlInput);
-                toggleDone(e.target);
-            });
+            if (validateInputs(inputFormUrls, matchPattern)) {
+                let urls = getInputValues(inputFormUrls);
+                myOptionsManager.saveOptions({
+                    urls: urls
+                }).then(function () {
+                    createOptions(inputFormUrls, urls, newUrlInput);
+                    toggleDone(e.target);
+                });
+            }
         });
         document.getElementById("saveParams").addEventListener("click", function (e) {
             e.preventDefault();

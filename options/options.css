@@ -2,6 +2,11 @@
     width: 60%;
 }
 
+.error {
+    border-color: red!important;
+    color: red!important;
+}
+
 button {
     transition: border-color 0.4s, color 0.4s;
 }
