@@ -3,6 +3,10 @@
     "description": "Get to the destination url without any page in the middle attacks.",
     "version": "1.1.0",
     "manifest_version": 2,
+    "icons": {
+        "48": "icon.png",
+        "96": "icon@2x.png"
+    },
 
     "permissions": [
         "storage",
