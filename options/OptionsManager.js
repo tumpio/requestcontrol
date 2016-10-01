@@ -3,6 +3,7 @@ function OptionsManager() {}
 OptionsManager.prototype.defaultOptions = {
     urls: [
         "*://*.deviantart.com/users/outgoing?*",
+        "*://*.google.com/url?*",
         "*://clk.tradedoubler.com/*url=*",
         "*://outgoing.prod.mozaws.net/*",
         "*://out.reddit.com/*?url=*",

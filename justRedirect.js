@@ -33,9 +33,11 @@ function filterNonwantedQueryParams(url) {
 }
 
 function redirect(request) {
-    if (request.method == "GET") {
+    let redirectUrl = parseRedirectUrl(request.url);
+    if (request.method == "GET" && redirectUrl.length < request.url.length) {
+        chrome.tabs.update({url: parseRedirectUrl(request.url)});
         return {
-            redirectUrl: parseRedirectUrl(request.url)
+            cancel: true
         };
     }
 }
@@ -45,7 +47,8 @@ myOptionsManager.loadOptions().then(result => {
     chrome.webRequest.onBeforeRequest.addListener(redirect, {
         urls: options.urls,
         types: [
-            "main_frame"
+            "main_frame",
+            "sub_frame"
         ]
     }, ["blocking"]);
 });
