@@ -15,6 +15,6 @@
     },
 
     "background": {
-        "scripts": ["options/OptionsManager.js", "justRedirect.js"]
+        "scripts": ["options/OptionsManager.js", "main.js"]
     }
 }
