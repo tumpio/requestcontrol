@@ -34,9 +34,12 @@ function filterUnwantedQueryParams(url) {
 }
 
 function redirect(request) {
+    if (request.method != "GET" || request.tabId == -1) {
+        return;
+    }
     let redirectUrl = parseRedirectUrl(request.url);
-    if (request.method == "GET" && redirectUrl.length < request.url.length) {
-        chrome.tabs.update({url: parseRedirectUrl(request.url)});
+    if (redirectUrl.length < request.url.length) {
+        chrome.tabs.update(request.tabId, {url: parseRedirectUrl(request.url)});
         return {
             cancel: true
         };
