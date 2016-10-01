@@ -42,8 +42,7 @@ function redirect(request) {
     }
 }
 
-myOptionsManager.loadOptions().then(result => {
-    options = myOptionsManager.handleLoadedOptions(result);
+myOptionsManager.loadOptions(function(options) {
     chrome.webRequest.onBeforeRequest.addListener(redirect, {
         urls: options.urls,
         types: [

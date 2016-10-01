@@ -20,14 +20,12 @@ OptionsManager.prototype.saveOptions = function(options) {
     return browser.storage.local.set(options);
 };
 
-OptionsManager.prototype.loadOptions = function() {
-    return browser.storage.local.get(Object.keys(this.defaultOptions));
-};
-
-OptionsManager.prototype.handleLoadedOptions = function(loadedOptions) {
-    let options = {};
-    for (let option in this.defaultOptions) {
-        options[option] = loadedOptions[option] || this.defaultOptions[option];
-    }
-    return options;
+OptionsManager.prototype.loadOptions = function(callback) {
+    browser.storage.local.get(Object.keys(this.defaultOptions)).then(result => {
+        let options = {};
+        for (let option in this.defaultOptions) {
+            options[option] = result[option] || this.defaultOptions[option];
+        }
+        callback(options);
+    });
 };

@@ -52,61 +52,58 @@ function toggleDone(btn) {
     }, 1500);
 }
 
-myOptionsManager.loadOptions().then(result => {
-    let options = myOptionsManager.handleLoadedOptions(result);
-    document.addEventListener("DOMContentLoaded", function() {
+myOptionsManager.loadOptions(function (options) {
+    document.addEventListener("DOMContentLoaded", function () {
         let inputFormUrls = document.getElementById("urls");
         let inputFormParams = document.getElementById("queryParams");
         createOptions(inputFormUrls, options.urls, newUrlInput);
         createOptions(inputFormParams, options.queryParams, newParamInput);
 
-        document.getElementById("addNewUrl").addEventListener("click", function(e) {
+        document.getElementById("addNewUrl").addEventListener("click", function (e) {
             e.preventDefault();
             newUrlInput(inputFormUrls);
         });
-        document.getElementById("addNewParam").addEventListener("click", function(e) {
+        document.getElementById("addNewParam").addEventListener("click", function (e) {
             e.preventDefault();
             newParamInput(inputFormParams);
         });
-        document.getElementById("saveUrls").addEventListener("click", function(e) {
+        document.getElementById("saveUrls").addEventListener("click", function (e) {
             e.preventDefault();
             let urls = getInputValues(inputFormUrls);
             myOptionsManager.saveOptions({
                 urls: urls
-            }).then(function() {
+            }).then(function () {
                 createOptions(inputFormUrls, urls, newUrlInput);
                 toggleDone(e.target);
             });
         });
-        document.getElementById("saveParams").addEventListener("click", function(e) {
+        document.getElementById("saveParams").addEventListener("click", function (e) {
             e.preventDefault();
             let queryParams = getInputValues(inputFormParams);
             myOptionsManager.saveOptions({
                 queryParams: queryParams
-            }).then(function() {
+            }).then(function () {
                 createOptions(inputFormParams, queryParams, newParamInput);
                 toggleDone(e.target);
             });
         });
-        document.getElementById("restoreUrls").addEventListener("click", function(e) {
+        document.getElementById("restoreUrls").addEventListener("click", function (e) {
             e.preventDefault();
             myOptionsManager.saveOptions({
                 urls: myOptionsManager.defaultOptions.urls
-            }).then(function() {
+            }).then(function () {
                 createOptions(inputFormUrls, myOptionsManager.defaultOptions.urls, newUrlInput);
                 toggleDone(e.target);
             });
         });
-        document.getElementById("restoreParams").addEventListener("click", function(e) {
+        document.getElementById("restoreParams").addEventListener("click", function (e) {
             e.preventDefault();
             myOptionsManager.saveOptions({
                 queryParams: myOptionsManager.defaultOptions.queryParams
-            }).then(function() {
+            }).then(function () {
                 createOptions(inputFormParams, myOptionsManager.defaultOptions.queryParams, newParamInput);
                 toggleDone(e.target);
             });
         });
     });
 });
-
-//document.querySelector("form").addEventListener("submit", saveOptions);
