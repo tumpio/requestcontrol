@@ -1,5 +1,6 @@
 var myOptionsManager = new OptionsManager();
-const matchPattern = /(https?|\*):\/\/((\*\.)?([\w-]+\.)*([\w]+|\*)|\*)\/.*/;
+const validationPattern = /(https?|\*):\/\/((\*\.)?([\w-]+\.)*([\w]+|\*)|\*)\/.*/;
+const tldStarPattern = /^(\*:\/\/[^\/]+).\*\//;
 
 function newRuleInput(target, value) {
     let inputModel = document.getElementById("ruleInputModel").cloneNode(true);
@@ -60,17 +61,27 @@ function getInputValues(target) {
     return values;
 }
 
-function validateInputs(target, validationPattern) {
+function getRules(target) {
+    let controls = target.querySelectorAll(".rule");
+    let rules = [];
+    let pattern, tlds;
     let valid = true;
-    for (let input of target.querySelectorAll("input")) {
-        if (!validationPattern.test(input.value)) {
-            input.classList.add("error");
+    for (let control of controls) {
+        pattern = control.querySelector(".pattern").value;
+        tlds = control.querySelector(".tlds").value;
+        tlds = tlds ? tlds.split(/\s*,\s*/) : [];
+        if (!validationPattern.test(pattern) || (tldStarPattern.test(pattern) && tlds.length == 0)) {
             valid = false;
+            control.classList.add("has-error");
         } else {
-            input.classList.remove("error");
+            control.classList.remove("has-error");
+            rules.push({
+                pattern: pattern,
+                TLDs: tlds
+            });
         }
     }
-    return valid;
+    return valid ? rules : [];
 }
 
 function init() {
@@ -88,14 +99,12 @@ function init() {
             newParamInput(inputFormParams);
         });
         document.getElementById("saveRules").addEventListener("click", function () {
-            //TODO: save rules
-            //TODO: validate rules
-            if (validateInputs(inputFormRules, matchPattern)) {
-                let urls = getInputValues(inputFormRules);
+            let rules = getRules(inputFormRules);
+            if (rules.length > 0) {
                 myOptionsManager.saveOptions({
-                    urls: urls
+                    rules: rules
                 }).then(function () {
-                    createOptions(inputFormRules, urls, newRuleInput);
+                    createOptions(inputFormRules, rules, newRuleInput);
                 });
             }
         });
