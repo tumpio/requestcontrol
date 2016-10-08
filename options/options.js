@@ -1,32 +1,52 @@
 var myOptionsManager = new OptionsManager();
-const validationPattern = /(https?|\*):\/\/((\*\.)?([\w-]+\.)*([\w]+|\*)|\*)\/.*/;
-const tldStarPattern = /^(\*:\/\/[^\/]+).\*\//;
+const hostValidation = /^(\*|[^*\s]+(\.\*)?)$/;
+const pathValidation = /^[!#-;=?-[\]_a-z~]*$/;
+const tldStarPattern = /^(.+)\.\*$/;
 
-function newRuleInput(target, value) {
+function newRuleInput(target, rule) {
     let inputModel = document.getElementById("ruleInputModel").cloneNode(true);
-    let input = inputModel.querySelector("input");
+    let scheme = inputModel.querySelector(".scheme");
+    let matchSubDomains = inputModel.querySelector(".matchSubDomains");
+    let host = inputModel.querySelector(".host");
+    let path = inputModel.querySelector(".path");
     let removeBtn = inputModel.querySelector(".btn-remove");
     let tldsBtn = inputModel.querySelector(".btn-tlds");
     let tldsBadge = inputModel.querySelector(".btn-tlds > .badge");
-    let tldsInput = inputModel.querySelector(".input-tlds");
+    let tlds = inputModel.querySelector(".tlds");
     inputModel.removeAttribute("id");
+    host.addEventListener("input", function () {
+        host.parentNode.classList.toggle("has-error", !hostValidation.test(host.value));
+        tldsBtn.parentNode.classList.toggle("hidden", !tldStarPattern.test(host.value));
+    });
+    host.addEventListener("blur", function () {
+        host.parentNode.classList.toggle("has-error", !hostValidation.test(host.value));
+        tldsBtn.parentNode.classList.toggle("hidden", !tldStarPattern.test(host.value));
+    });
+    path.addEventListener("input", function () {
+        path.parentNode.classList.toggle("has-error", !pathValidation.test(path.value));
+    });
+    path.addEventListener("blur", function () {
+        path.parentNode.classList.toggle("has-error", !pathValidation.test(path.value));
+    });
     tldsBtn.addEventListener("click", function () {
-        tldsInput.classList.toggle('hidden');
+        tlds.classList.toggle('hidden');
     });
     removeBtn.addEventListener("click", function () {
         target.removeChild(inputModel);
     });
-    if (value) {
-        input.value = value.pattern;
-        if (value.TLDs && value.TLDs.length > 0) {
-            tldsBadge.innerHTML = value.TLDs.length;
-            tldsInput.value = value.TLDs.join();
+    if (rule) {
+        scheme.value = rule.pattern.scheme;
+        matchSubDomains.checked = rule.pattern.matchSubDomains;
+        host.value = rule.pattern.host;
+        path.value = rule.pattern.path;
+        if (rule.pattern.topLevelDomains) {
+            tldsBadge.innerHTML = rule.pattern.topLevelDomains.length;
+            tlds.value = rule.pattern.topLevelDomains.join();
         }
-        else {
-            tldsBtn.classList.add("hidden");
-        }
+        tldsBtn.parentNode.classList.toggle("hidden", !tldStarPattern.test(host.value));
     }
     target.appendChild(inputModel);
+    return inputModel;
 }
 
 function newParamInput(target, value) {
@@ -41,6 +61,7 @@ function newParamInput(target, value) {
         input.value = value;
     }
     target.appendChild(inputModel);
+    return inputModel;
 }
 
 function createOptions(target, options, addInputFunc) {
@@ -64,24 +85,25 @@ function getInputValues(target) {
 function getRules(target) {
     let controls = target.querySelectorAll(".rule");
     let rules = [];
-    let pattern, tlds;
-    let valid = true;
+    let scheme, matchSubDomains, host, tlds, path;
     for (let control of controls) {
-        pattern = control.querySelector(".pattern").value;
+        scheme = control.querySelector(".scheme").value;
+        matchSubDomains = control.querySelector(".matchSubDomains").checked;
+        host = control.querySelector(".host").value;
+        path = control.querySelector(".path").value;
         tlds = control.querySelector(".tlds").value;
-        tlds = tlds ? tlds.split(/\s*,\s*/) : [];
-        if (!validationPattern.test(pattern) || (tldStarPattern.test(pattern) && tlds.length == 0)) {
-            valid = false;
-            control.classList.add("has-error");
-        } else {
-            control.classList.remove("has-error");
-            rules.push({
-                pattern: pattern,
-                TLDs: tlds
-            });
-        }
+        tlds = tlds ? tlds.split(/\s*,\s*/) :  [];
+        rules.push({
+            pattern: {
+                scheme: scheme,
+                matchSubDomains: matchSubDomains,
+                host: host,
+                topLevelDomains: tlds,
+                path: path
+            }
+        });
     }
-    return valid ? rules : [];
+    return rules;
 }
 
 function init() {
@@ -93,14 +115,14 @@ function init() {
         createOptions(inputFormParams, myOptionsManager.options.queryParams, newParamInput);
 
         document.getElementById("addNewRule").addEventListener("click", function () {
-            newRuleInput(inputFormRules);
+            newRuleInput(inputFormRules).querySelector(".host").focus();
         });
         document.getElementById("addNewParam").addEventListener("click", function () {
-            newParamInput(inputFormParams);
+            newParamInput(inputFormParams).querySelector(".param").focus();
         });
         document.getElementById("saveRules").addEventListener("click", function () {
-            let rules = getRules(inputFormRules);
-            if (rules.length > 0) {
+            if (!inputFormRules.querySelector(".has-error")) {
+                let rules = getRules(inputFormRules);
                 myOptionsManager.saveOptions({
                     rules: rules
                 }).then(function () {
@@ -120,14 +142,16 @@ function init() {
             myOptionsManager.saveOptions({
                 rules: myOptionsManager.defaultOptions.rules
             }).then(function () {
-                createOptions(inputFormRules, myOptionsManager.defaultOptions.rules, newRuleInput);
+                createOptions(inputFormRules, myOptionsManager.defaultOptions.rules,
+                    newRuleInput);
             });
         });
         document.getElementById("restoreParams").addEventListener("click", function (e) {
             myOptionsManager.saveOptions({
                 queryParams: myOptionsManager.defaultOptions.queryParams
             }).then(function () {
-                createOptions(inputFormParams, myOptionsManager.defaultOptions.queryParams, newParamInput);
+                createOptions(inputFormParams, myOptionsManager.defaultOptions.queryParams,
+                    newParamInput);
             });
         });
     });

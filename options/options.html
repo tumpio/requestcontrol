@@ -3,65 +3,102 @@
 
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
     <script src="lib/bootstrap.native/collapse-native.min.js"></script>
     <script src="OptionsManager.js"></script>
     <script src="options.js"></script>
 </head>
 
 <body class="well">
-<h2>Options</h2>
-<div>
-    <h3>Redirection url match rules</h3>
-    <p>Define patterns for redirection links. HTTP request that match a pattern rule, will be intercepted redirecting
-        the request to the parsed destination url. Rules follow the structure of <a target="_blank"
-                                                                                    href="https://developer.mozilla.org/Add-ons/WebExtensions/Match_patterns">Match
+    <h2>Options</h2>
+    <div>
+        <h3>Redirection url match rules</h3>
+        <p>Define patterns for redirection links. HTTP request that match a pattern rule, will be intercepted redirecting the
+            request to the parsed destination url. Rules follow the structure of <a target="_blank" href="https://developer.mozilla.org/Add-ons/WebExtensions/Match_patterns">Match
             patterns</a>.</p>
-    <ul id="rules" class="list-group"></ul>
-    <div class="btn-group">
-        <button id="addNewRule" class="btn btn-default">Add new match rule</button>
-        <button id="saveRules" class="btn btn-default">Save</button>
-        <button id="restoreRules" class="btn btn-default">Restore</button>
+        <div class="row text-center">
+            <div class="col-xs-3 col-md-2">
+                <p class="form-control-static">scheme</p>
+            </div>
+            <div class="col-xs-5 col-md-6">
+                <p class="form-control-static">host</p>
+            </div>
+            <div class="col-xs-4  col-md-4">
+                <p class="form-control-static">path</p>
+            </div>
+        </div>
+        <ul id="rules" class="list-group"></ul>
+        <div class="btn-group">
+            <button id="addNewRule" class="btn btn-default">Add new match rule</button>
+            <button id="saveRules" class="btn btn-default">Save</button>
+            <button id="restoreRules" class="btn btn-default">Restore</button>
+        </div>
     </div>
-</div>
-<div>
-    <h3>Filtered out query parameters</h3>
-    <p>Query parameters that are used for redirection tracking, will be removed from the destination url.</p>
-    <ul id="queryParams" class="list-group"></ul>
-    <div class="btn-group">
-        <button id="addNewParam" class="btn btn-default">Add new query parameter</button>
-        <button id="saveParams" class="btn btn-default">Save</button>
-        <button id="restoreParams" class="btn btn-default">Restore</button>
+    <div>
+        <h3>Filtered out query parameters</h3>
+        <p>Query parameters that are used for redirection tracking, will be removed from the destination url.</p>
+        <ul id="queryParams" class="list-group"></ul>
+        <div class="btn-group">
+            <button id="addNewParam" class="btn btn-default">Add new query parameter</button>
+            <button id="saveParams" class="btn btn-default">Save</button>
+            <button id="restoreParams" class="btn btn-default">Restore</button>
+        </div>
     </div>
-</div>
 
-<ul class="models hidden">
-    <li id="ruleInputModel" class="list-group-item rule">
-        <div class="input-group">
-            <input type="text" class="form-control pattern" placeholder="<scheme>://<host><path>"/>
-            <div class="input-group-btn">
-                <button class="btn btn-primary btn-tlds" type="button" title="Top-level-domains">
-                    <span>top-level domains </span><span class="badge">0</span>
-                </button>
-                <button type="button" class="btn btn-danger btn-remove" aria-label="Remove">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </button>
+    <ul class="models hidden">
+        <li id="ruleInputModel" class="list-group-item rule">
+            <div class="row no-gutter">
+                <div class="col-xs-3 col-md-2">
+                    <div class="input-group">
+                        <div class="input-group-btn" style="width:auto;">
+                            <select class="form-control scheme text-center">
+                                <option value="http">http</option>
+                                <option value="https">https</option>
+                                <option value="*">*</option>
+                            </select>
+                        </div>
+                        <span class="input-group-addon"><strong>://</strong></span>
+                    </div>
+                </div>
+                <div class="col-xs-5 col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <input class="matchSubDomains" type="checkbox" title="Include subdomains">
+                        </span>
+                        <input type="text" class="form-control host" placeholder="example.com" />
+                        <div class="input-group-btn hidden">
+                            <button class="btn btn-primary btn-tlds" type="button" title="Top-level domain names">
+                                <span>TLDs </span><span class="badge">0</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4  col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><strong>/</strong></span>
+                        <input type="text" class="form-control path" placeholder="path" />
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-danger btn-remove" aria-label="Remove">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <textarea class="form-control input-tlds tlds hidden" rows="3"></textarea>
-    </li>
-    <li id="paramInputModel" class="list-group-item">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="parameter"/>
-            <div class="input-group-btn">
-                <button type="button" class="btn btn-danger btn-remove" aria-label="Remove">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </button>
+            <textarea class="form-control input-tlds tlds hidden" rows="3"></textarea>
+        </li>
+        <li id="paramInputModel" class="list-group-item">
+            <div class="input-group">
+                <input type="text" class="form-control param" placeholder="parameter" />
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-danger btn-remove" aria-label="Remove">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+                </div>
             </div>
-        </div>
-    </li>
-</ul>
+        </li>
+    </ul>
 
 </body>
 

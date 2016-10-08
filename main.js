@@ -1,6 +1,6 @@
 var myOptionsManager = new OptionsManager();
-const tldStarPattern = /^(\*:\/\/[^\/]+).\*\//;
-const redirectUrlPattern = /https?:\/\/.+(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)/;
+const tldStarPattern = /^(.+)\.\*$/;
+const redirectUrlPattern = /^https?:\/\/.+(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
 
 function redirectUrlReplacer(match, p1, p2, p3, offset, string) {
     if (p2[0] == "%") {
@@ -48,15 +48,24 @@ function redirect(request) {
 function resolveUrls(rules) {
     let urls = [];
     for (let rule of rules) {
-        if (tldStarPattern.test(rule.pattern)) {
-            for (let TLD of rule.TLDs) {
-                urls.push(rule.pattern.replace(tldStarPattern, "$1." + TLD + "/"));
+        if (tldStarPattern.test(rule.pattern.host)) {
+            for (let TLD of rule.pattern.topLevelDomains) {
+                urls.push(tldStarPatternRuleToUrl(rule.pattern, TLD));
             }
         } else {
-            urls.push(rule.pattern);
+            urls.push(patternRuleToUrl(rule.pattern));
         }
     }
     return urls;
+}
+
+function patternRuleToUrl(pattern) {
+    return pattern.scheme + "://" + (pattern.matchSubDomains ? "*." : "") + pattern.host + "/" + pattern.path;
+}
+
+
+function tldStarPatternRuleToUrl(pattern, TLD) {
+    return pattern.scheme + "://" + (pattern.matchSubDomains ? "*." : "") + pattern.host.replace(tldStarPattern, "$1." + TLD)  + "/" +  pattern.path;
 }
 
 function init() {
