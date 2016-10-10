@@ -1,0 +1,9 @@
+.text-success {
+    transition: opacity .15s ease-in-out;
+    opacity: 0;
+}
+.text-success.show {
+    opacity: 1;
+}
+/* enables CSS3 transition for simple collapses, accordion and also navbar in responsive view */
+.collapse { transition: height .3s ease-out; /*-webkit-transition: height .3s ease-out*/ }

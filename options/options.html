@@ -4,93 +4,227 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-    crossorigin="anonymous">
-    <script src="lib/bootstrap.native/collapse-native.min.js"></script>
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="tags-input/tags-input.css">
+    <link rel="stylesheet" href="options.css">
+    <script src="tags-input/tags-input.js"></script>
     <script src="OptionsManager.js"></script>
     <script src="options.js"></script>
 </head>
 
 <body class="well">
-    <h2>Options</h2>
+    <h3>Request Control Rules</h3>
     <div>
-        <h3>Redirection url match rules</h3>
-        <p>Define patterns for redirection links. HTTP request that match a pattern rule, will be intercepted redirecting the
-            request to the parsed destination url. Rules follow the structure of <a target="_blank" href="https://developer.mozilla.org/Add-ons/WebExtensions/Match_patterns">Match
-            patterns</a>.</p>
-        <div class="row text-center">
-            <div class="col-xs-3 col-md-2">
-                <p class="form-control-static">scheme</p>
+        <p>Define rules for controlling HTTP requests. Requests that match an active rule, will be intercepted and the selected
+            action for the rule is applied.</p>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a id="showHelp" data-toggle="collapse" href="#help">
+                        <span class="glyphicon glyphicon-question-sign"></span> Show Help
+                    </a>
+                </h4>
             </div>
-            <div class="col-xs-5 col-md-6">
-                <p class="form-control-static">host</p>
-            </div>
-            <div class="col-xs-4  col-md-4">
-                <p class="form-control-static">path</p>
+            <div id="help" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="container">
+                        <h3>Pattern</h3>
+                        <p>Request pattern consists of URL scheme, host and path.</p>
+                        <h4>Scheme</h4>
+                        <p>Scheme matches the request URL protocol. It can either match <i>http</i> or <i>https</i> alone or both protocols
+                            at the same time.</p>
+                        <h4>Host</h4>
+                        <p>Host is the domain name part in the request URL. Host in pattern can match </p>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>1. A complete hostname.</td>
+                                    <td><i>www.example.com</i></td>
+                                </tr>
+                                <tr>
+                                    <td>2. The given host and any of its subdomains.</td>
+                                    <td><i>example.com</i> and check the include subdomains checkbox to match any subdomain (e.g. <i><strong>www</strong>.example.com</i>,
+                                        <i><strong>good</strong>.example.com</i>)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3. The given host and all listed top-level domains. (can be combined with 2.)</td>
+                                    <td><i>www.example.*</i> and write the top-level domains to the top-level domain name list (e.g. <i>com</i>, <i>co.uk</i>).</td>
+                                </tr>
+                                <tr>
+                                    <td>4. Any host.</td>
+                                    <td><i>*</i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h4>Path</h4>
+                        <p>Path is optional </p>
+                    </div>
+                    <div class="container well">
+                        <h3>Types</h3>
+                    </div>
+                    <div class="container well">
+                        <h3>Action</h3>
+                    </div>
+                </div>
             </div>
         </div>
-        <ul id="rules" class="list-group"></ul>
-        <div class="btn-group">
-            <button id="addNewRule" class="btn btn-default">Add new match rule</button>
-            <button id="saveRules" class="btn btn-default">Save</button>
-            <button id="restoreRules" class="btn btn-default">Restore</button>
-        </div>
+        <ul id="rules" class="list-group form-horizontal"></ul>
+        <button id="addNewRule" class="btn btn-default">Add new rule</button>
+        <button id="restoreRules" class="btn btn-link pull-right">Restore Defaults</button>
     </div>
+    <h3>Filtered out URL parameters</h3>
     <div>
-        <h3>Filtered out query parameters</h3>
-        <p>Query parameters that are used for redirection tracking, will be removed from the destination url.</p>
+        <p>Define URL parameters that will be filtered out from requests that match a "Filter request" rule. URL parameters
+            are commonly used in redirection tracking as a method to analyze the origin of traffic.</p>
         <ul id="queryParams" class="list-group"></ul>
-        <div class="btn-group">
-            <button id="addNewParam" class="btn btn-default">Add new query parameter</button>
-            <button id="saveParams" class="btn btn-default">Save</button>
-            <button id="restoreParams" class="btn btn-default">Restore</button>
-        </div>
+        <button id="addNewParam" class="btn btn-default">Add new parameter</button>
+        <button id="saveParams" class="btn btn-default">Save Parameters</button>
+        <button id="restoreParams" class="btn btn-link pull-right">Restore Defaults</button>
     </div>
 
-    <ul class="models hidden">
+    <ul id="models" class="list-group form-horizontal hidden">
         <li id="ruleInputModel" class="list-group-item rule">
-            <div class="row no-gutter">
-                <div class="col-xs-3 col-md-2">
-                    <div class="input-group">
-                        <div class="input-group-btn" style="width:auto;">
-                            <select class="form-control scheme text-center">
-                                <option value="http">http</option>
-                                <option value="https">https</option>
-                                <option value="*">*</option>
-                            </select>
+            <h4 class="title"></h4>
+            <p class="description"></p>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Pattern</label>
+                <div class="col-sm-10">
+                    <div class="row no-gutter">
+                        <div class="col-xs-3 col-md-2">
+                            <span class="help-block text-center">scheme://</span>
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-btn" style="width:auto;">
+                                    <select class="form-control input-sm scheme text-center">
+                                        <option value="http">http</option>
+                                        <option value="https">https</option>
+                                        <option value="*">http/https</option>
+                                    </select>
+                                </div>
+                                <span class="input-group-addon"><strong>://</strong></span>
+                            </div>
                         </div>
-                        <span class="input-group-addon"><strong>://</strong></span>
+                        <div class="col-xs-5 col-md-6">
+                            <span class="help-block text-center">host name</span>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon">
+                                    <input class="matchSubDomains" type="checkbox" title="Include subdomains" style="vertical-align:middle;">
+                                </span>
+                                <input type="text" class="form-control input-sm host" placeholder="example.com" pattern="^(\*|[^*\s]+(\.\*)?)$" />
+                                <div class="input-group-btn hidden">
+                                    <button class="btn btn-info btn-tlds" type="button" title="Included top-level domain names">
+                                        <span>TLDs </span><span class="badge">0</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4  col-md-4">
+                            <span class="help-block text-center">path</span>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon"><strong>/</strong></span>
+                                <input type="text" class="form-control input-sm path" placeholder="path" pattern="^[!#-;=?-[\]_a-z~]*$" />
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-xs-5 col-md-6">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <input class="matchSubDomains" type="checkbox" title="Include subdomains">
-                        </span>
-                        <input type="text" class="form-control host" placeholder="example.com" />
-                        <div class="input-group-btn hidden">
-                            <button class="btn btn-primary btn-tlds" type="button" title="Top-level domain names">
-                                <span>TLDs </span><span class="badge">0</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-4  col-md-4">
-                    <div class="input-group">
-                        <span class="input-group-addon"><strong>/</strong></span>
-                        <input type="text" class="form-control path" placeholder="path" />
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-danger btn-remove" aria-label="Remove">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
-                        </div>
+                    <div class="tlds-block hidden">
+                        <span class="help-block">Top-level domains</span>
+                        <input type="tags" class="form-control input-sm input-tlds tlds hidden"></input>
                     </div>
                 </div>
             </div>
-            <textarea class="form-control input-tlds tlds hidden" rows="3"></textarea>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Types</label>
+                <div class="col-sm-8">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group btn-group-sm btn-group-types" data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input value="main_frame" type="checkbox" autocomplete="off" class="type">Document
+                            </label>
+                            <label class="btn btn-default">
+                                <input value="sub_frame" type="checkbox" autocomplete="off" class="type">Embedded document
+                            </label>
+                            <label class="btn btn-default">
+                                <input value="stylesheet" type="checkbox" autocomplete="off" class="type">Stylesheet
+                            </label>
+                            <label class="btn btn-default">
+                                <input value="script" type="checkbox" autocomplete="off" class="type">Script
+                            </label>
+                            <label class="btn btn-default">
+                                <input value="image" type="checkbox" autocomplete="off" class="type">Image
+                            </label>
+                            <label class="btn btn-default hidden">
+                                <input value="object" type="checkbox" autocomplete="off" class="type extra-type">Object
+                            </label>
+                            <label class="btn btn-default hidden">
+                                <input value="xmlhttprequest" type="checkbox" autocomplete="off" class="type extra-type">XMLHttpRequest
+                            </label>
+                            <label class="btn btn-default hidden">
+                                <input value="xbl" type="checkbox" autocomplete="off" class="type extra-type">XBL
+                            </label>
+                            <label class="btn btn-default hidden">
+                                <input value="xslt" type="checkbox" autocomplete="off" class="type extra-type">XSLT
+                            </label>
+                            <label class="btn btn-default hidden">
+                                <input value="font" type="checkbox" autocomplete="off" class="type extra-type">Font
+                            </label>
+                            <label class="btn btn-default hidden">
+                                <input value="media" type="checkbox" autocomplete="off" class="type extra-type">Media
+                            </label>
+                            <label class="btn btn-default hidden">
+                                <input value="websocket" type="checkbox" autocomplete="off" class="type extra-type">WebSocket
+                            </label>
+                            <label class="btn btn-default hidden">
+                                <input value="csp_report" type="checkbox" autocomplete="off" class="type extra-type">CSP report
+                            </label>
+                            <label class="btn btn-default hidden">
+                                <input value="imageset" type="checkbox" autocomplete="off" class="type extra-type">Imageset
+                            </label>
+                            <label class="btn btn-default hidden">
+                                <input value="web_manifest" type="checkbox" autocomplete="off" class="type extra-type">Web Manifest
+                            </label>
+                            <label class="btn btn-default hidden">
+                                <input value="other" type="checkbox" autocomplete="off" class="type extra-type">Other
+                            </label>
+                            <label class="btn btn-default">
+                                <input class="more-types" type="checkbox" autocomplete="off"><span class="text">More ▸</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="btn-group btn-group-sm" data-toggle="buttons">
+                        <label class="btn btn-default">
+                            <input class="any-type" type="checkbox" autocomplete="off">Any type
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Action</label>
+                <div class="col-sm-3">
+                    <select class="form-control input-sm action">
+                        <option value="filter">Filter Request</option>
+                        <option value="block">Block Request</option>
+                        <option value="redirect">Redirect Request</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label text-success text-saved">
+                    <span class="glyphicon glyphicon-ok-circle"></span> saved
+                </label>
+                <div class="col-sm-10">
+                    <button type="button" class="btn btn-sm btn-primary btn-save">Save rule</button>
+                    <span class="pull-right">
+                    <button type="button" class="btn btn-sm btn-warning btn-active">Disable</button>
+                    <button type="button" class="btn btn-sm btn-danger btn-remove">Remove</button>
+                    </span>
+                </div>
+            </div>
         </li>
         <li id="paramInputModel" class="list-group-item">
-            <div class="input-group">
-                <input type="text" class="form-control param" placeholder="parameter" />
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control input-sm param" placeholder="parameter" />
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-danger btn-remove" aria-label="Remove">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>

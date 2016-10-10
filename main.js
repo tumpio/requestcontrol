@@ -1,4 +1,4 @@
-var myOptionsManager = new OptionsManager();
+const myOptionsManager = new OptionsManager();
 const tldStarPattern = /^(.+)\.\*$/;
 const redirectUrlPattern = /^https?:\/\/.+(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
 
