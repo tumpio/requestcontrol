@@ -7,3 +7,7 @@
 }
 /* enables CSS3 transition for simple collapses, accordion and also navbar in responsive view */
 .collapse { transition: height .3s ease-out; /*-webkit-transition: height .3s ease-out*/ }
+
+#help {
+    border: dashed #666;
+}

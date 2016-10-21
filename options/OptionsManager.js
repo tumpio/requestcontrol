@@ -55,7 +55,7 @@ OptionsManager.prototype.defaultOptions = {
             scheme: "*",
             matchSubDomains: false,
             host: "outgoing.prod.mozaws.net",
-            path: "*"
+            path: ""
         },
         types: ["main_frame"],
         action: "filter",

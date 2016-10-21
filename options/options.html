@@ -15,12 +15,12 @@
 <body class="well">
     <h3>Request Control Rules</h3>
     <div>
-        <p>Define rules for controlling HTTP requests. Requests that match an active rule, will be intercepted and the selected
-            action for the rule is applied.</p>
+        <p>Define rules for controlling HTTP requests. Requests that match the pattern of an active rule will be intercepted
+            applying the action of the rule.</p>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a id="showHelp" data-toggle="collapse" href="#help">
+                    <a id="showHelp" data-toggle="collapse" href="#help" class="text-info">
                         <span class="glyphicon glyphicon-question-sign"></span> Show Help
                     </a>
                 </h4>
@@ -28,43 +28,96 @@
             <div id="help" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="container">
+                        <h3>Request Control Rule</h3>
+                        <p>A request control rule consists of pattern, request types and action.</p>
+                    </div>
+                    <div class="container">
                         <h3>Pattern</h3>
-                        <p>Request pattern consists of URL scheme, host and path.</p>
+                        <p>Request pattern consists of scheme, host and path.</p>
                         <h4>Scheme</h4>
-                        <p>Scheme matches the request URL protocol. It can either match <i>http</i> or <i>https</i> alone or both protocols
-                            at the same time.</p>
+                        <p>Scheme matches the request URL protocol. It can either match <i>http</i> or <i>https</i> alone or
+                            both protocols at the same time.</p>
                         <h4>Host</h4>
                         <p>Host is the domain name part in the request URL. Host in pattern can match </p>
                         <table class="table">
                             <tbody>
                                 <tr>
-                                    <td>1. A complete hostname.</td>
+                                    <td>1. A complete domain name.</td>
                                     <td><i>www.example.com</i></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td>2. The given host and any of its subdomains.</td>
-                                    <td><i>example.com</i> and check the include subdomains checkbox to match any subdomain (e.g. <i><strong>www</strong>.example.com</i>,
-                                        <i><strong>good</strong>.example.com</i>)
+                                    <td><i>example.com</i></td>
+                                    <td>Check the include subdomains checkbox to match any subdomain (e.g.
+                                        <i><strong>www</strong>.example.com</i>,
+                                        <i><strong>good</strong>.example.com</i> and any other subdomain of example.com).
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>3. The given host and all listed top-level domains. (can be combined with 2.)</td>
-                                    <td><i>www.example.*</i> and write the top-level domains to the top-level domain name list (e.g. <i>com</i>, <i>co.uk</i>).</td>
+                                    <td><i>www.example.*</i></td>
+                                    <td>Write the top-level domains to the top-level domain name list (e.g. <i>com</i>, <i>org</i>).</td>
                                 </tr>
                                 <tr>
                                     <td>4. Any host.</td>
                                     <td><i>*</i></td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
                         <h4>Path</h4>
-                        <p>Path is optional </p>
+                        <p>Path is an optional part to limit rule by request URL path. Path may subsequently contain any combination
+                            of * wildcard and any of the characters that are allowed in URL paths. The * wildcard matches
+                            any portion of path and may appear more than once.
+                        </p>
                     </div>
-                    <div class="container well">
-                        <h3>Types</h3>
+                    <div class="container">
+                        <h3>Request Types</h3>
+                        <p>Apply the rule to certain types of requests. Type represents the requested resource. Rule can apply
+                            to a single or multiple request types or any type of request. Possible types are</p>
+                        <ul>
+                            <li>Document</li>
+                            <li>Embedded document</li>
+                            <li>Stylesheet</li>
+                            <li>Script</li>
+                            <li>Image</li>
+                            <li>Object</li>
+                            <li>XMLHttpRequest</li>
+                            <li>XBL</li>
+                            <li>XSLT</li>
+                            <li>Font</li>
+                            <li>Media</li>
+                            <li>WebSocket</li>
+                            <li>CSP report</li>
+                            <li>Imageset</li>
+                            <li>Web Manifest</li>
+                            <li>Other</li>
+                            <li>Any Type</li>
+                        </ul>
                     </div>
-                    <div class="container well">
-                        <h3>Action</h3>
+                    <div class="container">
+                        <h3>Rule Actions</h3>
+                        <p>There are three possible actions for rules</p>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>Filter Requests</td>
+                                    <td>Skips redirection tracking. If the matched request URL contains another URL, the request
+                                        is cancelled and the tab where the request was made is navigated to the contained
+                                        URL. Additionally URL tracking parameters that are defined in the filtered parameters
+                                        list will be removed.</td>
+                                </tr>
+                                <tr>
+                                    <td>Block Requests</td>
+                                    <td>Any request that matches a block rule will be cancelled.</td>
+                                </tr>
+                                <tr>
+                                    <td>Redirect Requests</td>
+                                    <td>Any request that matches a redirect rule will be redirected to the given redirect URL.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
