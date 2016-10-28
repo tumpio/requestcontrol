@@ -15,8 +15,7 @@
 <body class="well">
     <h3>Request Control Rules</h3>
     <div>
-        <p>Define rules for controlling HTTP requests. Requests that match the pattern of an active rule will be intercepted
-            applying the action of the rule.</p>
+        <p>Define rules for controlling HTTP requests.</p>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -29,25 +28,26 @@
                 <div class="panel-body">
                     <div class="container">
                         <h3>Request Control Rule</h3>
-                        <p>A request control rule consists of pattern, request types and action.</p>
+                        <p>Rule consists of a request pattern, request types and rule action. Request that matches a pattern of
+                            an active rule is intercepted with the action of the rule applied to it.
+                        </p>
                     </div>
                     <div class="container">
                         <h3>Pattern</h3>
-                        <p>Request pattern consists of scheme, host and path.</p>
+                        <p>Request pattern has three parts, scheme, host and path.</p>
                         <h4>Scheme</h4>
-                        <p>Scheme matches the request URL protocol. It can either match <i>http</i> or <i>https</i> alone or
-                            both protocols at the same time.</p>
+                        <p>Scheme matches the request URL protocol. It can be <i>http</i>, <i>https</i> or both.</p>
                         <h4>Host</h4>
-                        <p>Host is the domain name part in the request URL. Host in pattern can match </p>
+                        <p>Host matches the hostname of the request URL. It can match </p>
                         <table class="table">
                             <tbody>
                                 <tr>
-                                    <td>1. A complete domain name.</td>
+                                    <td>1. A complete hostname.</td>
                                     <td><i>www.example.com</i></td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td>2. The given host and any of its subdomains.</td>
+                                    <td>2. The given hostname and any of its subdomains.</td>
                                     <td><i>example.com</i></td>
                                     <td>Check the include subdomains checkbox to match any subdomain (e.g.
                                         <i><strong>www</strong>.example.com</i>,
@@ -55,7 +55,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>3. The given host and all listed top-level domains. (can be combined with 2.)</td>
+                                    <td>3. The given hostname and all listed top-level domains. (can be combined with 2.)</td>
                                     <td><i>www.example.*</i></td>
                                     <td>Write the top-level domains to the top-level domain name list (e.g. <i>com</i>, <i>org</i>).</td>
                                 </tr>
@@ -75,7 +75,7 @@
                     <div class="container">
                         <h3>Request Types</h3>
                         <p>Apply the rule to certain types of requests. Type represents the requested resource. Rule can apply
-                            to a single or multiple request types or any type of request. Possible types are</p>
+                            from one to many type of request or any type. Possible types are</p>
                         <ul>
                             <li>Document</li>
                             <li>Embedded document</li>
@@ -261,6 +261,10 @@
                         <option value="redirect">Redirect Request</option>
                     </select>
                 </div>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control input-sm redirectUrl hidden" placeholder="Redirect URL" pattern="^.+:\/\/[^\s/$.?#].[^\s]*$"
+                    />
+                </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label text-success text-saved">
@@ -269,7 +273,7 @@
                 <div class="col-sm-10">
                     <button type="button" class="btn btn-sm btn-primary btn-save">Save rule</button>
                     <span class="pull-right">
-                    <button type="button" class="btn btn-sm btn-warning btn-active">Disable</button>
+                    <button type="button" class="btn btn-sm btn-warning btn-activate">Disable</button>
                     <button type="button" class="btn btn-sm btn-danger btn-remove">Remove</button>
                     </span>
                 </div>
