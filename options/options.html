@@ -24,17 +24,17 @@
                     </a>
                 </h4>
             </div>
-            <div id="help" class="panel-collapse collapse">
+            <div id="help" class="panel-collapse collapsed">
                 <div class="panel-body">
                     <div class="container">
                         <h3>Request Control Rule</h3>
-                        <p>Rule consists of a request pattern, request types and rule action. Request that matches a pattern of
-                            an active rule is intercepted with the action of the rule applied to it.
+                        <p>Rule contains request pattern, request types and rule action. Request that matches a pattern of an
+                            active rule will be intercepted taking the action of the rule.
                         </p>
                     </div>
                     <div class="container">
                         <h3>Pattern</h3>
-                        <p>Request pattern has three parts, scheme, host and path.</p>
+                        <p>Request pattern consists of three parts, scheme, host and path.</p>
                         <h4>Scheme</h4>
                         <p>Scheme matches the request URL protocol. It can be <i>http</i>, <i>https</i> or both.</p>
                         <h4>Host</h4>
@@ -74,8 +74,8 @@
                     </div>
                     <div class="container">
                         <h3>Request Types</h3>
-                        <p>Apply the rule to certain types of requests. Type represents the requested resource. Rule can apply
-                            from one to many type of request or any type. Possible types are</p>
+                        <p>Apply rules based on the types of the requests. Type represents the requested resource. Rule can
+                            apply from one to many types or any type. Possible types are</p>
                         <ul>
                             <li>Document</li>
                             <li>Embedded document</li>
@@ -188,7 +188,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Types</label>
                 <div class="col-sm-8">
-                    <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-toolbar">
                         <div class="btn-group btn-group-sm btn-group-types" data-toggle="buttons">
                             <label class="btn btn-default">
                                 <input value="main_frame" type="checkbox" autocomplete="off" class="type">Document
@@ -283,8 +283,8 @@
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control input-sm param" placeholder="parameter" />
                 <div class="input-group-btn">
-                    <button type="button" class="btn btn-danger btn-remove" aria-label="Remove">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    <button type="button" class="btn btn-danger btn-remove">
+                        <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 </div>
             </div>

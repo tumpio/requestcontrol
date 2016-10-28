@@ -25,40 +25,13 @@ function newRuleInput(target, rule) {
     let successText = inputModel.querySelector(".text-saved");
     inputModel.removeAttribute("id");
 
-    function addInputValidation(input) {
-        input.addEventListener("input", validateInput);
-        input.addEventListener("blur", validateInput);
-    }
-
-    function validateInput(e) {
-        let input = e.target;
-        let pattern;
-        if (input.pattern) {
-            pattern = new RegExp(e.target.pattern);
-            let pass = pattern.test(input.value);
-            input.parentNode.classList.toggle("has-error", !pass);
-            if (!pass) {
-                saveBtn.setAttribute("disabled", "disabled");
-            } else { 
-                saveBtn.removeAttribute("disabled");
-            }
-        }
-    }
-
-    function validateInputs() {
-        saveBtn.removeAttribute("disabled");
-        for (let input of inputModel.querySelectorAll("input[pattern]:not(.hidden)")) {
-            validateInput({
-                target: input
-            });
-        }
-    }
-
     function checkTLDStarPattern() {
         let isTldsPattern = tldStarPattern.test(host.value);
-        tldsBtn.parentNode.classList.toggle("hidden", !isTldsPattern);
-        if (!isTldsPattern) tldsBlock.classList.add("hidden");
-        else if (tldsTagsInput.getValue().length == 0) saveBtn.setAttribute("disabled", "disabled");
+        toggleHidden(tldsBtn.parentNode, !isTldsPattern);
+        toggleHidden(tldsBlock, !isTldsPattern);
+        if (isTldsPattern && tldsTagsInput.getValue().length == 0) {
+            toggleSaveable(false);
+        }
     }
 
     function toggleActive() {
@@ -68,46 +41,44 @@ function newRuleInput(target, rule) {
         activateBtn.innerHTML = rule.active ? "Disable" : "Enable";
     }
 
-    addInputValidation(host);
-    addInputValidation(path);
-    addInputValidation(redirectUrl);
-
-    host.addEventListener("input", checkTLDStarPattern);
-    host.addEventListener("blur", checkTLDStarPattern);
-
-    types.addEventListener('change', function (e) {
-        if (e.target.checked) {
-            e.target.parentNode.classList.add("active");
-            anyType.checked = false;
-            anyType.parentNode.classList.remove("active");
-        } else {
-            e.target.parentNode.classList.remove("active");
+    function toggleSaveable(saveable) {
+        if (!saveable) {
+            saveBtn.setAttribute("disabled", "disabled");
+        } else { 
+            saveBtn.removeAttribute("disabled");
         }
+    }
+
+    addInputValidation(host, toggleSaveable);
+    addInputValidation(path, toggleSaveable);
+    addInputValidation(redirectUrl, toggleSaveable);
+    host.addEventListener("input", checkTLDStarPattern);
+
+    types.addEventListener("change", function (e) {
+        setButtonChecked(e.target, e.target.checked);
+        setButtonChecked(anyType, !(e.target.checked || inputModel.querySelector(".type:checked")));
     }, false);
 
-    moreTypesBtn.addEventListener('change', function (e) {
+    moreTypesBtn.addEventListener("change", function (e) {
         e.stopPropagation();
         var extraTypes = inputModel.querySelectorAll(".extra-type:not(:checked)");
         moreTypesBtn.parentNode.querySelector(".text").innerHTML = moreTypesBtn.checked ? "◂ Less" : "More ▸";
         for (let type of extraTypes) {
-            type.parentNode.classList.toggle("hidden", !moreTypesBtn.checked);
+            toggleHidden(type.parentNode, !moreTypesBtn.checked);
         }
     }, false);
 
-    anyType.addEventListener('change', function (e) {
+    anyType.addEventListener("change", function (e) {
+        setButtonChecked(anyType, e.target.checked);
         if (e.target.checked) {
-            e.target.parentNode.classList.add("active");
             for (let type of inputModel.querySelectorAll(".type:checked")) {
-                type.checked = false;
-                type.parentNode.classList.remove("active");
+                setButtonChecked(type, false);
             }
-        } else {
-            e.target.parentNode.classList.remove("active");
         }
     });
 
     tldsBtn.addEventListener("click", function () {
-        tldsBlock.classList.toggle('hidden');
+        toggleHidden(tldsBlock);
     });
 
     tldsInput.addEventListener("change", function () {
@@ -124,8 +95,11 @@ function newRuleInput(target, rule) {
     action.addEventListener("change", function () {
         rule.action = action.value;
         description.innerHTML = getRuleDescription(rule);
-        redirectUrl.classList.toggle("hidden", action.value != "redirect");
-        validateInputs();
+        toggleHidden(redirectUrl, action.value != "redirect");
+        saveBtn.removeAttribute("disabled");
+        for (let input of inputModel.querySelectorAll("input[pattern]:not(.hidden)")) {
+            input.dispatchEvent(new Event("blur"));
+        }
     })
 
     saveBtn.addEventListener("click", function () {
@@ -133,21 +107,22 @@ function newRuleInput(target, rule) {
         rule.pattern.matchSubDomains = matchSubDomains.checked;
         rule.pattern.host = host.value;
         rule.pattern.path = path.value;
-        if (anyType.checked) {
-            delete rule.types;
-        } else {
-            rule.types = Array.from(inputModel.querySelectorAll(".type:checked"), type => type.value);
-        }
+        rule.types = Array.from(inputModel.querySelectorAll(".type:checked"), type => type.value);
         rule.action = action.value;
+
+        if (rule.types.length == 0 || anyType.checked) {
+            delete rule.types;
+        }
         if (action.value == "redirect") {
             rule.redirectUrl = redirectUrl.value;
         }
         if (tldStarPattern.test(host.value)) {
             rule.pattern.topLevelDomains = tldsTagsInput.getValue();
         }
+
         myOptionsManager.saveOptions("rules").then(function () {
             title.innerHTML = "Rule for <mark>" + rule.pattern.host + "</mark>";
-            tldsBlock.classList.add("hidden");
+            toggleHidden(tldsBlock, true);
             successText.classList.add("show");
             setTimeout(function () {
                 successText.classList.remove("show");
@@ -178,25 +153,23 @@ function newRuleInput(target, rule) {
         path.value = rule.pattern.path;
         action.value = rule.action;
         if (action.value != "redirect") {
-            redirectUrl.classList.add("hidden");
+            toggleHidden(redirectUrl, true);
             redirectUrl.value = rule.redirectUrl || "";
         }
         if (rule.pattern.topLevelDomains) {
             tldsBadge.innerHTML = rule.pattern.topLevelDomains.length;
             tldsTagsInput.setValue(rule.pattern.topLevelDomains.join());
         }
-        tldsBtn.parentNode.classList.toggle("hidden", !tldStarPattern.test(host.value));
+        toggleHidden(tldsBtn.parentNode, !tldStarPattern.test(host.value));
         toggleActive();
 
         if (!rule.types || rule.types.length == 0) {
-            anyType.checked = true;
-            anyType.parentNode.classList.add("active");
+            setButtonChecked(anyType, true);
         } else {
             for (let value of rule.types) {
                 let type = inputModel.querySelector("[value=" + value + "]");
-                type.checked = true;
-                type.parentNode.classList.add("active");
-                type.parentNode.classList.remove("hidden");
+                setButtonChecked(type, true);
+                toggleHidden(type.parentNode, false);
             }
         }
     } else {
@@ -204,6 +177,35 @@ function newRuleInput(target, rule) {
     }
     target.appendChild(inputModel);
     return inputModel;
+}
+
+function setButtonChecked(button, checked) {
+    button.checked = checked;
+    button.parentNode.classList.toggle("active", checked);
+}
+
+function toggleHidden(element, hidden) {
+    let hiddenClass = "hidden";
+    if (typeof hidden == "boolean") {
+        element.classList.toggle(hiddenClass, hidden);
+    } else {
+        element.classList.toggle(hiddenClass, hidden);
+    }
+}
+
+function addInputValidation(input, callback) {
+    function validateInput(e) {
+        let input = e.target;
+        let pattern;
+        if (input.pattern) {
+            pattern = new RegExp(e.target.pattern);
+            let pass = pattern.test(input.value);
+            input.parentNode.classList.toggle("has-error", !pass);
+            callback(pass);
+        }
+    }
+    input.addEventListener("input", validateInput);
+    input.addEventListener("blur", validateInput);
 }
 
 function getRuleDescription(rule) {
@@ -271,19 +273,18 @@ function init() {
             });
         });
         document.getElementById("restoreRules").addEventListener("click", function () {
-            myOptionsManager.saveOptions("rules", myOptionsManager.defaultOptions.rules).then(function () {
+            myOptionsManager.restoreDefault("rules").then(function () {
                 createOptions(inputFormRules, myOptionsManager.options.rules, newRuleInput);
             });
         });
         document.getElementById("restoreParams").addEventListener("click", function (e) {
-            myOptionsManager.saveOptions("queryParams", myOptionsManager.defaultOptions.queryParams).then(
-                function () {
-                    createOptions(inputFormParams, myOptionsManager.options.queryParams,
-                        newParamInput);
-                });
+            myOptionsManager.restoreDefault("queryParams").then(function () {
+                createOptions(inputFormParams, myOptionsManager.options.queryParams,
+                    newParamInput);
+            });
         });
         document.getElementById("showHelp").addEventListener("click", function () {
-            document.getElementById("help").classList.toggle("in");
+            document.getElementById("help").classList.toggle("collapsed");
         });
     });
 }

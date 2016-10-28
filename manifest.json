@@ -1,7 +1,7 @@
 {
     "name": "Request Control",
-    "description": "Define rules for controlling HTTP requests.",
-    "version": "1.1.0",
+    "description": "Take control over your requests!",
+    "version": "1.2.0",
     "manifest_version": 2,
     "icons": {
         "48": "icon.png",

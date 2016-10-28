@@ -102,10 +102,15 @@ OptionsManager.prototype.loadOptions = function (callback) {
     browser.storage.local.get(Object.keys(this.defaultOptions)).then(result => {
         this.options = {};
         for (let option in this.defaultOptions) {
-            this.options[option] = result[option] || this.defaultOptions[option];
+            this.options[option] = result[option] || cloneObject(this.defaultOptions[option]);
         }
         callback();
     });
+};
+
+OptionsManager.prototype.restoreDefault = function (option, callback) {
+    this.options[option] = cloneObject(this.defaultOptions[option]);
+    return this.saveOptions(option);
 };
 
 OptionsManager.prototype.update = function (changes) {
@@ -121,3 +126,7 @@ OptionsManager.prototype.onChanged = function (callback) {
         callback();
     });
 };
+
+function cloneObject(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
