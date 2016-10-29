@@ -1,7 +1,7 @@
-const myOptionsManager = new OptionsManager();
-const tldStarPattern = /^(.+)\.\*$/;
-const redirectUrlPattern = /^https?:\/\/.+(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
-const requestListeners = [];
+var myOptionsManager = new OptionsManager();
+var tldStarPattern = /^(.+)\.\*$/;
+var redirectUrlPattern = /^https?:\/\/.+(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
+var requestListeners = [];
 
 function requestAction(action, redirectUrl) {
     switch (action) {

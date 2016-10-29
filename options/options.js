@@ -1,5 +1,4 @@
-const myOptionsManager = new OptionsManager();
-const tldStarPattern = /^(.+)\.\*$/;
+var myPage;
 
 function newRuleInput(target, rule) {
     let inputModel = document.getElementById("ruleInputModel").cloneNode(true);
@@ -26,7 +25,7 @@ function newRuleInput(target, rule) {
     inputModel.removeAttribute("id");
 
     function checkTLDStarPattern() {
-        let isTldsPattern = tldStarPattern.test(host.value);
+        let isTldsPattern = myPage.tldStarPattern.test(host.value);
         toggleHidden(tldsBtn.parentNode, !isTldsPattern);
         toggleHidden(tldsBlock, !isTldsPattern);
         if (isTldsPattern && tldsTagsInput.getValue().length == 0) {
@@ -116,11 +115,11 @@ function newRuleInput(target, rule) {
         if (action.value == "redirect") {
             rule.redirectUrl = redirectUrl.value;
         }
-        if (tldStarPattern.test(host.value)) {
+        if (myPage.tldStarPattern.test(host.value)) {
             rule.pattern.topLevelDomains = tldsTagsInput.getValue();
         }
 
-        myOptionsManager.saveOptions("rules").then(function () {
+        myPage.myOptionsManager.saveOptions("rules").then(function () {
             title.innerHTML = "Rule for <mark>" + rule.pattern.host + "</mark>";
             toggleHidden(tldsBlock, true);
             successText.classList.add("show");
@@ -132,15 +131,15 @@ function newRuleInput(target, rule) {
 
     activateBtn.addEventListener("click", function () {
         rule.active = !rule.active;
-        myOptionsManager.saveOptions("rules").then(toggleActive);
+        myPage.myOptionsManager.saveOptions("rules").then(toggleActive);
     });
 
     removeBtn.addEventListener("click", function () {
         target.removeChild(inputModel);
-        let i = myOptionsManager.options.rules.indexOf(rule);
+        let i = myPage.myOptionsManager.options.rules.indexOf(rule);
         if (i != -1) {
-            myOptionsManager.options.rules.splice(i, 1);
-            myOptionsManager.saveOptions("rules");
+            myPage.myOptionsManager.options.rules.splice(i, 1);
+            myPage.myOptionsManager.saveOptions("rules");
         }
     });
 
@@ -160,7 +159,7 @@ function newRuleInput(target, rule) {
             tldsBadge.innerHTML = rule.pattern.topLevelDomains.length;
             tldsTagsInput.setValue(rule.pattern.topLevelDomains.join());
         }
-        toggleHidden(tldsBtn.parentNode, !tldStarPattern.test(host.value));
+        toggleHidden(tldsBtn.parentNode, !myPage.tldStarPattern.test(host.value));
         toggleActive();
 
         if (!rule.types || rule.types.length == 0) {
@@ -254,40 +253,43 @@ function getInputValues(target) {
 }
 
 function init() {
-    document.addEventListener("DOMContentLoaded", function () {
-        let inputFormRules = document.getElementById("rules");
-        let inputFormParams = document.getElementById("queryParams");
+    let inputFormRules = document.getElementById("rules");
+    let inputFormParams = document.getElementById("queryParams");
 
-        createOptions(inputFormRules, myOptionsManager.options.rules, newRuleInput);
-        createOptions(inputFormParams, myOptionsManager.options.queryParams, newParamInput);
+    createOptions(inputFormRules, myPage.myOptionsManager.options.rules, newRuleInput);
+    createOptions(inputFormParams, myPage.myOptionsManager.options.queryParams, newParamInput);
 
-        document.getElementById("addNewRule").addEventListener("click", function () {
-            newRuleInput(inputFormRules).querySelector(".host").focus();
+    document.getElementById("addNewRule").addEventListener("click", function () {
+        newRuleInput(inputFormRules).querySelector(".host").focus();
+    });
+    document.getElementById("addNewParam").addEventListener("click", function () {
+        newParamInput(inputFormParams).querySelector(".param").focus();
+    });
+    document.getElementById("saveParams").addEventListener("click", function () {
+        myPage.myOptionsManager.saveOptions("queryParam", getInputValues(inputFormParams)).then(function () {
+            createOptions(inputFormParams, myPage.myOptionsManager.options.queryParams,
+                newParamInput);
         });
-        document.getElementById("addNewParam").addEventListener("click", function () {
-            newParamInput(inputFormParams).querySelector(".param").focus();
+    });
+    document.getElementById("restoreRules").addEventListener("click", function () {
+        myPage.myOptionsManager.restoreDefault("rules").then(function () {
+            createOptions(inputFormRules, myPage.myOptionsManager.options.rules, newRuleInput);
         });
-        document.getElementById("saveParams").addEventListener("click", function () {
-            myOptionsManager.saveOptions("queryParam", getInputValues(inputFormParams)).then(function () {
-                createOptions(inputFormParams, myOptionsManager.options.queryParams,
-                    newParamInput);
-            });
+    });
+    document.getElementById("restoreParams").addEventListener("click", function () {
+        myPage.myOptionsManager.restoreDefault("queryParams").then(function () {
+            createOptions(inputFormParams, myPage.myOptionsManager.options.queryParams,
+                newParamInput);
         });
-        document.getElementById("restoreRules").addEventListener("click", function () {
-            myOptionsManager.restoreDefault("rules").then(function () {
-                createOptions(inputFormRules, myOptionsManager.options.rules, newRuleInput);
-            });
-        });
-        document.getElementById("restoreParams").addEventListener("click", function () {
-            myOptionsManager.restoreDefault("queryParams").then(function () {
-                createOptions(inputFormParams, myOptionsManager.options.queryParams,
-                    newParamInput);
-            });
-        });
-        document.getElementById("showHelp").addEventListener("click", function () {
-            document.getElementById("help").classList.toggle("collapsed");
-        });
+    });
+    document.getElementById("showHelp").addEventListener("click", function () {
+        document.getElementById("help").classList.toggle("collapsed");
     });
 }
 
-myOptionsManager.loadOptions(init);
+document.addEventListener("DOMContentLoaded", function () {
+    browser.runtime.getBackgroundPage().then((page) => {
+        myPage = page;
+        init();
+    });
+});
