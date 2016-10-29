@@ -12,7 +12,9 @@ function requestAction(action, redirectUrl) {
                 }
                 let redirectUrl = parseRedirectUrl(request.url);
                 if (redirectUrl.length < request.url.length) {
-                    browser.webNavigation.onCommitted.addListener(showPageAction, {
+                    browser.webNavigation.onCommitted.addListener(function (details) {
+                        showPageAction(details, "filter");
+                    }, {
                         url: [{
                             urlContains: redirectUrl
                         }]
@@ -27,14 +29,18 @@ function requestAction(action, redirectUrl) {
             };
         case "block":
             return function (request) {
-                browser.webNavigation.onCommitted.addListener(showPageAction);
+                browser.webNavigation.onCommitted.addListener(function (details) {
+                    showPageAction(details, "block");
+                });
                 return {
                     cancel: true
                 };
             };
         case "redirect":
             return function (request) {
-                browser.webNavigation.onCommitted.addListener(showPageAction, {
+                browser.webNavigation.onCommitted.addListener(function (details) {
+                    showPageAction(details, "redirect");
+                }, {
                     url: [{
                         urlContains: redirectUrl
                     }]
@@ -46,7 +52,14 @@ function requestAction(action, redirectUrl) {
     }
 }
 
-function showPageAction(details) {
+function showPageAction(details, action) {
+    browser.pageAction.setIcon({
+        tabId: details.tabId,
+        path: {
+            19: "icons/icon-" + action + "@19.png",
+            38: "icons/icon-" + action + "@38.png"
+        }
+    });
     browser.pageAction.show(details.tabId);
 }
 

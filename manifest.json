@@ -18,8 +18,11 @@
     },
     "page_action": {
         "browser_style": true,
-        "default_icon": "icons/icon-48.png",
-        "default_title": "Whereami?",
+        "default_icon": {
+            "19": "icons/icon-filter@19.png",
+            "38": "icons/icon-filter@38.png"
+        },
+        "default_title": "Request Control",
         "default_popup": "popup/page-action.html"
     },
     "background": {
