@@ -12,7 +12,7 @@ function requestAction(action, redirectUrl) {
                 }
                 let redirectUrl = parseRedirectUrl(request.url);
                 if (redirectUrl.length < request.url.length) {
-                    chrome.tabs.update(request.tabId, {
+                    browser.tabs.update(request.tabId, {
                         url: parseRedirectUrl(request.url)
                     });
                     return {
@@ -89,7 +89,7 @@ function tldStarPatternRuleToUrl(pattern, TLD) {
 function removePreviousListeners() {
     let listener;
     while (listener = requestListeners.pop()) {
-        chrome.webRequest.onBeforeRequest.removeListener(listener);
+        browser.webRequest.onBeforeRequest.removeListener(listener);
     }
 }
 
@@ -104,7 +104,7 @@ function addListeners() {
             types: rule.types
         };
         listener = new requestAction(rule.action, rule.redirectUrl);
-        chrome.webRequest.onBeforeRequest.addListener(listener, filter, ["blocking"]);
+        browser.webRequest.onBeforeRequest.addListener(listener, filter, ["blocking"]);
         requestListeners.push(listener);
     }
 }
