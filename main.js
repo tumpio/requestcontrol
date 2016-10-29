@@ -88,7 +88,8 @@ function tldStarPatternRuleToUrl(pattern, TLD) {
 
 function removePreviousListeners() {
     let listener;
-    while (listener = requestListeners.pop()) {
+    while (requestListeners.length) {
+        listener = requestListeners.pop();
         browser.webRequest.onBeforeRequest.removeListener(listener);
     }
 }
@@ -103,7 +104,7 @@ function addListeners() {
             urls: resolveUrls(rule.pattern),
             types: rule.types
         };
-        listener = new requestAction(rule.action, rule.redirectUrl);
+        listener = new requestAction(rule.action, rule.redirectUrl || null);
         browser.webRequest.onBeforeRequest.addListener(listener, filter, ["blocking"]);
         requestListeners.push(listener);
     }
