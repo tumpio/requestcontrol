@@ -4,18 +4,26 @@
     "version": "1.2.0",
     "manifest_version": 2,
     "icons": {
-        "48": "icon.png",
-        "96": "icon@2x.png"
+        "48": "icons/icon-48.png",
+        "96": "icons/icon-96.png"
     },
 
     "permissions": [
         "storage",
+        "webNavigation",
         "webRequest",
         "webRequestBlocking"
     ],
 
     "options_ui": {
         "page": "options/options.html"
+    },
+
+    "page_action": {
+        "browser_style": true,
+        "default_icon": "icons/icon-48.png",
+        "default_title": "Whereami?",
+        "default_popup": "popup/page-action.html"
     },
 
     "background": {

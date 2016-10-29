@@ -12,6 +12,11 @@ function requestAction(action, redirectUrl) {
                 }
                 let redirectUrl = parseRedirectUrl(request.url);
                 if (redirectUrl.length < request.url.length) {
+                    browser.webNavigation.onCommitted.addListener(showPageAction, {
+                        url: [{
+                            urlContains: redirectUrl
+                        }]
+                    });
                     browser.tabs.update(request.tabId, {
                         url: parseRedirectUrl(request.url)
                     });
@@ -22,17 +27,27 @@ function requestAction(action, redirectUrl) {
             };
         case "block":
             return function (request) {
+                browser.webNavigation.onCommitted.addListener(showPageAction);
                 return {
                     cancel: true
                 };
             };
         case "redirect":
             return function (request) {
+                browser.webNavigation.onCommitted.addListener(showPageAction, {
+                    url: [{
+                        urlContains: redirectUrl
+                    }]
+                });
                 return {
                     redirectUrl: redirectUrl
                 };
             };
     }
+}
+
+function showPageAction(details) {
+    browser.pageAction.show(details.tabId);
 }
 
 function redirectUrlReplacer(match, p1, p2, p3, offset, string) {
