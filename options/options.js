@@ -44,7 +44,7 @@ function newRuleInput(target, rule) {
     function toggleSaveable(saveable) {
         if (!saveable) {
             saveBtn.setAttribute("disabled", "disabled");
-        } else { 
+        } else {
             saveBtn.removeAttribute("disabled");
         }
     }
@@ -87,7 +87,7 @@ function newRuleInput(target, rule) {
         tldsBtn.classList.toggle("btn-danger", numberOfTlds == 0);
         if (numberOfTlds == 0) {
             saveBtn.setAttribute("disabled", "disabled");
-        } else { 
+        } else {
             saveBtn.removeAttribute("disabled");
         }
     });
@@ -100,7 +100,7 @@ function newRuleInput(target, rule) {
         for (let input of inputModel.querySelectorAll("input[pattern]:not(.hidden)")) {
             input.dispatchEvent(new Event("blur"));
         }
-    })
+    });
 
     saveBtn.addEventListener("click", function () {
         rule.pattern.scheme = scheme.value;
@@ -204,6 +204,7 @@ function addInputValidation(input, callback) {
             callback(pass);
         }
     }
+
     input.addEventListener("input", validateInput);
     input.addEventListener("blur", validateInput);
 }
@@ -277,7 +278,7 @@ function init() {
                 createOptions(inputFormRules, myOptionsManager.options.rules, newRuleInput);
             });
         });
-        document.getElementById("restoreParams").addEventListener("click", function (e) {
+        document.getElementById("restoreParams").addEventListener("click", function () {
             myOptionsManager.restoreDefault("queryParams").then(function () {
                 createOptions(inputFormParams, myOptionsManager.options.queryParams,
                     newParamInput);

@@ -80,7 +80,7 @@ OptionsManager.prototype.defaultOptions = {
         types: ["main_frame"],
         action: "filter",
         active: true
-    }, ],
+    },],
 
     queryParams: [
         "utm_source",
@@ -101,14 +101,14 @@ OptionsManager.prototype.saveOptions = function (option, value) {
 OptionsManager.prototype.loadOptions = function (callback) {
     browser.storage.local.get(Object.keys(this.defaultOptions)).then(result => {
         this.options = {};
-        for (let option in this.defaultOptions) {
+        for (let option of Object.keys(this.defaultOptions)) {
             this.options[option] = result[option] || cloneObject(this.defaultOptions[option]);
         }
         callback();
     });
 };
 
-OptionsManager.prototype.restoreDefault = function (option, callback) {
+OptionsManager.prototype.restoreDefault = function (option) {
     this.options[option] = cloneObject(this.defaultOptions[option]);
     return this.saveOptions(option);
 };

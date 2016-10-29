@@ -2,8 +2,17 @@
     transition: opacity .15s ease-in-out;
     opacity: 0;
 }
+
 .text-success.show {
     opacity: 1;
 }
-.panel-collapse { max-height: 9999px; transition: max-height .3s ease-out; }
-.panel-collapse.collapsed { max-height: 0; overflow-y: hidden; }
+
+.panel-collapse {
+    max-height: 9999px;
+    transition: max-height .3s ease-out;
+}
+
+.panel-collapse.collapsed {
+    max-height: 0;
+    overflow-y: hidden;
+}

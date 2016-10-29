@@ -7,26 +7,25 @@
         "48": "icons/icon-48.png",
         "96": "icons/icon-96.png"
     },
-
     "permissions": [
         "storage",
         "webNavigation",
         "webRequest",
         "webRequestBlocking"
     ],
-
     "options_ui": {
         "page": "options/options.html"
     },
-
     "page_action": {
         "browser_style": true,
         "default_icon": "icons/icon-48.png",
         "default_title": "Whereami?",
         "default_popup": "popup/page-action.html"
     },
-
     "background": {
-        "scripts": ["options/OptionsManager.js", "main.js"]
+        "scripts": [
+            "options/OptionsManager.js",
+            "main.js"
+        ]
     }
 }

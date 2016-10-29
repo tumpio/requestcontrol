@@ -98,7 +98,7 @@ function patternRuleToUrl(pattern) {
 
 function tldStarPatternRuleToUrl(pattern, TLD) {
     return pattern.scheme + "://" + (pattern.matchSubDomains ? "*." : "") + pattern.host.replace(tldStarPattern, "$1." +
-        TLD) + "/" + pattern.path;
+            TLD) + "/" + pattern.path;
 }
 
 function removePreviousListeners() {
