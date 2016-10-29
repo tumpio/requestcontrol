@@ -60,7 +60,12 @@ function showPageAction(details, action) {
             38: "icons/icon-" + action + "@38.png"
         }
     });
+    browser.pageAction.setTitle({
+        tabId: details.tabId,
+        title: "Request Control: " + action
+    });
     browser.pageAction.show(details.tabId);
+    browser.webNavigation.onCommitted.removeListener(arguments.callee);
 }
 
 function redirectUrlReplacer(match, p1, p2, p3, offset, string) {
