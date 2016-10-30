@@ -1,4 +1,5 @@
-var myPage;
+const myOptionsManager = new OptionsManager();
+const tldStarPattern = /^(.+)\.\*$/;
 
 function RequestRule() {
     return {
@@ -39,7 +40,7 @@ function newRuleInput(target, rule) {
     inputModel.removeAttribute("id");
 
     function checkTLDStarPattern() {
-        let isTldsPattern = myPage.tldStarPattern.test(host.value);
+        let isTldsPattern = tldStarPattern.test(host.value);
         toggleHidden(tldsBtn.parentNode, !isTldsPattern);
         toggleHidden(tldsBlock, !isTldsPattern);
         if (isTldsPattern && tldsTagsInput.getValue().length == 0) {
@@ -128,11 +129,11 @@ function newRuleInput(target, rule) {
         if (action.value == "redirect") {
             rule.redirectUrl = redirectUrl.value;
         }
-        if (myPage.tldStarPattern.test(host.value)) {
+        if (tldStarPattern.test(host.value)) {
             rule.pattern.topLevelDomains = tldsTagsInput.getValue();
         }
 
-        myPage.myOptionsManager.saveOptions("rules").then(function () {
+        myOptionsManager.saveOptions("rules").then(function () {
             title.innerHTML = "Rule for <mark>" + rule.pattern.host + "</mark>";
             toggleHidden(tldsBlock, true);
             successText.classList.add("show");
@@ -144,15 +145,15 @@ function newRuleInput(target, rule) {
 
     activateBtn.addEventListener("click", function () {
         rule.active = !rule.active;
-        myPage.myOptionsManager.saveOptions("rules").then(toggleActive);
+        myOptionsManager.saveOptions("rules").then(toggleActive);
     });
 
     removeBtn.addEventListener("click", function () {
         target.removeChild(inputModel);
-        let i = myPage.myOptionsManager.options.rules.indexOf(rule);
+        let i = myOptionsManager.options.rules.indexOf(rule);
         if (i != -1) {
-            myPage.myOptionsManager.options.rules.splice(i, 1);
-            myPage.myOptionsManager.saveOptions("rules");
+            myOptionsManager.options.rules.splice(i, 1);
+            myOptionsManager.saveOptions("rules");
         }
     });
 
@@ -172,7 +173,7 @@ function newRuleInput(target, rule) {
             tldsBadge.innerHTML = rule.pattern.topLevelDomains.length;
             tldsTagsInput.setValue(rule.pattern.topLevelDomains.join());
         }
-        toggleHidden(tldsBtn.parentNode, !myPage.tldStarPattern.test(host.value));
+        toggleHidden(tldsBtn.parentNode, !tldStarPattern.test(host.value));
         toggleActive();
 
         if (!rule.types || rule.types.length == 0) {
@@ -187,7 +188,7 @@ function newRuleInput(target, rule) {
     } else {
         title.innerHTML = "New rule";
         rule = new RequestRule();
-        myPage.myOptionsManager.options.rules.push(rule);
+        myOptionsManager.options.rules.push(rule);
     }
     target.appendChild(inputModel);
     return inputModel;
@@ -271,8 +272,8 @@ function init() {
     let inputFormRules = document.getElementById("rules");
     let inputFormParams = document.getElementById("queryParams");
 
-    createOptions(inputFormRules, myPage.myOptionsManager.options.rules, newRuleInput);
-    createOptions(inputFormParams, myPage.myOptionsManager.options.queryParams, newParamInput);
+    createOptions(inputFormRules, myOptionsManager.options.rules, newRuleInput);
+    createOptions(inputFormParams, myOptionsManager.options.queryParams, newParamInput);
 
     document.getElementById("addNewRule").addEventListener("click", function () {
         newRuleInput(inputFormRules).querySelector(".host").focus();
@@ -281,19 +282,19 @@ function init() {
         newParamInput(inputFormParams).querySelector(".param").focus();
     });
     document.getElementById("saveParams").addEventListener("click", function () {
-        myPage.myOptionsManager.saveOptions("queryParams", getInputValues(inputFormParams)).then(function () {
-            createOptions(inputFormParams, myPage.myOptionsManager.options.queryParams,
+        myOptionsManager.saveOptions("queryParams", getInputValues(inputFormParams)).then(function () {
+            createOptions(inputFormParams, myOptionsManager.options.queryParams,
                 newParamInput);
         });
     });
     document.getElementById("restoreRules").addEventListener("click", function () {
-        myPage.myOptionsManager.restoreDefault("rules").then(function () {
-            createOptions(inputFormRules, myPage.myOptionsManager.options.rules, newRuleInput);
+        myOptionsManager.restoreDefault("rules").then(function () {
+            createOptions(inputFormRules, myOptionsManager.options.rules, newRuleInput);
         });
     });
     document.getElementById("restoreParams").addEventListener("click", function () {
-        myPage.myOptionsManager.restoreDefault("queryParams").then(function () {
-            createOptions(inputFormParams, myPage.myOptionsManager.options.queryParams,
+        myOptionsManager.restoreDefault("queryParams").then(function () {
+            createOptions(inputFormParams, myOptionsManager.options.queryParams,
                 newParamInput);
         });
     });
@@ -303,8 +304,5 @@ function init() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    browser.runtime.getBackgroundPage().then((page) => {
-        myPage = page;
-        init();
-    });
+    myOptionsManager.loadOptions(init);
 });
