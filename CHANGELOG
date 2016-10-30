@@ -1,12 +1,13 @@
-Version 1.2.0 October 30, 2016
-- Add support for different rule actions (filter, block, redirect).
+Version 1.2.1 October 30, 2016
+- Add support for rule based control with actions (filter, block, redirect).
 - Add support for request types.
-- Add page action for giving user feedback for controlled requests.
+- Add page action for providing user feedback of handled requests.
 - Add help page.
-- Add "ng" too google TLDs list.
+- Add "ng" to the TLDs of pre-defined rule for Google.
 - Fix subdomain top-level domain confusion.
 - Change TLDs from global list to rule based manual list.
 - Change add-on name from JustRedirect! to Request Control.
+- Change license from MIT to MPL-2.0.
 - Enhance options usability to improve rule creation and match pattern definition (uses Bootstrap CSS).
 
 Version 1.1.0 October 1, 2016
