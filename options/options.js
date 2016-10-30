@@ -41,8 +41,8 @@ function newRuleInput(target, rule) {
 
     function checkTLDStarPattern() {
         let isTldsPattern = tldStarPattern.test(host.value);
-        toggleHidden(tldsBtn.parentNode, !isTldsPattern);
-        toggleHidden(tldsBlock, !isTldsPattern);
+        toggleHidden(!isTldsPattern, tldsBtn.parentNode);
+        toggleHidden(!isTldsPattern, tldsBlock);
         if (isTldsPattern && tldsTagsInput.getValue().length == 0) {
             toggleSaveable(false);
         }
@@ -52,7 +52,7 @@ function newRuleInput(target, rule) {
         inputModel.classList.toggle("disabled", !rule.active);
         activateBtn.classList.toggle("btn-warning", rule.active);
         activateBtn.classList.toggle("btn-success", !rule.active);
-        activateBtn.innerHTML = rule.active ? "Disable" : "Enable";
+        activateBtn.innerHTML = rule.active ? '<span class="glyphicon glyphicon-off"></span> Disable' : '<span class="glyphicon glyphicon-flash"></span> Enable';
     }
 
     function toggleSaveable(saveable) {
@@ -78,7 +78,7 @@ function newRuleInput(target, rule) {
         var extraTypes = inputModel.querySelectorAll(".extra-type:not(:checked)");
         moreTypesBtn.parentNode.querySelector(".text").innerHTML = moreTypesBtn.checked ? "◂ Less" : "More ▸";
         for (let type of extraTypes) {
-            toggleHidden(type.parentNode, !moreTypesBtn.checked);
+            toggleHidden(!moreTypesBtn.checked, type.parentNode);
         }
     }, false);
 
@@ -108,7 +108,7 @@ function newRuleInput(target, rule) {
 
     action.addEventListener("change", function () {
         description.innerHTML = getRuleDescription(action.value);
-        toggleHidden(redirectUrl, action.value != "redirect");
+        toggleHidden(action.value != "redirect", redirectUrl, redirectUrl.parentNode);
         saveBtn.removeAttribute("disabled");
         for (let input of inputModel.querySelectorAll("input[pattern]:not(.hidden)")) {
             input.dispatchEvent(new Event("blur"));
@@ -135,7 +135,7 @@ function newRuleInput(target, rule) {
 
         myOptionsManager.saveOptions("rules").then(function () {
             title.innerHTML = "Rule for <mark>" + rule.pattern.host + "</mark>";
-            toggleHidden(tldsBlock, true);
+            toggleHidden(true, tldsBlock);
             toggleFade(successText);
         });
     });
@@ -163,14 +163,14 @@ function newRuleInput(target, rule) {
         path.value = rule.pattern.path;
         action.value = rule.action;
         if (action.value == "redirect") {
-            toggleHidden(redirectUrl, false);
+            toggleHidden(false, redirectUrl, redirectUrl.parentNode);
             redirectUrl.value = rule.redirectUrl || "";
         }
         if (rule.pattern.topLevelDomains) {
             tldsBadge.innerHTML = rule.pattern.topLevelDomains.length;
             tldsTagsInput.setValue(rule.pattern.topLevelDomains.join());
         }
-        toggleHidden(tldsBtn.parentNode, !tldStarPattern.test(host.value));
+        toggleHidden(!tldStarPattern.test(host.value), tldsBtn.parentNode);
         toggleActive();
 
         if (!rule.types || rule.types.length == 0) {
@@ -179,7 +179,7 @@ function newRuleInput(target, rule) {
             for (let value of rule.types) {
                 let type = inputModel.querySelector("[value=" + value + "]");
                 setButtonChecked(type, true);
-                toggleHidden(type.parentNode, false);
+                toggleHidden(false, type.parentNode);
             }
         }
     } else {
@@ -196,12 +196,14 @@ function setButtonChecked(button, checked) {
     button.parentNode.classList.toggle("active", checked);
 }
 
-function toggleHidden(element, hidden) {
+function toggleHidden(hidden) {
     let hiddenClass = "hidden";
     if (typeof hidden == "boolean") {
-        element.classList.toggle(hiddenClass, hidden);
-    } else {
-        element.classList.toggle(hiddenClass);
+        for (let i = 1; i < arguments.length; i++) {
+            arguments[i].classList.toggle(hiddenClass, hidden);
+        }
+    } else if (hidden) {
+        hidden.classList.toggle(hiddenClass);
     }
 }
 

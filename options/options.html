@@ -103,7 +103,7 @@
                             <td>Match exact path "path/a/b/".</td>
                         </tr>
                         <tr>
-                            <td><i>*/b/*/</i></td>
+                            <td><i>*/b/*</i></td>
                             <td>Match path that contains a component "b" somewhere in the middle.</td>
                         </tr>
                         </tbody>
@@ -139,6 +139,7 @@
                     <table class="table">
                         <tbody>
                         <tr>
+                            <td><img src="../icons/icon-filter@19.png"></td>
                             <td>Filter Requests</td>
                             <td>Skips redirection tracking. If the matched request URL contains another URL, the request
                                 is cancelled and the tab where the request was made is navigated to the contained
@@ -147,10 +148,12 @@
                             </td>
                         </tr>
                         <tr>
+                            <td><img src="../icons/icon-block@19.png"></td>
                             <td>Block Requests</td>
                             <td>Any request that matches a block rule will be cancelled.</td>
                         </tr>
                         <tr>
+                            <td><img src="../icons/icon-redirect@19.png"></td>
                             <td>Redirect Requests</td>
                             <td>Any request that matches a redirect rule will be redirected to the given redirect URL.
                             </td>
@@ -162,7 +165,7 @@
         </div>
     </div>
     <ul id="rules" class="list-group form-horizontal"></ul>
-    <button id="addNewRule" class="btn btn-default">Add new rule</button>
+    <button id="addNewRule" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add new rule</button>
     <button id="restoreRules" class="btn btn-link pull-right">Restore Defaults</button>
 </div>
 <h3 class="page-header">Filtered out URL parameters</h3>
@@ -172,13 +175,16 @@
     <ul class="list-group form-horizontal">
         <ul id="queryParams" class="list-group list-group-item"></ul>
         <li class="list-group-item">
-            <button id="saveParams" class="btn btn-sm btn-primary">Save parameters</button>
+            <button id="saveParams" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span>
+                Save parameters
+            </button>
             <label id="saveParamsSuccess" class="text-success text-saved">
                 <span class="glyphicon glyphicon-ok-circle"></span> saved
             </label>
         </li>
     </ul>
-    <button id="addNewParam" class="btn btn-default">Add new parameter</button>
+    <button id="addNewParam" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add new parameter
+    </button>
     <button id="restoreParams" class="btn btn-link pull-right">Restore Defaults</button>
 </div>
 
@@ -211,7 +217,7 @@
                         </div>
                     </div>
                     <div class="col-xs-5 col-md-6">
-                        <label for="host" class="help-block text-center">host name</label>
+                        <label for="host" class="help-block text-center">host</label>
                         <div class="input-group input-group-sm">
                                 <span class="input-group-addon">
                                     <input class="matchSubDomains" type="checkbox" title="Include subdomains"
@@ -319,16 +325,19 @@
         </div>
         <div class="form-group">
             <label for="action" class="col-sm-2 control-label">Action</label>
-            <div class="col-sm-3">
+            <div class="col-sm-3 col-md-2">
                 <select id="action" class="form-control input-sm action">
                     <option value="filter">Filter Request</option>
                     <option value="block">Block Request</option>
                     <option value="redirect">Redirect Request</option>
                 </select>
             </div>
-            <div class="col-sm-7">
-                <input type="text" class="form-control input-sm redirectUrl hidden" placeholder="Redirect URL"
-                       pattern="^.+:\/\/[^\s/$.?#].[^\s]*$"/>
+            <div class="col-sm-7 col-md-8">
+                <div class="input-group hidden">
+                    <span class="input-group-addon">Redirect URL</span>
+                    <input type="text" class="form-control input-sm redirectUrl" placeholder="Redirect URL"
+                           pattern="^.+:\/\/[^\s/$.?#].[^\s]*$"/>
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -336,10 +345,14 @@
                 <span class="glyphicon glyphicon-ok-circle"></span> saved
             </label>
             <div class="col-sm-10">
-                <button type="button" class="btn btn-sm btn-primary btn-save">Save rule</button>
+                <button type="button" class="btn btn-sm btn-primary btn-save"><span
+                        class="glyphicon glyphicon-floppy-disk"></span> Save rule
+                </button>
                 <span class="pull-right">
-                    <button type="button" class="btn btn-sm btn-warning btn-activate">Disable</button>
-                    <button type="button" class="btn btn-sm btn-danger btn-remove">Remove</button>
+                    <button type="button" class="btn btn-sm btn-warning btn-activate"><span
+                            class="glyphicon glyphicon-ban-circle"></span> Disable</button>
+                    <button type="button" class="btn btn-sm btn-danger btn-remove"><span
+                            class="glyphicon glyphicon-trash"></span> Remove</button>
                     </span>
             </div>
         </div>
