@@ -281,7 +281,7 @@ function init() {
         newParamInput(inputFormParams).querySelector(".param").focus();
     });
     document.getElementById("saveParams").addEventListener("click", function () {
-        myPage.myOptionsManager.saveOptions("queryParam", getInputValues(inputFormParams)).then(function () {
+        myPage.myOptionsManager.saveOptions("queryParams", getInputValues(inputFormParams)).then(function () {
             createOptions(inputFormParams, myPage.myOptionsManager.options.queryParams,
                 newParamInput);
         });
