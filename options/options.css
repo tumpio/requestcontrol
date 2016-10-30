@@ -6,13 +6,3 @@
 .text-success.show {
     opacity: 1;
 }
-
-.panel-collapse {
-    max-height: 9999px;
-    transition: max-height .3s ease-out;
-}
-
-.panel-collapse.collapsed {
-    max-height: 0;
-    overflow-y: hidden;
-}

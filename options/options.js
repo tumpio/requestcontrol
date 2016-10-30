@@ -1,5 +1,19 @@
 var myPage;
 
+function RequestRule() {
+    return {
+        pattern: {
+            scheme: "*",
+            matchSubDomains: false,
+            host: "",
+            path: ""
+        },
+        types: [],
+        action: "",
+        active: true
+    };
+}
+
 function newRuleInput(target, rule) {
     let inputModel = document.getElementById("ruleInputModel").cloneNode(true);
     let title = inputModel.querySelector(".title");
@@ -92,8 +106,7 @@ function newRuleInput(target, rule) {
     });
 
     action.addEventListener("change", function () {
-        rule.action = action.value;
-        description.innerHTML = getRuleDescription(rule);
+        description.innerHTML = getRuleDescription(action.value, rule.redirectUrl);
         toggleHidden(redirectUrl, action.value != "redirect");
         saveBtn.removeAttribute("disabled");
         for (let input of inputModel.querySelectorAll("input[pattern]:not(.hidden)")) {
@@ -173,6 +186,8 @@ function newRuleInput(target, rule) {
         }
     } else {
         title.innerHTML = "New rule";
+        rule = new RequestRule();
+        myPage.myOptionsManager.options.rules.push(rule);
     }
     target.appendChild(inputModel);
     return inputModel;
@@ -188,7 +203,7 @@ function toggleHidden(element, hidden) {
     if (typeof hidden == "boolean") {
         element.classList.toggle(hiddenClass, hidden);
     } else {
-        element.classList.toggle(hiddenClass, hidden);
+        element.classList.toggle(hiddenClass);
     }
 }
 
@@ -208,14 +223,14 @@ function addInputValidation(input, callback) {
     input.addEventListener("blur", validateInput);
 }
 
-function getRuleDescription(rule) {
-    switch (rule.action) {
+function getRuleDescription(action, redirectUrl) {
+    switch (action) {
         case "filter":
             return "Rule to <i>filter</i> requests. Skips redirection tracking requests.";
         case "block":
             return "Rule to <i>block</i> requests. Requests are cancelled.";
         case "redirect":
-            return "Rule to <i>redirect</i> requests. Requests are redirected to " + rule.redirectUrl || "";
+            return "Rule to <i>redirect</i> requests. Requests are redirected to " + (redirectUrl || "");
     }
 }
 
@@ -283,7 +298,7 @@ function init() {
         });
     });
     document.getElementById("showHelp").addEventListener("click", function () {
-        document.getElementById("help").classList.toggle("collapsed");
+        document.getElementById("help").classList.toggle("in");
     });
 }
 

@@ -2,9 +2,16 @@ var myOptionsManager = new OptionsManager();
 var tldStarPattern = /^(.+)\.\*$/;
 var redirectUrlPattern = /^https?:\/\/.+(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
 var requestListeners = [];
+var requestDetails = {};
 
-function requestAction(action, redirectUrl) {
-    switch (action) {
+var titles = {
+    filter: "Request was filtered",
+    block: "Request was blocked",
+    redirect: "Request was redirected"
+};
+
+function RequestAction(rule) {
+    switch (rule.action) {
         case "filter":
             return function (request) {
                 if (request.method != "GET" || request.tabId == -1) {
@@ -12,13 +19,7 @@ function requestAction(action, redirectUrl) {
                 }
                 let redirectUrl = parseRedirectUrl(request.url);
                 if (redirectUrl.length < request.url.length) {
-                    browser.webNavigation.onCommitted.addListener(function (details) {
-                        showPageAction(details, "filter");
-                    }, {
-                        url: [{
-                            urlContains: redirectUrl
-                        }]
-                    });
+                    addPageActionDetails(request, rule.action);
                     browser.tabs.update(request.tabId, {
                         url: parseRedirectUrl(request.url)
                     });
@@ -29,46 +30,48 @@ function requestAction(action, redirectUrl) {
             };
         case "block":
             return function (request) {
-                browser.webNavigation.onCommitted.addListener(function (details) {
-                    showPageAction(details, "block");
-                });
+                addPageActionDetails(request, rule.action);
                 return {
                     cancel: true
                 };
             };
         case "redirect":
             return function (request) {
-                browser.webNavigation.onCommitted.addListener(function (details) {
-                    showPageAction(details, "redirect");
-                }, {
-                    url: [{
-                        urlContains: redirectUrl
-                    }]
-                });
+                addPageActionDetails(request, rule.action);
                 return {
-                    redirectUrl: redirectUrl
+                    redirectUrl: rule.redirectUrl
                 };
             };
     }
 }
 
-function showPageAction(details, action) {
-    browser.pageAction.setIcon({
-        tabId: details.tabId,
-        path: {
-            19: "icons/icon-" + action + "@19.png",
-            38: "icons/icon-" + action + "@38.png"
-        }
+function addPageActionDetails(request, action) {
+    requestDetails[request.tabId] = {
+        action: action,
+        originUrl: request.originUrl,
+        timeStamp: request.timeStamp,
+        type: request.type,
+        url: request.url
+    };
+    browser.webNavigation.onDOMContentLoaded.addListener(function (details) {
+        console.log(details.url);
+        browser.pageAction.setIcon({
+            tabId: details.tabId,
+            path: {
+                19: "icons/icon-" + action + "@19.png",
+                38: "icons/icon-" + action + "@38.png"
+            }
+        });
+        browser.pageAction.setTitle({
+            tabId: details.tabId,
+            title: titles[action]
+        });
+        browser.pageAction.show(details.tabId);
+        browser.webNavigation.onDOMContentLoaded.removeListener(arguments.callee);
     });
-    browser.pageAction.setTitle({
-        tabId: details.tabId,
-        title: "Request Control: " + action
-    });
-    browser.pageAction.show(details.tabId);
-    browser.webNavigation.onCommitted.removeListener(arguments.callee);
 }
 
-function redirectUrlReplacer(match, p1, p2, p3, offset, string) {
+function redirectUrlReplacer(match, p1, p2, p3) {
     if (p2[0] == "%") {
         p2 = decodeURIComponent(p2);
     }
@@ -137,7 +140,7 @@ function addListeners() {
             urls: resolveUrls(rule.pattern),
             types: rule.types
         };
-        listener = new requestAction(rule.action, rule.redirectUrl || null);
+        listener = new RequestAction(rule);
         browser.webRequest.onBeforeRequest.addListener(listener, filter, ["blocking"]);
         requestListeners.push(listener);
     }

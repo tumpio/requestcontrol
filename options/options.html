@@ -24,7 +24,7 @@
                 </a>
             </h3>
         </div>
-        <div id="help" class="panel-collapse collapsed">
+        <div id="help" class="panel-collapse collapse">
             <div class="panel-body">
                 <div class="container">
                     <h2 class="page-header">Request Control Rule</h2>
@@ -37,43 +37,76 @@
                     <h2 class="page-header">Pattern</h2>
                     <p>Request pattern consists of three parts, scheme, host and path.</p>
                     <h3>Scheme</h3>
-                    <p>Scheme matches the request URL protocol. It can be <i>http</i>, <i>https</i> or both.</p>
+                    <p>Scheme matches the request URL protocol. It can be one of the below schemes.</p>
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td><i>http</i></td>
+                            <td>Match http-scheme.</td>
+                        </tr>
+                        <tr>
+                            <td><i>https</i></td>
+                            <td>Match https-scheme.</td>
+                        </tr>
+                        <tr>
+                            <td><i>http/https</i></td>
+                            <td>Match both http and https.</td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <h3>Host</h3>
                     <p>Host matches the host of the request URL. It can be in one of the following forms. </p>
                     <table class="table">
                         <tbody>
                         <tr>
-                            <td>1. A complete host.</td>
                             <td><i>www.example.com</i></td>
+                            <td>A complete host.</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td>2. The given host and any of its subdomains.</td>
                             <td><i>example.com</i></td>
+                            <td>The given host and any of its subdomains.</td>
                             <td>Check the include subdomains checkbox to match any subdomain (e.g.
                                 <i><strong>www</strong>.example.com</i>,
                                 <i><strong>good</strong>.example.com</i> and any other subdomain of example.com).
                             </td>
                         </tr>
                         <tr>
-                            <td>3. The given host and all listed top-level domains. (can be combined with 2.)</td>
                             <td><i>www.example.*</i></td>
+                            <td>The given host and all listed top-level domains. (can be combined with 2.)</td>
                             <td>Write the top-level domains to the top-level domain name list (e.g. <i>com</i>,
                                 <i>org</i>).
                             </td>
                         </tr>
                         <tr>
-                            <td>4. Any host.</td>
                             <td><i>*</i></td>
+                            <td>Any host.</td>
                             <td></td>
                         </tr>
                         </tbody>
                     </table>
                     <h3>Path</h3>
-                    <p>Path is an optional part to limit rule by request URL path. Path may subsequently contain any
+                    <p>Path matches the request URL path. Path may subsequently contain any
                         combination of "*" wildcard and any of the characters that are allowed in URL paths. The "*"
-                        wildcard matches any portion of path and may appear more than once.
+                        wildcard matches any portion of path and may appear more than once. Below is examples for using
+                        path patterns.
                     </p>
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>*</td>
+                            <td>Match any path.</td>
+                        </tr>
+                        <tr>
+                            <td><i>path/a/b/</i></td>
+                            <td>Match exact path "path/a/b/".</td>
+                        </tr>
+                        <tr>
+                            <td><i>*/b/*/</i></td>
+                            <td>Match path that contains a component "b" somewhere in the middle.</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="container">
                     <h2 class="page-header">Request Types</h2>
