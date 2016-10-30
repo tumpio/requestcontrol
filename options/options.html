@@ -14,7 +14,7 @@
 </head>
 
 <body class="well">
-<h2 class="page-header">Request Control Rules</h2>
+<h2 class="page-header">Request Control Panel</h2>
 <div>
     <p>Define rules for controlling HTTP requests.</p>
     <div class="panel panel-default">
@@ -43,15 +43,15 @@
                         <tbody>
                         <tr>
                             <td><i>http</i></td>
-                            <td>Match http-scheme.</td>
+                            <td>Match http scheme.</td>
                         </tr>
                         <tr>
                             <td><i>https</i></td>
-                            <td>Match https-scheme.</td>
+                            <td>Match https scheme.</td>
                         </tr>
                         <tr>
                             <td><i>http/https</i></td>
-                            <td>Match both http and https.</td>
+                            <td>Match both http and https schemes.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -165,7 +165,7 @@
     <button id="addNewRule" class="btn btn-default">Add new rule</button>
     <button id="restoreRules" class="btn btn-link pull-right">Restore Defaults</button>
 </div>
-<h2 class="page-header">Filtered out URL parameters</h2>
+<h3 class="page-header">Filtered out URL parameters</h3>
 <div>
     <p>Define URL parameters that will be filtered out from requests that match a "Filter request" rule. URL parameters
         are commonly used in redirection tracking as a method to analyze the origin of traffic.</p>
@@ -177,8 +177,8 @@
 
 <ul id="models" class="list-group form-horizontal hidden">
     <li id="ruleInputModel" class="list-group-item rule">
-        <h4 class="title"></h4>
-        <p class="description"></p>
+        <label class="title"></label>
+        <span class="description"></span>
         <div class="form-group">
             <div class="col-sm-2 control-label">
                 <div class="row no-gutter">
@@ -197,7 +197,7 @@
                                 <select id="scheme" class="form-control input-sm scheme text-center">
                                     <option value="http">http</option>
                                     <option value="https">https</option>
-                                    <option value="*">http/https</option>
+                                    <option value="*" selected>http/https</option>
                                 </select>
                             </div>
                             <span class="input-group-addon"><strong>://</strong></span>

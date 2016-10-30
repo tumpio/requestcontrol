@@ -107,7 +107,7 @@ function newRuleInput(target, rule) {
     });
 
     action.addEventListener("change", function () {
-        description.innerHTML = getRuleDescription(action.value, rule.redirectUrl);
+        description.innerHTML = getRuleDescription(action.value);
         toggleHidden(redirectUrl, action.value != "redirect");
         saveBtn.removeAttribute("disabled");
         for (let input of inputModel.querySelectorAll("input[pattern]:not(.hidden)")) {
@@ -159,14 +159,14 @@ function newRuleInput(target, rule) {
 
     if (rule) {
         title.innerHTML = "Rule for <mark>" + rule.pattern.host + "</mark>";
-        description.innerHTML = getRuleDescription(rule);
+        description.innerHTML = getRuleDescription(rule.action);
         scheme.value = rule.pattern.scheme;
         matchSubDomains.checked = rule.pattern.matchSubDomains;
         host.value = rule.pattern.host;
         path.value = rule.pattern.path;
         action.value = rule.action;
-        if (action.value != "redirect") {
-            toggleHidden(redirectUrl, true);
+        if (action.value == "redirect") {
+            toggleHidden(redirectUrl, false);
             redirectUrl.value = rule.redirectUrl || "";
         }
         if (rule.pattern.topLevelDomains) {
@@ -224,14 +224,14 @@ function addInputValidation(input, callback) {
     input.addEventListener("blur", validateInput);
 }
 
-function getRuleDescription(action, redirectUrl) {
+function getRuleDescription(action) {
     switch (action) {
         case "filter":
-            return "Rule to <i>filter</i> requests. Skips redirection tracking requests.";
+            return " to <i>filter</i> requests. Skips redirection tracking requests.";
         case "block":
-            return "Rule to <i>block</i> requests. Requests are cancelled.";
+            return " to <i>block</i> requests. Requests are cancelled.";
         case "redirect":
-            return "Rule to <i>redirect</i> requests. Requests are redirected to " + (redirectUrl || "");
+            return " to <i>redirect</i> requests. Requests are redirected to the given redirect URL";
     }
 }
 
