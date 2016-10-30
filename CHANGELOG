@@ -6,6 +6,7 @@ Version 1.2.0 October 30, 2016
 - Add "ng" too google TLDs list.
 - Fix subdomain top-level domain confusion.
 - Change TLDs from global list to rule based manual list.
+- Change add-on name from JustRedirect! to Request Control.
 - Enhance options usability to improve rule creation and match pattern definition (uses Bootstrap CSS).
 
 Version 1.1.0 October 1, 2016
