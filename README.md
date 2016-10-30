@@ -1,21 +1,23 @@
-## Firefox webextension
+## Request Control - Firefox WebExtension
 
 ### Description
-Skip confirmation pages for outgoing links, annoying advertisements or other nasty page in the middle attacks and remove query parameters used for redirection tracking.
+Take control over your requests! Filter redirection tracking, skip confirmation pages for outgoing links or block requests entirely, and remove url parameters used in redirection tracking.
 
 ### Instructions
-In the add-on's preferences define the patters for redirection url matching using the match pattern structure. Set query parameters that will be omitted from the destination url.
+In the add-on's preferences create rules for requests. Set url parameters that will be omitted from filtered request url. Check the help page in add-on's preferences for further instructions.
 
-#### Pre-defined redirection url patters include patterns for
+#### Pre-defined rules include rules for
 
 ```
+google.com/url
 deviantart.com/users/outgoing
 clk.tradedoubler.com
 outgoing.prod.mozaws.net
+out.reddit.com
 steamcommunity.com/linkfilter
 ```
 
-#### Pre-defined tracking query paramters include</b>
+#### Pre-defined tracking url parameters include utm tracking parameters.</b>
 
 ```
 utm_source
@@ -23,4 +25,11 @@ utm_medium
 utm_campaign
 ```
 
-This is my first WebExtension that I have created. I wanted to try them out and see what cababilities they provide. I found out that WebExtensions are a very limited way of creating browser extensions. You are given a basic set of APIs (access to certain cabibilities of the browser) that your add-ons have to be made with. This addon was made using the three APIs, webRequest API for intercepting the HTTP requests, webRequestBlocking for redirecting the HTTP requests and storage API for storing user configurations. My other add-ons cannot be created as WebExtensions because there is no API for user interface modifications to customize the browser, and there is now API for managing search engines, and there is no API for creating new toolbars.
+#### Permissions required
+WebExtensions use API permission management. This add-on requires permissions for the following APIs:
+- webNavigation API, for setting page action (URL icon).
+- webRequest API, for intercepting HTTP requests.
+- webRequestBlocking, for redirecting and cancelling HTTP requests.
+- storage API, for storing user configurations. 
+
+This is my first WebExtension. From my experience I can say that WebExtensions are a limited way of creating browser extensions. You are given a basic set of APIs (access to certain capabilities of the browser) that your add-ons have to be made with. My other add-ons cannot be created as WebExtensions because there is no API for user interface modifications to customize the browser, nor API for managing search engines, nor API for creating new toolbars.
