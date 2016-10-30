@@ -33,3 +33,8 @@ WebExtensions use API permission management. This add-on requires permissions fo
 - storage API, for storing user configurations. 
 
 This is my first WebExtension. From my experience I can say that WebExtensions are a limited way of creating browser extensions. You are given a basic set of APIs (access to certain capabilities of the browser) that your add-ons have to be made with. My other add-ons cannot be created as WebExtensions because there is no API for user interface modifications to customize the browser, nor API for managing search engines, nor API for creating new toolbars.
+
+#### Lisence
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.

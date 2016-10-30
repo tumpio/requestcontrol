@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 function OptionsManager() {}
 
 OptionsManager.prototype.defaultOptions = {
@@ -55,7 +59,7 @@ OptionsManager.prototype.defaultOptions = {
             scheme: "*",
             matchSubDomains: false,
             host: "outgoing.prod.mozaws.net",
-            path: ""
+            path: "*"
         },
         types: ["main_frame"],
         action: "filter",

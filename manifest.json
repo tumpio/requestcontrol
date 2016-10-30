@@ -28,7 +28,7 @@
     "background": {
         "scripts": [
             "options/OptionsManager.js",
-            "main.js"
+            "background.js"
         ]
     }
 }
