@@ -169,9 +169,16 @@
 <div>
     <p>Define URL parameters that will be filtered out from requests that match a "Filter request" rule. URL parameters
         are commonly used in redirection tracking as a method to analyze the origin of traffic.</p>
-    <ul id="queryParams" class="list-group"></ul>
+    <ul class="list-group form-horizontal">
+        <ul id="queryParams" class="list-group list-group-item"></ul>
+        <li class="list-group-item">
+            <button id="saveParams" class="btn btn-sm btn-primary">Save parameters</button>
+            <label id="saveParamsSuccess" class="text-success text-saved">
+                <span class="glyphicon glyphicon-ok-circle"></span> saved
+            </label>
+        </li>
+    </ul>
     <button id="addNewParam" class="btn btn-default">Add new parameter</button>
-    <button id="saveParams" class="btn btn-default">Save Parameters</button>
     <button id="restoreParams" class="btn btn-link pull-right">Restore Defaults</button>
 </div>
 

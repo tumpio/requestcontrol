@@ -3,6 +3,6 @@
     opacity: 0;
 }
 
-.text-success.show {
+.text-success.fade {
     opacity: 1;
 }

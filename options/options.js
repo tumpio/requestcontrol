@@ -136,10 +136,7 @@ function newRuleInput(target, rule) {
         myOptionsManager.saveOptions("rules").then(function () {
             title.innerHTML = "Rule for <mark>" + rule.pattern.host + "</mark>";
             toggleHidden(tldsBlock, true);
-            successText.classList.add("show");
-            setTimeout(function () {
-                successText.classList.remove("show");
-            }, 2000);
+            toggleFade(successText);
         });
     });
 
@@ -206,6 +203,13 @@ function toggleHidden(element, hidden) {
     } else {
         element.classList.toggle(hiddenClass);
     }
+}
+
+function toggleFade(element) {
+    element.classList.add("fade");
+    setTimeout(function () {
+        element.classList.remove("fade");
+    }, 2000);
 }
 
 function addInputValidation(input, callback) {
@@ -283,6 +287,7 @@ function init() {
     });
     document.getElementById("saveParams").addEventListener("click", function () {
         myOptionsManager.saveOptions("queryParams", getInputValues(inputFormParams)).then(function () {
+            toggleFade(document.getElementById("saveParamsSuccess"));
             createOptions(inputFormParams, myOptionsManager.options.queryParams,
                 newParamInput);
         });
