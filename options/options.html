@@ -6,9 +6,7 @@
 
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-          crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="tags-input/tags-input.css">
     <link rel="stylesheet" href="options.css">
     <script src="tags-input/tags-input.js"></script>
@@ -28,7 +26,7 @@
                 </a>
             </h3>
         </div>
-        <div id="help" class="panel-collapse collapse">
+        <div id="help" class="panel-collapse collapse hidden">
             <div class="panel-body">
                 <div class="container">
                     <h2 class="page-header">Request Control Rule</h2>
@@ -182,7 +180,7 @@
                 Save parameters
             </button>
             <label id="saveParamsSuccess" class="text-success text-saved">
-                <span class="glyphicon glyphicon-ok-circle"></span> saved
+                <span class="glyphicon glyphicon-ok"></span> saved
             </label>
         </li>
     </ul>
@@ -227,7 +225,7 @@
                                            style="vertical-align:middle;">
                                 </span>
                             <input id="host" type="text" class="form-control input-sm host" placeholder="example.com"
-                                   pattern="^(\*|[^*\s]+(\.\*)?)$"/>
+                                   pattern="^(\*|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(\.\*)?)$"/>
                             <div class="input-group-btn hidden">
                                 <button class="btn btn-info btn-tlds" type="button"
                                         title="Included top-level domain names">
@@ -241,7 +239,7 @@
                         <div class="input-group input-group-sm">
                             <span class="input-group-addon"><strong>/</strong></span>
                             <input id="path" type="text" class="form-control input-sm path" placeholder="path"
-                                   pattern="^[!#-;=?-[\]_a-z~]*$"/>
+                                   pattern="^[!#-;=?-[\]_-z~]*$"/>
                         </div>
                     </div>
                 </div>
@@ -345,7 +343,7 @@
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label text-success text-saved">
-                <span class="glyphicon glyphicon-ok-circle"></span> saved
+                <span class="glyphicon glyphicon-ok"></span> saved
             </label>
             <div class="col-sm-10">
                 <button type="button" class="btn btn-sm btn-primary btn-save"><span

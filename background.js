@@ -58,7 +58,6 @@ function addPageActionDetails(request, action) {
         url: request.url
     };
     browser.webNavigation.onDOMContentLoaded.addListener(function (details) {
-        console.log(details.url);
         browser.pageAction.setIcon({
             tabId: details.tabId,
             path: {

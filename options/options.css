@@ -10,3 +10,42 @@
 .text-success.fade {
     opacity: 1;
 }
+
+/* Some bootstrap glyph icons with UTF-8 variants */
+.glyphicon-question-sign::after {
+    content: "\2753";
+    border-radius: 50%;
+    padding: 1px 3px;
+    text-align: center;
+    background: #333;
+    color: white;
+    text-decoration: none!important;
+}
+
+.glyphicon-plus::after {
+    content: "\2795";
+}
+
+.glyphicon-floppy-disk::after {
+    content: "\1F5AB";
+}
+
+.glyphicon-ok::after {
+    content: "\2713";
+}
+
+.glyphicon-remove::after {
+    content: "\1F5D9";
+}
+
+.glyphicon-trash::after {
+    content: "\2718";
+}
+
+.glyphicon-off::after {
+    content: "\25FC";
+}
+
+.glyphicon-flash::after {
+    content: "\1F5F2";
+}

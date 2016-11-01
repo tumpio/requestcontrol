@@ -56,7 +56,7 @@ function newRuleInput(target, rule) {
         inputModel.classList.toggle("disabled", !rule.active);
         activateBtn.classList.toggle("btn-warning", rule.active);
         activateBtn.classList.toggle("btn-success", !rule.active);
-        activateBtn.innerHTML = rule.active ? '<span class="glyphicon glyphicon-off"></span> Disable' : '<span class="glyphicon glyphicon-flash"></span> Enable';
+        activateBtn.textContent = rule.active ? '◼ Disable' : '🗲 Enable';
     }
 
     function toggleSaveable(saveable) {
@@ -80,7 +80,7 @@ function newRuleInput(target, rule) {
     moreTypesBtn.addEventListener("change", function (e) {
         e.stopPropagation();
         var extraTypes = inputModel.querySelectorAll(".extra-type:not(:checked)");
-        moreTypesBtn.parentNode.querySelector(".text").innerHTML = moreTypesBtn.checked ? "◂ Less" : "More ▸";
+        moreTypesBtn.parentNode.querySelector(".text").textContent = moreTypesBtn.checked ? "◂ Less" : "More ▸";
         for (let type of extraTypes) {
             toggleHidden(!moreTypesBtn.checked, type.parentNode);
         }
@@ -101,7 +101,7 @@ function newRuleInput(target, rule) {
 
     tldsInput.addEventListener("change", function () {
         let numberOfTlds = tldsTagsInput.getValue().length;
-        tldsBadge.innerHTML = numberOfTlds;
+        tldsBadge.textContent = numberOfTlds;
         tldsBtn.classList.toggle("btn-danger", numberOfTlds == 0);
         if (numberOfTlds == 0) {
             saveBtn.setAttribute("disabled", "disabled");
@@ -111,7 +111,7 @@ function newRuleInput(target, rule) {
     });
 
     action.addEventListener("change", function () {
-        description.innerHTML = getRuleDescription(action.value);
+        description.textContent = getRuleDescription(action.value);
         toggleHidden(action.value != "redirect", redirectUrl, redirectUrl.parentNode);
         saveBtn.removeAttribute("disabled");
         for (let input of inputModel.querySelectorAll("input[pattern]:not(.hidden)")) {
@@ -138,7 +138,7 @@ function newRuleInput(target, rule) {
         }
 
         myOptionsManager.saveOptions("rules").then(function () {
-            title.innerHTML = "Rule for <mark>" + rule.pattern.host + "</mark>";
+            title.textContent = "Rule for " + encodeURIComponent(rule.pattern.host);
             toggleHidden(true, tldsBlock);
             toggleFade(successText);
         });
@@ -159,8 +159,8 @@ function newRuleInput(target, rule) {
     });
 
     if (rule) {
-        title.innerHTML = "Rule for <mark>" + rule.pattern.host + "</mark>";
-        description.innerHTML = getRuleDescription(rule.action);
+        title.textContent = "Rule for " + encodeURIComponent(rule.pattern.host);
+        description.textContent = getRuleDescription(rule.action);
         scheme.value = rule.pattern.scheme;
         matchSubDomains.checked = rule.pattern.matchSubDomains;
         host.value = rule.pattern.host;
@@ -171,7 +171,7 @@ function newRuleInput(target, rule) {
             redirectUrl.value = rule.redirectUrl || "";
         }
         if (rule.pattern.topLevelDomains) {
-            tldsBadge.innerHTML = rule.pattern.topLevelDomains.length;
+            tldsBadge.textContent = rule.pattern.topLevelDomains.length;
             tldsTagsInput.setValue(rule.pattern.topLevelDomains.join());
         }
         toggleHidden(!tldStarPattern.test(host.value), tldsBtn.parentNode);
@@ -187,7 +187,7 @@ function newRuleInput(target, rule) {
             }
         }
     } else {
-        title.innerHTML = "New rule";
+        title.textContent = "New rule";
         rule = new RequestRule();
         myOptionsManager.options.rules.push(rule);
     }
@@ -237,11 +237,11 @@ function addInputValidation(input, callback) {
 function getRuleDescription(action) {
     switch (action) {
         case "filter":
-            return " to <i>filter</i> requests. Skips redirection tracking requests.";
+            return " to filter requests. Skips redirection tracking requests.";
         case "block":
-            return " to <i>block</i> requests. Requests are cancelled.";
+            return " to block requests. Requests are cancelled.";
         case "redirect":
-            return " to <i>redirect</i> requests. Requests are redirected to the given redirect URL";
+            return " to redirect requests. Requests are redirected to the given redirect URL";
     }
 }
 
@@ -310,7 +310,7 @@ function init() {
         });
     });
     document.getElementById("showHelp").addEventListener("click", function () {
-        document.getElementById("help").classList.toggle("in");
+        toggleHidden(document.getElementById("help"));
     });
 }
 

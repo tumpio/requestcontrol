@@ -10,9 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
             let tab = tabs[0];
             let detail = myPage.requestDetails[tab.id];
             document.getElementById("icon").src = "../icons/icon-" + detail.action + "@38.png";
-            document.getElementById("title").innerHTML = myPage.titles[detail.action];
-            //document.getElementById("type").innerHTML = detail.type;
-            //document.getElementById("timeStamp").innerHTML = new Date(detail.timeStamp).toTimeString().split(" ")[0];
+            document.getElementById("title").textContent = myPage.titles[detail.action];
+            //document.getElementById("type").textContent = detail.type;
+            //document.getElementById("timeStamp").textContent = new Date(detail.timeStamp).toTimeString().split(" ")[0];
         });
     });
 });
