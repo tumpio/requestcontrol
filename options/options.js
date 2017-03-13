@@ -21,6 +21,8 @@ function RequestRule() {
 
 function newRuleInput(target, rule) {
     let inputModel = document.getElementById("ruleInputModel").cloneNode(true);
+    let ruleInputs = inputModel.querySelector(".panel-collapse");
+    let icon = inputModel.querySelector(".icon");
     let title = inputModel.querySelector(".title");
     let description = inputModel.querySelector(".description");
     let scheme = inputModel.querySelector(".scheme");
@@ -32,6 +34,7 @@ function newRuleInput(target, rule) {
     let anyType = inputModel.querySelector(".any-type");
     let action = inputModel.querySelector(".action");
     let redirectUrl = inputModel.querySelector(".redirectUrl");
+    let editBtn = inputModel.querySelector(".btn-edit");
     let saveBtn = inputModel.querySelector(".btn-save");
     let activateBtn = inputModel.querySelector(".btn-activate");
     let removeBtn = inputModel.querySelector(".btn-remove");
@@ -54,9 +57,7 @@ function newRuleInput(target, rule) {
 
     function toggleActive() {
         inputModel.classList.toggle("disabled", !rule.active);
-        activateBtn.classList.toggle("btn-warning", rule.active);
-        activateBtn.classList.toggle("btn-success", !rule.active);
-        activateBtn.textContent = rule.active ? '◼ Disable' : '🗲 Enable';
+        activateBtn.textContent = rule.active ? 'Disable' : 'Enable';
     }
 
     function toggleSaveable(saveable) {
@@ -111,12 +112,18 @@ function newRuleInput(target, rule) {
     });
 
     action.addEventListener("change", function () {
+        icon.src = "../icons/icon-" + action.value + "@19.png";
+        title.textContent = getRuleTitle(action.value) + encodeURIComponent(rule.pattern.host);
         description.textContent = getRuleDescription(action.value);
         toggleHidden(action.value != "redirect", redirectUrl, redirectUrl.parentNode);
         saveBtn.removeAttribute("disabled");
         for (let input of inputModel.querySelectorAll("input[pattern]:not(.hidden)")) {
             input.dispatchEvent(new Event("blur"));
         }
+    });
+
+    editBtn.addEventListener("click", function () {
+        toggleHidden(ruleInputs);
     });
 
     saveBtn.addEventListener("click", function () {
@@ -138,7 +145,9 @@ function newRuleInput(target, rule) {
         }
 
         myOptionsManager.saveOptions("rules").then(function () {
-            title.textContent = "Rule for " + encodeURIComponent(rule.pattern.host);
+            icon.src = "../icons/icon-" + rule.action + "@19.png";
+            title.textContent = getRuleTitle(rule.action) + encodeURIComponent(rule.pattern.host);
+            description.textContent = getRuleDescription(rule.action);
             toggleHidden(true, tldsBlock);
             toggleFade(successText);
         });
@@ -159,7 +168,8 @@ function newRuleInput(target, rule) {
     });
 
     if (rule) {
-        title.textContent = "Rule for " + encodeURIComponent(rule.pattern.host);
+        icon.src = "../icons/icon-" + rule.action + "@19.png";
+        title.textContent = getRuleTitle(rule.action) + encodeURIComponent(rule.pattern.host);
         description.textContent = getRuleDescription(rule.action);
         scheme.value = rule.pattern.scheme;
         matchSubDomains.checked = rule.pattern.matchSubDomains;
@@ -190,6 +200,7 @@ function newRuleInput(target, rule) {
         title.textContent = "New rule";
         rule = new RequestRule();
         myOptionsManager.options.rules.push(rule);
+        toggleHidden(ruleInputs);
     }
     target.appendChild(inputModel);
     return inputModel;
@@ -234,14 +245,25 @@ function addInputValidation(input, callback) {
     input.addEventListener("blur", validateInput);
 }
 
+function getRuleTitle(action) {
+    switch (action) {
+        case "filter":
+            return "Filter rule for ";
+        case "block":
+            return "Block rule for ";
+        case "redirect":
+            return "Redirect rule for ";
+    }
+}
+
 function getRuleDescription(action) {
     switch (action) {
         case "filter":
-            return " to filter requests. Skips redirection tracking requests.";
+            return "Filters redirection tracking requests and omits tracking URL parameters.";
         case "block":
-            return " to block requests. Requests are cancelled.";
+            return "Cancels requests before they are made.";
         case "redirect":
-            return " to redirect requests. Requests are redirected to the given redirect URL";
+            return "Redirects requests to self defined redirect URL";
     }
 }
 

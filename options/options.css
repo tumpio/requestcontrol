@@ -2,6 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+body {
+    background-color: #f5f5f5;
+    padding: 28px;
+    padding-top: 0px;
+}
+
 .text-success {
     transition: opacity .15s ease-in-out;
     opacity: 0;
@@ -11,17 +17,16 @@
     opacity: 1;
 }
 
-/* Some bootstrap glyph icons with UTF-8 variants */
 .glyphicon-question-sign::after {
-    content: "\2753";
-    border-radius: 50%;
-    padding: 1px 3px;
-    text-align: center;
-    background: #333;
-    color: white;
-    text-decoration: none!important;
+    content: "";
+    background-image: url("chrome://browser/skin/menuPanel-help.png");
+    width: 16px;
+    height: 14px;
+    display: inline-block;
+    background-position: 48px;
 }
 
+/* Some bootstrap glyph icons with UTF-8 variants */
 .glyphicon-plus::after {
     content: "\2795";
 }

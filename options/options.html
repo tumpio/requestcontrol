@@ -14,7 +14,7 @@
     <script src="options.js"></script>
 </head>
 
-<body class="well">
+<body>
 <h2 class="page-header">Request Control Panel</h2>
 <div>
     <p>Define rules for controlling HTTP requests.</p>
@@ -166,7 +166,8 @@
         </div>
     </div>
     <ul id="rules" class="list-group form-horizontal"></ul>
-    <button id="addNewRule" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add new rule</button>
+    <button id="addNewRule" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Create new rule
+    </button>
     <button id="restoreRules" class="btn btn-link pull-right">Restore Defaults</button>
 </div>
 <h3 class="page-header">Filtered out URL parameters</h3>
@@ -176,8 +177,7 @@
     <ul class="list-group form-horizontal">
         <ul id="queryParams" class="list-group list-group-item"></ul>
         <li class="list-group-item">
-            <button id="saveParams" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span>
-                Save parameters
+            <button id="saveParams" class="btn btn-sm btn-primary">Save parameters
             </button>
             <label id="saveParamsSuccess" class="text-success text-saved">
                 <span class="glyphicon glyphicon-ok"></span> saved
@@ -191,170 +191,186 @@
 
 <ul id="models" class="list-group form-horizontal hidden">
     <li id="ruleInputModel" class="list-group-item rule">
-        <label class="title"></label>
-        <span class="description"></span>
-        <div class="form-group">
-            <div class="col-sm-2 control-label">
-                <div class="row no-gutter">
-                    <div class="col-sm-12">
-                        <label class="help-block">&#8203;</label>
-                        <label>Pattern</label>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-6">
+                <img class="icon" src="../icons/icon-filter@19.png">
+                <label class="title"></label>
+                <p class="description"></p>
             </div>
-            <div class="col-sm-10">
-                <div class="row no-gutter">
-                    <div class="col-xs-3 col-md-2">
-                        <label for="scheme" class="help-block text-center">scheme://</label>
-                        <div class="input-group input-group-sm">
-                            <div class="input-group-btn" style="width:auto;">
-                                <select id="scheme" class="form-control input-sm scheme text-center">
-                                    <option value="http">http</option>
-                                    <option value="https">https</option>
-                                    <option value="*" selected>http/https</option>
-                                </select>
-                            </div>
-                            <span class="input-group-addon"><strong>://</strong></span>
+            <div class="col-md-6">
+                <span class="pull-right">
+                    <button type="button" class="btn btn-default btn-edit">Edit
+                    </button>
+                    <button type="button" class="btn btn-default btn-activate">Disable
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div class="panel-collapse collapse hidden">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">
+                    <div class="row no-gutter">
+                        <div class="col-sm-12">
+                            <label class="help-block">&#8203;</label>
+                            <label>Pattern</label>
                         </div>
                     </div>
-                    <div class="col-xs-5 col-md-6">
-                        <label for="host" class="help-block text-center">host</label>
-                        <div class="input-group input-group-sm">
+                </div>
+                <div class="col-sm-10">
+                    <div class="row no-gutter">
+                        <div class="col-xs-3 col-md-2">
+                            <label for="scheme" class="help-block text-center">scheme://</label>
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-btn" style="width:auto;">
+                                    <select id="scheme" class="form-control input-sm scheme text-center">
+                                        <option value="http">http</option>
+                                        <option value="https">https</option>
+                                        <option value="*" selected>http/https</option>
+                                    </select>
+                                </div>
+                                <span class="input-group-addon"><strong>://</strong></span>
+                            </div>
+                        </div>
+                        <div class="col-xs-5 col-md-6">
+                            <label for="host" class="help-block text-center">host</label>
+                            <div class="input-group input-group-sm">
                                 <span class="input-group-addon">
                                     <input class="matchSubDomains" type="checkbox" title="Include subdomains"
                                            style="vertical-align:middle;">
                                 </span>
-                            <input id="host" type="text" class="form-control input-sm host" placeholder="example.com"
-                                   pattern="^(\*|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(\.\*)?)$"/>
-                            <div class="input-group-btn hidden">
-                                <button class="btn btn-info btn-tlds" type="button"
-                                        title="Included top-level domain names">
-                                    <span>TLDs </span><span class="badge">0</span>
-                                </button>
+                                <input id="host" type="text" class="form-control input-sm host"
+                                       placeholder="example.com"
+                                       pattern="^(\*|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(\.\*)?)$"/>
+                                <div class="input-group-btn hidden">
+                                    <button class="btn btn-info btn-tlds" type="button"
+                                            title="Included top-level domain names">
+                                        <span>TLDs </span><span class="badge">0</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4  col-md-4">
+                            <label for="path" class="help-block text-center">path</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon"><strong>/</strong></span>
+                                <input id="path" type="text" class="form-control input-sm path" placeholder="path"
+                                       pattern="^[!#-;=?-[\]_-z~]*$"/>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-4  col-md-4">
-                        <label for="path" class="help-block text-center">path</label>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon"><strong>/</strong></span>
-                            <input id="path" type="text" class="form-control input-sm path" placeholder="path"
-                                   pattern="^[!#-;=?-[\]_-z~]*$"/>
-                        </div>
+                    <div class="tlds-block hidden">
+                        <label for="tlds" class="help-block">Top-level domains</label>
+                        <input id="tlds" type="tags" class="form-control input-sm input-tlds tlds hidden"/>
                     </div>
-                </div>
-                <div class="tlds-block hidden">
-                    <label for="tlds" class="help-block">Top-level domains</label>
-                    <input id="tlds" type="tags" class="form-control input-sm input-tlds tlds hidden"/>
                 </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Types</label>
-            <div class="col-sm-10">
-                <div class="row no-gutter">
-                    <div class="col-xs-3 col-md-2">
-                        <div class="btn-group btn-group-justified btn-group-sm" data-toggle="buttons">
-                            <label class="btn btn-default">
-                                <input class="any-type" type="checkbox" autocomplete="off">Any type
-                            </label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Types</label>
+                <div class="col-sm-10">
+                    <div class="row no-gutter">
+                        <div class="col-xs-3 col-md-2">
+                            <div class="btn-group btn-group-justified btn-group-sm" data-toggle="buttons">
+                                <label class="btn btn-default">
+                                    <input class="any-type" type="checkbox" autocomplete="off">Any type
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-xs-8 col-md-7">
-                        <div class="btn-toolbar">
-                            <div class="btn-group btn-group-sm btn-group-types" data-toggle="buttons">
-                                <label class="btn btn-default">
-                                    <input value="main_frame" type="checkbox" autocomplete="off" class="type">Document
-                                </label>
-                                <label class="btn btn-default">
-                                    <input value="sub_frame" type="checkbox" autocomplete="off" class="type">Embedded
-                                    document
-                                </label>
-                                <label class="btn btn-default">
-                                    <input value="stylesheet" type="checkbox" autocomplete="off" class="type">Stylesheet
-                                </label>
-                                <label class="btn btn-default">
-                                    <input value="script" type="checkbox" autocomplete="off" class="type">Script
-                                </label>
-                                <label class="btn btn-default">
-                                    <input value="image" type="checkbox" autocomplete="off" class="type">Image
-                                </label>
-                                <label class="btn btn-default hidden">
-                                    <input value="object" type="checkbox" autocomplete="off" class="type extra-type">Object
-                                </label>
-                                <label class="btn btn-default hidden">
-                                    <input value="xmlhttprequest" type="checkbox" autocomplete="off"
-                                           class="type extra-type">XMLHttpRequest
-                                </label>
-                                <label class="btn btn-default hidden">
-                                    <input value="xbl" type="checkbox" autocomplete="off" class="type extra-type">XBL
-                                </label>
-                                <label class="btn btn-default hidden">
-                                    <input value="xslt" type="checkbox" autocomplete="off" class="type extra-type">XSLT
-                                </label>
-                                <label class="btn btn-default hidden">
-                                    <input value="font" type="checkbox" autocomplete="off" class="type extra-type">Font
-                                </label>
-                                <label class="btn btn-default hidden">
-                                    <input value="media" type="checkbox" autocomplete="off" class="type extra-type">Media
-                                </label>
-                                <label class="btn btn-default hidden">
-                                    <input value="websocket" type="checkbox" autocomplete="off" class="type extra-type">WebSocket
-                                </label>
-                                <label class="btn btn-default hidden">
-                                    <input value="csp_report" type="checkbox" autocomplete="off"
-                                           class="type extra-type">CSP report
-                                </label>
-                                <label class="btn btn-default hidden">
-                                    <input value="imageset" type="checkbox" autocomplete="off" class="type extra-type">Imageset
-                                </label>
-                                <label class="btn btn-default hidden">
-                                    <input value="web_manifest" type="checkbox" autocomplete="off"
-                                           class="type extra-type">Web Manifest
-                                </label>
-                                <label class="btn btn-default hidden">
-                                    <input value="other" type="checkbox" autocomplete="off" class="type extra-type">Other
-                                </label>
-                                <label class="btn btn-default">
-                                    <input class="more-types" type="checkbox" autocomplete="off"><span class="text">More ▸</span>
-                                </label>
+                        <div class="col-xs-8 col-md-7">
+                            <div class="btn-toolbar">
+                                <div class="btn-group btn-group-sm btn-group-types" data-toggle="buttons">
+                                    <label class="btn btn-default">
+                                        <input value="main_frame" type="checkbox" autocomplete="off" class="type">Document
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input value="sub_frame" type="checkbox" autocomplete="off" class="type">Embedded
+                                        document
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input value="stylesheet" type="checkbox" autocomplete="off" class="type">Stylesheet
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input value="script" type="checkbox" autocomplete="off" class="type">Script
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input value="image" type="checkbox" autocomplete="off" class="type">Image
+                                    </label>
+                                    <label class="btn btn-default hidden">
+                                        <input value="object" type="checkbox" autocomplete="off"
+                                               class="type extra-type">Object
+                                    </label>
+                                    <label class="btn btn-default hidden">
+                                        <input value="xmlhttprequest" type="checkbox" autocomplete="off"
+                                               class="type extra-type">XMLHttpRequest
+                                    </label>
+                                    <label class="btn btn-default hidden">
+                                        <input value="xbl" type="checkbox" autocomplete="off" class="type extra-type">XBL
+                                    </label>
+                                    <label class="btn btn-default hidden">
+                                        <input value="xslt" type="checkbox" autocomplete="off" class="type extra-type">XSLT
+                                    </label>
+                                    <label class="btn btn-default hidden">
+                                        <input value="font" type="checkbox" autocomplete="off" class="type extra-type">Font
+                                    </label>
+                                    <label class="btn btn-default hidden">
+                                        <input value="media" type="checkbox" autocomplete="off" class="type extra-type">Media
+                                    </label>
+                                    <label class="btn btn-default hidden">
+                                        <input value="websocket" type="checkbox" autocomplete="off"
+                                               class="type extra-type">WebSocket
+                                    </label>
+                                    <label class="btn btn-default hidden">
+                                        <input value="csp_report" type="checkbox" autocomplete="off"
+                                               class="type extra-type">CSP report
+                                    </label>
+                                    <label class="btn btn-default hidden">
+                                        <input value="imageset" type="checkbox" autocomplete="off"
+                                               class="type extra-type">Imageset
+                                    </label>
+                                    <label class="btn btn-default hidden">
+                                        <input value="web_manifest" type="checkbox" autocomplete="off"
+                                               class="type extra-type">Web Manifest
+                                    </label>
+                                    <label class="btn btn-default hidden">
+                                        <input value="other" type="checkbox" autocomplete="off" class="type extra-type">Other
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input class="more-types" type="checkbox" autocomplete="off"><span class="text">More ▸</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="action" class="col-sm-2 control-label">Action</label>
-            <div class="col-sm-3 col-md-2">
-                <select id="action" class="form-control input-sm action">
-                    <option value="filter">Filter Request</option>
-                    <option value="block">Block Request</option>
-                    <option value="redirect">Redirect Request</option>
-                </select>
-            </div>
-            <div class="col-sm-7 col-md-8">
-                <div class="input-group hidden">
-                    <span class="input-group-addon">Redirect URL</span>
-                    <input type="text" class="form-control input-sm redirectUrl" placeholder="Redirect URL"
-                           pattern="^.+:\/\/[^\s/$.?#].[^\s]*$"/>
+            <div class="form-group">
+                <label for="action" class="col-sm-2 control-label">Action</label>
+                <div class="col-sm-3 col-md-2">
+                    <select id="action" class="form-control input-sm action">
+                        <option value="filter">Filter Request</option>
+                        <option value="block">Block Request</option>
+                        <option value="redirect">Redirect Request</option>
+                    </select>
+                </div>
+                <div class="col-sm-7 col-md-8">
+                    <div class="input-group hidden">
+                        <span class="input-group-addon">Redirect URL</span>
+                        <input type="text" class="form-control input-sm redirectUrl" placeholder="Redirect URL"
+                               pattern="^.+:\/\/[^\s/$.?#].[^\s]*$"/>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label text-success text-saved">
-                <span class="glyphicon glyphicon-ok"></span> saved
-            </label>
-            <div class="col-sm-10">
-                <button type="button" class="btn btn-sm btn-primary btn-save"><span
-                        class="glyphicon glyphicon-floppy-disk"></span> Save rule
-                </button>
-                <span class="pull-right">
-                    <button type="button" class="btn btn-sm btn-warning btn-activate"><span
-                            class="glyphicon glyphicon-ban-circle"></span> Disable</button>
+            <div class="form-group">
+                <label class="col-sm-2 control-label text-success text-saved">
+                    <span class="glyphicon glyphicon-ok"></span> saved
+                </label>
+                <div class="col-sm-10">
+                    <button type="button" class="btn btn-sm btn-primary btn-save">Save rule
+                    </button>
+                    <span class="pull-right">
                     <button type="button" class="btn btn-sm btn-danger btn-remove"><span
                             class="glyphicon glyphicon-trash"></span> Remove</button>
                     </span>
+                </div>
             </div>
         </div>
     </li>
