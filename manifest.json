@@ -7,6 +7,11 @@
         "48": "icons/icon-48.png",
         "96": "icons/icon-96.png"
     },
+    "applications": {
+        "gecko": {
+            "id": "{1b1e6108-2d88-4f0f-a338-01f9dbcccd6f}"
+        }
+    },
     "permissions": [
         "<all_urls>",
         "storage",

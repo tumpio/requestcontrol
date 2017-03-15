@@ -2,6 +2,7 @@ Version 1.2.3 March 15, 2017
 - Add toggleable edit mode for rules.
 - Change tracking URL parameters input option to use one line tags-input.
 - Fix to include WebExtension permission for all urls.
+- Fix to include applications key with add-on id in manifest.json.
 
 Version 1.2.2 October 30, 2016
 - Add support for rule based control with actions (filter, block, redirect).
