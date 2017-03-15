@@ -170,22 +170,16 @@
     </button>
     <button id="restoreRules" class="btn btn-link pull-right">Restore Defaults</button>
 </div>
-<h3 class="page-header">Filtered out URL parameters</h3>
+<h3 class="page-header">Configure URL parameters filtering</h3>
 <div>
-    <p>Define URL parameters that will be filtered out from requests that match a "Filter request" rule. URL parameters
+    <p>Set URL parameters that will be removed from requests that match a "Filter" rule. URL parameters
         are commonly used in redirection tracking as a method to analyze the origin of traffic.</p>
-    <ul class="list-group form-horizontal">
-        <ul id="queryParams" class="list-group list-group-item"></ul>
-        <li class="list-group-item">
-            <button id="saveParams" class="btn btn-sm btn-primary">Save parameters
-            </button>
-            <label id="saveParamsSuccess" class="text-success text-saved">
-                <span class="glyphicon glyphicon-ok"></span> saved
-            </label>
-        </li>
-    </ul>
-    <button id="addNewParam" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add new parameter
-    </button>
+    <div class="form-group">
+        <input id="queryParams" type="tags" class="form-control input-sm input-params params"/>
+    </div>
+    <label id="saveParamsSuccess" class="text-success text-saved">
+        <span class="glyphicon glyphicon-ok"></span> parameters saved
+    </label>
     <button id="restoreParams" class="btn btn-link pull-right">Restore Defaults</button>
 </div>
 
@@ -194,8 +188,8 @@
         <div class="row">
             <div class="col-md-6">
                 <img class="icon" src="../icons/icon-filter@19.png">
-                <label class="title"></label>
-                <p class="description"></p>
+                <label class="title"></label><br/>
+                <small class="description"></small>
             </div>
             <div class="col-md-6">
                 <span class="pull-right">
@@ -371,16 +365,6 @@
                             class="glyphicon glyphicon-trash"></span> Remove</button>
                     </span>
                 </div>
-            </div>
-        </div>
-    </li>
-    <li id="paramInputModel" class="list-group-item">
-        <div class="input-group input-group-sm">
-            <input type="text" class="form-control input-sm param" placeholder="parameter"/>
-            <div class="input-group-btn">
-                <button type="button" class="btn btn-danger btn-remove">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </button>
             </div>
         </div>
     </li>

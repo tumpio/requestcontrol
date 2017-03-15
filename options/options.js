@@ -80,7 +80,7 @@ function newRuleInput(target, rule) {
 
     moreTypesBtn.addEventListener("change", function (e) {
         e.stopPropagation();
-        var extraTypes = inputModel.querySelectorAll(".extra-type:not(:checked)");
+        let extraTypes = inputModel.querySelectorAll(".extra-type:not(:checked)");
         moreTypesBtn.parentNode.querySelector(".text").textContent = moreTypesBtn.checked ? "◂ Less" : "More ▸";
         for (let type of extraTypes) {
             toggleHidden(!moreTypesBtn.checked, type.parentNode);
@@ -267,21 +267,6 @@ function getRuleDescription(action) {
     }
 }
 
-function newParamInput(target, value) {
-    let inputModel = document.getElementById("paramInputModel").cloneNode(true);
-    let input = inputModel.querySelector("input");
-    let removeBtn = inputModel.querySelector(".btn-remove");
-    inputModel.removeAttribute("id");
-    removeBtn.addEventListener("click", function () {
-        target.removeChild(inputModel);
-    });
-    if (value) {
-        input.value = value;
-    }
-    target.appendChild(inputModel);
-    return inputModel;
-}
-
 function createOptions(target, options, addInputFunc) {
     while (target.firstChild) {
         target.removeChild(target.firstChild);
@@ -291,33 +276,19 @@ function createOptions(target, options, addInputFunc) {
     }
 }
 
-function getInputValues(target) {
-    let values = [];
-    for (let input of target.querySelectorAll("input")) {
-        if (input.value)
-            values.push(input.value);
-    }
-    return values;
-}
-
 function init() {
     let inputFormRules = document.getElementById("rules");
-    let inputFormParams = document.getElementById("queryParams");
+    let inputFormParams = tagsInput(document.getElementById("queryParams"));
 
     createOptions(inputFormRules, myOptionsManager.options.rules, newRuleInput);
-    createOptions(inputFormParams, myOptionsManager.options.queryParams, newParamInput);
+    inputFormParams.setValue(myOptionsManager.options.queryParams.join());
 
     document.getElementById("addNewRule").addEventListener("click", function () {
         newRuleInput(inputFormRules).querySelector(".host").focus();
     });
-    document.getElementById("addNewParam").addEventListener("click", function () {
-        newParamInput(inputFormParams).querySelector(".param").focus();
-    });
-    document.getElementById("saveParams").addEventListener("click", function () {
-        myOptionsManager.saveOptions("queryParams", getInputValues(inputFormParams)).then(function () {
+    document.getElementById("queryParams").addEventListener("change", function () {
+        myOptionsManager.saveOptions("queryParams", inputFormParams.getValue()).then(function () {
             toggleFade(document.getElementById("saveParamsSuccess"));
-            createOptions(inputFormParams, myOptionsManager.options.queryParams,
-                newParamInput);
         });
     });
     document.getElementById("restoreRules").addEventListener("click", function () {
@@ -327,8 +298,7 @@ function init() {
     });
     document.getElementById("restoreParams").addEventListener("click", function () {
         myOptionsManager.restoreDefault("queryParams").then(function () {
-            createOptions(inputFormParams, myOptionsManager.options.queryParams,
-                newParamInput);
+            inputFormParams.setValue(myOptionsManager.options.queryParams.join());
         });
     });
     document.getElementById("showHelp").addEventListener("click", function () {
