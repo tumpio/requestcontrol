@@ -1,9 +1,9 @@
-Version 1.2.2 March 15, 2017
+Version 1.2.3 March 15, 2017
 - Add toggleable edit mode for rules.
 - Change tracking URL parameters input option to use one line tags-input.
 - Fix to include WebExtension permission for all urls.
 
-Version 1.2.1 October 30, 2016
+Version 1.2.2 October 30, 2016
 - Add support for rule based control with actions (filter, block, redirect).
 - Add support for request types.
 - Add page action for providing user feedback of handled requests.
