@@ -2,7 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-function OptionsManager() {}
+function OptionsManager() {
+}
 
 OptionsManager.prototype.defaultOptions = {
     rules: [{
@@ -86,6 +87,8 @@ OptionsManager.prototype.defaultOptions = {
         active: true
     },],
 
+    whitelist: [],
+
     queryParams: [
         "utm_source",
         "utm_medium",
@@ -93,7 +96,15 @@ OptionsManager.prototype.defaultOptions = {
     ]
 };
 
-OptionsManager.prototype.saveOptions = function (option, value) {
+OptionsManager.prototype.saveAllOptions = function () {
+    let setObject = {};
+    for (let option of Object.keys(this.defaultOptions)) {
+        setObject[option] = this.options[option];
+    }
+    return browser.storage.local.set(setObject);
+};
+
+OptionsManager.prototype.saveOption = function (option, value) {
     if (typeof value != "undefined") {
         this.options[option] = value;
     }
@@ -114,7 +125,7 @@ OptionsManager.prototype.loadOptions = function (callback) {
 
 OptionsManager.prototype.restoreDefault = function (option) {
     this.options[option] = cloneObject(this.defaultOptions[option]);
-    return this.saveOptions(option);
+    return this.saveOption(option);
 };
 
 OptionsManager.prototype.update = function (changes) {

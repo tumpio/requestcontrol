@@ -19,191 +19,261 @@ function RequestRule() {
     };
 }
 
-function newRuleInput(target, rule) {
-    let inputModel = document.getElementById("ruleInputModel").cloneNode(true);
-    let ruleInputs = inputModel.querySelector(".panel-collapse");
-    let icon = inputModel.querySelector(".icon");
-    let title = inputModel.querySelector(".title");
-    let description = inputModel.querySelector(".description");
-    let scheme = inputModel.querySelector(".scheme");
-    let matchSubDomains = inputModel.querySelector(".matchSubDomains");
-    let host = inputModel.querySelector(".host");
-    let path = inputModel.querySelector(".path");
-    let types = inputModel.querySelector(".btn-group-types");
-    let moreTypesBtn = inputModel.querySelector(".more-types");
-    let anyType = inputModel.querySelector(".any-type");
-    let action = inputModel.querySelector(".action");
-    let redirectUrl = inputModel.querySelector(".redirectUrl");
-    let editBtn = inputModel.querySelector(".btn-edit");
-    let saveBtn = inputModel.querySelector(".btn-save");
-    let activateBtn = inputModel.querySelector(".btn-activate");
-    let removeBtn = inputModel.querySelector(".btn-remove");
-    let tldsBtn = inputModel.querySelector(".btn-tlds");
-    let tldsBadge = inputModel.querySelector(".btn-tlds > .badge");
-    let tldsInput = inputModel.querySelector(".input-tlds");
-    let tldsTagsInput = tagsInput(tldsInput);
-    let tldsBlock = inputModel.querySelector(".tlds-block");
-    let successText = inputModel.querySelector(".text-saved");
-    inputModel.removeAttribute("id");
-
-    function checkTLDStarPattern() {
-        let isTldsPattern = tldStarPattern.test(host.value);
-        toggleHidden(!isTldsPattern, tldsBtn.parentNode);
-        toggleHidden(!isTldsPattern, tldsBlock);
-        if (isTldsPattern && tldsTagsInput.getValue().length == 0) {
-            toggleSaveable(false);
-        }
+function RuleInputFactory(rule = new RequestRule()) {
+    switch (rule.action) {
+        case "filter":
+            return new FilterRuleInput(rule);
+        case "block":
+            return new BlockRuleInput(rule);
+        case "redirect":
+            return new RedirectRuleInput(rule);
+        case "whitelist":
+            return new WhitelistRuleInput(rule);
+        default:
+            return new RuleInput(rule);
     }
+}
 
-    function toggleActive() {
-        inputModel.classList.toggle("disabled", !rule.active);
-        activateBtn.textContent = rule.active ? 'Disable' : 'Enable';
-    }
+function FilterRuleInput(rule) {
+    RuleInput.call(this, rule);
+    this.title = "Filter rule for " + encodeURIComponent(this.rule.pattern.host);
+    this.description = "Filters redirection tracking requests and omits tracking URL parameters.";
+    this.optionsPath = "rules";
+    this.updateModel();
+}
+FilterRuleInput.prototype = Object.create(RuleInput.prototype);
+FilterRuleInput.prototype.constructor = FilterRuleInput;
 
-    function toggleSaveable(saveable) {
-        if (!saveable) {
-            saveBtn.setAttribute("disabled", "disabled");
-        } else {
-            saveBtn.removeAttribute("disabled");
-        }
-    }
+function BlockRuleInput(rule) {
+    RuleInput.call(this, rule);
+    this.title = "Block rule for " + encodeURIComponent(this.rule.pattern.host);
+    this.description = "Cancels requests before they are made.";
+    this.optionsPath = "rules";
+    this.updateModel();
+}
+BlockRuleInput.prototype = Object.create(RuleInput.prototype);
+BlockRuleInput.prototype.constructor = BlockRuleInput;
 
-    addInputValidation(host, toggleSaveable);
-    addInputValidation(path, toggleSaveable);
-    addInputValidation(redirectUrl, toggleSaveable);
-    host.addEventListener("input", checkTLDStarPattern);
+function RedirectRuleInput(rule) {
+    RuleInput.call(this, rule);
+    this.title = "Redirect rule for " + encodeURIComponent(this.rule.pattern.host);
+    this.description = "Redirects requests to self defined redirect URL.";
+    this.optionsPath = "rules";
+    this.updateModel();
+}
+RedirectRuleInput.prototype = Object.create(RuleInput.prototype);
+RedirectRuleInput.prototype.constructor = RedirectRuleInput;
+RedirectRuleInput.prototype.updateModel = function () {
+    RuleInput.prototype.updateModel.call(this);
+    toggleHidden(false, this.model.qs(".redirectUrl"), this.model.qs(".redirectUrl").parentNode);
+    this.model.qs(".redirectUrl").value = this.rule.redirectUrl || "";
+};
+RedirectRuleInput.prototype.updateRule = function () {
+    RuleInput.prototype.updateRule.call(this);
+    this.rule.redirectUrl = this.model.qs(".redirectUrl").value;
+};
 
-    types.addEventListener("change", function (e) {
+function WhitelistRuleInput(rule) {
+    RuleInput.call(this, rule);
+    this.title = "Whitelist rule for " + encodeURIComponent(this.rule.pattern.host);
+    this.description = "Whitelists requests.";
+    this.optionsPath = "whitelist";
+    this.updateModel();
+}
+WhitelistRuleInput.prototype = Object.create(RuleInput.prototype);
+WhitelistRuleInput.prototype.constructor = WhitelistRuleInput;
+
+function RuleInput(rule) {
+    let self = this;
+    self.rule = rule;
+    self.model = cloneRuleInputModel();
+    self.model.qs = self.model.querySelector;
+    self.model.qsa = self.model.querySelectorAll;
+    self.tldsTagsInput = tagsInput(self.model.qs(".input-tlds"));
+    self.optionsPath = "rules";
+
+    addInputValidation(self.model.qs(".host"), self.setAllowSave.bind(self));
+    addInputValidation(self.model.qs(".path"), self.setAllowSave.bind(self));
+    addInputValidation(self.model.qs(".redirectUrl"), self.setAllowSave.bind(self));
+
+    self.model.qs(".host").addEventListener("input", self.validateTLDPattern.bind(self));
+    self.model.qs(".btn-edit").addEventListener("click", self.toggleEdit.bind(self));
+    self.model.qs(".btn-activate").addEventListener("click", self.toggleActive.bind(self));
+    self.model.qs(".btn-remove").addEventListener("click", self.remove.bind(self));
+    self.model.qs(".btn-save").addEventListener("click", self.save.bind(self));
+    self.model.qs(".action").addEventListener("change", self.change.bind(self));
+
+    self.model.qs(".btn-group-types").addEventListener("change", function (e) {
         setButtonChecked(e.target, e.target.checked);
-        setButtonChecked(anyType, !(e.target.checked || inputModel.querySelector(".type:checked")));
+        setButtonChecked(self.model.qs(".any-type"), !(e.target.checked || self.model.qs(".type:checked")));
     }, false);
 
-    moreTypesBtn.addEventListener("change", function (e) {
+    self.model.qs(".more-types").addEventListener("change", function (e) {
         e.stopPropagation();
-        let extraTypes = inputModel.querySelectorAll(".extra-type:not(:checked)");
-        moreTypesBtn.parentNode.querySelector(".text").textContent = moreTypesBtn.checked ? "◂ Less" : "More ▸";
+        let extraTypes = self.model.qsa(".extra-type:not(:checked)");
+        self.model.qs(".more-types").parentNode.querySelector(".text").textContent = self.model.qs(".more-types").checked ? "◂ Less" : "More ▸";
         for (let type of extraTypes) {
-            toggleHidden(!moreTypesBtn.checked, type.parentNode);
+            toggleHidden(!self.model.qs(".more-types").checked, type.parentNode);
         }
     }, false);
 
-    anyType.addEventListener("change", function (e) {
-        setButtonChecked(anyType, e.target.checked);
+    self.model.qs(".any-type").addEventListener("change", function (e) {
+        setButtonChecked(self.model.qs(".any-type"), e.target.checked);
         if (e.target.checked) {
-            for (let type of inputModel.querySelectorAll(".type:checked")) {
+            for (let type of self.model.qsa(".type:checked")) {
                 setButtonChecked(type, false);
             }
         }
     });
 
-    tldsBtn.addEventListener("click", function () {
-        toggleHidden(tldsBlock);
+    self.model.qs(".btn-tlds").addEventListener("click", function () {
+        toggleHidden(self.model.qs(".tlds-block"));
     });
 
-    tldsInput.addEventListener("change", function () {
-        let numberOfTlds = tldsTagsInput.getValue().length;
-        tldsBadge.textContent = numberOfTlds;
-        tldsBtn.classList.toggle("btn-danger", numberOfTlds == 0);
-        if (numberOfTlds == 0) {
-            saveBtn.setAttribute("disabled", "disabled");
-        } else {
-            saveBtn.removeAttribute("disabled");
-        }
+    self.model.qs(".input-tlds").addEventListener("change", function () {
+        let numberOfTlds = self.tldsTagsInput.getValue().length;
+        let error = numberOfTlds === 0;
+        self.model.qs(".btn-tlds > .badge").textContent = numberOfTlds;
+        self.model.qs(".btn-tlds").classList.toggle("btn-danger", error);
+        self.model.qs(".btn-tlds").parentNode.classList.toggle("has-error", error);
+        self.setAllowSave(!error);
     });
+}
 
-    action.addEventListener("change", function () {
-        icon.src = "../icons/icon-" + action.value + "@19.png";
-        title.textContent = getRuleTitle(action.value) + encodeURIComponent(rule.pattern.host);
-        description.textContent = getRuleDescription(action.value);
-        toggleHidden(action.value != "redirect", redirectUrl, redirectUrl.parentNode);
-        saveBtn.removeAttribute("disabled");
-        for (let input of inputModel.querySelectorAll("input[pattern]:not(.hidden)")) {
-            input.dispatchEvent(new Event("blur"));
-        }
-    });
+RuleInput.prototype.change = function () {
+    this.updateRule();
+    let newInput = RuleInputFactory(this.rule);
+    this.model.parentNode.insertBefore(newInput.model, this.model);
+    this.softRemove();
+    newInput.toggleEdit();
+    newInput.validate();
+};
 
-    editBtn.addEventListener("click", function () {
-        toggleHidden(ruleInputs);
-    });
-
-    saveBtn.addEventListener("click", function () {
-        rule.pattern.scheme = scheme.value;
-        rule.pattern.matchSubDomains = matchSubDomains.checked;
-        rule.pattern.host = host.value;
-        rule.pattern.path = path.value;
-        rule.types = Array.from(inputModel.querySelectorAll(".type:checked"), type => type.value);
-        rule.action = action.value;
-
-        if (rule.types.length == 0 || anyType.checked) {
-            delete rule.types;
-        }
-        if (action.value == "redirect") {
-            rule.redirectUrl = redirectUrl.value;
-        }
-        if (tldStarPattern.test(host.value)) {
-            rule.pattern.topLevelDomains = tldsTagsInput.getValue();
-        }
-
-        myOptionsManager.saveOptions("rules").then(function () {
-            icon.src = "../icons/icon-" + rule.action + "@19.png";
-            title.textContent = getRuleTitle(rule.action) + encodeURIComponent(rule.pattern.host);
-            description.textContent = getRuleDescription(rule.action);
-            toggleHidden(true, tldsBlock);
-            toggleFade(successText);
-        });
-    });
-
-    activateBtn.addEventListener("click", function () {
-        rule.active = !rule.active;
-        myOptionsManager.saveOptions("rules").then(toggleActive);
-    });
-
-    removeBtn.addEventListener("click", function () {
-        target.removeChild(inputModel);
-        let i = myOptionsManager.options.rules.indexOf(rule);
-        if (i != -1) {
-            myOptionsManager.options.rules.splice(i, 1);
-            myOptionsManager.saveOptions("rules");
-        }
-    });
-
-    if (rule) {
-        icon.src = "../icons/icon-" + rule.action + "@19.png";
-        title.textContent = getRuleTitle(rule.action) + encodeURIComponent(rule.pattern.host);
-        description.textContent = getRuleDescription(rule.action);
-        scheme.value = rule.pattern.scheme;
-        matchSubDomains.checked = rule.pattern.matchSubDomains;
-        host.value = rule.pattern.host;
-        path.value = rule.pattern.path;
-        action.value = rule.action;
-        if (action.value == "redirect") {
-            toggleHidden(false, redirectUrl, redirectUrl.parentNode);
-            redirectUrl.value = rule.redirectUrl || "";
-        }
-        if (rule.pattern.topLevelDomains) {
-            tldsBadge.textContent = rule.pattern.topLevelDomains.length;
-            tldsTagsInput.setValue(rule.pattern.topLevelDomains.join());
-        }
-        toggleHidden(!tldStarPattern.test(host.value), tldsBtn.parentNode);
-        toggleActive();
-
-        if (!rule.types || rule.types.length == 0) {
-            setButtonChecked(anyType, true);
-        } else {
-            for (let value of rule.types) {
-                let type = inputModel.querySelector("[value=" + value + "]");
-                setButtonChecked(type, true);
-                toggleHidden(false, type.parentNode);
-            }
-        }
+RuleInput.prototype.remove = function () {
+    this.softRemove();
+    if (this.indexOfRule() !== -1) {
+        myOptionsManager.saveOption(this.optionsPath);
     } else {
-        title.textContent = "New rule";
-        rule = new RequestRule();
-        myOptionsManager.options.rules.push(rule);
-        toggleHidden(ruleInputs);
+        myOptionsManager.saveAllOptions();
     }
-    target.appendChild(inputModel);
-    return inputModel;
+};
+
+RuleInput.prototype.softRemove = function () {
+    this.model.parentNode.removeChild(this.model);
+    let i = this.indexOfRule();
+    if (i !== -1) {
+        myOptionsManager.options[this.optionsPath].splice(i, 1);
+    }
+};
+
+RuleInput.prototype.save = function () {
+    let text = this.model.qs(".text-saved");
+    this.updateRule();
+    if (this.indexOfRule() === -1) {
+        myOptionsManager.options[this.optionsPath].push(this.rule);
+        return myOptionsManager.saveAllOptions().then(function () {
+            toggleFade(text);
+        });
+    }
+    return myOptionsManager.saveOption(this.optionsPath).then(function () {
+        toggleFade(text);
+    });
+};
+
+RuleInput.prototype.setAllowSave = function (bool) {
+    if (!bool || this.model.qs(".has-error:not(.hidden)")) {
+        this.model.qs(".btn-save").setAttribute("disabled", "disabled");
+    } else {
+        this.model.qs(".btn-save").removeAttribute("disabled");
+    }
+};
+
+RuleInput.prototype.toggleActive = function () {
+    this.rule.active = !this.rule.active;
+    this.setActiveState();
+    if (this.indexOfRule() !== -1) {
+        myOptionsManager.saveOption(this.optionsPath);
+    }
+};
+
+RuleInput.prototype.toggleEdit = function () {
+    toggleHidden(this.model.qs(".panel-collapse"));
+};
+
+RuleInput.prototype.setActiveState = function () {
+    this.model.classList.toggle("disabled", !this.rule.active);
+    this.model.qs(".btn-activate").textContent = this.rule.active ? 'Disable' : 'Enable';
+};
+
+RuleInput.prototype.validate = function () {
+    for (let input of this.model.qsa("input[pattern]:not(.hidden)")) {
+        input.dispatchEvent(new Event("blur"));
+    }
+    this.validateTLDPattern();
+};
+
+RuleInput.prototype.validateTLDPattern = function () {
+    let isTldsPattern = tldStarPattern.test(this.model.qs(".host").value);
+    toggleHidden(!isTldsPattern, this.model.qs(".btn-tlds").parentNode);
+    toggleHidden(!isTldsPattern, this.model.qs(".tlds-block"));
+    if (isTldsPattern && this.tldsTagsInput.getValue().length === 0) {
+        this.setAllowSave(false);
+        this.model.qs(".btn-tlds").classList.add("btn-danger");
+        this.model.qs(".btn-tlds").parentNode.classList.add("has-error");
+    }
+};
+
+RuleInput.prototype.indexOfRule = function () {
+    return myOptionsManager.options[this.optionsPath].indexOf(this.rule);
+};
+
+RuleInput.prototype.updateModel = function () {
+    this.model.qs(".icon").src = "../icons/icon-" + this.rule.action + "@19.png";
+    this.model.qs(".title").textContent = this.title;
+    this.model.qs(".description").textContent = this.description;
+    this.model.qs(".scheme").value = this.rule.pattern.scheme;
+    this.model.qs(".matchSubDomains").checked = this.rule.pattern.matchSubDomains;
+    this.model.qs(".host").value = this.rule.pattern.host;
+    this.model.qs(".path").value = this.rule.pattern.path;
+    this.model.qs(".action").value = this.rule.action;
+    if (this.rule.pattern.topLevelDomains) {
+        this.model.qs(".btn-tlds > .badge").textContent = this.rule.pattern.topLevelDomains.length;
+        this.tldsTagsInput.setValue(this.rule.pattern.topLevelDomains.join());
+    }
+    toggleHidden(!tldStarPattern.test(this.model.qs(".host").value), this.model.qs(".btn-tlds").parentNode);
+    this.setActiveState();
+
+    if (!this.rule.types || this.rule.types.length === 0) {
+        setButtonChecked(this.model.qs(".any-type"), true);
+    } else {
+        for (let value of this.rule.types) {
+            let type = this.model.qs("[value=" + value + "]");
+            setButtonChecked(type, true);
+            toggleHidden(false, type.parentNode);
+        }
+    }
+};
+
+RuleInput.prototype.updateRule = function () {
+    this.rule.pattern.scheme = this.model.qs(".scheme").value;
+    this.rule.pattern.matchSubDomains = this.model.qs(".matchSubDomains").checked;
+    this.rule.pattern.host = this.model.qs(".host").value;
+    this.rule.pattern.path = this.model.qs(".path").value;
+    this.rule.types = Array.from(this.model.qsa(".type:checked"), type => type.value);
+    this.rule.action = this.model.qs(".action").value;
+
+    if (this.rule.types.length === 0 || this.model.qs(".any-type").checked) {
+        delete this.rule.types;
+    }
+    if (tldStarPattern.test(this.model.qs(".host").value)) {
+        this.rule.pattern.topLevelDomains = this.tldsTagsInput.getValue();
+    }
+};
+
+function cloneRuleInputModel() {
+    let model = document.getElementById("ruleInputModel").cloneNode(true);
+    model.removeAttribute("id");
+    return model;
 }
 
 function setButtonChecked(button, checked) {
@@ -213,7 +283,7 @@ function setButtonChecked(button, checked) {
 
 function toggleHidden(hidden) {
     let hiddenClass = "hidden";
-    if (typeof hidden == "boolean") {
+    if (typeof hidden === "boolean") {
         for (let i = 1; i < arguments.length; i++) {
             arguments[i].classList.toggle(hiddenClass, hidden);
         }
@@ -245,55 +315,42 @@ function addInputValidation(input, callback) {
     input.addEventListener("blur", validateInput);
 }
 
-function getRuleTitle(action) {
-    switch (action) {
-        case "filter":
-            return "Filter rule for ";
-        case "block":
-            return "Block rule for ";
-        case "redirect":
-            return "Redirect rule for ";
-    }
-}
-
-function getRuleDescription(action) {
-    switch (action) {
-        case "filter":
-            return "Filters redirection tracking requests and omits tracking URL parameters.";
-        case "block":
-            return "Cancels requests before they are made.";
-        case "redirect":
-            return "Redirects requests to self defined redirect URL";
-    }
-}
-
-function createOptions(target, options, addInputFunc) {
+function createOptions(target, options) {
     while (target.firstChild) {
         target.removeChild(target.firstChild);
     }
     for (let value of options) {
-        addInputFunc(target, value);
+        let input = RuleInputFactory(value);
+        target.appendChild(input.model);
     }
 }
 
 function init() {
     let inputFormRules = document.getElementById("rules");
+    let inputFormWhitelist = document.getElementById("whitelist");
     let inputFormParams = tagsInput(document.getElementById("queryParams"));
 
-    createOptions(inputFormRules, myOptionsManager.options.rules, newRuleInput);
+    createOptions(inputFormRules, myOptionsManager.options.rules);
+    createOptions(inputFormWhitelist, myOptionsManager.options.whitelist);
     inputFormParams.setValue(myOptionsManager.options.queryParams.join());
 
     document.getElementById("addNewRule").addEventListener("click", function () {
-        newRuleInput(inputFormRules).querySelector(".host").focus();
+        let ruleInput = RuleInputFactory();
+        inputFormRules.appendChild(ruleInput.model);
+        ruleInput.toggleEdit();
+        ruleInput.model.qs(".host").focus();
     });
     document.getElementById("queryParams").addEventListener("change", function () {
-        myOptionsManager.saveOptions("queryParams", inputFormParams.getValue()).then(function () {
+        myOptionsManager.saveOption("queryParams", inputFormParams.getValue()).then(function () {
             toggleFade(document.getElementById("saveParamsSuccess"));
         });
     });
     document.getElementById("restoreRules").addEventListener("click", function () {
         myOptionsManager.restoreDefault("rules").then(function () {
-            createOptions(inputFormRules, myOptionsManager.options.rules, newRuleInput);
+            createOptions(inputFormRules, myOptionsManager.options.rules);
+        });
+        myOptionsManager.restoreDefault("whitelist").then(function () {
+            createOptions(inputFormWhitelist, myOptionsManager.options.whitelist);
         });
     });
     document.getElementById("restoreParams").addEventListener("click", function () {

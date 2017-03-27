@@ -166,6 +166,7 @@
         </div>
     </div>
     <ul id="rules" class="list-group form-horizontal"></ul>
+    <ul id="whitelist" class="list-group form-horizontal"></ul>
     <button id="addNewRule" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Create new rule
     </button>
     <button id="restoreRules" class="btn btn-link pull-right">Restore Defaults</button>
@@ -187,8 +188,8 @@
     <li id="ruleInputModel" class="list-group-item rule">
         <div class="row">
             <div class="col-md-6">
-                <img class="icon" src="../icons/icon-filter@19.png">
-                <label class="title"></label><br/>
+                <img class="icon" src="" alt="">
+                <label class="title">New rule</label><br/>
                 <small class="description"></small>
             </div>
             <div class="col-md-6">
@@ -343,12 +344,13 @@
                         <option value="filter">Filter Request</option>
                         <option value="block">Block Request</option>
                         <option value="redirect">Redirect Request</option>
+                        <option value="whitelist">Whitelist Request</option>
                     </select>
                 </div>
                 <div class="col-sm-7 col-md-8">
                     <div class="input-group hidden">
                         <span class="input-group-addon">Redirect URL</span>
-                        <input type="text" class="form-control input-sm redirectUrl" placeholder="Redirect URL"
+                        <input type="text" class="form-control input-sm redirectUrl hidden" placeholder="Redirect URL"
                                pattern="^.+:\/\/[^\s/$.?#].[^\s]*$"/>
                     </div>
                 </div>

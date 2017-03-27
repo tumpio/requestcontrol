@@ -11,41 +11,75 @@ var requestDetails = {};
 var titles = {
     filter: "Request was filtered",
     block: "Request was blocked",
-    redirect: "Request was redirected"
+    redirect: "Request was redirected",
+    whitelist: "Request was whitelisted"
 };
+
+var whitelist = new Map();
+
+function tidyWhitelist() {
+    if (whitelist.size > 20) {
+        let timeLimit = Date.now() - 1000;
+        for (let [requestId, timeStamp] of whitelist) {
+            if (timeStamp < timeLimit) {
+                whitelist.delete(requestId);
+            }
+        }
+    }
+}
 
 function RequestAction(rule) {
     switch (rule.action) {
         case "filter":
             return function (request) {
-                if (request.method != "GET" || request.tabId == -1) {
-                    return;
-                }
-                let redirectUrl = parseRedirectUrl(request.url);
-                if (redirectUrl.length < request.url.length) {
-                    addPageActionDetails(request, rule.action);
-                    browser.tabs.update(request.tabId, {
-                        url: parseRedirectUrl(request.url)
-                    });
-                    return {
-                        cancel: true
-                    };
-                }
+                return new Promise((resolve) => {
+                    if (whitelist.has(request.requestId) || request.method != "GET" || request.tabId == -1) {
+                        resolve(null);
+                    } else {
+                        let redirectUrl = parseRedirectUrl(request.url);
+                        if (redirectUrl.length < request.url.length) {
+                            resolve({cancel: true});
+                            browser.tabs.update(request.tabId, {
+                                url: redirectUrl
+                            });
+                            addPageActionDetails(request, rule.action);
+                        } else {
+                            resolve(null);
+                        }
+                    }
+                });
             };
         case "block":
             return function (request) {
-                addPageActionDetails(request, rule.action);
-                return {
-                    cancel: true
-                };
+                return new Promise((resolve) => {
+                    if (whitelist.has(request.requestId)) {
+                        resolve(null);
+                    } else {
+                        resolve({cancel: true});
+                        addPageActionDetails(request, rule.action);
+                    }
+                });
             };
         case "redirect":
             return function (request) {
-                addPageActionDetails(request, rule.action);
-                return {
-                    redirectUrl: rule.redirectUrl
-                };
+                return new Promise((resolve) => {
+                    if (whitelist.has(request.requestId)) {
+                        resolve(null);
+                    } else {
+                        resolve({redirectUrl: rule.redirectUrl});
+                        addPageActionDetails(request, rule.action);
+                    }
+                });
             };
+        case "whitelist":
+            return function (request) {
+                whitelist.set(request.requestId, request.timeStamp);
+                return new Promise((resolve) => {
+                    resolve(null);
+                    addPageActionDetails(request, rule.action);
+                    tidyWhitelist();
+                });
+            }
     }
 }
 
@@ -133,9 +167,9 @@ function removePreviousListeners() {
     }
 }
 
-function addListeners() {
+function addListeners(rules) {
     let filter, listener;
-    for (let rule of myOptionsManager.options.rules) {
+    for (let rule of rules) {
         if (!rule.active) {
             continue;
         }
@@ -151,7 +185,9 @@ function addListeners() {
 
 function init() {
     removePreviousListeners();
-    addListeners();
+    addListeners(myOptionsManager.options.whitelist);
+    addListeners(myOptionsManager.options.rules);
+    browser.webRequest.handlerBehaviorChanged();
 }
 
 myOptionsManager.loadOptions(init);
