@@ -359,6 +359,7 @@ function init() {
         inputFormRules.appendChild(ruleInput.model);
         ruleInput.toggleEdit();
         ruleInput.model.qs(".host").focus();
+        ruleInput.model.scrollIntoView();
     });
     document.getElementById("queryParams").addEventListener("change", function () {
         myOptionsManager.saveOption("queryParams", inputFormParams.getValue()).then(function () {
