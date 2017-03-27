@@ -15,8 +15,8 @@
 </head>
 
 <body>
-<h2 class="page-header">Request Control Panel</h2>
-<div>
+<div class="container">
+    <h2 class="page-header">Request Control Panel</h2>
     <p>Define rules for controlling HTTP requests.</p>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -28,14 +28,14 @@
         </div>
         <div id="help" class="panel-collapse collapse hidden">
             <div class="panel-body">
-                <div class="container">
+                <div class="container-fluid">
                     <h2 class="page-header">Request Control Rule</h2>
                     <p>Request Control Rule consists of <i>request pattern</i>, <i>request types</i> and <i>rule
                         action</i>. Any request that matches a pattern of an active rule, will be intercepted taking the
                         action of the rule.
                     </p>
                 </div>
-                <div class="container">
+                <div class="container-fluid">
                     <h2 class="page-header">Request Pattern</h2>
                     <p>Request pattern contains three parts: <i>scheme</i>, <i>host</i> and <i>path</i>.</p>
                     <h3>Scheme</h3>
@@ -113,7 +113,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="container">
+                <div class="container-fluid">
                     <h2 class="page-header">Request Types</h2>
                     <p>Filter requests based on the type of the request. A type represents the requested resource. Rule
                         can apply from one to many types or any type. All the possible types are listed below.</p>
@@ -137,7 +137,7 @@
                         <li>Any Type</li>
                     </ul>
                 </div>
-                <div class="container">
+                <div class="container-fluid">
                     <h2 class="page-header">Rule Action</h2>
                     <p>There are four possible actions for rules.</p>
                     <table class="table">
@@ -180,9 +180,7 @@
     <button id="addNewRule" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Create new rule
     </button>
     <button id="restoreRules" class="btn btn-link pull-right">Restore Defaults</button>
-</div>
-<h3 class="page-header">Configure URL parameters filtering</h3>
-<div>
+    <h3 class="page-header">Configure URL parameters filtering</h3>
     <p>Set URL parameters that will be removed from requests that match a "Filter" rule. URL parameters
         are commonly used in redirection tracking as a method to analyze the origin of traffic.</p>
     <div class="form-group">
