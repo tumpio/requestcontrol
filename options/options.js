@@ -76,7 +76,7 @@ RedirectRuleInput.prototype.updateRule = function () {
 function WhitelistRuleInput(rule) {
     RuleInput.call(this, rule);
     this.title = "Whitelist rule for " + encodeURIComponent(this.rule.pattern.host);
-    this.description = "Whitelists requests.";
+    this.description = "Skips all other rules and processes requests normally.";
     this.optionsPath = "whitelist";
     this.updateModel();
 }

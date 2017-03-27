@@ -30,16 +30,17 @@
             <div class="panel-body">
                 <div class="container">
                     <h2 class="page-header">Request Control Rule</h2>
-                    <p>Rule contains request pattern, request types and rule action. Request that matches a pattern of
-                        an
-                        active rule will be intercepted taking the action of the rule.
+                    <p>Request Control Rule consists of <i>request pattern</i>, <i>request types</i> and <i>rule
+                        action</i>. Any request that matches a pattern of an active rule, will be intercepted taking the
+                        action of the rule.
                     </p>
                 </div>
                 <div class="container">
-                    <h2 class="page-header">Pattern</h2>
-                    <p>Request pattern consists of three parts, scheme, host and path.</p>
+                    <h2 class="page-header">Request Pattern</h2>
+                    <p>Request pattern contains three parts: <i>scheme</i>, <i>host</i> and <i>path</i>.</p>
                     <h3>Scheme</h3>
-                    <p>Scheme matches the request URL protocol. It can be one of the below schemes.</p>
+                    <p>Scheme matches the protocol of the request URL. It can be set to match schemes in the following
+                        ways.</p>
                     <table class="table">
                         <tbody>
                         <tr>
@@ -62,12 +63,12 @@
                         <tbody>
                         <tr>
                             <td><i>www.example.com</i></td>
-                            <td>A complete host.</td>
+                            <td>Match a complete host.</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td><i>example.com</i></td>
-                            <td>The given host and any of its subdomains.</td>
+                            <td>Match the given host and any of its subdomains.</td>
                             <td>Check the include subdomains checkbox to match any subdomain (e.g.
                                 <i><strong>www</strong>.example.com</i>,
                                 <i><strong>good</strong>.example.com</i> and any other subdomain of example.com).
@@ -75,14 +76,16 @@
                         </tr>
                         <tr>
                             <td><i>www.example.*</i></td>
-                            <td>The given host and all listed top-level domains. (can be combined with 2.)</td>
+                            <td>Match the given host and all of the listed top-level domains. (can be combined with
+                                the subdomain matching)
+                            </td>
                             <td>Write the top-level domains to the top-level domain name list (e.g. <i>com</i>,
                                 <i>org</i>).
                             </td>
                         </tr>
                         <tr>
                             <td><i>*</i></td>
-                            <td>Any host.</td>
+                            <td>Match any host.</td>
                             <td></td>
                         </tr>
                         </tbody>
@@ -112,8 +115,8 @@
                 </div>
                 <div class="container">
                     <h2 class="page-header">Request Types</h2>
-                    <p>Filter rules based on the types of the requests. Type represents the requested resource. Rule can
-                        apply from one to many types or any type. Possible types are listed below.</p>
+                    <p>Filter requests based on the type of the request. A type represents the requested resource. Rule
+                        can apply from one to many types or any type. All the possible types are listed below.</p>
                     <ul>
                         <li>Document</li>
                         <li>Embedded document</li>
@@ -135,8 +138,8 @@
                     </ul>
                 </div>
                 <div class="container">
-                    <h2 class="page-header">Rule Actions</h2>
-                    <p>There are three possible actions for rules.</p>
+                    <h2 class="page-header">Rule Action</h2>
+                    <p>There are four possible actions for rules.</p>
                     <table class="table">
                         <tbody>
                         <tr>
@@ -151,12 +154,19 @@
                         <tr>
                             <td><img src="../icons/icon-block@19.png"></td>
                             <td>Block Requests</td>
-                            <td>Any request that matches a block rule will be cancelled.</td>
+                            <td>Any request that matches a block rule will be cancelled before it is made.</td>
                         </tr>
                         <tr>
                             <td><img src="../icons/icon-redirect@19.png"></td>
                             <td>Redirect Requests</td>
                             <td>Any request that matches a redirect rule will be redirected to the given redirect URL.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><img src="../icons/icon-whitelist@19.png"></td>
+                            <td>Whitelist Requests</td>
+                            <td>Any request that matches a whitelist rule will be processed normally without taking any
+                                action of any other matched rules.
                             </td>
                         </tr>
                         </tbody>
