@@ -1,3 +1,9 @@
+Version 1.3.0 March 27, 2017
+- Add whitelist rules support.
+- Add <all_urls> pattern support for creating global rules.
+- Change option page to open in new tab.
+- Fix input validation that allowed incorrect rule saving.
+
 Version 1.2.3 March 15, 2017
 - Add toggleable edit mode for rules.
 - Change tracking URL parameters input option to use one line tags-input.
