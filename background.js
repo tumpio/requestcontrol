@@ -140,6 +140,9 @@ function filterUnwantedQueryParams(url) {
 
 function resolveUrls(pattern) {
     let urls = [];
+    if (pattern.allUrls) {
+        return ["<all_urls>"];
+    }
     if (tldStarPattern.test(pattern.host)) {
         for (let TLD of pattern.topLevelDomains) {
             urls.push(tldStarPatternRuleToUrl(pattern, TLD));

@@ -36,7 +36,7 @@ function RuleInputFactory(rule = new RequestRule()) {
 
 function FilterRuleInput(rule) {
     RuleInput.call(this, rule);
-    this.title = "Filter rule for " + encodeURIComponent(this.rule.pattern.host);
+    this.title = "Filter rule for ";
     this.description = "Filters redirection tracking requests and omits tracking URL parameters.";
     this.optionsPath = "rules";
     this.updateModel();
@@ -46,7 +46,7 @@ FilterRuleInput.prototype.constructor = FilterRuleInput;
 
 function BlockRuleInput(rule) {
     RuleInput.call(this, rule);
-    this.title = "Block rule for " + encodeURIComponent(this.rule.pattern.host);
+    this.title = "Block rule for ";
     this.description = "Cancels requests before they are made.";
     this.optionsPath = "rules";
     this.updateModel();
@@ -56,7 +56,7 @@ BlockRuleInput.prototype.constructor = BlockRuleInput;
 
 function RedirectRuleInput(rule) {
     RuleInput.call(this, rule);
-    this.title = "Redirect rule for " + encodeURIComponent(this.rule.pattern.host);
+    this.title = "Redirect rule for ";
     this.description = "Redirects requests to self defined redirect URL.";
     this.optionsPath = "rules";
     this.updateModel();
@@ -75,8 +75,8 @@ RedirectRuleInput.prototype.updateRule = function () {
 
 function WhitelistRuleInput(rule) {
     RuleInput.call(this, rule);
-    this.title = "Whitelist rule for " + encodeURIComponent(this.rule.pattern.host);
-    this.description = "Skips all other rules and processes requests normally.";
+    this.title = "Whitelist rule for ";
+    this.description = "Disables all other rules and processes requests normally.";
     this.optionsPath = "whitelist";
     this.updateModel();
 }
@@ -103,6 +103,12 @@ function RuleInput(rule) {
     self.model.qs(".btn-save").addEventListener("click", self.save.bind(self));
     self.model.qs(".action").addEventListener("change", self.change.bind(self));
 
+    self.model.qs(".any-url").addEventListener("change", function (e) {
+        setButtonChecked(self.model.qs(".any-url"), e.target.checked);
+        toggleHidden(e.target.checked, self.model.qs(".host").parentNode, self.model.qs(".path").parentNode, self.model.qs(".pattern"));
+        self.validate();
+    });
+
     self.model.qs(".btn-group-types").addEventListener("change", function (e) {
         setButtonChecked(e.target, e.target.checked);
         setButtonChecked(self.model.qs(".any-type"), !(e.target.checked || self.model.qs(".type:checked")));
@@ -119,6 +125,7 @@ function RuleInput(rule) {
 
     self.model.qs(".any-type").addEventListener("change", function (e) {
         setButtonChecked(self.model.qs(".any-type"), e.target.checked);
+        toggleHidden(e.target.checked, self.model.qs(".btn-group-types"));
         if (e.target.checked) {
             for (let type of self.model.qsa(".type:checked")) {
                 setButtonChecked(type, false);
@@ -167,17 +174,16 @@ RuleInput.prototype.softRemove = function () {
 };
 
 RuleInput.prototype.save = function () {
-    let text = this.model.qs(".text-saved");
     this.updateRule();
     if (this.indexOfRule() === -1) {
         myOptionsManager.options[this.optionsPath].push(this.rule);
-        return myOptionsManager.saveAllOptions().then(function () {
-            toggleFade(text);
-        });
+        return myOptionsManager.saveAllOptions().then(this.updateModel.bind(this)).then(this.showSavedText.bind(this));
     }
-    return myOptionsManager.saveOption(this.optionsPath).then(function () {
-        toggleFade(text);
-    });
+    return myOptionsManager.saveOption(this.optionsPath).then(this.updateModel.bind(this)).then(this.showSavedText.bind(this));
+};
+
+RuleInput.prototype.showSavedText = function () {
+    toggleFade(this.model.qs(".text-saved"));
 };
 
 RuleInput.prototype.setAllowSave = function (bool) {
@@ -206,10 +212,13 @@ RuleInput.prototype.setActiveState = function () {
 };
 
 RuleInput.prototype.validate = function () {
-    for (let input of this.model.qsa("input[pattern]:not(.hidden)")) {
-        input.dispatchEvent(new Event("blur"));
+    this.setAllowSave(true);
+    if (this.model.qs(".pattern:not(.hidden)")) {
+        for (let input of this.model.qsa("input[pattern]:not(.hidden)")) {
+            input.dispatchEvent(new Event("blur"));
+        }
+        this.validateTLDPattern();
     }
-    this.validateTLDPattern();
 };
 
 RuleInput.prototype.validateTLDPattern = function () {
@@ -229,7 +238,7 @@ RuleInput.prototype.indexOfRule = function () {
 
 RuleInput.prototype.updateModel = function () {
     this.model.qs(".icon").src = "../icons/icon-" + this.rule.action + "@19.png";
-    this.model.qs(".title").textContent = this.title;
+    this.model.qs(".title").textContent = this.title + (this.rule.pattern.allUrls ? "any URL" : encodeURIComponent(this.rule.pattern.host));
     this.model.qs(".description").textContent = this.description;
     this.model.qs(".scheme").value = this.rule.pattern.scheme;
     this.model.qs(".matchSubDomains").checked = this.rule.pattern.matchSubDomains;
@@ -245,6 +254,7 @@ RuleInput.prototype.updateModel = function () {
 
     if (!this.rule.types || this.rule.types.length === 0) {
         setButtonChecked(this.model.qs(".any-type"), true);
+        toggleHidden(true, this.model.qs(".btn-group-types"));
     } else {
         for (let value of this.rule.types) {
             let type = this.model.qs("[value=" + value + "]");
@@ -252,22 +262,33 @@ RuleInput.prototype.updateModel = function () {
             toggleHidden(false, type.parentNode);
         }
     }
+
+    if (this.rule.pattern.allUrls) {
+        setButtonChecked(this.model.qs(".any-url"), true);
+        toggleHidden(true, this.model.qs(".host").parentNode, this.model.qs(".path").parentNode, this.model.qs(".pattern"));
+    }
 };
 
 RuleInput.prototype.updateRule = function () {
-    this.rule.pattern.scheme = this.model.qs(".scheme").value;
-    this.rule.pattern.matchSubDomains = this.model.qs(".matchSubDomains").checked;
-    this.rule.pattern.host = this.model.qs(".host").value;
-    this.rule.pattern.path = this.model.qs(".path").value;
-    this.rule.types = Array.from(this.model.qsa(".type:checked"), type => type.value);
-    this.rule.action = this.model.qs(".action").value;
+    if (this.model.qs(".any-url").checked) {
+        this.rule.pattern.allUrls = true;
+    } else {
+        this.rule.pattern.scheme = this.model.qs(".scheme").value;
+        this.rule.pattern.matchSubDomains = this.model.qs(".matchSubDomains").checked;
+        this.rule.pattern.host = this.model.qs(".host").value;
+        this.rule.pattern.path = this.model.qs(".path").value;
+        if (tldStarPattern.test(this.model.qs(".host").value)) {
+            this.rule.pattern.topLevelDomains = this.tldsTagsInput.getValue();
+        }
+        delete this.rule.pattern.allUrls;
+    }
 
+    this.rule.types = Array.from(this.model.qsa(".type:checked"), type => type.value);
     if (this.rule.types.length === 0 || this.model.qs(".any-type").checked) {
         delete this.rule.types;
     }
-    if (tldStarPattern.test(this.model.qs(".host").value)) {
-        this.rule.pattern.topLevelDomains = this.tldsTagsInput.getValue();
-    }
+
+    this.rule.action = this.model.qs(".action").value;
 };
 
 function cloneRuleInputModel() {
