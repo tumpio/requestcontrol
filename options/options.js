@@ -111,7 +111,6 @@ function RuleInput(rule) {
 
     self.model.qs(".btn-group-types").addEventListener("change", function (e) {
         setButtonChecked(e.target, e.target.checked);
-        setButtonChecked(self.model.qs(".any-type"), !(e.target.checked || self.model.qs(".type:checked")));
     }, false);
 
     self.model.qs(".more-types").addEventListener("change", function (e) {
