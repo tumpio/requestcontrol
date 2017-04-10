@@ -1,3 +1,10 @@
+Version 1.4.0 April 10, 2017
+- Add support for pattern capturing (parameter expansion) to redirect based on the original request.
+- Add support for parameter instructions to redirect based on the original request.
+- Change help page to open in a new page.
+- Update help and add attributions to the MDN documents.
+- Fix missing title for options page.
+
 Version 1.3.0 March 27, 2017
 - Add whitelist rules support.
 - Add <all_urls> pattern support for creating global rules.
