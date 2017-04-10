@@ -1,10 +1,24 @@
 ## Request Control - Firefox WebExtension
 
 ### Description
-Take control over your requests! Filter redirection tracking, skip confirmation pages for outgoing links or block requests entirely, and remove url parameters used in redirection tracking.
 
-### Instructions
-In the add-on's preferences create rules for requests. Set url parameters that will be omitted from filtered request url. Check the help page in add-on's preferences for further instructions.
+Control your HTTP requests with Request Control Rules. Rules include request filtering (preventing redirection tracking), request blocking and request redirection.
+
+#### Filter Requests
+
+Skips redirection tracking. If the matched request URL contains another URL, the request is cancelled and the tab where the request was made is navigated to the contained URL. Additionally URL tracking parameters that are defined in the filtered parameters list will be removed.
+
+#### Block Requests
+
+Any request that matches a block rule will be cancelled before it is made.
+
+#### Redirect Requests
+
+Any request that matches a redirect rule will be redirected to the given redirect URL. The redirect URL supports pattern capturing to redirect based on the original request.
+
+#### Whitelist Requests
+
+Any request that matches a whitelist rule will be processed normally without taking any action of any other matched rules.
 
 #### Pre-defined rules include rules for
 
@@ -31,8 +45,6 @@ WebExtensions use API permission management. This add-on requires permissions fo
 - webRequest API, for intercepting HTTP requests.
 - webRequestBlocking, for redirecting and cancelling HTTP requests.
 - storage API, for storing user configurations. 
-
-This is my first WebExtension. From my experience I can say that WebExtensions are a limited way of creating browser extensions. You are given a basic set of APIs (access to certain capabilities of the browser) that your add-ons have to be made with. My other add-ons cannot be created as WebExtensions because there is no API for user interface modifications to customize the browser, nor API for managing search engines, nor API for creating new toolbars.
 
 #### Lisence
     This Source Code Form is subject to the terms of the Mozilla Public
