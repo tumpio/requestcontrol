@@ -2,10 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var myOptionsManager = new OptionsManager();
-var tldStarPattern = /^(.+)\.\*$/;
-var redirectUrlPattern = /^https?:\/\/.+(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
-var requestListeners = [];
+const myOptionsManager = new OptionsManager();
+const tldStarPattern = /^(.+)\.\*$/;
+const redirectUrlPattern = /^https?:\/\/.+(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
+const paramExpanPattern = /{([a-z]+)(.*)}/g;
+const redirectInstrPattern = /\[([a-z]+)=(.+?)]/g;
+const substrExtractPattern = /^(:-?\d*)(:-?\d*)?(\|(.*))?/;
+const substrReplacePattern = /^\/(.+?)\/([^|]*)(\|(.*))?/;
+const requestListeners = [];
 var requestDetails = {};
 
 var titles = {
@@ -15,7 +19,7 @@ var titles = {
     whitelist: "Request was whitelisted"
 };
 
-var whitelist = new Map();
+const whitelist = new Map();
 
 function tidyWhitelist() {
     if (whitelist.size > 20) {
@@ -33,7 +37,7 @@ function RequestAction(rule) {
         case "filter":
             return function (request) {
                 return new Promise((resolve) => {
-                    if (whitelist.has(request.requestId) || request.method != "GET" || request.tabId == -1) {
+                    if (whitelist.has(request.requestId) || request.method !== "GET" || request.tabId === -1) {
                         resolve(null);
                     } else {
                         let redirectUrl = parseRedirectUrl(request.url);
@@ -66,7 +70,21 @@ function RequestAction(rule) {
                     if (whitelist.has(request.requestId)) {
                         resolve(null);
                     } else {
-                        resolve({redirectUrl: rule.redirectUrl});
+                        let [requestUrl, instrParsed] = parseRedirectInstructions(request.url, rule.redirectUrl);
+                        let paramsExpanded = resolveParamExpansion(requestUrl.href, instrParsed);
+                        let redirectUrl;
+
+                        try {
+                            redirectUrl = new URL(paramsExpanded);
+                        } catch (e) {
+                            redirectUrl = requestUrl;
+                        }
+
+                        if (redirectUrl.href !== request.url) {
+                            resolve({redirectUrl: redirectUrl.href});
+                        } else {
+                            resolve(null);
+                        }
                         addPageActionDetails(request, rule.action);
                     }
                 });
@@ -81,6 +99,67 @@ function RequestAction(rule) {
                 });
             }
     }
+}
+
+function parseRedirectInstructions(requestURL, redirectURL) {
+    let url = new URL(requestURL);
+    let redirectInstrReplacer = function (match, param, value) {
+        if (param in url && typeof url[param] === "string") {
+            url[param] = value;
+        }
+        return "";
+    };
+
+    let instrRemoved = redirectURL.replace(redirectInstrPattern, redirectInstrReplacer);
+
+    return [url, instrRemoved];
+}
+
+function resolveParamExpansion(requestURL, redirectURL) {
+    let paramExpansionReplacer = function (match, param, manipulationRules) {
+        let url = new URL(requestURL);
+        if (param in url && typeof url[param] === "string") {
+            return applyStringManipulation(url[param], manipulationRules);
+        }
+        return "";
+    };
+    return redirectURL.replace(paramExpanPattern, paramExpansionReplacer);
+}
+
+function applyStringManipulation(str, rules) {
+    if (typeof rules !== "string" || rules.length === 0) {
+        return str;
+    }
+    if (substrReplacePattern.test(rules)) {
+        return replaceSubstring(str, ...rules.match(substrReplacePattern));
+    } else if (substrExtractPattern.test(rules)) {
+        return extractSubstring(str, ...rules.match(substrExtractPattern));
+    }
+    return str;
+}
+
+function replaceSubstring(str, match, pattern, replacement, pipe, manipulationRules) {
+    let newStr = str.replace(new RegExp(pattern), replacement);
+    return applyStringManipulation(newStr, manipulationRules);
+}
+
+function extractSubstring(str, match, offset, length, pipe, manipulationRules) {
+    let substr;
+    let i = (offset === ":" ? 0 : parseInt(offset.substring(1)));
+    if (i < 0) {
+        substr = str.slice(i);
+    } else {
+        substr = str.substring(i);
+    }
+    if (length) {
+        let l = (length === ":" ? 0 : parseInt(length.substring(1)));
+        if (l < 0) {
+            substr = substr.substring(0, substr.length + l);
+        } else {
+            substr = substr.substring(0, l);
+        }
+    }
+    return applyStringManipulation(substr, manipulationRules);
 }
 
 function addPageActionDetails(request, action) {
@@ -109,7 +188,7 @@ function addPageActionDetails(request, action) {
 }
 
 function redirectUrlReplacer(match, p1, p2, p3) {
-    if (p2[0] == "%") {
+    if (p2[0] === "%") {
         p2 = decodeURIComponent(p2);
     }
     if (/(%26|%2F)/.test(p3)) {
@@ -131,7 +210,7 @@ function filterUnwantedQueryParams(url) {
     let urlParts = url.split("?");
     for (let i = urlParts.length - 1; i >= 1; i--) {
         urlParts[i] = urlParts[i].split("&").filter(filterQuery).join("&");
-        if (urlParts[i].length == 0) {
+        if (urlParts[i].length === 0) {
             urlParts.splice(i, 1);
         }
     }

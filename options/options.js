@@ -65,7 +65,7 @@ RedirectRuleInput.prototype = Object.create(RuleInput.prototype);
 RedirectRuleInput.prototype.constructor = RedirectRuleInput;
 RedirectRuleInput.prototype.updateModel = function () {
     RuleInput.prototype.updateModel.call(this);
-    toggleHidden(false, this.model.qs(".redirectUrl"), this.model.qs(".redirectUrl").parentNode);
+    toggleHidden(false, this.model.qs(".redirectUrl"), this.model.qs(".redirectUrl").parentNode, this.model.qs(".redirectUrlForm"));
     this.model.qs(".redirectUrl").value = this.rule.redirectUrl || "";
 };
 RedirectRuleInput.prototype.updateRule = function () {
@@ -378,9 +378,6 @@ function init() {
         myOptionsManager.restoreDefault("queryParams").then(function () {
             inputFormParams.setValue(myOptionsManager.options.queryParams.join());
         });
-    });
-    document.getElementById("showHelp").addEventListener("click", function () {
-        toggleHidden(document.getElementById("help"));
     });
 }
 

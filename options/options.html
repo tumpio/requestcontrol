@@ -12,172 +12,20 @@
     <script src="tags-input/tags-input.js"></script>
     <script src="OptionsManager.js"></script>
     <script src="options.js"></script>
+    <title>Request Control Rules</title>
 </head>
 
 <body>
 <div class="container">
-    <h2 class="page-header">Request Control Panel</h2>
+    <h1 class="page-header">Request Control Rules</h1>
     <p>Define rules for controlling HTTP requests.</p>
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-                <a id="showHelp" data-toggle="collapse" href="#help" class="text-info">
+                <a href="help.html" class="text-info">
                     <span class="glyphicon glyphicon-question-sign"></span> Show Help
                 </a>
             </h3>
-        </div>
-        <div id="help" class="panel-collapse collapse hidden">
-            <div class="panel-body">
-                <div class="container-fluid">
-                    <h2 class="page-header">Request Control Rule</h2>
-                    <p>Request Control Rule consists of <i>request pattern</i>, <i>request types</i> and <i>rule
-                        action</i>. Any request that matches a pattern of an active rule, will be intercepted taking the
-                        action of the rule.
-                    </p>
-                </div>
-                <div class="container-fluid">
-                    <h2 class="page-header">Request Pattern</h2>
-                    <p>Request pattern contains three parts: <i>scheme</i>, <i>host</i> and <i>path</i>. Alternatively
-                        the request pattern can be set to a global pattern matching any URL.</p>
-                    <h3>Scheme</h3>
-                    <p>Scheme matches the protocol of the request URL. It can be set to match schemes in the following
-                        ways.</p>
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <td><i>http</i></td>
-                            <td>Match http scheme.</td>
-                        </tr>
-                        <tr>
-                            <td><i>https</i></td>
-                            <td>Match https scheme.</td>
-                        </tr>
-                        <tr>
-                            <td><i>http/https</i></td>
-                            <td>Match both http and https schemes.</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <h3>Host</h3>
-                    <p>Host matches the host of the request URL. It can be in one of the following forms. </p>
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <td><i>www.example.com</i></td>
-                            <td>Match a complete host.</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><i>example.com</i></td>
-                            <td>Match the given host and any of its subdomains.</td>
-                            <td>Check the include subdomains checkbox to match any subdomain (e.g.
-                                <i><strong>www</strong>.example.com</i>,
-                                <i><strong>good</strong>.example.com</i> and any other subdomain of example.com).
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><i>www.example.*</i></td>
-                            <td>Match the given host and all of the listed top-level domains. (can be combined with
-                                the subdomain matching)
-                            </td>
-                            <td>Write the top-level domains to the top-level domain name list (e.g. <i>com</i>,
-                                <i>org</i>).
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><i>*</i></td>
-                            <td>Match any host.</td>
-                            <td></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <h3>Path</h3>
-                    <p>Path matches the request URL path. Path may subsequently contain any
-                        combination of "*" wildcard and any of the characters that are allowed in URL paths. The "*"
-                        wildcard matches any portion of path and may appear more than once. Below is examples for using
-                        path patterns.
-                    </p>
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <td>*</td>
-                            <td>Match any path.</td>
-                        </tr>
-                        <tr>
-                            <td><i>path/a/b/</i></td>
-                            <td>Match exact path "path/a/b/".</td>
-                        </tr>
-                        <tr>
-                            <td><i>*/b/*</i></td>
-                            <td>Match path that contains a component "b" somewhere in the middle.</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <h3>Matching All URLs</h3>
-                    <p>Checking the Any URL button matches all URLs under any of the supported schemes ("http"
-                        or "https").
-                    </p>
-                </div>
-                <div class="container-fluid">
-                    <h2 class="page-header">Request Types</h2>
-                    <p>Filter requests based on the type of the request. A type represents the requested resource. Rule
-                        can apply from one to many types or any type. All the possible types are listed below.</p>
-                    <ul>
-                        <li>Document</li>
-                        <li>Embedded document</li>
-                        <li>Stylesheet</li>
-                        <li>Script</li>
-                        <li>Image</li>
-                        <li>Object</li>
-                        <li>XMLHttpRequest</li>
-                        <li>XBL</li>
-                        <li>XSLT</li>
-                        <li>Font</li>
-                        <li>Media</li>
-                        <li>WebSocket</li>
-                        <li>CSP report</li>
-                        <li>Imageset</li>
-                        <li>Web Manifest</li>
-                        <li>Other</li>
-                        <li>Any Type</li>
-                    </ul>
-                </div>
-                <div class="container-fluid">
-                    <h2 class="page-header">Rule Action</h2>
-                    <p>There are four possible actions for rules.</p>
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <td><img src="../icons/icon-filter@19.png"></td>
-                            <td>Filter Requests</td>
-                            <td>Skips redirection tracking. If the matched request URL contains another URL, the request
-                                is cancelled and the tab where the request was made is navigated to the contained
-                                URL. Additionally URL tracking parameters that are defined in the filtered parameters
-                                list will be removed.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="../icons/icon-block@19.png"></td>
-                            <td>Block Requests</td>
-                            <td>Any request that matches a block rule will be cancelled before it is made.</td>
-                        </tr>
-                        <tr>
-                            <td><img src="../icons/icon-redirect@19.png"></td>
-                            <td>Redirect Requests</td>
-                            <td>Any request that matches a redirect rule will be redirected to the given redirect URL.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="../icons/icon-whitelist@19.png"></td>
-                            <td>Whitelist Requests</td>
-                            <td>Any request that matches a whitelist rule will be processed normally without taking any
-                                action of any other matched rules.
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
     </div>
     <ul id="rules" class="list-group form-horizontal"></ul>
@@ -369,20 +217,25 @@
             </div>
             <div class="form-group">
                 <label for="action" class="col-sm-2 control-label">Action</label>
-                <div class="col-sm-3 col-md-2">
-                    <select id="action" class="form-control input-sm action">
-                        <option value="filter">Filter Request</option>
-                        <option value="block">Block Request</option>
-                        <option value="redirect">Redirect Request</option>
-                        <option value="whitelist">Whitelist Request</option>
-                    </select>
-                </div>
-                <div class="col-sm-7 col-md-8">
-                    <div class="input-group hidden">
-                        <span class="input-group-addon">Redirect URL</span>
-                        <input type="text" class="form-control input-sm redirectUrl hidden" placeholder="Redirect URL"
-                               pattern="^.+:\/\/[^\s/$.?#].[^\s]*$"/>
+                <div class="col-sm-10">
+                    <div class="row no-gutter">
+                        <div class="col-xs-3 col-md-2">
+                            <select id="action" class="form-control input-sm action text-center">
+                                <option value="filter">Filter</option>
+                                <option value="block">Block</option>
+                                <option value="redirect">Redirect</option>
+                                <option value="whitelist">Whitelist</option>
+                            </select>
+                        </div>
                     </div>
+                </div>
+            </div>
+            <div class="form-group redirectUrlForm hidden">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-10 col-md-10">
+                    <input type="text" class="form-control redirectUrl hidden" placeholder="Redirect URL"
+                           pattern=".*"/>
+                    <span id="helpBlock" class="help-block small">Use pattern capturing to redirect based on the original request. <a href="help.html#redirection">See help.</a></span>
                 </div>
             </div>
             <div class="form-group">
