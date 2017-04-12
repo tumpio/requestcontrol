@@ -5,7 +5,7 @@
 const myOptionsManager = new OptionsManager();
 const tldStarPattern = /^(.+)\.\*$/;
 const redirectUrlPattern = /^https?:\/\/.+(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
-const paramExpanPattern = /{([a-z]+)(.*)}/g;
+const paramExpanPattern = /{([a-z]+)(.*?)}/g;
 const redirectInstrPattern = /\[([a-z]+)=(.+?)]/g;
 const substrExtractPattern = /^(:-?\d*)(:-?\d*)?(\|(.*))?/;
 const substrReplacePattern = /^\/(.+?)\/([^|]*)(\|(.*))?/;
