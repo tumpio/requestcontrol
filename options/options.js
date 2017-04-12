@@ -13,7 +13,7 @@ function RequestRule() {
             host: "",
             path: ""
         },
-        types: [],
+        types: ["main_frame"],
         action: "",
         active: true
     };
@@ -254,6 +254,7 @@ RuleInput.prototype.updateModel = function () {
     if (!this.rule.types || this.rule.types.length === 0) {
         setButtonChecked(this.model.qs(".any-type"), true);
         toggleHidden(true, this.model.qs(".btn-group-types"));
+        setButtonChecked(this.model.qs(".type[value=main_frame]"), false);
     } else {
         for (let value of this.rule.types) {
             let type = this.model.qs("[value=" + value + "]");
