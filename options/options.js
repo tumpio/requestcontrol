@@ -90,6 +90,8 @@ function RuleInput(rule) {
     self.model.qs = self.model.querySelector;
     self.model.qsa = self.model.querySelectorAll;
     self.tldsTagsInput = tagsInput(self.model.qs(".input-tlds"));
+    self.title = "Filter rule for ";
+    self.description = "Filters redirection tracking requests and omits tracking URL parameters.";
     self.optionsPath = "rules";
 
     addInputValidation(self.model.qs(".host"), self.setAllowSave.bind(self));
