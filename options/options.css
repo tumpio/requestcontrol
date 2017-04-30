@@ -30,6 +30,10 @@ h4 {
     margin-top: 1.5em;
 }
 
+.list-group-item > .row {
+    -moz-user-select: none;
+}
+
 /* Some bootstrap glyph icons with UTF-8 variants */
 .glyphicon-plus::after {
     content: "\2795";

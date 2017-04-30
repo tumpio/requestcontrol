@@ -105,6 +105,8 @@ function RuleInput(rule) {
     self.model.qs(".btn-save").addEventListener("click", self.save.bind(self));
     self.model.qs(".action").addEventListener("change", self.change.bind(self));
 
+    self.model.addEventListener("dblclick", self.toggleEdit.bind(self));
+
     self.model.qs(".any-url").addEventListener("change", function (e) {
         setButtonChecked(self.model.qs(".any-url"), e.target.checked);
         toggleHidden(e.target.checked, self.model.qs(".host").parentNode, self.model.qs(".path").parentNode, self.model.qs(".pattern"));
