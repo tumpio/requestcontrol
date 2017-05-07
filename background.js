@@ -40,11 +40,14 @@ function RequestAction(rule) {
                     if (whitelist.has(request.requestId) || request.method !== "GET" || request.tabId === -1) {
                         resolve(null);
                     } else {
-                        let redirectUrl = parseRedirectUrl(request.url);
-                        if (redirectUrl.length < request.url.length) {
+                        let filterURL = new URL(request.url.replace(redirectUrlPattern, redirectUrlReplacer));
+                        for (let param of myOptionsManager.options.queryParams) {
+                            filterURL.searchParams.delete(param);
+                        }
+                        if (filterURL.href.length < request.url.length) {
                             resolve({cancel: true});
                             browser.tabs.update(request.tabId, {
-                                url: redirectUrl
+                                url: filterURL.href
                             });
                             addPageActionDetails(request, rule.action);
                         } else {
@@ -99,6 +102,16 @@ function RequestAction(rule) {
                 });
             }
     }
+}
+
+function redirectUrlReplacer(match, p1, p2, p3) {
+    if (p2[0] === "%") {
+        p2 = decodeURIComponent(p2);
+    }
+    if (/(%26|%2F)/.test(p3)) {
+        p3 = p3.replace(/&.+/, "");
+    }
+    return p1 + p2 + decodeURIComponent(p3);
 }
 
 function parseRedirectInstructions(requestURL, redirectURL) {
@@ -185,36 +198,6 @@ function addPageActionDetails(request, action) {
         browser.pageAction.show(details.tabId);
         browser.webNavigation.onDOMContentLoaded.removeListener(arguments.callee);
     });
-}
-
-function redirectUrlReplacer(match, p1, p2, p3) {
-    if (p2[0] === "%") {
-        p2 = decodeURIComponent(p2);
-    }
-    if (/(%26|%2F)/.test(p3)) {
-        p3 = p3.replace(/&.+/, "");
-    }
-    return p1 + p2 + filterUnwantedQueryParams(decodeURIComponent(p3));
-}
-
-function parseRedirectUrl(url) {
-    return url.replace(redirectUrlPattern, redirectUrlReplacer);
-}
-
-function filterQuery(query) {
-    let queryParam = query.split("=")[0];
-    return !myOptionsManager.options.queryParams.includes(queryParam);
-}
-
-function filterUnwantedQueryParams(url) {
-    let urlParts = url.split("?");
-    for (let i = urlParts.length - 1; i >= 1; i--) {
-        urlParts[i] = urlParts[i].split("&").filter(filterQuery).join("&");
-        if (urlParts[i].length === 0) {
-            urlParts.splice(i, 1);
-        }
-    }
-    return urlParts.join("?");
 }
 
 function resolveUrls(pattern) {
