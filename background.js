@@ -4,7 +4,7 @@
 
 const myOptionsManager = new OptionsManager();
 const tldStarPattern = /^(.+)\.\*$/;
-const redirectUrlPattern = /^https?:\/\/.+(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
+const redirectUrlPattern = /^https?:\/\/(.+)(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
 const paramExpanPattern = /{([a-z]+)(.*?)}/g;
 const redirectInstrPattern = /\[([a-z]+)=(.+?)]/g;
 const substrExtractPattern = /^(:-?\d*)(:-?\d*)?(\|(.*))?/;
@@ -104,14 +104,14 @@ function RequestAction(rule) {
     }
 }
 
-function redirectUrlReplacer(match, p1, p2, p3) {
+function redirectUrlReplacer(match, urlBegin, p1, p2, urlEnd) {
     if (p2[0] === "%") {
         p2 = decodeURIComponent(p2);
     }
-    if (/(%26|%2F)/.test(p3)) {
-        p3 = p3.replace(/&.+/, "");
+    if (/(%26|%2F)/.test(urlEnd) || urlBegin.includes("?")) {
+        urlEnd = urlEnd.replace(/[&;].+/, "");
     }
-    return p1 + p2 + decodeURIComponent(p3);
+    return p1 + p2 + decodeURIComponent(urlEnd);
 }
 
 function parseRedirectInstructions(requestURL, redirectURL) {
