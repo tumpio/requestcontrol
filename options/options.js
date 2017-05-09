@@ -255,10 +255,11 @@ RuleInput.prototype.updateModel = function () {
     toggleHidden(!tldStarPattern.test(this.model.qs(".host").value), this.model.qs(".btn-tlds").parentNode);
     this.setActiveState();
 
+    setButtonChecked(this.model.qs(".type[value=main_frame]"), false);
+
     if (!this.rule.types || this.rule.types.length === 0) {
         setButtonChecked(this.model.qs(".any-type"), true);
         toggleHidden(true, this.model.qs(".btn-group-types"));
-        setButtonChecked(this.model.qs(".type[value=main_frame]"), false);
     } else {
         for (let value of this.rule.types) {
             let type = this.model.qs("[value=" + value + "]");

@@ -42,7 +42,7 @@ OptionsManager.prototype.defaultOptions = {
             ],
             path: "url?*"
         },
-        types: ["sub_frame"],
+        types: ["main_frame", "sub_frame"],
         action: "filter",
         active: true
     }, {
