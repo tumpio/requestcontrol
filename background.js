@@ -45,10 +45,14 @@ function RequestAction(rule) {
                             filterURL.searchParams.delete(param);
                         }
                         if (filterURL.href.length < request.url.length) {
-                            resolve({cancel: true});
-                            browser.tabs.update(request.tabId, {
-                                url: filterURL.href
-                            });
+                            if (request.type === "sub_frame") {
+                                resolve({cancel: true});
+                                browser.tabs.update(request.tabId, {
+                                    url: filterURL.href
+                                });
+                            } else {
+                                resolve({redirectUrl: filterURL.href});
+                            }
                             addPageActionDetails(request, rule.action);
                         } else {
                             resolve(null);
