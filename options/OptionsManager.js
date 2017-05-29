@@ -54,6 +54,7 @@ OptionsManager.prototype.defaultOptions = {
         },
         types: ["main_frame"],
         action: "filter",
+        paramsFilter: ["utm_*"],
         active: true
     }, {
         pattern: {
@@ -89,11 +90,6 @@ OptionsManager.prototype.defaultOptions = {
 
     whitelist: [],
 
-    queryParams: [
-        "utm_source",
-        "utm_medium",
-        "utm_campaign"
-    ]
 };
 
 OptionsManager.prototype.saveAllOptions = function () {

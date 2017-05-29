@@ -32,22 +32,12 @@
     <ul id="whitelist" class="list-group form-horizontal"></ul>
     <button id="addNewRule" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Create new rule
     </button>
-    <button id="restoreRules" class="btn btn-link pull-right">Restore Defaults</button>
-    <h3 class="page-header">Configure URL parameters filtering</h3>
-    <p>Set URL parameters that will be removed from requests that match a "Filter" rule. URL parameters
-        are commonly used in redirection tracking as a method to analyze the origin of traffic.</p>
-    <div class="form-group">
-        <input id="queryParams" type="tags" class="form-control input-sm input-params params"/>
-    </div>
-    <label id="saveParamsSuccess" class="text-success text-saved">
-        <span class="glyphicon glyphicon-ok"></span> parameters saved
-    </label>
-    <button id="restoreParams" class="btn btn-link pull-right">Restore Defaults</button>
+    <button id="restoreRules" class="btn btn-link pull-right">Restore Default Rules</button>
 </div>
 
 <ul id="models" class="list-group form-horizontal hidden">
     <li id="ruleInputModel" class="list-group-item rule">
-        <div class="row">
+        <div class="row rule-header">
             <div class="col-md-6">
                 <img class="icon" src="" alt="">
                 <label class="title">New rule</label><br/>
@@ -220,8 +210,9 @@
                 <div class="col-sm-10">
                     <div class="row no-gutter">
                         <div class="col-xs-3 col-md-2">
-                            <select id="action" class="form-control input-sm action text-center">
-                                <option value="filter" selected="selected">Filter</option>
+                            <select id="action" class="form-control input-sm action text-center" required="required">
+                                <option disabled selected hidden></option>
+                                <option value="filter">Filter</option>
                                 <option value="block">Block</option>
                                 <option value="redirect">Redirect</option>
                                 <option value="whitelist">Whitelist</option>
@@ -231,11 +222,41 @@
                 </div>
             </div>
             <div class="form-group redirectUrlForm hidden">
-                <label class="col-sm-2 control-label"></label>
+                <label class="col-sm-2 control-label">Redirect To</label>
                 <div class="col-sm-10 col-md-10">
                     <input type="text" class="form-control redirectUrl hidden" placeholder="Redirect URL"
                            pattern=".*"/>
                     <span id="helpBlock" class="help-block small">Use pattern capturing to redirect based on the original request. <a href="help.html#redirection">See help.</a></span>
+                </div>
+            </div>
+            <div class="form-group filterRedirectionForm hidden">
+                <label class="col-sm-2 control-label">Filter URL Redirection</label>
+                <div class="col-sm-10">
+                    <div class="row no-gutter">
+                        <div class="col-xs-3 col-md-2">
+                            <label class="switch">
+                                <input class="redirectionFilter-toggle" type="checkbox" checked="checked"/>
+                                <span class="knob"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group filterQueryStringForm hidden">
+                <label class="col-sm-2 control-label">Trim URL Parameters</label>
+                <div class="col-sm-10">
+                    <div class="row no-gutter">
+                        <div class="col-xs-9 col-md-10 btn-group-params">
+                            <input type="tags" class="form-control input-sm input-params params" placeholder="Add parameter names to filter"/>
+                        </div>
+                        <div class="col-xs-3 col-md-2">
+                            <div class="btn-group btn-group-justified btn-group-sm" data-toggle="buttons">
+                                <label class="btn btn-default">
+                                    <input class="trim-all-params" type="checkbox" autocomplete="off">Trim all
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group">

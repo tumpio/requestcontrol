@@ -17,6 +17,42 @@ body {
     opacity: 1;
 }
 
+h4 {
+    margin-top: 1.5em;
+}
+
+.rule-header,
+.title,
+.description {
+    -moz-user-select: none;
+    cursor: pointer;
+}
+
+.rule.editing:before {
+    content:"";
+    position:absolute;
+    float: left;
+    top:0;
+    left:0;
+    bottom: 0;
+    width: 3px;
+    background-color: #2e6da4;
+}
+
+.rule:hover {
+    background-color: #F8F8F8;
+}
+
+.rule[data-type="filter"] .filterRedirectionForm,
+.rule[data-type="filter"] .filterQueryStringForm {
+    display: block!important;
+}
+
+.rule[data-type="redirect"] .redirectUrlForm {
+    display: block!important;
+}
+
+/* Some bootstrap glyph icons with UTF-8 variants */
 .glyphicon-question-sign::after {
     content: "";
     background-image: url("chrome://browser/skin/menuPanel-help.png");
@@ -25,16 +61,6 @@ body {
     display: inline-block;
     background-position: 48px;
 }
-
-h4 {
-    margin-top: 1.5em;
-}
-
-.list-group-item > .row {
-    -moz-user-select: none;
-}
-
-/* Some bootstrap glyph icons with UTF-8 variants */
 .glyphicon-plus::after {
     content: "\2795";
 }
@@ -61,4 +87,69 @@ h4 {
 
 .glyphicon-flash::after {
     content: "\1F5F2";
+}
+
+/* Toggle switch style */
+.switch {
+    position: relative;
+    border: 1px solid #adadad;
+    border-radius: 3px;
+    cursor: pointer;
+    -moz-user-select: none;
+    height: 26px;
+    width: 60px;
+    font-weight: normal;
+    font-size: 12px;
+    color: #333;
+    background-color: #e6e6e6;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.switch:after, .switch:before {
+    background-color: #1D90CD;
+    color: #FFF;
+    content: "On";
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 51%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.switch:before {
+    content: "Off";
+    left: auto;
+    right: 0;
+    width: 50%;
+    box-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
+    color: #333;
+    background-color: #e6e6e6;
+}
+
+.switch .knob {
+    background: #eee;
+    border: 1px solid #adadad;
+    border-bottom: none;
+    border-radius: 1px;
+    border-top: none;
+    display: block;
+    height: 100%;
+    left: -1px;
+    position: relative;
+    transition: all .15s ease;
+    width: 30px;
+    z-index: 2;
+}
+
+.switch input {
+    position: absolute;
+    visibility: hidden;
+}
+
+.switch input:checked + .knob {
+    left: 50%;
 }

@@ -40,12 +40,32 @@ function RequestAction(rule) {
                     if (whitelist.has(request.requestId) || request.method !== "GET" || request.tabId === -1) {
                         resolve(null);
                     } else {
-                        let filterURL = new URL(request.url.replace(redirectUrlPattern, redirectUrlReplacer));
-                        for (let param of myOptionsManager.options.queryParams) {
-                            filterURL.searchParams.delete(param);
+                        let filterURL;
+
+                        // redirection url filter
+                        if (rule.skipRedirectionFilter) {
+                            filterURL = new URL(request.url);
+                        } else {
+                            filterURL = new URL(request.url.replace(redirectUrlPattern, redirectUrlReplacer));
                         }
+
+                        // trim query parameters
+                        if (rule.trimAllParams) {
+                            filterURL.search = "";
+                        } else if (Array.isArray(rule.paramsFilter)) {
+                            let filterParams = new URLSearchParams();
+                            let pattern = new RegExp("^(" + rule.paramsFilter.join("|").replace("*", ".*") + ")$");
+                            for (let param of filterURL.searchParams) {
+                                if (!pattern.test(param[0])) {
+                                    filterParams.append(param[0], param[1]);
+                                }
+                            }
+                            filterURL.search = filterParams.toString();
+                        }
+
+                        // resolve request listener
                         if (filterURL.href.length < request.url.length) {
-                            if (request.type === "sub_frame") {
+                            if (request.type === "sub_frame" && !rule.skipRedirectionFilter) {
                                 resolve({cancel: true});
                                 browser.tabs.update(request.tabId, {
                                     url: filterURL.href
@@ -112,7 +132,7 @@ function redirectUrlReplacer(match, urlBegin, p1, p2, urlEnd) {
     if (p2[0] === "%") {
         p2 = decodeURIComponent(p2);
     }
-    if (/(%26|%2F)/.test(urlEnd) || urlBegin.includes("?")) {
+    if (/(%26|%2F)/.test(urlEnd) || urlBegin.includes("?")) {
         urlEnd = urlEnd.replace(/[&;].+/, "");
     }
     return p1 + p2 + decodeURIComponent(urlEnd);

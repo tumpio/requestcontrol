@@ -39,10 +39,48 @@ function FilterRuleInput(rule) {
     this.title = "Filter rule for ";
     this.description = "Filters redirection tracking requests and omits tracking URL parameters.";
     this.optionsPath = "rules";
+    this.paramsTagsInput = tagsInput(this.model.qs(".input-params"));
+
+    this.toggleTrimAll = function (e) {
+        setButtonChecked(e.target, e.target.checked);
+        toggleHidden(e.target.checked, this.model.qs(".btn-group-params"));
+    };
+    this.model.qs(".trim-all-params").addEventListener("change", this.toggleTrimAll.bind(this));
     this.updateModel();
 }
 FilterRuleInput.prototype = Object.create(RuleInput.prototype);
 FilterRuleInput.prototype.constructor = FilterRuleInput;
+FilterRuleInput.prototype.updateModel = function () {
+    RuleInput.prototype.updateModel.call(this);
+    this.model.qs(".redirectionFilter-toggle").checked = !this.rule.skipRedirectionFilter;
+    if (Array.isArray(this.rule.paramsFilter)) {
+        this.paramsTagsInput.setValue(this.rule.paramsFilter.join());
+    }
+    if (this.rule.pattern.allUrls) {
+        setButtonChecked(this.model.qs(".any-url"), true);
+        toggleHidden(true, this.model.qs(".host").parentNode, this.model.qs(".path").parentNode, this.model.qs(".pattern"));
+    }
+    if (this.rule.trimAllParams) {
+        setButtonChecked(this.model.qs(".trim-all-params"), true);
+        toggleHidden(true, this.model.qs(".btn-group-params"));
+    }
+};
+FilterRuleInput.prototype.updateRule = function () {
+    RuleInput.prototype.updateRule.call(this);
+    this.rule.paramsFilter = this.paramsTagsInput.getValue();
+
+    if (this.model.qs(".redirectionFilter-toggle").checked) {
+        delete this.rule.skipRedirectionFilter;
+    } else {
+        this.rule.skipRedirectionFilter = true;
+    }
+
+    if (this.model.qs(".trim-all-params").checked) {
+        this.rule.trimAllParams = true;
+    } else {
+        delete this.rule.trimAllParams;
+    }
+};
 
 function BlockRuleInput(rule) {
     RuleInput.call(this, rule);
@@ -90,8 +128,7 @@ function RuleInput(rule) {
     self.model.qs = self.model.querySelector;
     self.model.qsa = self.model.querySelectorAll;
     self.tldsTagsInput = tagsInput(self.model.qs(".input-tlds"));
-    self.title = "Filter rule for ";
-    self.description = "Filters redirection tracking requests and omits tracking URL parameters.";
+    self.title = "New Rule";
     self.optionsPath = "rules";
 
     addInputValidation(self.model.qs(".host"), self.setAllowSave.bind(self));
@@ -105,7 +142,7 @@ function RuleInput(rule) {
     self.model.qs(".btn-save").addEventListener("click", self.save.bind(self));
     self.model.qs(".action").addEventListener("change", self.change.bind(self));
 
-    self.model.addEventListener("dblclick", self.toggleEdit.bind(self));
+    self.model.qs(".rule-header").addEventListener("dblclick", self.toggleEdit.bind(self));
 
     self.model.qs(".any-url").addEventListener("change", function (e) {
         setButtonChecked(self.model.qs(".any-url"), e.target.checked);
@@ -207,6 +244,7 @@ RuleInput.prototype.toggleActive = function () {
 
 RuleInput.prototype.toggleEdit = function () {
     toggleHidden(this.model.qs(".panel-collapse"));
+    this.model.classList.toggle("editing");
 };
 
 RuleInput.prototype.setActiveState = function () {
@@ -240,6 +278,7 @@ RuleInput.prototype.indexOfRule = function () {
 };
 
 RuleInput.prototype.updateModel = function () {
+    this.model.setAttribute("data-type", this.rule.action);
     this.model.qs(".icon").src = "../icons/icon-" + this.rule.action + "@19.png";
     this.model.qs(".title").textContent = this.title + (this.rule.pattern.allUrls ? "any URL" : encodeURIComponent(this.rule.pattern.host));
     this.model.qs(".description").textContent = this.description;
@@ -354,11 +393,9 @@ function createOptions(target, options) {
 function init() {
     let inputFormRules = document.getElementById("rules");
     let inputFormWhitelist = document.getElementById("whitelist");
-    let inputFormParams = tagsInput(document.getElementById("queryParams"));
 
     createOptions(inputFormRules, myOptionsManager.options.rules);
     createOptions(inputFormWhitelist, myOptionsManager.options.whitelist);
-    inputFormParams.setValue(myOptionsManager.options.queryParams.join());
 
     document.getElementById("addNewRule").addEventListener("click", function () {
         let ruleInput = RuleInputFactory();
@@ -367,22 +404,13 @@ function init() {
         ruleInput.model.qs(".host").focus();
         ruleInput.model.scrollIntoView();
     });
-    document.getElementById("queryParams").addEventListener("change", function () {
-        myOptionsManager.saveOption("queryParams", inputFormParams.getValue()).then(function () {
-            toggleFade(document.getElementById("saveParamsSuccess"));
-        });
-    });
+
     document.getElementById("restoreRules").addEventListener("click", function () {
         myOptionsManager.restoreDefault("rules").then(function () {
             createOptions(inputFormRules, myOptionsManager.options.rules);
         });
         myOptionsManager.restoreDefault("whitelist").then(function () {
             createOptions(inputFormWhitelist, myOptionsManager.options.whitelist);
-        });
-    });
-    document.getElementById("restoreParams").addEventListener("click", function () {
-        myOptionsManager.restoreDefault("queryParams").then(function () {
-            inputFormParams.setValue(myOptionsManager.options.queryParams.join());
         });
     });
 }
