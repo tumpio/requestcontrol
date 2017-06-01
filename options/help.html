@@ -79,11 +79,10 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <td><em>example.com</em></td>
+                            <td><em>*.example.com</em></td>
                             <td>Match the given host and any of its subdomains.</td>
-                            <td>Check the include subdomains checkbox to match any subdomain (e.g.
+                            <td>Will match any subdomain of example.com e.g.
                                 <em><strong>www</strong>.example.com</em>, <em><strong>good</strong>.example.com</em>
-                                and any other subdomain of example.com).
                             </td>
                         </tr>
                         <tr>
@@ -155,9 +154,12 @@
                         <tr>
                             <td><img src="../icons/icon-filter@19.png"/></td>
                             <td>Filter Requests</td>
-                            <td>Any request that matches a filter rule will be filtered according the filter rule configuration.
-                                With URL redirection filtering the request is taken directly to the contained redirect URL.
-                                With URL parameters trimming the configured URL parameters will be removed from requests.
+                            <td>Any request that matches a filter rule will be filtered according the filter rule
+                                configuration.
+                                With URL redirection filtering the request is taken directly to the contained redirect
+                                URL.
+                                With URL parameters trimming the configured URL parameters will be removed from
+                                requests.
                             </td>
                         </tr>
                         <tr>
@@ -227,7 +229,8 @@
                     </table>
                     <h3 id="redirect-instructions">Redirect instructions</h3>
                     <pre>[parameter=value]</pre>
-                    <p>Modify the original request. Available named parameters are listed at the end of this section.</p>
+                    <p>Modify the original request. Available named parameters are listed at the end of this
+                        section.</p>
                     <h4 id="instruction-examples">Examples</h4>
                     <table class="table">
                         <tbody>

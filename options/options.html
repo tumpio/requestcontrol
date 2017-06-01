@@ -82,13 +82,9 @@
                                 <div class="col-xs-4 col-md-5">
                                     <label for="host" class="help-block text-center">host</label>
                                     <div class="input-group input-group-sm">
-                                        <span class="input-group-addon">
-                                            <input class="matchSubDomains" type="checkbox" title="Include subdomains"
-                                                   style="vertical-align:middle;">
-                                        </span>
                                         <input id="host" type="text" class="form-control input-sm host"
                                                placeholder="example.com"
-                                               pattern="^(\*|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(\.\*)?)$"/>
+                                               pattern="^(\*\.)?[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+(\.\*)?$"/>
                                         <div class="input-group-btn hidden">
                                             <button class="btn btn-info btn-tlds" type="button"
                                                     title="Included top-level domain names">

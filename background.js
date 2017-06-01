@@ -240,11 +240,11 @@ function resolveUrls(pattern) {
 }
 
 function patternRuleToUrl(pattern) {
-    return pattern.scheme + "://" + (pattern.matchSubDomains ? "*." : "") + pattern.host + "/" + pattern.path;
+    return pattern.scheme + "://" + pattern.host + "/" + pattern.path;
 }
 
 function tldStarPatternRuleToUrl(pattern, TLD) {
-    return pattern.scheme + "://" + (pattern.matchSubDomains ? "*." : "") + pattern.host.replace(tldStarPattern, "$1." +
+    return pattern.scheme + "://" + pattern.host.replace(tldStarPattern, "$1." +
             TLD) + "/" + pattern.path;
 }
 

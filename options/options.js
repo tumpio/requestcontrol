@@ -9,7 +9,6 @@ function RequestRule() {
     return {
         pattern: {
             scheme: "*",
-            matchSubDomains: false,
             host: "",
             path: ""
         },
@@ -283,7 +282,6 @@ RuleInput.prototype.updateModel = function () {
     this.model.qs(".title").textContent = this.title + (this.rule.pattern.allUrls ? "any URL" : encodeURIComponent(this.rule.pattern.host));
     this.model.qs(".description").textContent = this.description;
     this.model.qs(".scheme").value = this.rule.pattern.scheme;
-    this.model.qs(".matchSubDomains").checked = this.rule.pattern.matchSubDomains;
     this.model.qs(".host").value = this.rule.pattern.host;
     this.model.qs(".path").value = this.rule.pattern.path;
     this.model.qs(".action").value = this.rule.action;
@@ -318,7 +316,6 @@ RuleInput.prototype.updateRule = function () {
         this.rule.pattern.allUrls = true;
     } else {
         this.rule.pattern.scheme = this.model.qs(".scheme").value;
-        this.rule.pattern.matchSubDomains = this.model.qs(".matchSubDomains").checked;
         this.rule.pattern.host = this.model.qs(".host").value;
         this.rule.pattern.path = this.model.qs(".path").value;
         if (tldStarPattern.test(this.model.qs(".host").value)) {
