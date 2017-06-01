@@ -9,8 +9,7 @@ OptionsManager.prototype.defaultOptions = {
     rules: [{
         pattern: {
             scheme: "*",
-            matchSubDomains: true,
-            host: "deviantart.com",
+            host: "*.deviantart.com",
             path: "outgoing?*"
         },
         types: ["main_frame"],
@@ -19,8 +18,7 @@ OptionsManager.prototype.defaultOptions = {
     }, {
         pattern: {
             scheme: "*",
-            matchSubDomains: true,
-            host: "google.*",
+            host: "*.google.*",
             topLevelDomains: ["com", "ad", "ae", "com.af", "com.ag", "com.ai", "al", "am", "co.ao",
                 "com.ar", "as", "at", "com.au", "az", "ba", "com.bd", "be", "bf", "bg", "com.bh", "bi",
                 "bj", "com.bn", "com.bo", "com.br", "bs", "bt", "co.bw", "by", "com.bz", "ca", "cd",
@@ -48,7 +46,6 @@ OptionsManager.prototype.defaultOptions = {
     }, {
         pattern: {
             scheme: "*",
-            matchSubDomains: false,
             host: "clk.tradedoubler.com",
             path: "*url=*"
         },
@@ -59,7 +56,6 @@ OptionsManager.prototype.defaultOptions = {
     }, {
         pattern: {
             scheme: "*",
-            matchSubDomains: false,
             host: "outgoing.prod.mozaws.net",
             path: "*"
         },
@@ -69,7 +65,6 @@ OptionsManager.prototype.defaultOptions = {
     }, {
         pattern: {
             scheme: "*",
-            matchSubDomains: false,
             host: "out.reddit.com",
             path: "*url=*"
         },
@@ -79,7 +74,6 @@ OptionsManager.prototype.defaultOptions = {
     }, {
         pattern: {
             scheme: "*",
-            matchSubDomains: false,
             host: "steamcommunity.com",
             path: "linkfilter/?url=*"
         },
