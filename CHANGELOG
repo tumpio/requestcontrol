@@ -1,3 +1,8 @@
+Version 1.5.0 June 1, 2017
+- URL parameter filtering is now Filter rule specific.
+- Redirection cleaning can now be turned off in Filter rule.
+- Added wildcard "*" support for url parameter trimming.
+
 Version 1.4.3 May 27, 2017
 - Fix url parameter filtering for global rules.
 - Fix redirection url parsing from query string.

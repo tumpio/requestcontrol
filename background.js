@@ -52,7 +52,7 @@ function RequestAction(rule) {
                         // trim query parameters
                         if (rule.trimAllParams) {
                             filterURL.search = "";
-                        } else if (Array.isArray(rule.paramsFilter)) {
+                        } else if (Array.isArray(rule.paramsFilter) && rule.paramsFilter.length > 0) {
                             let filterParams = new URLSearchParams();
                             let pattern = new RegExp("^(" + rule.paramsFilter.join("|").replace("*", ".*") + ")$");
                             for (let param of filterURL.searchParams) {

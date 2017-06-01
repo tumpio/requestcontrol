@@ -39,7 +39,7 @@ h4 {
     background-color: #2e6da4;
 }
 
-.rule:hover {
+.rule:not(.editing):hover {
     background-color: #F8F8F8;
 }
 

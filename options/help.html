@@ -45,15 +45,14 @@
                     </ul>
                     <h2 id="request-control-rule" class="page-header">Request Control Rule explained</h2>
                     <p>Request Control Rule consists of <em>request pattern</em>, <em>request types</em> and <em>rule
-                        action</em>. Any request that matches a pattern of an active rule, will be intercepted taking
+                        action</em>. Requests that match a pattern of an active rule, will be intercepted taking
                         the action of the rule.</p>
                     <h2 id="request-pattern" class="page-header">Request Pattern
                         <small><sup><a href="#attr1" title="Attributed to Mozilla Contributors">[1]</a></sup></small>
                     </h2>
                     <p>Request pattern contains three parts: <em>scheme</em>, <em>host</em> and <em>path</em>.</p>
                     <h3 id="scheme">Scheme</h3>
-                    <p>Scheme matches the protocol of the request URL. It can be set to match schemes in the following
-                        ways.</p>
+                    <p>Scheme matches the protocol of the request URL. The following schemes are supported.</p>
                     <table class="table">
                         <tbody>
                         <tr>
@@ -128,7 +127,7 @@
                     <h2 id="request-types" class="page-header">Request Types
                         <small><sup><a href="#attr2" title="Attributed to Mozilla Contributors">[2]</a></sup></small>
                     </h2>
-                    <p>Filter requests based on the type of a request. A type represents the requested resource. Rule
+                    <p>Filter requests based on the type of the request. A type represents the requested resource. Rule
                         can apply from one to many types or any type. All possible types are listed below.</p>
                     <ul>
                         <li>Document</li>
@@ -150,16 +149,15 @@
                         <li>Any Type</li>
                     </ul>
                     <h2 id="rule-action" class="page-header">Rule Action</h2>
-                    <p>There are four types of actions.</p>
+                    <p>There are four types of rule actions.</p>
                     <table class="table">
                         <tbody>
                         <tr>
                             <td><img src="../icons/icon-filter@19.png"/></td>
                             <td>Filter Requests</td>
-                            <td>Skips redirection tracking. If the matched request URL contains another
-                                URL, the request is cancelled and the tab where the request was made is navigated to the
-                                contained URL. Additionally URL tracking parameters that are defined in the filtered
-                                parameters list will be removed.
+                            <td>Any request that matches a filter rule will be filtered according the filter rule configuration.
+                                With URL redirection filtering the request is taken directly to the contained redirect URL.
+                                With URL parameters trimming the configured URL parameters will be removed from requests.
                             </td>
                         </tr>
                         <tr>
@@ -172,14 +170,14 @@
                         <tr>
                             <td><img src="../icons/icon-redirect@19.png"/></td>
                             <td>Redirect Requests</td>
-                            <td>Any request that matches a redirect rule will be redirected to the given
+                            <td>Any request that matches a redirect rule will be redirected to the configured
                                 redirect URL.
                             </td>
                         </tr>
                         <tr>
                             <td><img src="../icons/icon-whitelist@19.png"/></td>
                             <td>Whitelist Requests</td>
-                            <td>Any request that matches a whitelist rule will be processed normally
+                            <td>Any requests that match a whitelist rule will be processed normally
                                 without taking any action of any other matched rules.
                             </td>
                         </tr>
