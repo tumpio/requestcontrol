@@ -38,7 +38,7 @@ function FilterRuleInput(rule) {
     this.title = "Filter rule for ";
     this.description = "Filters redirection tracking requests and omits tracking URL parameters.";
     this.optionsPath = "rules";
-    this.paramsTagsInput = tagsInput(this.model.qs(".input-params"));
+    this.paramsTagsInput = new TagsInput(this.model.qs(".input-params"));
 
     this.toggleTrimAll = function (e) {
         setButtonChecked(e.target, e.target.checked);
@@ -126,7 +126,7 @@ function RuleInput(rule) {
     self.model = cloneRuleInputModel();
     self.model.qs = self.model.querySelector;
     self.model.qsa = self.model.querySelectorAll;
-    self.tldsTagsInput = tagsInput(self.model.qs(".input-tlds"));
+    self.tldsTagsInput = new TagsInput(self.model.qs(".input-tlds"));
     self.title = "New Rule";
     self.optionsPath = "rules";
 
