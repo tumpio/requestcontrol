@@ -1,7 +1,7 @@
 {
     "name": "Request Control",
     "description": "Take control over your requests!",
-    "version": "1.6.0beta2",
+    "version": "1.6.0beta3",
     "manifest_version": 2,
     "icons": {
         "48": "icons/icon-48.png",
