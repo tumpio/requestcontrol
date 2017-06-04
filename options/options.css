@@ -56,6 +56,31 @@ h4 {
     display: block!important;
 }
 
+.input-group::after {
+    color: #868181;
+    font-size: 1em;
+    position: absolute;
+    right: -30px;
+    font-weight: bold;
+    margin-top: 0.5em;
+    top: 0;
+    width: 30px;
+    text-align: center;
+}
+
+.scheme-group::after {
+    content: "://";
+}
+
+.host-group::after {
+    content: "/";
+}
+
+.help-block,
+.control-label {
+    font-size: 0.9em;
+}
+
 /* Some bootstrap glyph icons with UTF-8 variants */
 .glyphicon-question-sign::after {
     content: "";

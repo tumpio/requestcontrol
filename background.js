@@ -226,26 +226,27 @@ function addPageActionDetails(request, action) {
 
 function resolveUrls(pattern) {
     let urls = [];
+    let hosts = Array.isArray(pattern.host) ? pattern.host : [pattern.host];
+    let paths = Array.isArray(pattern.path) ? pattern.path : [pattern.path];
+
     if (pattern.allUrls) {
         return ["<all_urls>"];
     }
-    if (tldStarPattern.test(pattern.host)) {
-        for (let TLD of pattern.topLevelDomains) {
-            urls.push(tldStarPatternRuleToUrl(pattern, TLD));
+
+    for (let host of hosts) {
+        for (let path of paths) {
+            if (tldStarPattern.test(host)) {
+                host = host.slice(0, -1);
+                for (let TLD of pattern.topLevelDomains) {
+                    urls.push(pattern.scheme + "://" + host + TLD + "/" + path);
+                }
+            } else {
+                urls.push(pattern.scheme + "://" + host + "/" + path);
+            }
         }
-    } else {
-        urls.push(patternRuleToUrl(pattern));
     }
+
     return urls;
-}
-
-function patternRuleToUrl(pattern) {
-    return pattern.scheme + "://" + pattern.host + "/" + pattern.path;
-}
-
-function tldStarPatternRuleToUrl(pattern, TLD) {
-    return pattern.scheme + "://" + pattern.host.replace(tldStarPattern, "$1." +
-            TLD) + "/" + pattern.path;
 }
 
 function removePreviousListeners() {

@@ -53,7 +53,7 @@ FilterRuleInput.prototype.updateModel = function () {
     RuleInput.prototype.updateModel.call(this);
     this.model.qs(".redirectionFilter-toggle").checked = !this.rule.skipRedirectionFilter;
     if (Array.isArray(this.rule.paramsFilter)) {
-        this.paramsTagsInput.setValue(this.rule.paramsFilter.join());
+        this.paramsTagsInput.setValue(this.rule.paramsFilter);
     }
     if (this.rule.pattern.allUrls) {
         setButtonChecked(this.model.qs(".any-url"), true);
@@ -126,15 +126,15 @@ function RuleInput(rule) {
     self.model = cloneRuleInputModel();
     self.model.qs = self.model.querySelector;
     self.model.qsa = self.model.querySelectorAll;
+    self.hostsTagsInput = new TagsInput(self.model.qs(".host"));
+    self.pathsTagsInput = new TagsInput(self.model.qs(".path"));
     self.tldsTagsInput = new TagsInput(self.model.qs(".input-tlds"));
     self.title = "New Rule";
     self.optionsPath = "rules";
 
-    addInputValidation(self.model.qs(".host"), self.setAllowSave.bind(self));
-    addInputValidation(self.model.qs(".path"), self.setAllowSave.bind(self));
     addInputValidation(self.model.qs(".redirectUrl"), self.setAllowSave.bind(self));
 
-    self.model.qs(".host").addEventListener("input", self.validateTLDPattern.bind(self));
+    //self.model.qs(".host").addEventListener("input", self.validateTLDPattern.bind(self));
     self.model.qs(".btn-edit").addEventListener("click", self.toggleEdit.bind(self));
     self.model.qs(".btn-activate").addEventListener("click", self.toggleActive.bind(self));
     self.model.qs(".btn-remove").addEventListener("click", self.remove.bind(self));
@@ -279,15 +279,15 @@ RuleInput.prototype.indexOfRule = function () {
 RuleInput.prototype.updateModel = function () {
     this.model.setAttribute("data-type", this.rule.action);
     this.model.qs(".icon").src = "../icons/icon-" + this.rule.action + "@19.png";
-    this.model.qs(".title").textContent = this.title + (this.rule.pattern.allUrls ? "any URL" : encodeURIComponent(this.rule.pattern.host));
+    this.model.qs(".title").textContent = this.title + (this.rule.pattern.allUrls ? "any URL" : this.rule.pattern.host);
     this.model.qs(".description").textContent = this.description;
     this.model.qs(".scheme").value = this.rule.pattern.scheme;
-    this.model.qs(".host").value = this.rule.pattern.host;
-    this.model.qs(".path").value = this.rule.pattern.path;
+    this.hostsTagsInput.setValue(this.rule.pattern.host);
+    this.pathsTagsInput.setValue(this.rule.pattern.path);
     this.model.qs(".action").value = this.rule.action;
     if (this.rule.pattern.topLevelDomains) {
         this.model.qs(".btn-tlds > .badge").textContent = this.rule.pattern.topLevelDomains.length;
-        this.tldsTagsInput.setValue(this.rule.pattern.topLevelDomains.join());
+        this.tldsTagsInput.setValue(this.rule.pattern.topLevelDomains);
     }
     toggleHidden(!tldStarPattern.test(this.model.qs(".host").value), this.model.qs(".btn-tlds").parentNode);
     this.setActiveState();
@@ -316,8 +316,8 @@ RuleInput.prototype.updateRule = function () {
         this.rule.pattern.allUrls = true;
     } else {
         this.rule.pattern.scheme = this.model.qs(".scheme").value;
-        this.rule.pattern.host = this.model.qs(".host").value;
-        this.rule.pattern.path = this.model.qs(".path").value;
+        this.rule.pattern.host = this.hostsTagsInput.getValue();
+        this.rule.pattern.path = this.pathsTagsInput.getValue();
         if (tldStarPattern.test(this.model.qs(".host").value)) {
             this.rule.pattern.topLevelDomains = this.tldsTagsInput.getValue();
         }
