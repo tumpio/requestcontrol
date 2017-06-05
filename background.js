@@ -263,8 +263,9 @@ function addListeners(rules) {
         if (!rule.active) {
             continue;
         }
+        let urls = resolveUrls(rule.pattern);
         filter = {
-            urls: resolveUrls(rule.pattern),
+            urls: urls,
             types: rule.types
         };
         listener = new RequestAction(rule);

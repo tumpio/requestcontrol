@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 const myOptionsManager = new OptionsManager();
-const tldStarPattern = /^(.+)\.\*$/;
+const tldStarPattern = /^(.+\.\*,.+|.+\.\*)$/;
 
 function RequestRule() {
     return {
@@ -97,6 +97,8 @@ function RedirectRuleInput(rule) {
     this.description = "Redirects requests to self defined redirect URL.";
     this.optionsPath = "rules";
     this.updateModel();
+
+    addInputValidation(this.model.qs(".redirectUrl"), this.setAllowSave.bind(this));
 }
 RedirectRuleInput.prototype = Object.create(RuleInput.prototype);
 RedirectRuleInput.prototype.constructor = RedirectRuleInput;
@@ -132,9 +134,10 @@ function RuleInput(rule) {
     self.title = "New Rule";
     self.optionsPath = "rules";
 
-    addInputValidation(self.model.qs(".redirectUrl"), self.setAllowSave.bind(self));
+    addInputValidation(this.model.qs(".host"), this.setAllowSave.bind(self));
+    addInputValidation(this.model.qs(".path"), this.setAllowSave.bind(self));
 
-    //self.model.qs(".host").addEventListener("input", self.validateTLDPattern.bind(self));
+    self.model.qs(".host").addEventListener("change", self.validateTLDPattern.bind(self));
     self.model.qs(".btn-edit").addEventListener("click", self.toggleEdit.bind(self));
     self.model.qs(".btn-activate").addEventListener("click", self.toggleActive.bind(self));
     self.model.qs(".btn-remove").addEventListener("click", self.remove.bind(self));
@@ -363,17 +366,13 @@ function toggleFade(element) {
 
 function addInputValidation(input, callback) {
     function validateInput(e) {
-        let input = e.target;
-        let pattern;
-        if (input.pattern) {
-            pattern = new RegExp(e.target.pattern);
-            let pass = pattern.test(input.value);
-            input.parentNode.classList.toggle("has-error", !pass);
-            callback(pass);
-        }
+        let pass = e.target.checkValidity();
+        input.parentNode.classList.toggle("has-error", !pass);
+        callback(pass);
     }
 
     input.addEventListener("input", validateInput);
+    input.addEventListener("change", validateInput);
     input.addEventListener("blur", validateInput);
 }
 

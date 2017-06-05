@@ -83,7 +83,8 @@
                                     <div class="input-group input-group-sm host-group">
                                         <input id="host" type="text" class="form-control input-sm host"
                                                placeholder="example.com"
-                                               pattern="^(\*\.)?[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+(\.\*)?$"/>
+                                               required="required"
+                                               pattern="^(\*|[0-9a-zA-Z]{1,2}|(\*\.)?[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+(\.\*)?)$"/>
                                         <div class="input-group-btn hidden">
                                             <button class="btn btn-info btn-tlds" type="button"
                                                     title="Included top-level domain names">
@@ -117,7 +118,9 @@
                     </div>
                     <div class="tlds-block hidden">
                         <label for="tlds" class="help-block">Top-level domains</label>
-                        <input id="tlds" type="tags" class="form-control input-sm input-tlds tlds hidden"/>
+                        <input id="tlds" type="text" class="form-control input-sm input-tlds tlds hidden"
+                               pattern="^([0-9a-zA-Z]{1,2}|[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+)$"
+                               required="required"/>
                     </div>
                 </div>
             </div>
@@ -219,7 +222,7 @@
                 <label class="col-sm-2 control-label">Redirect To</label>
                 <div class="col-sm-10 col-md-10">
                     <input type="text" class="form-control redirectUrl hidden" placeholder="Redirect URL"
-                           pattern=".*"/>
+                           pattern=".*" required="required"/>
                     <span id="helpBlock" class="help-block small">Use pattern capturing to redirect based on the original request. <a href="help.html#redirection">See help.</a></span>
                 </div>
             </div>
@@ -241,7 +244,8 @@
                 <div class="col-sm-10">
                     <div class="row no-gutter">
                         <div class="col-xs-9 col-md-10 btn-group-params">
-                            <input type="tags" class="form-control input-sm input-params params" placeholder="Add parameter names to filter"/>
+                            <input type="text" class="form-control input-sm input-params params"
+                                   placeholder="Add parameter names to filter"/>
                         </div>
                         <div class="col-xs-3 col-md-2">
                             <div class="btn-group btn-group-justified btn-group-sm" data-toggle="buttons">
