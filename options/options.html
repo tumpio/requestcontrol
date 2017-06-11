@@ -6,11 +6,12 @@
 
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="tags-input/src/tags-input.css">
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../lib/tags-input/src/tags-input.css">
     <link rel="stylesheet" href="options.css">
-    <script src="tags-input/src/tags-input.js"></script>
-    <script src="OptionsManager.js"></script>
+    <script src="../lib/tags-input/src/tags-input.js"></script>
+    <script src="../lib/OptionsManager.js"></script>
+    <script src="../lib/RequestControl.js"></script>
     <script src="options.js"></script>
     <title>Request Control Rules</title>
 </head>
@@ -45,6 +46,7 @@
             </div>
             <div class="col-md-6">
                 <span class="pull-right">
+                    <div class="information"><small><span class="badge match-patterns"></span> patterns</small></div>
                     <button type="button" class="btn btn-default btn-edit">Edit
                     </button>
                     <button type="button" class="btn btn-default btn-activate">Disable

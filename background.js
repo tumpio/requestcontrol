@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-const myOptionsManager = new OptionsManager();
+const myOptionsManager = new OptionsManager(RequestControl.defaultOptions);
 const tldStarPattern = /^(.+)\.\*$/;
 const redirectUrlPattern = /^https?:\/\/(.+)(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
 const paramExpanPattern = /{([a-z]+)(.*?)}/g;
@@ -224,31 +224,6 @@ function addPageActionDetails(request, action) {
     });
 }
 
-function resolveUrls(pattern) {
-    let urls = [];
-    let hosts = Array.isArray(pattern.host) ? pattern.host : [pattern.host];
-    let paths = Array.isArray(pattern.path) ? pattern.path : [pattern.path];
-
-    if (pattern.allUrls) {
-        return ["<all_urls>"];
-    }
-
-    for (let host of hosts) {
-        for (let path of paths) {
-            if (tldStarPattern.test(host)) {
-                host = host.slice(0, -1);
-                for (let TLD of pattern.topLevelDomains) {
-                    urls.push(pattern.scheme + "://" + host + TLD + "/" + path);
-                }
-            } else {
-                urls.push(pattern.scheme + "://" + host + "/" + path);
-            }
-        }
-    }
-
-    return urls;
-}
-
 function removePreviousListeners() {
     let listener;
     while (requestListeners.length) {
@@ -263,7 +238,7 @@ function addListeners(rules) {
         if (!rule.active) {
             continue;
         }
-        let urls = resolveUrls(rule.pattern);
+        let urls = RequestControl.resolveUrls(rule.pattern);
         filter = {
             urls: urls,
             types: rule.types

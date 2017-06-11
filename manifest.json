@@ -35,7 +35,8 @@
     },
     "background": {
         "scripts": [
-            "options/OptionsManager.js",
+            "lib/OptionsManager.js",
+            "lib/RequestControl.js",
             "background.js"
         ]
     }

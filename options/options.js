@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-const myOptionsManager = new OptionsManager();
+const myOptionsManager = new OptionsManager(RequestControl.defaultOptions);
 const tldStarPattern = /^(.+\.\*,.+|.+\.\*)$/;
 
 function RequestRule() {
@@ -36,7 +36,7 @@ function RuleInputFactory(rule = new RequestRule()) {
 function FilterRuleInput(rule) {
     RuleInput.call(this, rule);
     this.title = "Filter rule for ";
-    this.description = "Filters redirection tracking requests and omits tracking URL parameters.";
+    this.description = ["Filters URL redirection", "trims URL parameters"];
     this.optionsPath = "rules";
     this.paramsTagsInput = new TagsInput(this.model.qs(".input-params"));
 
@@ -80,6 +80,15 @@ FilterRuleInput.prototype.updateRule = function () {
         delete this.rule.trimAllParams;
     }
 };
+FilterRuleInput.prototype.getDescription = function () {
+    if (this.rule.skipRedirectionFilter) {
+        this.description.shift();
+    }
+    if (!this.rule.trimAllParams && !this.rule.paramsFilter) {
+        this.description.pop();
+    }
+    return this.description.join(" and ");
+};
 
 function BlockRuleInput(rule) {
     RuleInput.call(this, rule);
@@ -94,7 +103,7 @@ BlockRuleInput.prototype.constructor = BlockRuleInput;
 function RedirectRuleInput(rule) {
     RuleInput.call(this, rule);
     this.title = "Redirect rule for ";
-    this.description = "Redirects requests to self defined redirect URL.";
+    this.description = "Redirects requests to ";
     this.optionsPath = "rules";
     this.updateModel();
 
@@ -110,6 +119,9 @@ RedirectRuleInput.prototype.updateModel = function () {
 RedirectRuleInput.prototype.updateRule = function () {
     RuleInput.prototype.updateRule.call(this);
     this.rule.redirectUrl = this.model.qs(".redirectUrl").value;
+};
+RedirectRuleInput.prototype.getDescription = function () {
+    return this.description + this.rule.redirectUrl;
 };
 
 function WhitelistRuleInput(rule) {
@@ -279,11 +291,31 @@ RuleInput.prototype.indexOfRule = function () {
     return myOptionsManager.options[this.optionsPath].indexOf(this.rule);
 };
 
+RuleInput.prototype.getTitle = function () {
+    let hosts = "";
+    if (this.rule.pattern.allUrls) {
+        hosts = "any URL";
+    } else if (Array.isArray(this.rule.pattern.host)) {
+        hosts = this.rule.pattern.host.slice(0, 3).join(", ").replace(/\*\.|\.\*/g, "");
+        if (this.rule.pattern.host.length > 3) {
+            hosts += " and " + (this.rule.pattern.host.length - 3) + " other";
+        }
+    } else {
+        hosts = this.rule.pattern.host.replace(/\*\.|\.\*/g, "");
+    }
+    return this.title + hosts;
+};
+
+RuleInput.prototype.getDescription = function () {
+    return this.description;
+};
+
 RuleInput.prototype.updateModel = function () {
     this.model.setAttribute("data-type", this.rule.action);
     this.model.qs(".icon").src = "../icons/icon-" + this.rule.action + "@19.png";
-    this.model.qs(".title").textContent = this.title + (this.rule.pattern.allUrls ? "any URL" : this.rule.pattern.host);
-    this.model.qs(".description").textContent = this.description;
+    this.model.qs(".title").textContent = this.getTitle();
+    this.model.qs(".description").textContent = this.getDescription();
+    this.model.qs(".match-patterns").textContent = RequestControl.resolveUrls(this.rule.pattern).length;
     this.model.qs(".scheme").value = this.rule.pattern.scheme;
     this.hostsTagsInput.setValue(this.rule.pattern.host);
     this.pathsTagsInput.setValue(this.rule.pattern.path);

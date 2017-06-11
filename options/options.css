@@ -81,6 +81,16 @@ h4 {
     font-size: 0.9em;
 }
 
+.information {
+    display: inline-block;
+    margin-right: 1em;
+}
+
+.match-patterns {
+    font-size: 0.95em;
+    padding-top: 0.3em;
+}
+
 /* Some bootstrap glyph icons with UTF-8 variants */
 .glyphicon-question-sign::after {
     content: "";
