@@ -420,10 +420,8 @@ function createOptions(target, options) {
 
 function init() {
     let inputFormRules = document.getElementById("rules");
-    let inputFormWhitelist = document.getElementById("whitelist");
 
     createOptions(inputFormRules, myOptionsManager.options.rules);
-    createOptions(inputFormWhitelist, myOptionsManager.options.whitelist);
 
     document.getElementById("addNewRule").addEventListener("click", function () {
         let ruleInput = RuleInputFactory();
@@ -436,9 +434,6 @@ function init() {
     document.getElementById("restoreRules").addEventListener("click", function () {
         myOptionsManager.restoreDefault("rules").then(function () {
             createOptions(inputFormRules, myOptionsManager.options.rules);
-        });
-        myOptionsManager.restoreDefault("whitelist").then(function () {
-            createOptions(inputFormWhitelist, myOptionsManager.options.whitelist);
         });
     });
 }

@@ -93,30 +93,42 @@ function applyRedirectRules(url, rule) {
     }
 }
 
-function applyFilterRules(url, rule) {
-    let filterURL;
+function applyFilterRules(url, rules) {
+    let skipRedirectionFilter = true;
+    let trimAllParams = false;
+    let paramsFilter = [];
+
+    for (let rule of rules) {
+        if (!rule.skipRedirectionFilter) {
+            skipRedirectionFilter = false;
+        }
+        if (rule.trimAllParams) {
+            trimAllParams = true;
+        }
+        if (Array.isArray(rule.paramsFilter)) {
+            paramsFilter = paramsFilter.concat(rule.paramsFilter);
+        }
+    }
 
     // redirection url filter
-    if (rule.skipRedirectionFilter) {
-        filterURL = url;
-    } else {
-        filterURL = new URL(url.href.replace(redirectUrlPattern, redirectUrlReplacer));
+    if (!skipRedirectionFilter) {
+        url = new URL(url.href.replace(redirectUrlPattern, redirectUrlReplacer));
     }
 
     // trim query parameters
-    if (rule.trimAllParams) {
-        filterURL.search = "";
-    } else if (Array.isArray(rule.paramsFilter) && rule.paramsFilter.length > 0) {
+    if (trimAllParams) {
+        url.search = "";
+    } else if (paramsFilter.length > 0) {
         let filterParams = new URLSearchParams();
-        let pattern = new RegExp("^(" + rule.paramsFilter.join("|").replace("*", ".*") + ")$");
-        for (let param of filterURL.searchParams) {
+        let pattern = new RegExp("^(" + paramsFilter.join("|").replace("*", ".*") + ")$");
+        for (let param of url.searchParams) {
             if (!pattern.test(param[0])) {
                 filterParams.append(param[0], param[1]);
             }
         }
-        filterURL.search = filterParams.toString();
+        url.search = filterParams.toString();
     }
-    return filterURL;
+    return url;
 }
 
 function redirectUrlReplacer(match, urlBegin, p1, p2, urlEnd) {
@@ -254,7 +266,7 @@ function resolveControlRules(resolve, requestId) {
             requestUrl = request.redirectRules.reduce(applyRedirectRules, requestUrl);
         }
         if (request.filter) {
-            requestUrl = request.filterRules.reduce(applyFilterRules, requestUrl);
+            requestUrl = applyFilterRules(requestUrl, request.filterRules);
         }
 
         if (requestUrl.href !== request.url) {
