@@ -16,8 +16,7 @@ var titles = {
     filter: "Request was filtered",
     block: "Request was blocked",
     redirect: "Request was redirected",
-    whitelist: "Request was whitelisted",
-    blank: "Request was left unchanged"
+    whitelist: "Request was whitelisted"
 };
 
 const requests = new Map();
@@ -264,13 +263,14 @@ function resolveControlRules(resolve, requestId) {
 
         if (request.redirect) {
             requestUrl = request.redirectRules.reduce(applyRedirectRules, requestUrl);
+            request.action = "redirect";
         }
         if (request.filter) {
             requestUrl = applyFilterRules(requestUrl, request.filterRules);
+            request.action = "filter";
         }
 
         if (requestUrl.href !== request.url) {
-            request.action = "filter";
             request.redirectUrl = requestUrl.href;
 
             // Filter sub frame redirection requests (e.g. Google search link tracking)
@@ -284,10 +284,12 @@ function resolveControlRules(resolve, requestId) {
             }
         } else {
             resolve(null);
-            request.action = "blank";
+            request.action = null;
         }
     }
-    addPageActionDetails(request);
+    if (request.action) {
+        addPageActionDetails(request);
+    }
     requests.delete(requestId);
 }
 
