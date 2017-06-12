@@ -16,116 +16,107 @@ var titles = {
     filter: "Request was filtered",
     block: "Request was blocked",
     redirect: "Request was redirected",
-    whitelist: "Request was whitelisted"
+    whitelist: "Request was whitelisted",
+    blank: "Request was left unchanged"
 };
 
-const whitelist = new Map();
+const requests = new Map();
 
-function tidyWhitelist() {
-    if (whitelist.size > 20) {
-        let timeLimit = Date.now() - 1000;
-        for (let [requestId, timeStamp] of whitelist) {
-            if (timeStamp < timeLimit) {
-                whitelist.delete(requestId);
-            }
-        }
+function RequestActionFactory(rule) {
+    switch (rule.action) {
+        case "whitelist":
+            return whitelistAction;
+        case "block":
+            return blockAction;
+        case "redirect":
+            return function (details) {
+                redirectAction(details, rule);
+            };
+        case "filter":
+            return function (details) {
+                filterAction(details, rule);
+            };
     }
 }
 
-function RequestAction(rule) {
-    switch (rule.action) {
-        case "filter":
-            return function (request) {
-                return new Promise((resolve) => {
-                    if (whitelist.has(request.requestId) || request.method !== "GET" || request.tabId === -1) {
-                        resolve(null);
-                    } else {
-                        let filterURL;
-
-                        // redirection url filter
-                        if (rule.skipRedirectionFilter) {
-                            filterURL = new URL(request.url);
-                        } else {
-                            filterURL = new URL(request.url.replace(redirectUrlPattern, redirectUrlReplacer));
-                        }
-
-                        // trim query parameters
-                        if (rule.trimAllParams) {
-                            filterURL.search = "";
-                        } else if (Array.isArray(rule.paramsFilter) && rule.paramsFilter.length > 0) {
-                            let filterParams = new URLSearchParams();
-                            let pattern = new RegExp("^(" + rule.paramsFilter.join("|").replace("*", ".*") + ")$");
-                            for (let param of filterURL.searchParams) {
-                                if (!pattern.test(param[0])) {
-                                    filterParams.append(param[0], param[1]);
-                                }
-                            }
-                            filterURL.search = filterParams.toString();
-                        }
-
-                        // resolve request listener
-                        if (filterURL.href.length < request.url.length) {
-                            if (request.type === "sub_frame" && !rule.skipRedirectionFilter) {
-                                resolve({cancel: true});
-                                browser.tabs.update(request.tabId, {
-                                    url: filterURL.href
-                                });
-                            } else {
-                                resolve({redirectUrl: filterURL.href});
-                            }
-                            addPageActionDetails(request, rule.action);
-                        } else {
-                            resolve(null);
-                        }
-                    }
-                });
-            };
-        case "block":
-            return function (request) {
-                return new Promise((resolve) => {
-                    if (whitelist.has(request.requestId)) {
-                        resolve(null);
-                    } else {
-                        resolve({cancel: true});
-                        addPageActionDetails(request, rule.action);
-                    }
-                });
-            };
-        case "redirect":
-            return function (request) {
-                return new Promise((resolve) => {
-                    if (whitelist.has(request.requestId)) {
-                        resolve(null);
-                    } else {
-                        let [requestUrl, instrParsed] = parseRedirectInstructions(request.url, rule.redirectUrl);
-                        let paramsExpanded = resolveParamExpansion(requestUrl.href, instrParsed);
-                        let redirectUrl;
-
-                        try {
-                            redirectUrl = new URL(paramsExpanded);
-                        } catch (e) {
-                            redirectUrl = requestUrl;
-                        }
-
-                        if (redirectUrl.href !== request.url) {
-                            resolve({redirectUrl: redirectUrl.href});
-                        } else {
-                            resolve(null);
-                        }
-                        addPageActionDetails(request, rule.action);
-                    }
-                });
-            };
-        case "whitelist":
-            return function (request) {
-                whitelist.set(request.requestId, request.timeStamp);
-                return new Promise((resolve) => {
-                    resolve(null);
-                    addPageActionDetails(request, rule.action);
-                    tidyWhitelist();
-                });
-            }
+function getRequest(details) {
+    if (!requests.has(details.requestId)) {
+        requests.set(details.requestId, details);
     }
+    return requests.get(details.requestId);
+}
+
+function whitelistAction(details) {
+    let request = getRequest(details);
+    request.whitelist = true;
+}
+
+function blockAction(details) {
+    let request = getRequest(details);
+    request.block = true;
+}
+
+function redirectAction(details, rule) {
+    let request = getRequest(details);
+    request.filter = true;
+
+    if (!request.redirectRules) {
+        request.redirectRules = [rule];
+    } else {
+        request.redirectRules.push(rule);
+    }
+}
+
+function filterAction(details, rule) {
+    let request = getRequest(details);
+    request.filter = true;
+
+    if (!request.filterRules) {
+        request.filterRules = [rule];
+    } else {
+        request.filterRules.push(rule);
+    }
+
+    if (rule.skipRedirectionFilter) {
+        request.skipRedirectionFilter = true;
+    }
+}
+
+function applyRedirectRules(url, rule) {
+    let [requestUrl, instrParsed] = parseRedirectInstructions(url, rule.redirectUrl);
+    let paramsExpanded = resolveParamExpansion(requestUrl.href, instrParsed);
+
+    try {
+        return new URL(paramsExpanded);
+    } catch (e) {
+        return requestUrl;
+    }
+}
+
+function applyFilterRules(url, rule) {
+    let filterURL;
+
+    // redirection url filter
+    if (rule.skipRedirectionFilter) {
+        filterURL = url;
+    } else {
+        filterURL = new URL(url.href.replace(redirectUrlPattern, redirectUrlReplacer));
+    }
+
+    // trim query parameters
+    if (rule.trimAllParams) {
+        filterURL.search = "";
+    } else if (Array.isArray(rule.paramsFilter) && rule.paramsFilter.length > 0) {
+        let filterParams = new URLSearchParams();
+        let pattern = new RegExp("^(" + rule.paramsFilter.join("|").replace("*", ".*") + ")$");
+        for (let param of filterURL.searchParams) {
+            if (!pattern.test(param[0])) {
+                filterParams.append(param[0], param[1]);
+            }
+        }
+        filterURL.search = filterParams.toString();
+    }
+    return filterURL;
 }
 
 function redirectUrlReplacer(match, urlBegin, p1, p2, urlEnd) {
@@ -138,8 +129,7 @@ function redirectUrlReplacer(match, urlBegin, p1, p2, urlEnd) {
     return p1 + p2 + decodeURIComponent(urlEnd);
 }
 
-function parseRedirectInstructions(requestURL, redirectURL) {
-    let url = new URL(requestURL);
+function parseRedirectInstructions(url, redirectURL) {
     let redirectInstrReplacer = function (match, param, value) {
         if (param in url && typeof url[param] === "string") {
             url[param] = value;
@@ -199,40 +189,35 @@ function extractSubstring(str, match, offset, length, pipe, manipulationRules) {
     return applyStringManipulation(substr, manipulationRules);
 }
 
-function addPageActionDetails(request, action) {
-    requestDetails[request.tabId] = {
-        action: action,
-        originUrl: request.originUrl,
-        timeStamp: request.timeStamp,
-        type: request.type,
-        url: request.url
-    };
+function addPageActionDetails(request) {
+    requestDetails[request.tabId] = request;
     browser.webNavigation.onDOMContentLoaded.addListener(function (details) {
         browser.pageAction.setIcon({
             tabId: details.tabId,
             path: {
-                19: "icons/icon-" + action + "@19.png",
-                38: "icons/icon-" + action + "@38.png"
+                19: "icons/icon-" + request.action + "@19.png",
+                38: "icons/icon-" + request.action + "@38.png"
             }
         });
         browser.pageAction.setTitle({
             tabId: details.tabId,
-            title: titles[action]
+            title: titles[request.action]
         });
         browser.pageAction.show(details.tabId);
         browser.webNavigation.onDOMContentLoaded.removeListener(arguments.callee);
     });
 }
 
-function removePreviousListeners() {
+function removeRuleListeners() {
     let listener;
     while (requestListeners.length) {
         listener = requestListeners.pop();
         browser.webRequest.onBeforeRequest.removeListener(listener);
     }
+    browser.webRequest.onBeforeRequest.removeListener(requestControlListener);
 }
 
-function addListeners(rules) {
+function addRuleListeners(rules) {
     let filter, listener;
     for (let rule of rules) {
         if (!rule.active) {
@@ -243,16 +228,69 @@ function addListeners(rules) {
             urls: urls,
             types: rule.types
         };
-        listener = new RequestAction(rule);
-        browser.webRequest.onBeforeRequest.addListener(listener, filter, ["blocking"]);
+        listener = new RequestActionFactory(rule);
+        browser.webRequest.onBeforeRequest.addListener(listener, filter);
         requestListeners.push(listener);
     }
+    browser.webRequest.onBeforeRequest.addListener(requestControlListener,
+        {urls: ["<all_urls>"]}, ["blocking"]);
+}
+
+function resolveControlRules(resolve, requestId) {
+    let request = requests.get(requestId);
+
+    if (request.whitelist) {
+        resolve(null);
+        request.action = "whitelist";
+    }
+    else if (request.block) {
+        resolve({cancel: true});
+        request.action = "block";
+    }
+    else {
+        let requestUrl = new URL(request.url);
+
+        if (request.redirect) {
+            requestUrl = request.redirectRules.reduce(applyRedirectRules, requestUrl);
+        }
+        if (request.filter) {
+            requestUrl = request.filterRules.reduce(applyFilterRules, requestUrl);
+        }
+
+        if (requestUrl.href !== request.url) {
+            request.action = "filter";
+            request.redirectUrl = requestUrl.href;
+
+            // Filter sub frame redirection requests (e.g. Google search link tracking)
+            if (request.filter && request.type === "sub_frame" && !request.skipRedirectionFilter) {
+                resolve({cancel: true});
+                browser.tabs.update(request.tabId, {
+                    url: request.redirectUrl
+                });
+            } else {
+                resolve({redirectUrl: request.redirectUrl});
+            }
+        } else {
+            resolve(null);
+            request.action = "blank";
+        }
+    }
+    addPageActionDetails(request);
+    requests.delete(requestId);
+}
+
+function requestControlListener(details) {
+    if (requests.has(details.requestId)) {
+        return new Promise(function (resolve) {
+            resolveControlRules(resolve, details.requestId);
+        });
+    }
+    return null;
 }
 
 function init() {
-    removePreviousListeners();
-    addListeners(myOptionsManager.options.whitelist);
-    addListeners(myOptionsManager.options.rules);
+    removeRuleListeners();
+    addRuleListeners(myOptionsManager.options.rules);
     browser.webRequest.handlerBehaviorChanged();
 }
 

@@ -128,7 +128,7 @@ function WhitelistRuleInput(rule) {
     RuleInput.call(this, rule);
     this.title = "Whitelist rule for ";
     this.description = "Disables all other rules and processes requests normally.";
-    this.optionsPath = "whitelist";
+    this.optionsPath = "rules";
     this.updateModel();
 }
 WhitelistRuleInput.prototype = Object.create(RuleInput.prototype);
