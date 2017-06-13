@@ -33,6 +33,7 @@
                                 <li><a href="#rule-action">Rule Action</a></li>
                             </ul>
                         </li>
+                        <li><a href="#rule-priorities">Rule priorities</a></li>
                         <li><a href="#matching-all-urls">Matching all URLs</a></li>
                         <li><a href="#redirection">Redirect using pattern capturing</a></li>
                         <li style="list-style-type:none">
@@ -50,7 +51,9 @@
                     <h2 id="request-pattern" class="page-header">Request Pattern
                         <small><sup><a href="#attr1" title="Attributed to Mozilla Contributors">[1]</a></sup></small>
                     </h2>
-                    <p>Request pattern contains three parts: <em>scheme</em>, <em>host</em> and <em>path</em>.</p>
+                    <p>Request pattern contains three parts: <em>scheme</em>, <em>host</em> and <em>path</em>.
+                        Rule can include one or more request patterns.
+                    </p>
                     <h3 id="scheme">Scheme</h3>
                     <p>Scheme matches the protocol of the request URL. The following schemes are supported.</p>
                     <table class="table">
@@ -185,6 +188,18 @@
                         </tr>
                         </tbody>
                     </table>
+                    <h2 id="rule-priorities" class="page-header">Rule priorities</h2>
+                    <p>Rules have the following priorities:</p>
+                    <ol>
+                        <li>Whitelist rule</li>
+                        <li>Block rule</li>
+                        <li>Redirect rule</li>
+                        <li>Filter rule</li>
+                    </ol>
+                    <p>Whitelist rules have the highest priority and they revoke all other rules. Next are block rules and
+                        they revoke redirect and filter rules. Finally redirect rules will be applied before filter
+                        rules. If more than one redirect or filter rule matches a single request they will all be applied
+                        one by one.</p>
                     <h2 id="matching-all-urls" class="page-header">Matching all URLs</h2>
                     <p>The request pattern can be set to a global pattern that matches all URLs under the supported
                         schemes ("http" or "https"). The global request pattern is enabled by checking the Any URL
@@ -293,14 +308,6 @@
                         <tr>
                             <td>href</td>
                             <td>https://www.example.com:8080/some/path?query=value#hash</td>
-                        </tr>
-                        <tr>
-                            <td>username</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>password</td>
-                            <td></td>
                         </tr>
                         </tbody>
                     </table>
