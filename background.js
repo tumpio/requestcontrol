@@ -249,6 +249,7 @@ function addRuleListeners(rules) {
 
 function resolveControlRules(resolve, requestId) {
     let request = requests.get(requestId);
+    requests.delete(requestId);
 
     if (request.whitelist) {
         resolve(null);
@@ -290,7 +291,6 @@ function resolveControlRules(resolve, requestId) {
     if (request.action) {
         addPageActionDetails(request);
     }
-    requests.delete(requestId);
 }
 
 function requestControlListener(details) {
