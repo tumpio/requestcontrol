@@ -32,6 +32,23 @@ h4 {
     cursor: pointer;
 }
 
+.title {
+    margin-bottom: 0;
+}
+
+.icon {
+    margin-top: -3px;
+    margin-left: -5px;
+}
+
+.description {
+    margin-left: 19px;
+}
+
+.rule {
+    padding: 8px 14px;
+}
+
 .rule.editing:before {
     content:"";
     position:absolute;

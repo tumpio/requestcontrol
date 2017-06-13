@@ -29,8 +29,11 @@
             </h3>
         </div>
     </div>
-    <ul id="rules" class="list-group form-horizontal"></ul>
-    <ul id="whitelist" class="list-group form-horizontal"></ul>
+    <ul id="filter" class="list-group rule-list form-horizontal"></ul>
+    <ul id="redirect" class="list-group rule-list form-horizontal"></ul>
+    <ul id="block" class="list-group rule-list form-horizontal"></ul>
+    <ul id="whitelist" class="list-group rule-list form-horizontal"></ul>
+    <ul id="newRules" class="list-group rule-list form-horizontal"></ul>
     <button id="addNewRule" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Create new rule
     </button>
     <button id="restoreRules" class="btn btn-link pull-right">Restore Default Rules</button>
@@ -39,19 +42,19 @@
 <ul id="models" class="list-group form-horizontal hidden">
     <li id="ruleInputModel" class="list-group-item rule">
         <div class="row rule-header">
-            <div class="col-md-6">
-                <img class="icon" src="" alt="">
-                <label class="title">New rule</label><br/>
-                <small class="description"></small>
-            </div>
-            <div class="col-md-6">
-                <span class="pull-right">
+            <div class="d-table table-fixed width-full Box-row--drag-hide position-relative">
+                <div class="pull-left col-md-7">
+                    <img class="icon" src="" alt="">
+                    <label class="title">New rule</label><br/>
+                    <small class="description"></small>
+                </div>
+                <div class="pull-right col-md-4 text-right">
                     <div class="information"><small><span class="badge match-patterns"></span> patterns</small></div>
                     <button type="button" class="btn btn-default btn-edit">Edit
                     </button>
                     <button type="button" class="btn btn-default btn-activate">Disable
                     </button>
-                </span>
+                </div>
             </div>
         </div>
         <div class="panel-collapse collapse hidden">

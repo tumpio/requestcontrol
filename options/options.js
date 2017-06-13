@@ -36,7 +36,7 @@ function RuleInputFactory(rule = new RequestRule()) {
 function FilterRuleInput(rule) {
     RuleInput.call(this, rule);
     this.title = "Filter rule for ";
-    this.description = ["Filters URL redirection", "trims URL parameters"];
+    this.description = ["Filter URL redirection", "Trim URL parameters"];
     this.optionsPath = "rules";
     this.paramsTagsInput = new TagsInput(this.model.qs(".input-params"));
 
@@ -81,19 +81,21 @@ FilterRuleInput.prototype.updateRule = function () {
     }
 };
 FilterRuleInput.prototype.getDescription = function () {
-    if (this.rule.skipRedirectionFilter) {
-        this.description.shift();
+    let description = [];
+    if (!this.rule.skipRedirectionFilter) {
+        description.push(this.description[0]);
     }
-    if (!this.rule.trimAllParams && !this.rule.paramsFilter) {
-        this.description.pop();
+    if (this.rule.trimAllParams ||
+        (this.rule.paramsFilter && this.rule.paramsFilter.length > 0)) {
+        description.push(this.description[1]);
     }
-    return this.description.join(" and ");
+    return description.join(" and ");
 };
 
 function BlockRuleInput(rule) {
     RuleInput.call(this, rule);
     this.title = "Block rule for ";
-    this.description = "Cancels requests before they are made.";
+    this.description = "Block requests before they are made.";
     this.optionsPath = "rules";
     this.updateModel();
 }
@@ -103,7 +105,7 @@ BlockRuleInput.prototype.constructor = BlockRuleInput;
 function RedirectRuleInput(rule) {
     RuleInput.call(this, rule);
     this.title = "Redirect rule for ";
-    this.description = "Redirects requests to ";
+    this.description = "Redirect requests to ";
     this.optionsPath = "rules";
     this.updateModel();
 
@@ -127,7 +129,7 @@ RedirectRuleInput.prototype.getDescription = function () {
 function WhitelistRuleInput(rule) {
     RuleInput.call(this, rule);
     this.title = "Whitelist rule for ";
-    this.description = "Disables all other rules and processes requests normally.";
+    this.description = "Revoke other rules and process requests normally.";
     this.optionsPath = "rules";
     this.updateModel();
 }
@@ -408,24 +410,25 @@ function addInputValidation(input, callback) {
     input.addEventListener("blur", validateInput);
 }
 
-function createOptions(target, options) {
-    while (target.firstChild) {
-        target.removeChild(target.firstChild);
+function createRuleInputs(rules) {
+    let ruleLists = document.getElementsByClassName("rule-list");
+    for (let list of ruleLists) {
+        while (list.firstChild) {
+            list.removeChild(list.firstChild);
+        }
     }
-    for (let value of options) {
-        let input = RuleInputFactory(value);
-        target.appendChild(input.model);
+    for (let rule of rules) {
+        let input = RuleInputFactory(rule);
+        document.getElementById(rule.action).appendChild(input.model);
     }
 }
 
 function init() {
-    let inputFormRules = document.getElementById("rules");
-
-    createOptions(inputFormRules, myOptionsManager.options.rules);
+    createRuleInputs(myOptionsManager.options.rules);
 
     document.getElementById("addNewRule").addEventListener("click", function () {
         let ruleInput = RuleInputFactory();
-        inputFormRules.appendChild(ruleInput.model);
+        document.getElementById("newRules").appendChild(ruleInput.model);
         ruleInput.toggleEdit();
         ruleInput.model.qs(".host").focus();
         ruleInput.model.scrollIntoView();
@@ -433,7 +436,7 @@ function init() {
 
     document.getElementById("restoreRules").addEventListener("click", function () {
         myOptionsManager.restoreDefault("rules").then(function () {
-            createOptions(inputFormRules, myOptionsManager.options.rules);
+            createRuleInputs(myOptionsManager.options.rules);
         });
     });
 }
