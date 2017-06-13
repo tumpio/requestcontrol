@@ -57,7 +57,7 @@ function blockAction(details) {
 
 function redirectAction(details, rule) {
     let request = getRequest(details);
-    request.filter = true;
+    request.redirect = true;
 
     if (!request.redirectRules) {
         request.redirectRules = [rule];
