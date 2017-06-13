@@ -10,7 +10,7 @@
 
 <body>
 <div class="container">
-    <h1 class="page-header">Request Control Help</h1>
+    <h1 id="top" class="page-header">Request Control Help</h1>
     <p>Help page for Request Control.</p>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -22,9 +22,8 @@
         </div>
         <div id="help" class="panel-collapse">
             <div class="panel-body">
-                <div class="container-fluid">
-                    <h2 id="contents">Contents</h2>
-                    <ul>
+                <div class="contents pull-right">
+                    <ul class="list-unstyled">
                         <li><a href="#request-control-rule">Request Control Rule explained</a></li>
                         <li style="list-style-type:none">
                             <ul>
@@ -43,7 +42,10 @@
                                 <li><a href="#rule-action">List of named parameters</a></li>
                             </ul>
                         </li>
+                        <li><a href="#top">Back to Top</a></li>
                     </ul>
+                </div>
+                <div class="container-fluid help-content">
                     <h2 id="request-control-rule" class="page-header">Request Control Rule explained</h2>
                     <p>Request Control Rule consists of <em>request pattern</em>, <em>request types</em> and <em>rule
                         action</em>. Requests that match a pattern of an active rule, will be intercepted taking
@@ -196,9 +198,11 @@
                         <li>Redirect rule</li>
                         <li>Filter rule</li>
                     </ol>
-                    <p>Whitelist rules have the highest priority and they revoke all other rules. Next are block rules and
+                    <p>Whitelist rules have the highest priority and they revoke all other rules. Next are block rules
+                        and
                         they revoke redirect and filter rules. Finally redirect rules will be applied before filter
-                        rules. If more than one redirect or filter rule matches a single request they will all be applied
+                        rules. If more than one redirect or filter rule matches a single request they will all be
+                        applied
                         one by one.</p>
                     <h2 id="matching-all-urls" class="page-header">Matching all URLs</h2>
                     <p>The request pattern can be set to a global pattern that matches all URLs under the supported

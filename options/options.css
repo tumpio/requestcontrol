@@ -108,6 +108,26 @@ h4 {
     padding-top: 0.3em;
 }
 
+.help-content {
+    max-width: 700px;
+    margin-left: 0;
+}
+
+.contents {
+    padding: 2em;
+    position: sticky;
+    top: 0;
+}
+.contents ul {
+    line-height: 2;
+}
+.contents ul ul {
+    line-height: 1.5;
+    margin-bottom: 0.5em;
+    list-style: none;
+    padding-left: 2em;
+}
+
 /* Some bootstrap glyph icons with UTF-8 variants */
 .glyphicon-question-sign::after {
     content: "";
