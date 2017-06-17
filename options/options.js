@@ -274,6 +274,9 @@ RuleInput.prototype.validate = function () {
         for (let input of this.model.qsa("input[pattern]:not(.hidden)")) {
             input.dispatchEvent(new Event("blur"));
         }
+        for (let input of this.model.qsa("input[required]:not(.hidden)")) {
+            input.dispatchEvent(new Event("blur"));
+        }
         this.validateTLDPattern();
     }
 };
