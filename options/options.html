@@ -3,273 +3,366 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../lib/tags-input/src/tags-input.css">
-    <link rel="stylesheet" href="options.css">
-    <script src="../lib/tags-input/src/tags-input.js"></script>
-    <script src="../lib/OptionsManager.js"></script>
-    <script src="../lib/RequestControl.js"></script>
-    <script src="../lib/i18n.js"></script>
-    <script src="options.js"></script>
-    <title data-i18n="options_title"></title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../lib/tags-input/src/tags-input.css">
+  <link rel="stylesheet" href="options.css">
+  <script src="../lib/tags-input/src/tags-input.js"></script>
+  <script src="../lib/OptionsManager.js"></script>
+  <script src="../lib/RequestControl.js"></script>
+  <script src="../lib/i18n.js"></script>
+  <script src="options.js"></script>
+  <title data-i18n="options_title"></title>
 </head>
-
 <body>
 <div class="container">
-    <h1 class="page-header" data-i18n="options_title"></h1>
-    <p data-i18n="options_description"></p>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <a data-i18n-href="extensionManual" class="text-info">
-                    <span class="glyphicon glyphicon-question-sign"></span>
-                    <span data-i18n="show_help"></span>
-                </a>
-            </h3>
-        </div>
+  <h1 class="page-header" data-i18n="options_title"></h1>
+  <p data-i18n="options_description"></p>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-i18n-href="extensionManual" class="text-info">
+          <span class="glyphicon glyphicon-question-sign"></span>
+          <span data-i18n="show_help"></span>
+        </a>
+      </h3>
     </div>
-    <ul id="filter" class="list-group rule-list form-horizontal"></ul>
-    <ul id="redirect" class="list-group rule-list form-horizontal"></ul>
-    <ul id="block" class="list-group rule-list form-horizontal"></ul>
-    <ul id="whitelist" class="list-group rule-list form-horizontal"></ul>
-    <ul id="newRules" class="list-group rule-list form-horizontal"></ul>
-    <button id="addNewRule" class="btn btn-default">
-        <span class="glyphicon glyphicon-plus"></span>
-        <span data-i18n="create_new_rule"></span>
-    </button>
-    <button id="restoreRules" class="btn btn-link pull-right"
-            data-i18n="restore_default_rules"></button>
+  </div>
+  <ul id="filter" class="list-group rule-list form-horizontal"></ul>
+  <ul id="redirect" class="list-group rule-list form-horizontal"></ul>
+  <ul id="block" class="list-group rule-list form-horizontal"></ul>
+  <ul id="whitelist" class="list-group rule-list form-horizontal"></ul>
+  <ul id="newRules" class="list-group rule-list form-horizontal"></ul>
+  <button id="addNewRule" class="btn btn-default">
+    <span class="glyphicon glyphicon-plus"></span>
+    <span data-i18n="create_new_rule"></span>
+  </button>
+  <button id="restoreRules" class="btn btn-link pull-right"
+          data-i18n="restore_default_rules"></button>
 </div>
-
 <ul id="models" class="list-group form-horizontal hidden">
-    <li id="ruleInputModel" class="list-group-item rule">
-        <div class="row rule-header">
-            <div class="d-table table-fixed width-full Box-row--drag-hide position-relative">
-                <div class="pull-left col-md-7">
-                    <img class="icon" src="" alt="">
-                    <label class="title" data-i18n="new_rule"></label><br/>
-                    <small class="description"></small>
-                </div>
-                <div class="pull-right col-md-4 text-right">
-                    <div class="information">
-                        <small>
-                            <span class="badge match-patterns"></span>
-                            <span data-i18n="patterns"></span>
-                        </small>
-                    </div>
-                    <button type="button" class="btn btn-default btn-edit"
-                            data-i18n="edit">
-                    </button>
-                    <button type="button" class="btn btn-default btn-activate"
-                            data-i18n="disable">
-                    </button>
-                </div>
-            </div>
+  <li id="ruleInputModel" class="list-group-item rule">
+    <div class="row rule-header">
+      <div
+          class="d-table table-fixed width-full Box-row--drag-hide position-relative">
+        <div class="pull-left col-md-7">
+          <img class="icon" src="" alt="">
+          <label class="title" data-i18n="new_rule"></label>
+          <br/>
+          <small class="description"></small>
         </div>
-        <div class="panel-collapse collapse hidden">
-            <div class="form-group">
-                <div class="col-sm-2 control-label">
-                    <div class="row no-gutter">
-                        <div class="col-sm-12">
-                            <label class="help-block">&#8203;</label>
-                            <label data-i18n="pattern"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-10">
-                    <div class="row no-gutter">
-                        <div class="col-xs-9 col-md-10 pattern">
-                            <div class="row no-gutter">
-                                <div class="col-xs-3 col-md-2">
-                                    <label for="scheme" class="help-block text-center"
-                                           data-i18n="scheme"></label>
-                                    <div class="input-group input-group-sm scheme-group">
-                                        <div class="input-group-btn" style="width:auto;">
-                                            <select id="scheme" class="form-control input-sm scheme text-center">
-                                                <option value="http">http</option>
-                                                <option value="https">https</option>
-                                                <option value="*" selected>http/https</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-5 col-md-6">
-                                    <label for="host" class="help-block text-center" data-i18n="host"></label>
-                                    <div class="input-group input-group-sm host-group">
-                                        <input id="host" type="text" class="form-control input-sm host"
-                                               placeholder="example.com"
-                                               required="required"
-                                               pattern="^(\*|[0-9a-zA-Z]{1,2}|(\*\.)?[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+(\.\*)?)$"/>
-                                        <div class="input-group-btn hidden">
-                                            <button class="btn btn-info btn-tlds" type="button"
-                                                    data-i18n-title="title_tlds">
-                                                <span data-i18n="tlds"></span><span class="badge">0</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-4  col-md-4">
-                                    <label for="path" class="help-block text-center"
-                                           data-i18n="path"></label>
-                                    <div class="input-group input-group-sm">
-                                        <input id="path" type="text" class="form-control input-sm path"
-                                               data-i18n-placeholder="path"
-                                               pattern="^[!#-;=?-[\]_-z~]*$"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-3 col-md-2">
-                            <div class="row no-gutter">
-                                <div class="col-sm-12">
-                                    <label class="help-block">&#8203;</label>
-                                    <div class="btn-group btn-group-justified btn-group-sm" data-toggle="buttons">
-                                        <label class="btn btn-default">
-                                            <input class="any-url" type="checkbox" autocomplete="off">
-                                            <span data-i18n="any_url"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tlds-block hidden">
-                        <label for="tlds" class="help-block"
-                               data-i18n="top_level_domains"></label>
-                        <input id="tlds" type="text" class="form-control input-sm input-tlds tlds hidden"
-                               pattern="^([0-9a-zA-Z]{1,2}|[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+)$"
-                               required="required"/>
-                    </div>
-                </div>
+        <div class="pull-right col-md-4 text-right">
+          <div class="information">
+            <small>
+              <span class="badge match-patterns"></span>
+              <span data-i18n="patterns"></span>
+            </small>
+          </div>
+          <button type="button" class="btn btn-default btn-edit"
+                  data-i18n="edit"></button>
+          <button type="button" class="btn btn-default btn-activate"
+                  data-i18n="disable"></button>
+        </div>
+      </div>
+    </div>
+    <div class="panel-collapse collapse hidden">
+      <div class="form-group">
+        <div class="col-sm-2 control-label">
+          <div class="row no-gutter">
+            <div class="col-sm-12">
+              <label class="help-block">&#8203;</label>
+              <label data-i18n="pattern"></label>
             </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label" data-i18n="types"></label>
-                <div class="col-sm-10">
-                    <div class="row no-gutter">
-                        <div class="col-xs-9 col-md-10 btn-group-types">
-                            <div class="btn-toolbar">
-                                <div class="btn-group btn-group-sm" data-toggle="buttons">
-                                    <label class="btn btn-default active"><input type="checkbox" autocomplete="off" class="type" value="main_frame" checked="checked"><span data-i18n="main_frame"></span></label>
-                                    <label class="btn btn-default"><input type="checkbox" autocomplete="off" class="type" value="sub_frame"><span data-i18n="sub_frame"></span></label>
-                                    <label class="btn btn-default"><input type="checkbox" autocomplete="off" class="type" value="stylesheet"><span data-i18n="stylesheet"></span></label>
-                                    <label class="btn btn-default"><input type="checkbox" autocomplete="off" class="type" value="script"><span data-i18n="script"></span></label>
-                                    <label class="btn btn-default"><input type="checkbox" autocomplete="off" class="type" value="image"><span data-i18n="image"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="object"><span data-i18n="object"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="object_subrequest"><span data-i18n="object_subrequest"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="xmlhttprequest"><span data-i18n="xmlhttprequest"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="xbl"><span data-i18n="xbl"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="xslt"><span data-i18n="xslt"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="ping"><span data-i18n="ping"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="beacon"><span data-i18n="beacon"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="xml_dtd"><span data-i18n="xml_dtd"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="font"><span data-i18n="font"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="media"><span data-i18n="media"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="websocket"><span data-i18n="websocket"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="csp_report"><span data-i18n="csp_report"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="imageset"><span data-i18n="imageset"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="web_manifest"><span data-i18n="web_manifest"></span></label>
-                                    <label class="btn btn-default hidden"><input type="checkbox" autocomplete="off" class="type extra-type" value="other"><span data-i18n="other"></span></label>
-                                    <label class="btn btn-default">
-                                        <input class="more-types" type="checkbox" autocomplete="off">
-                                        <span class="text" data-i18n="show_more_true"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-3 col-md-2">
-                            <div class="btn-group btn-group-justified btn-group-sm" data-toggle="buttons">
-                                <label class="btn btn-default">
-                                    <input class="any-type" type="checkbox" autocomplete="off">
-                                    <span data-i18n="any_type"></span>
-                                </label>
-                            </div>
-                        </div>
+          </div>
+        </div>
+        <div class="col-sm-10">
+          <div class="row no-gutter">
+            <div class="col-xs-9 col-md-10 pattern">
+              <div class="row no-gutter">
+                <div class="col-xs-3 col-md-2">
+                  <label for="scheme" class="help-block text-center"
+                         data-i18n="scheme"></label>
+                  <div class="input-group input-group-sm scheme-group">
+                    <div class="input-group-btn" style="width:auto;">
+                      <select id="scheme"
+                              class="form-control input-sm scheme text-center">
+                        <option value="http">http</option>
+                        <option value="https">https</option>
+                        <option value="*" selected>http/https</option>
+                      </select>
                     </div>
+                  </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="action" class="col-sm-2 control-label"
-                       data-i18n="action"></label>
-                <div class="col-sm-10">
-                    <div class="row no-gutter">
-                        <div class="col-xs-3 col-md-2">
-                            <select id="action" class="form-control input-sm action text-center" required="required">
-                                <option disabled selected hidden></option>
-                                <option value="filter" data-i18n="filter"></option>
-                                <option value="block" data-i18n="block"></option>
-                                <option value="redirect" data-i18n="redirect"></option>
-                                <option value="whitelist" data-i18n="whitelist"></option>
-                            </select>
-                        </div>
+                <div class="col-xs-5 col-md-6">
+                  <label for="host" class="help-block text-center"
+                         data-i18n="host"></label>
+                  <div class="input-group input-group-sm host-group">
+                    <input id="host" type="text"
+                           class="form-control input-sm host"
+                           placeholder="example.com"
+                           required="required"
+                           pattern="^(\*|[0-9a-zA-Z]{1,2}|(\*\.)?[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+(\.\*)?)$"/>
+                    <div class="input-group-btn hidden">
+                      <button class="btn btn-info btn-tlds" type="button"
+                              data-i18n-title="title_tlds">
+                        <span data-i18n="tlds"></span>
+                        <span class="badge">0</span>
+                      </button>
                     </div>
+                  </div>
                 </div>
-            </div>
-            <div class="form-group redirectUrlForm hidden">
-                <label class="col-sm-2 control-label" data-i18n="redirect_to"></label>
-                <div class="col-sm-10 col-md-10">
-                    <input type="text" class="form-control redirectUrl hidden" data-i18n-placeholder="redirect_url"
-                           pattern=".*" required="required"/>
-                    <span id="helpBlock" class="help-block small">
-                        <span data-i18n="help_text_redirect"></span>
-                        <a data-i18n-href="extensionManual#redirection" data-i18n="see_help"></a>
-                    </span>
-
+                <div class="col-xs-4  col-md-4">
+                  <label for="path" class="help-block text-center"
+                         data-i18n="path"></label>
+                  <div class="input-group input-group-sm">
+                    <input id="path" type="text"
+                           class="form-control input-sm path"
+                           data-i18n-placeholder="path"
+                           pattern="^[!#-;=?-[\]_-z~]*$"/>
+                  </div>
                 </div>
+              </div>
             </div>
-            <div class="form-group filterRedirectionForm hidden">
-                <label class="col-sm-2 control-label" data-i18n="filter_url_redirection"></label>
-                <div class="col-sm-10">
-                    <div class="row no-gutter">
-                        <div class="col-xs-3 col-md-2">
-                            <label class="switch">
-                                <input class="redirectionFilter-toggle" type="checkbox" checked="checked"/>
-                                <span class="knob"></span>
-                            </label>
-                        </div>
-                    </div>
+            <div class="col-xs-3 col-md-2">
+              <div class="row no-gutter">
+                <div class="col-sm-12">
+                  <label class="help-block">&#8203;</label>
+                  <div class="btn-group btn-group-justified btn-group-sm"
+                       data-toggle="buttons">
+                    <label class="btn btn-default">
+                      <input class="any-url" type="checkbox" autocomplete="off">
+                      <span data-i18n="any_url"></span>
+                    </label>
+                  </div>
                 </div>
+              </div>
             </div>
-            <div class="form-group filterQueryStringForm hidden">
-                <label class="col-sm-2 control-label" data-i18n="trim_url_parameters"></label>
-                <div class="col-sm-10">
-                    <div class="row no-gutter">
-                        <div class="col-xs-9 col-md-10 btn-group-params">
-                            <input type="text" class="form-control input-sm input-params params"
-                                   data-i18n-placeholder="placeholder_trim_parameters"/>
-                        </div>
-                        <div class="col-xs-3 col-md-2">
-                            <div class="btn-group btn-group-justified btn-group-sm" data-toggle="buttons">
-                                <label class="btn btn-default">
-                                    <input class="trim-all-params" type="checkbox" autocomplete="off">
-                                    <span data-i18n="trim_all"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+          </div>
+          <div class="tlds-block hidden">
+            <label for="tlds" class="help-block"
+                   data-i18n="top_level_domains"></label>
+            <input id="tlds" type="text"
+                   class="form-control input-sm input-tlds tlds hidden"
+                   pattern="^([0-9a-zA-Z]{1,2}|[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+)$"
+                   required="required"/>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" data-i18n="types"></label>
+        <div class="col-sm-10">
+          <div class="row no-gutter">
+            <div class="col-xs-9 col-md-10 btn-group-types">
+              <div class="btn-toolbar">
+                <div class="btn-group btn-group-sm" data-toggle="buttons">
+                  <label class="btn btn-default active">
+                    <input type="checkbox" autocomplete="off" class="type"
+                           value="main_frame" checked="checked">
+                    <span data-i18n="main_frame"></span>
+                  </label>
+                  <label class="btn btn-default">
+                    <input type="checkbox" autocomplete="off" class="type"
+                           value="sub_frame">
+                    <span data-i18n="sub_frame"></span>
+                  </label>
+                  <label class="btn btn-default">
+                    <input type="checkbox" autocomplete="off" class="type"
+                           value="stylesheet">
+                    <span data-i18n="stylesheet"></span>
+                  </label>
+                  <label class="btn btn-default">
+                    <input type="checkbox" autocomplete="off" class="type"
+                           value="script">
+                    <span data-i18n="script"></span>
+                  </label>
+                  <label class="btn btn-default">
+                    <input type="checkbox" autocomplete="off" class="type"
+                           value="image">
+                    <span data-i18n="image"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="object">
+                    <span data-i18n="object"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="object_subrequest">
+                    <span data-i18n="object_subrequest"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="xmlhttprequest">
+                    <span data-i18n="xmlhttprequest"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="xbl">
+                    <span data-i18n="xbl"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="xslt">
+                    <span data-i18n="xslt"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="ping">
+                    <span data-i18n="ping"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="beacon">
+                    <span data-i18n="beacon"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="xml_dtd">
+                    <span data-i18n="xml_dtd"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="font">
+                    <span data-i18n="font"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="media">
+                    <span data-i18n="media"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="websocket">
+                    <span data-i18n="websocket"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="csp_report">
+                    <span data-i18n="csp_report"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="imageset">
+                    <span data-i18n="imageset"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="web_manifest">
+                    <span data-i18n="web_manifest"></span>
+                  </label>
+                  <label class="btn btn-default hidden">
+                    <input type="checkbox" autocomplete="off"
+                           class="type extra-type" value="other">
+                    <span data-i18n="other"></span>
+                  </label>
+                  <label class="btn btn-default">
+                    <input class="more-types" type="checkbox"
+                           autocomplete="off">
+                    <span class="text" data-i18n="show_more_true"></span>
+                  </label>
                 </div>
+              </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label text-success text-saved">
-                    <span class="glyphicon glyphicon-ok"></span>
-                    <span data-i18n="saved"></span>
+            <div class="col-xs-3 col-md-2">
+              <div class="btn-group btn-group-justified btn-group-sm"
+                   data-toggle="buttons">
+                <label class="btn btn-default">
+                  <input class="any-type" type="checkbox" autocomplete="off">
+                  <span data-i18n="any_type"></span>
                 </label>
-                <div class="col-sm-10">
-                    <button type="button" class="btn btn-sm btn-primary btn-save"
-                            data-i18n="save_rule">
-                    </button>
-                    <button type="button" class="btn btn-sm btn-danger btn-remove pull-right">
-                        <span class="glyphicon glyphicon-trash"></span>
-                        <span data-i18n="remove"></span>
-                    </button>
-                </div>
+              </div>
             </div>
+          </div>
         </div>
-    </li>
+      </div>
+      <div class="form-group">
+        <label for="action" class="col-sm-2 control-label"
+               data-i18n="action"></label>
+        <div class="col-sm-10">
+          <div class="row no-gutter">
+            <div class="col-xs-3 col-md-2">
+              <select id="action"
+                      class="form-control input-sm action text-center"
+                      required="required">
+                <option disabled selected hidden></option>
+                <option value="filter" data-i18n="filter"></option>
+                <option value="block" data-i18n="block"></option>
+                <option value="redirect" data-i18n="redirect"></option>
+                <option value="whitelist" data-i18n="whitelist"></option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group redirectUrlForm hidden">
+        <label class="col-sm-2 control-label" data-i18n="redirect_to"></label>
+        <div class="col-sm-10 col-md-10">
+          <input type="text" class="form-control redirectUrl hidden"
+                 data-i18n-placeholder="redirect_url" pattern=".*"
+                 required="required"/>
+          <span id="helpBlock" class="help-block small">
+            <span data-i18n="help_text_redirect"></span>
+            <a data-i18n-href="extensionManual#redirection"
+               data-i18n="see_help"></a>
+          </span>
+        </div>
+      </div>
+      <div class="form-group filterRedirectionForm hidden">
+        <label class="col-sm-2 control-label"
+               data-i18n="filter_url_redirection"></label>
+        <div class="col-sm-10">
+          <div class="row no-gutter">
+            <div class="col-xs-3 col-md-2">
+              <label class="switch">
+                <input class="redirectionFilter-toggle" type="checkbox"
+                       checked="checked"/>
+                <span class="knob"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group filterQueryStringForm hidden">
+        <label class="col-sm-2 control-label"
+               data-i18n="trim_url_parameters"></label>
+        <div class="col-sm-10">
+          <div class="row no-gutter">
+            <div class="col-xs-9 col-md-10 btn-group-params">
+              <input type="text"
+                     class="form-control input-sm input-params params"
+                     data-i18n-placeholder="placeholder_trim_parameters"/>
+            </div>
+            <div class="col-xs-3 col-md-2">
+              <div class="btn-group btn-group-justified btn-group-sm"
+                   data-toggle="buttons">
+                <label class="btn btn-default">
+                  <input class="trim-all-params" type="checkbox"
+                         autocomplete="off">
+                  <span data-i18n="trim_all"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label text-success text-saved">
+          <span class="glyphicon glyphicon-ok"></span>
+          <span data-i18n="saved"></span>
+        </label>
+        <div class="col-sm-10">
+          <button type="button" class="btn btn-sm btn-primary btn-save"
+                  data-i18n="save_rule"></button>
+          <button type="button"
+                  class="btn btn-sm btn-danger btn-remove pull-right">
+            <span class="glyphicon glyphicon-trash"></span>
+            <span data-i18n="remove"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </li>
 </ul>
-
 </body>
-
 </html>

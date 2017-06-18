@@ -1,348 +1,383 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/options/options.css">
-    <title>Request Control Help</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/options/options.css">
+  <title>Request Control Help</title>
 </head>
-
 <body>
 <div class="container">
-    <h1 id="top" class="page-header">Request Control Help</h1>
-    <p>Help page for Request Control.</p>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <a href="/options/options.html" class="text-info">
-                    <span class="glyphicon">←</span> Back to Rules
-                </a>
-            </h3>
-        </div>
-        <div id="help" class="panel-collapse">
-            <div class="panel-body">
-                <div class="contents pull-right">
-                    <ul class="list-unstyled">
-                        <li><a href="#request-control-rule">Request Control Rule explained</a></li>
-                        <li style="list-style-type:none">
-                            <ul>
-                                <li><a href="#request-pattern">Request Pattern</a></li>
-                                <li><a href="#request-types">Request Types</a></li>
-                                <li><a href="#rule-action">Rule Action</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#rule-priorities">Rule priorities</a></li>
-                        <li><a href="#matching-all-urls">Matching all URLs</a></li>
-                        <li><a href="#redirection">Redirect using pattern capturing</a></li>
-                        <li style="list-style-type:none">
-                            <ul>
-                                <li><a href="#param-expansion">Parameter expansion</a></li>
-                                <li><a href="#redirect-instructions">Redirect instructions</a></li>
-                                <li><a href="#rule-action">List of named parameters</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#top">Back to Top</a></li>
-                    </ul>
-                </div>
-                <div class="container-fluid help-content">
-                    <h2 id="request-control-rule" class="page-header">Request Control Rule explained</h2>
-                    <p>Request Control Rule consists of <em>request pattern</em>, <em>request types</em> and <em>rule
-                        action</em>. Requests that match a pattern of an active rule, will be intercepted taking
-                        the action of the rule.</p>
-                    <h2 id="request-pattern" class="page-header">Request Pattern
-                        <small><sup><a href="#attr1" title="Attributed to Mozilla Contributors">[1]</a></sup></small>
-                    </h2>
-                    <p>Request pattern contains three parts: <em>scheme</em>, <em>host</em> and <em>path</em>.
-                        Rule can include one or more request patterns.
-                    </p>
-                    <h3 id="scheme">Scheme</h3>
-                    <p>Scheme matches the protocol of the request URL. The following schemes are supported.</p>
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <td><em>http</em></td>
-                            <td>Match a http scheme.</td>
-                        </tr>
-                        <tr>
-                            <td><em>https</em></td>
-                            <td>Match a https scheme.</td>
-                        </tr>
-                        <tr>
-                            <td><em>http/https</em></td>
-                            <td>Match both http and https schemes.</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <h3 id="host">Host</h3>
-                    <p>Host matches the host of the request URL. It can be in one of the following forms.</p>
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <td><em>www.example.com</em></td>
-                            <td>Match a complete host.</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><em>*.example.com</em></td>
-                            <td>Match the given host and any of its subdomains.</td>
-                            <td>Will match any subdomain of example.com e.g.
-                                <em><strong>www</strong>.example.com</em>, <em><strong>good</strong>.example.com</em>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><em>www.example.*</em></td>
-                            <td>Match the given host and all of the listed top-level domains. (can be
-                                combined with the subdomain matching)
-                            </td>
-                            <td>Write the top-level domains to the top-level domain name list (e.g. <em>com</em>, <em>org</em>).
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><em>*</em></td>
-                            <td>Match any host.</td>
-                            <td></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <h3 id="path">Path</h3>
-                    <p>Path matches the request URL path. Path may subsequently contain any combination of &quot;*&quot;
-                        wildcard and any of the characters that are allowed in URL paths. The &quot;*&quot; wildcard
-                        matches any portion of path and may appear more than once. Below is examples for using path
-                        patterns.</p>
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <td>*</td>
-                            <td>Match any path.</td>
-                        </tr>
-                        <tr>
-                            <td><em>path/a/b/</em></td>
-                            <td>Match exact path &quot;path/a/b/&quot;.</td>
-                        </tr>
-                        <tr>
-                            <td><em>*/b/*</em></td>
-                            <td>Match path that contains a component &quot;b&quot; somewhere in the
-                                middle.
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <h2 id="request-types" class="page-header">Request Types
-                        <small><sup><a href="#attr2" title="Attributed to Mozilla Contributors">[2]</a></sup></small>
-                    </h2>
-                    <p>Filter requests based on the type of the request. A type represents the requested resource. Rule
-                        can apply from one to many types or any type. All possible types are listed below.</p>
-                    <ul>
-                        <li>Document</li>
-                        <li>Embedded document</li>
-                        <li>Stylesheet</li>
-                        <li>Script</li>
-                        <li>Image</li>
-                        <li>Object</li>
-                        <li>XMLHttpRequest</li>
-                        <li>XBL</li>
-                        <li>XSLT</li>
-                        <li>Font</li>
-                        <li>Media</li>
-                        <li>WebSocket</li>
-                        <li>CSP report</li>
-                        <li>Imageset</li>
-                        <li>Web Manifest</li>
-                        <li>Other</li>
-                        <li>Any Type</li>
-                    </ul>
-                    <h2 id="rule-action" class="page-header">Rule Action</h2>
-                    <p>There are four types of rule actions.</p>
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <td><img src="/icons/icon-filter@19.png"/></td>
-                            <td>Filter Requests</td>
-                            <td>Any request that matches a filter rule will be filtered according the filter rule
-                                configuration.
-                                With URL redirection filtering the request is taken directly to the contained redirect
-                                URL.
-                                With URL parameters trimming the configured URL parameters will be removed from
-                                requests.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="/icons/icon-block@19.png"/></td>
-                            <td>Block Requests</td>
-                            <td>Any request that matches a block rule will be cancelled before it is
-                                made.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="/icons/icon-redirect@19.png"/></td>
-                            <td>Redirect Requests</td>
-                            <td>Any request that matches a redirect rule will be redirected to the configured
-                                redirect URL.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="/icons/icon-whitelist@19.png"/></td>
-                            <td>Whitelist Requests</td>
-                            <td>Any requests that match a whitelist rule will be processed normally
-                                without taking any action of any other matched rules.
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <h2 id="rule-priorities" class="page-header">Rule priorities</h2>
-                    <p>Rules have the following priorities:</p>
-                    <ol>
-                        <li>Whitelist rule</li>
-                        <li>Block rule</li>
-                        <li>Redirect rule</li>
-                        <li>Filter rule</li>
-                    </ol>
-                    <p>Whitelist rules have the highest priority and they revoke all other rules. Next are block rules
-                        and
-                        they revoke redirect and filter rules. Finally redirect rules will be applied before filter
-                        rules. If more than one redirect or filter rule matches a single request they will all be
-                        applied
-                        one by one.</p>
-                    <h2 id="matching-all-urls" class="page-header">Matching all URLs</h2>
-                    <p>The request pattern can be set to a global pattern that matches all URLs under the supported
-                        schemes ("http" or "https"). The global request pattern is enabled by checking the Any URL
-                        button.</p>
-                    <h2 id="redirection" class="page-header">Redirect using pattern capturing</h2>
-                    <p>There are two ways for redirecting requests based on the original request. The first way is to
-                        use parameter expansion that includes writing the complete redirection URL but using some
-                        patterns from the original request. The second way is to use a single or multiple instructions
-                        to override parts of the original request (e.g. instruct requests to redirect to a different
-                        port).</p>
-                    <h3 id="param-expansion">Parameter expansion</h3>
-                    <pre>{parameter}</pre>
-                    <p>Access a named pattern of the original request. Available named parameters are listed at the end
-                        of this section.</p>
-                    <p>Parameter expansion supports the following string manipulation formats:</p>
-                    <h4 id="substring-expansion">Substring expansion</h4>
-                    <pre>{parameter:offset:length}</pre>
-                    <p>Include only a part of the expanded parameter. Offset determines the starting position. It begins
-                        from 0 and can be a negative value counting from the end of the string.</p>
-                    <h4 id="substring-replacing">Substring replacing</h4>
-                    <pre>{parameter/pattern/replacement}</pre>
-                    <p>Replace a matched substring in the extracted parameter. Pattern is written in regular
-                        expression.</p>
-                    <h4 id="manipulation-chain">Combining manipulation rules</h4>
-                    <pre>{parameter(manipulation1)|(manipulation2)|...|(manipulationN)}</pre>
-                    <p>All the string manipulation rules can be chained using a "|" pipe character. The output is the
-                        result of the manipulations chain.</p>
-                    <h4 id="expansion-examples">Examples</h4>
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <td>https://{hostname}/some/new/path</td>
-                            <td>Uses the hostname of the original request.</td>
-                        </tr>
-                        <tr>
-                            <td>https://{hostname::-3|/\.co$/.com}/some/new/path</td>
-                            <td>Uses the hostname of the original request but manipulates its length by three
-                                cutting it from the end and replaces ".co" with ".com".
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <h3 id="redirect-instructions">Redirect instructions</h3>
-                    <pre>[parameter=value]</pre>
-                    <p>Modify the original request. Available named parameters are listed at the end of this
-                        section.</p>
-                    <h4 id="instruction-examples">Examples</h4>
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <td>[port=8080]</td>
-                            <td>Redirects the original request to a port 8080.</td>
-                        </tr>
-                        <tr>
-                            <td>[port=8080][hostname=localhost]</td>
-                            <td>Redirects the original request to a port 8080 of localhost.</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <h3 id="named-params">List of named parameters
-                        <small><sup><a href="#attr3" title="Attributed to Mozilla Contributors">[3]</a></sup></small>
-                    </h3>
-                    <p>The names of the supported parameters and their example outputs are listed in below table.</p>
-                    <p>Example address used for outputs:</p>
-                    <pre>https://www.example.com:8080/some/path?query=value#hash</pre>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Output</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>protocol</td>
-                            <td>https:</td>
-                        </tr>
-                        <tr>
-                            <td>hostname</td>
-                            <td>www.example.com</td>
-                        </tr>
-                        <tr>
-                            <td>port</td>
-                            <td>8080</td>
-                        </tr>
-                        <tr>
-                            <td>pathname</td>
-                            <td>/some/path</td>
-                        </tr>
-                        <tr>
-                            <td>search</td>
-                            <td>?query=value</td>
-                        </tr>
-                        <tr>
-                            <td>hash</td>
-                            <td>#hash</td>
-                        </tr>
-                        <tr>
-                            <td>host</td>
-                            <td>www.example.com:8080</td>
-                        </tr>
-                        <tr>
-                            <td>origin</td>
-                            <td>https://www.example.com:8080</td>
-                        </tr>
-                        <tr>
-                            <td>href</td>
-                            <td>https://www.example.com:8080/some/path?query=value#hash</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+  <h1 id="top" class="page-header">Request Control Help</h1>
+  <p>Help page for Request Control.</p>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a href="/options/options.html" class="text-info">
+          <span class="glyphicon">←</span>
+          Back to Rules </a>
+      </h3>
     </div>
-    <div class="text-muted small">
-        <p> This help page is build upon the material of the following MDN wiki documents and is licenced under <a
-                href="http://creativecommons.org/licenses/by-sa/2.5/">CC-BY-SA 2.5</a>.</p>
-        <ol>
-            <li id="attr1"><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns">Match
-                patterns</a> by <a
-                    href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns$history">Mozilla
-                Contributors</a> is licensed under <a href="http://creativecommons.org/licenses/by-sa/2.5/">CC-BY-SA
-                2.5</a>.
+    <div id="help" class="panel-collapse">
+      <div class="panel-body">
+        <div class="contents pull-right">
+          <ul class="list-unstyled">
+            <li><a href="#request-control-rule">Request Control Rule
+              explained</a></li>
+            <li style="list-style-type:none">
+              <ul>
+                <li><a href="#request-pattern">Request Pattern</a></li>
+                <li><a href="#request-types">Request Types</a></li>
+                <li><a href="#rule-action">Rule Action</a></li>
+              </ul>
             </li>
-            <li id="attr2"><a
-                    href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType">webRequest.ResourceType</a>
-                by
-                <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType$history">Mozilla
-                    Contributors</a> is licensed under <a href="http://creativecommons.org/licenses/by-sa/2.5/">CC-BY-SA
-                    2.5</a>.
+            <li><a href="#rule-priorities">Rule priorities</a></li>
+            <li><a href="#matching-all-urls">Matching all URLs</a></li>
+            <li><a href="#redirection">Redirect using pattern capturing</a></li>
+            <li style="list-style-type:none">
+              <ul>
+                <li><a href="#param-expansion">Parameter expansion</a></li>
+                <li><a href="#redirect-instructions">Redirect instructions</a>
+                </li>
+                <li><a href="#rule-action">List of named parameters</a></li>
+              </ul>
             </li>
-            <li id="attr3"><a href="https://developer.mozilla.org/en-US/docs/Web/API/URL">URL</a> by <a
-                    href="https://developer.mozilla.org/en-US/docs/Web/API/URL$history">Mozilla Contributors</a> is
-                licensed
-                under <a href="http://creativecommons.org/licenses/by-sa/2.5/">CC-BY-SA 2.5</a>.
-            </li>
-        </ol>
+            <li><a href="#top">Back to Top</a></li>
+          </ul>
+        </div>
+        <div class="container-fluid help-content">
+          <h2 id="request-control-rule" class="page-header">Request Control Rule
+            explained</h2>
+          <p>Request Control Rule consists of <em>request pattern</em>, <em>request
+            types</em> and <em>rule action</em>. Requests that match a pattern
+            of an active rule, will be intercepted taking the action of the
+            rule.</p>
+          <h2 id="request-pattern" class="page-header">Request Pattern
+            <small><sup><a href="#attr1"
+                           title="Attributed to Mozilla Contributors">[1]</a></sup>
+            </small>
+          </h2>
+          <p>Request pattern contains three parts: <em>scheme</em>,
+            <em>host</em> and <em>path</em>. Rule can include one or more
+            request patterns.
+          </p>
+          <h3 id="scheme">Scheme</h3>
+          <p>Scheme matches the protocol of the request URL. The following
+            schemes are supported.</p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td><em>http</em></td>
+              <td>Match a http scheme.</td>
+            </tr>
+            <tr>
+              <td><em>https</em></td>
+              <td>Match a https scheme.</td>
+            </tr>
+            <tr>
+              <td><em>http/https</em></td>
+              <td>Match both http and https schemes.</td>
+            </tr>
+            </tbody>
+          </table>
+          <h3 id="host">Host</h3>
+          <p>Host matches the host of the request URL. It can be in one of the
+            following forms.</p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td><em>www.example.com</em></td>
+              <td>Match a complete host.</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><em>*.example.com</em></td>
+              <td>Match the given host and any of its subdomains.</td>
+              <td>Will match any subdomain of example.com e.g.
+                <em><strong>www</strong>.example.com</em>,
+                <em><strong>good</strong>.example.com</em>
+              </td>
+            </tr>
+            <tr>
+              <td><em>www.example.*</em></td>
+              <td>Match the given host and all of the listed top-level domains.
+                (can be combined with the subdomain matching)
+              </td>
+              <td>Write the top-level domains to the top-level domain name list
+                (e.g. <em>com</em>, <em>org</em>).
+              </td>
+            </tr>
+            <tr>
+              <td><em>*</em></td>
+              <td>Match any host.</td>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+          <h3 id="path">Path</h3>
+          <p>Path matches the request URL path. Path may subsequently contain
+            any combination of &quot;*&quot;
+            wildcard and any of the characters that are allowed in URL paths.
+            The &quot;*&quot; wildcard matches any portion of path and may
+            appear more than once. Below is examples for using path
+            patterns.</p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td>*</td>
+              <td>Match any path.</td>
+            </tr>
+            <tr>
+              <td><em>path/a/b/</em></td>
+              <td>Match exact path &quot;path/a/b/&quot;.</td>
+            </tr>
+            <tr>
+              <td><em>*/b/*</em></td>
+              <td>Match path that contains a component &quot;b&quot; somewhere
+                in the middle.
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <h2 id="request-types" class="page-header">Request Types
+            <small><sup><a href="#attr2"
+                           title="Attributed to Mozilla Contributors">[2]</a></sup>
+            </small>
+          </h2>
+          <p>Filter requests based on the type of the request. A type represents
+            the requested resource. Rule can apply from one to many types or any
+            type. All possible types are listed below.</p>
+          <ul>
+            <li>Document</li>
+            <li>Embedded document</li>
+            <li>Stylesheet</li>
+            <li>Script</li>
+            <li>Image</li>
+            <li>Object</li>
+            <li>XMLHttpRequest</li>
+            <li>XBL</li>
+            <li>XSLT</li>
+            <li>Font</li>
+            <li>Media</li>
+            <li>WebSocket</li>
+            <li>CSP report</li>
+            <li>Imageset</li>
+            <li>Web Manifest</li>
+            <li>Other</li>
+            <li>Any Type</li>
+          </ul>
+          <h2 id="rule-action" class="page-header">Rule Action</h2>
+          <p>There are four types of rule actions.</p>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td>
+                <img src="/icons/icon-filter@19.png"/>
+              </td>
+              <td>Filter Requests</td>
+              <td>Any request that matches a filter rule will be filtered
+                according the filter rule configuration. With URL redirection
+                filtering the request is taken directly to the contained
+                redirect URL. With URL parameters trimming the configured URL
+                parameters will be removed from requests.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <img src="/icons/icon-block@19.png"/>
+              </td>
+              <td>Block Requests</td>
+              <td>Any request that matches a block rule will be cancelled before
+                it is made.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <img src="/icons/icon-redirect@19.png"/>
+              </td>
+              <td>Redirect Requests</td>
+              <td>Any request that matches a redirect rule will be redirected to
+                the configured redirect URL.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <img src="/icons/icon-whitelist@19.png"/>
+              </td>
+              <td>Whitelist Requests</td>
+              <td>Any requests that match a whitelist rule will be processed
+                normally without taking any action of any other matched rules.
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <h2 id="rule-priorities" class="page-header">Rule priorities</h2>
+          <p>Rules have the following priorities:</p>
+          <ol>
+            <li>Whitelist rule</li>
+            <li>Block rule</li>
+            <li>Redirect rule</li>
+            <li>Filter rule</li>
+          </ol>
+          <p>Whitelist rules have the highest priority and they revoke all other
+            rules. Next are block rules and they revoke redirect and filter
+            rules. Finally redirect rules will be applied before filter rules.
+            If more than one redirect or filter rule matches a single request
+            they will all be applied one by one.</p>
+          <h2 id="matching-all-urls" class="page-header">Matching all URLs</h2>
+          <p>The request pattern can be set to a global pattern that matches all
+            URLs under the supported schemes ("http" or "https"). The global
+            request pattern is enabled by checking the Any URL button.</p>
+          <h2 id="redirection" class="page-header">Redirect using pattern
+            capturing</h2>
+          <p>There are two ways for redirecting requests based on the original
+            request. The first way is to use parameter expansion that includes
+            writing the complete redirection URL but using some patterns from
+            the original request. The second way is to use a single or multiple
+            instructions to override parts of the original request (e.g.
+            instruct requests to redirect to a different port).</p>
+          <h3 id="param-expansion">Parameter expansion</h3>
+          <pre>{parameter}</pre>
+          <p>Access a named pattern of the original request. Available named
+            parameters are listed at the end of this section.</p>
+          <p>Parameter expansion supports the following string manipulation
+            formats:</p>
+          <h4 id="substring-expansion">Substring expansion</h4>
+          <pre>{parameter:offset:length}</pre>
+          <p>Include only a part of the expanded parameter. Offset determines
+            the starting position. It begins from 0 and can be a negative value
+            counting from the end of the string.</p>
+          <h4 id="substring-replacing">Substring replacing</h4>
+          <pre>{parameter/pattern/replacement}</pre>
+          <p>Replace a matched substring in the extracted parameter. Pattern is
+            written in regular expression.</p>
+          <h4 id="manipulation-chain">Combining manipulation rules</h4>
+          <pre>{parameter(manipulation1)|(manipulation2)|...|(manipulationN)}</pre>
+          <p>All the string manipulation rules can be chained using a "|" pipe
+            character. The output is the result of the manipulations chain.</p>
+          <h4 id="expansion-examples">Examples</h4>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td>https://{hostname}/some/new/path</td>
+              <td>Uses the hostname of the original request.</td>
+            </tr>
+            <tr>
+              <td>https://{hostname::-3|/\.co$/.com}/some/new/path</td>
+              <td>Uses the hostname of the original request but manipulates its
+                length by three cutting it from the end and replaces ".co" with
+                ".com".
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <h3 id="redirect-instructions">Redirect instructions</h3>
+          <pre>[parameter=value]</pre>
+          <p>Modify the original request. Available named parameters are listed
+            at the end of this section.</p>
+          <h4 id="instruction-examples">Examples</h4>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td>[port=8080]</td>
+              <td>Redirects the original request to a port 8080.</td>
+            </tr>
+            <tr>
+              <td>[port=8080][hostname=localhost]</td>
+              <td>Redirects the original request to a port 8080 of localhost.
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <h3 id="named-params">List of named parameters
+            <small><sup><a href="#attr3"
+                           title="Attributed to Mozilla Contributors">[3]</a></sup>
+            </small>
+          </h3>
+          <p>The names of the supported parameters and their example outputs are
+            listed in below table.</p>
+          <p>Example address used for outputs:</p>
+          <pre>https://www.example.com:8080/some/path?query=value#hash</pre>
+          <table class="table">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Output</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>protocol</td>
+              <td>https:</td>
+            </tr>
+            <tr>
+              <td>hostname</td>
+              <td>www.example.com</td>
+            </tr>
+            <tr>
+              <td>port</td>
+              <td>8080</td>
+            </tr>
+            <tr>
+              <td>pathname</td>
+              <td>/some/path</td>
+            </tr>
+            <tr>
+              <td>search</td>
+              <td>?query=value</td>
+            </tr>
+            <tr>
+              <td>hash</td>
+              <td>#hash</td>
+            </tr>
+            <tr>
+              <td>host</td>
+              <td>www.example.com:8080</td>
+            </tr>
+            <tr>
+              <td>origin</td>
+              <td>https://www.example.com:8080</td>
+            </tr>
+            <tr>
+              <td>href</td>
+              <td>https://www.example.com:8080/some/path?query=value#hash</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="text-muted small">
+    <p> This help page is build upon the material of the following MDN wiki
+      documents and is licenced under <a
+          href="http://creativecommons.org/licenses/by-sa/2.5/">CC-BY-SA 2.5</a>.
+    </p>
+    <ol>
+      <li id="attr1">
+        <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns">Match
+          patterns</a> by <a
+          href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns$history">Mozilla
+        Contributors</a> is licensed under <a
+          href="http://creativecommons.org/licenses/by-sa/2.5/">CC-BY-SA 2.5</a>.
+      </li>
+      <li id="attr2"><a
+          href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType">webRequest.ResourceType</a>
+        by <a
+            href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType$history">Mozilla
+          Contributors</a> is licensed under <a
+            href="http://creativecommons.org/licenses/by-sa/2.5/">CC-BY-SA
+          2.5</a>.
+      </li>
+      <li id="attr3">
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL">URL</a>
+        by <a
+          href="https://developer.mozilla.org/en-US/docs/Web/API/URL$history">
+        Mozilla Contributors</a> is licensed under <a
+          href="http://creativecommons.org/licenses/by-sa/2.5/">CC-BY-SA 2.5</a>.
+      </li>
+    </ol>
+  </div>
 </div>
 </body>
 </html>
