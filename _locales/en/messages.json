@@ -95,7 +95,7 @@
     "message": "Revoke other rules and process requests normally."
   },
   "any_url": {
-    "message": "any URL"
+    "message": "Any URL"
   },
   "and": {
     "message": "$1 and $2"
