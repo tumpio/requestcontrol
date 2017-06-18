@@ -1,171 +1,310 @@
 {
-    "extensionName": {
-        "message": "Request Control"
-    },
-    "extensionDescription": {
-        "message": "Define rules for controlling HTTP requests."
-    },
-    "title_filter": {
-        "message": "Request filtered"
-    },
-    "title_block": {
-        "message": "Request blocked"
-    },
-    "title_redirect": {
-        "message": "Request redirected"
-    },
-    "title_whitelist": {
-        "message": "Request whitelisted"
-    },
-    "rule_title_filter": {
-        "message": "Filter rule for $HOST$",
-        "placeholders": {
-            "host": {
-                "content": "$1",
-                "example": "example.com"
-            }
-        }
-    },
-    "rule_title_redirect": {
-        "message": "Redirect rule for $HOST$",
-        "placeholders": {
-            "host": {
-                "content": "$1",
-                "example": "example.com"
-            }
-        }
-    },
-    "rule_title_block": {
-        "message": "Block rule for $HOST$",
-        "placeholders": {
-            "host": {
-                "content": "$1",
-                "example": "example.com"
-            }
-        }
-    },
-    "rule_title_whitelist": {
-        "message": "Whitelist rule for $HOST$",
-        "placeholders": {
-            "host": {
-                "content": "$1",
-                "example": "example.com"
-            }
-        }
-    },
-    "rule_title_new": {
-        "message": "New Rule"
-    },
-    "rule_title_hosts": {
-        "message": "$HOSTS$ and $NUM$ other",
-        "placeholders": {
-            "hosts": {
-                "content": "$1",
-                "example": "host1.com, host2.com, host3.com"
-            },
-            "num": {
-                "content": "$2",
-                "example": "10"
-            }
-        }
-    },
-    "rule_description_filter_url": {
-        "message": "Filter URL redirection"
-    },
-    "rule_description_filter_parameters": {
-        "message": "Trim URL parameters"
-    },
-    "rule_description_block": {
-        "message": "Block requests before they are made."
-    },
-    "rule_description_redirect": {
-        "message": "Redirect requests to $ULR$",
-        "placeholders": {
-            "url": {
-                "content": "$1",
-                "example": "http://example.com"
-            }
-        }
-    },
-    "rule_description_whitelist": {
-        "message": "Revoke other rules and process requests normally."
-    },
-    "any_url": {
-        "message": "any URL"
-    },
-    "and": {
-        "message": "$1 and $2"
-    },
-    "activate_false": {
-        "message": "Disable"
-    },
-    "activate_true": {
-        "message": "Enable"
-    },
-    "show_more_false": {
-        "message": "◂ Less"
-    },
-    "show_more_true": {
-        "message": "More ▸"
-    },
-    "main_frame": {
-        "message": "Document"
-    },
-    "sub_frame": {
-        "message": "Embedded document"
-    },
-    "stylesheet": {
-        "message": "Stylesheet"
-    },
-    "script": {
-        "message": "Script"
-    },
-    "image": {
-        "message": "Image"
-    },
-    "object": {
-        "message": "Object"
-    },
-    "object_subrequest": {
-        "message": "Plugin"
-    },
-    "xmlhttprequest": {
-        "message": "XMLHttpRequest"
-    },
-    "xbl": {
-        "message": "XBL"
-    },
-    "xslt": {
-        "message": "XSLT"
-    },
-    "ping": {
-        "message": "Ping"
-    },
-    "beacon": {
-        "message": "Beacon"
-    },
-    "xml_dtd": {
-        "message": "XML DTD"
-    },
-    "font": {
-        "message": "Font"
-    },
-    "media": {
-        "message": "Media"
-    },
-    "websocket": {
-        "message": "WebSocket"
-    },
-    "csp_report": {
-        "message": "CSP report"
-    },
-    "imageset": {
-        "message": "Imageset"
-    },
-    "web_manifest": {
-        "message": "Web Manifest"
-    },
-    "other": {
-        "message": "Other"
+  "extensionName": {
+    "message": "Request Control"
+  },
+  "extensionDescription": {
+    "message": "Define rules for controlling HTTP requests."
+  },
+  "extensionManual": {
+    "message": "/_locales/en/manual.html",
+    "description": "Change to point to the localised manual.html."
+  },
+  "title_filter": {
+    "message": "Request filtered"
+  },
+  "title_block": {
+    "message": "Request blocked"
+  },
+  "title_redirect": {
+    "message": "Request redirected"
+  },
+  "title_whitelist": {
+    "message": "Request whitelisted"
+  },
+  "rule_title_filter": {
+    "message": "Filter rule for $HOST$",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "example.com"
+      }
     }
+  },
+  "rule_title_redirect": {
+    "message": "Redirect rule for $HOST$",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "rule_title_block": {
+    "message": "Block rule for $HOST$",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "rule_title_whitelist": {
+    "message": "Whitelist rule for $HOST$",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "rule_title_new": {
+    "message": "New Rule"
+  },
+  "rule_title_hosts": {
+    "message": "$HOSTS$ and $NUM$ other",
+    "placeholders": {
+      "hosts": {
+        "content": "$1",
+        "example": "host1.com, host2.com, host3.com"
+      },
+      "num": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "rule_description_filter_url": {
+    "message": "Filter URL redirection"
+  },
+  "rule_description_filter_parameters": {
+    "message": "Trim URL parameters"
+  },
+  "rule_description_block": {
+    "message": "Block requests before they are made."
+  },
+  "rule_description_redirect": {
+    "message": "Redirect requests to $ULR$",
+    "placeholders": {
+      "url": {
+        "content": "$1",
+        "example": "http://example.com"
+      }
+    }
+  },
+  "rule_description_whitelist": {
+    "message": "Revoke other rules and process requests normally."
+  },
+  "any_url": {
+    "message": "any URL"
+  },
+  "and": {
+    "message": "$1 and $2"
+  },
+  "activate_false": {
+    "message": "Disable"
+  },
+  "activate_true": {
+    "message": "Enable"
+  },
+  "show_more_false": {
+    "message": "◂ Less"
+  },
+  "show_more_true": {
+    "message": "More ▸"
+  },
+  "main_frame": {
+    "message": "Document"
+  },
+  "sub_frame": {
+    "message": "Embedded document"
+  },
+  "stylesheet": {
+    "message": "Stylesheet"
+  },
+  "script": {
+    "message": "Script"
+  },
+  "image": {
+    "message": "Image"
+  },
+  "object": {
+    "message": "Object"
+  },
+  "object_subrequest": {
+    "message": "Plugin"
+  },
+  "xmlhttprequest": {
+    "message": "XMLHttpRequest"
+  },
+  "xbl": {
+    "message": "XBL"
+  },
+  "xslt": {
+    "message": "XSLT"
+  },
+  "ping": {
+    "message": "Ping"
+  },
+  "beacon": {
+    "message": "Beacon"
+  },
+  "xml_dtd": {
+    "message": "XML DTD"
+  },
+  "font": {
+    "message": "Font"
+  },
+  "media": {
+    "message": "Media"
+  },
+  "websocket": {
+    "message": "WebSocket"
+  },
+  "csp_report": {
+    "message": "CSP report"
+  },
+  "imageset": {
+    "message": "Imageset"
+  },
+  "web_manifest": {
+    "message": "Web Manifest"
+  },
+  "other": {
+    "message": "Other"
+  },
+  "options_title": {
+    "message": "Request Control Rules"
+  },
+  "options_description": {
+    "message": "Define rules for controlling HTTP requests."
+  },
+  "show_help": {
+    "message": "Show Help"
+  },
+  "see_help": {
+    "message": "See help."
+  },
+  "create_new_rule": {
+    "message": "Create new rule"
+  },
+  "restore_default_rules": {
+    "message": "Restore Default Rules"
+  },
+  "new_rule": {
+    "message": "New rule"
+  },
+  "patterns": {
+    "message": "patterns"
+  },
+  "edit": {
+    "message": "Edit"
+  },
+  "disable": {
+    "message": "Disable"
+  },
+  "pattern": {
+    "message": "Pattern"
+  },
+  "scheme": {
+    "message": "scheme"
+  },
+  "host": {
+    "message": "host"
+  },
+  "tlds": {
+    "message": "TLDs"
+  },
+  "path": {
+    "message": "path"
+  },
+  "top_level_domains": {
+    "message": "Top-level domains"
+  },
+  "types": {
+    "message": "Types"
+  },
+  "any_type": {
+    "message": "Any type"
+  },
+  "action": {
+    "message": "Action"
+  },
+  "filter": {
+    "message": "Filter"
+  },
+  "block": {
+    "message": "Block"
+  },
+  "redirect": {
+    "message": "Redirect"
+  },
+  "whitelist": {
+    "message": "Whitelist"
+  },
+  "redirect_to": {
+    "message": "Redirect To"
+  },
+  "help_text_redirect": {
+    "message": "Use pattern capturing to redirect based on the original request."
+  },
+  "filter_url_redirection": {
+    "message": "Filter URL"
+  },
+  "trim_url_parameters": {
+    "message": "Trim URL Parameters"
+  },
+  "trim_all": {
+    "message": "Trim all"
+  },
+  "saved": {
+    "message": "saved"
+  },
+  "save_rule": {
+    "message": "Save rule"
+  },
+  "remove": {
+    "message": "Remove"
+  },
+  "title_tlds": {
+    "message": "Included top-level domain names"
+  },
+  "redirect_url": {
+    "message": "Redirect URL"
+  },
+  "placeholder_trim_parameters": {
+    "message": "Add parameter names to filter"
+  },
+  "show_rules": {
+    "message": "Show Rules"
+  },
+  "request_type": {
+    "message": "Request type: $TYPE$",
+    "placeholders": {
+      "type": {
+        "content": "$1",
+        "example": "Document"
+      }
+    }
+  },
+  "timestamp": {
+    "message": "Timestamp: $TIME$",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "18:32:21"
+      }
+    }
+  },
+  "request_url": {
+    "message": "Request url:"
+  },
+  "copy_to_clipboard": {
+    "message": "Copy to clipboard"
+  },
+  "copied": {
+    "message": "Copied!"
+  },
+  "request_target": {
+    "message": "Request target:"
+  }
 }

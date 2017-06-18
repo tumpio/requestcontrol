@@ -5,8 +5,10 @@
 function showDetails(details) {
     document.getElementById("icon").src = "../icons/icon-" + details.action + "@38.png";
     document.getElementById("title").textContent = browser.i18n.getMessage("title_" + details.action);
-    document.getElementById("type").textContent = browser.i18n.getMessage(details.type);
-    document.getElementById("timestamp").textContent = new Date(details.timestamp).toLocaleTimeString();
+    document.getElementById("type").textContent =
+        browser.i18n.getMessage("request_type", browser.i18n.getMessage(details.type));
+    document.getElementById("timestamp").textContent =
+        browser.i18n.getMessage("timestamp", new Date(details.timestamp).toLocaleTimeString());
     document.getElementById("url").textContent = details.url;
     document.getElementById("target").textContent = details.target;
 

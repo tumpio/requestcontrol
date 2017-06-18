@@ -447,6 +447,10 @@ function init() {
             createRuleInputs(myOptionsManager.options.rules);
         });
     });
+
+    document.getElementById("showHelp").addEventListener("click", function () {
+        window.location = browser.i18n.getMessage("extensionManual");
+    })
 }
 
 document.addEventListener("DOMContentLoaded", function () {
