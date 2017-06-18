@@ -35,8 +35,8 @@ function RuleInputFactory(rule = new RequestRule()) {
 
 function FilterRuleInput(rule) {
     RuleInput.call(this, rule);
-    this.title = "Filter rule for ";
-    this.description = ["Filter URL redirection", "Trim URL parameters"];
+    this.title = "rule_title_filter";
+    this.description = ["rule_description_filter_url", "rule_description_filter_parameters"];
     this.optionsPath = "rules";
     this.paramsTagsInput = new TagsInput(this.model.qs(".input-params"));
 
@@ -83,19 +83,23 @@ FilterRuleInput.prototype.updateRule = function () {
 FilterRuleInput.prototype.getDescription = function () {
     let description = [];
     if (!this.rule.skipRedirectionFilter) {
-        description.push(this.description[0]);
+        description.push(browser.i18n.getMessage(this.description[0]));
     }
     if (this.rule.trimAllParams ||
-        (this.rule.paramsFilter && this.rule.paramsFilter.length > 0)) {
-        description.push(this.description[1]);
+        (this.rule.paramsFilter && this.rule.paramsFilter.length > 0)) {
+        description.push(browser.i18n.getMessage(this.description[1]));
     }
-    return description.join(" and ");
+    if (description.length === 2) {
+        return browser.i18n.getMessage("and", description);
+    } else {
+        return description.join();
+    }
 };
 
 function BlockRuleInput(rule) {
     RuleInput.call(this, rule);
-    this.title = "Block rule for ";
-    this.description = "Block requests before they are made.";
+    this.title = "rule_title_block";
+    this.description = "rule_description_block";
     this.optionsPath = "rules";
     this.updateModel();
 }
@@ -104,8 +108,8 @@ BlockRuleInput.prototype.constructor = BlockRuleInput;
 
 function RedirectRuleInput(rule) {
     RuleInput.call(this, rule);
-    this.title = "Redirect rule for ";
-    this.description = "Redirect requests to ";
+    this.title = "rule_title_redirect";
+    this.description = "rule_description_redirect";
     this.optionsPath = "rules";
     this.updateModel();
 
@@ -123,13 +127,13 @@ RedirectRuleInput.prototype.updateRule = function () {
     this.rule.redirectUrl = this.model.qs(".redirectUrl").value;
 };
 RedirectRuleInput.prototype.getDescription = function () {
-    return this.description + this.rule.redirectUrl;
+    return browser.i18n.getMessage(this.title, this.rule.redirectUrl);
 };
 
 function WhitelistRuleInput(rule) {
     RuleInput.call(this, rule);
-    this.title = "Whitelist rule for ";
-    this.description = "Revoke other rules and process requests normally.";
+    this.title = "rule_title_whitelist";
+    this.description = "rule_description_whitelist";
     this.optionsPath = "rules";
     this.updateModel();
 }
@@ -145,7 +149,7 @@ function RuleInput(rule) {
     self.hostsTagsInput = new TagsInput(self.model.qs(".host"));
     self.pathsTagsInput = new TagsInput(self.model.qs(".path"));
     self.tldsTagsInput = new TagsInput(self.model.qs(".input-tlds"));
-    self.title = "New Rule";
+    self.title = "rule_title_new";
     self.optionsPath = "rules";
 
     addInputValidation(this.model.qs(".host"), this.setAllowSave.bind(self));
@@ -173,7 +177,8 @@ function RuleInput(rule) {
     self.model.qs(".more-types").addEventListener("change", function (e) {
         e.stopPropagation();
         let extraTypes = self.model.qsa(".extra-type:not(:checked)");
-        self.model.qs(".more-types").parentNode.querySelector(".text").textContent = self.model.qs(".more-types").checked ? "◂ Less" : "More ▸";
+        self.model.qs(".more-types").parentNode.querySelector(".text").textContent =
+            browser.i18n.getMessage("show_more_" + !self.model.qs(".more-types").checked);
         for (let type of extraTypes) {
             toggleHidden(!self.model.qs(".more-types").checked, type.parentNode);
         }
@@ -265,7 +270,7 @@ RuleInput.prototype.toggleEdit = function () {
 
 RuleInput.prototype.setActiveState = function () {
     this.model.classList.toggle("disabled", !this.rule.active);
-    this.model.qs(".btn-activate").textContent = this.rule.active ? 'Disable' : 'Enable';
+    this.model.qs(".btn-activate").textContent = browser.i18n.getMessage("activate_" + !this.rule.active);
 };
 
 RuleInput.prototype.validate = function () {
@@ -299,20 +304,20 @@ RuleInput.prototype.indexOfRule = function () {
 RuleInput.prototype.getTitle = function () {
     let hosts = "";
     if (this.rule.pattern.allUrls) {
-        hosts = "any URL";
+        hosts = browser.i18n.getMessage("any_url");
     } else if (Array.isArray(this.rule.pattern.host)) {
         hosts = this.rule.pattern.host.slice(0, 3).join(", ").replace(/\*\.|\.\*/g, "");
         if (this.rule.pattern.host.length > 3) {
-            hosts += " and " + (this.rule.pattern.host.length - 3) + " other";
+            hosts = browser.i18n.getMessage("rule_title_hosts", [hosts, (this.rule.pattern.host.length - 3)]);
         }
     } else {
         hosts = this.rule.pattern.host.replace(/\*\.|\.\*/g, "");
     }
-    return this.title + hosts;
+    return browser.i18n.getMessage(this.title, hosts);
 };
 
 RuleInput.prototype.getDescription = function () {
-    return this.description;
+    return browser.i18n.getMessage(this.description);
 };
 
 RuleInput.prototype.updateModel = function () {

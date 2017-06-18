@@ -11,13 +11,6 @@ const substrExtractPattern = /^(:-?\d*)(:-?\d*)?(\|(.*))?/;
 const substrReplacePattern = /^\/(.+?(?!\\).)\/([^|]*)(\|(.*))?/;
 const requestListeners = [];
 
-const titles = {
-    filter: "Request filtered",
-    block: "Request blocked",
-    redirect: "Request redirected",
-    whitelist: "Request whitelisted"
-};
-
 const requests = new Map();
 const requestDetails = new Map();
 
@@ -217,7 +210,6 @@ function extractSubstring(str, match, offset, length, pipe, manipulationRules) {
 
 function addPageActionDetails(request) {
     requestDetails.set(request.tabId, {
-        title: titles[request.action],
         action: request.action,
         tabId: request.tabId,
         type: request.type,
@@ -243,7 +235,7 @@ function showPageAction(event) {
 
     browser.pageAction.setTitle({
         tabId: details.tabId,
-        title: details.title
+        title: browser.i18n.getMessage("title_" + details.action)
     });
 
     browser.pageAction.show(details.tabId);
