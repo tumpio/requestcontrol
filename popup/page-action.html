@@ -6,13 +6,50 @@
 <head>
     <meta charset="utf-8">
     <script src="page-action.js"></script>
+    <link rel="stylesheet" href="page-action.css">
 </head>
-<body class="well">
+<body>
 <div class="panel">
     <div class="panel-arrowUp"></div>
     <div class="panel-section panel-section-header">
-        <div class="icon-section-header"><img id="icon" src="../icons/icon-48.png"></div>
-        <div class="text-section-header" id="title">Request Control</div>
+        <div class="icon-section-header"><img id="icon" src=""></div>
+        <div class="text-section-header">
+            <span id="title"></span>
+        </div>
+        <button id="showRules">Show Rules</button>
+    </div>
+    <div class="panel-section panel-section-list">
+        <div class="panel-list-item disabled">
+            <div class="text">Request type: <span id="type"></span></div>
+            <div class="text-shortcut">Timestamp: <span id="timestamp"></span></div>
+        </div>
+        <div class="requestUrl">
+            <div class="panel-section-separator"></div>
+            <div class="panel-list-item disabled">Request url:</div>
+            <div class="panel-list-item">
+                <div class="text">
+                    <pre id="url"></pre>
+                </div>
+                <div class="text-shortcut">
+                    <button class="copyButton tooltip" data-copy-target="url" title="Copy to clipboard">
+                        <span class="tooltiptext">Copied!</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="requestTarget">
+            <div class="panel-list-item disabled">Request target:</div>
+            <div class="panel-list-item">
+                <div class="text">
+                    <pre id="target"></pre>
+                </div>
+                <div class="text-shortcut">
+                    <button class="copyButton tooltip" data-copy-target="target" title="Copy to clipboard">
+                        <span class="tooltiptext">Copied!</span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

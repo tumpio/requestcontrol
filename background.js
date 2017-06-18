@@ -10,16 +10,16 @@ const redirectInstrPattern = /\[([a-z]+)=(.+?)]/g;
 const substrExtractPattern = /^(:-?\d*)(:-?\d*)?(\|(.*))?/;
 const substrReplacePattern = /^\/(.+?(?!\\).)\/([^|]*)(\|(.*))?/;
 const requestListeners = [];
-var requestDetails = {};
 
-var titles = {
-    filter: "Request was filtered",
-    block: "Request was blocked",
-    redirect: "Request was redirected",
-    whitelist: "Request was whitelisted"
+const titles = {
+    filter: "Request filtered",
+    block: "Request blocked",
+    redirect: "Request redirected",
+    whitelist: "Request whitelisted"
 };
 
 const requests = new Map();
+const requestDetails = new Map();
 
 function RequestActionFactory(rule) {
     switch (rule.action) {
@@ -43,6 +43,21 @@ function getRequest(details) {
         requests.set(details.requestId, details);
     }
     return requests.get(details.requestId);
+}
+
+function getCurrentDetails(tabs) {
+    return requestDetails.get(tabs[0].id);
+}
+
+function removeDetails(tabId) {
+    requestDetails.delete(tabId);
+}
+
+function handlePageAction() {
+    return browser.tabs.query({
+        currentWindow: true,
+        active: true
+    }).then(getCurrentDetails);
 }
 
 function whitelistAction(details) {
@@ -201,22 +216,37 @@ function extractSubstring(str, match, offset, length, pipe, manipulationRules) {
 }
 
 function addPageActionDetails(request) {
-    requestDetails[request.tabId] = request;
-    browser.webNavigation.onDOMContentLoaded.addListener(function (details) {
-        browser.pageAction.setIcon({
-            tabId: details.tabId,
-            path: {
-                19: "icons/icon-" + request.action + "@19.png",
-                38: "icons/icon-" + request.action + "@38.png"
-            }
-        });
-        browser.pageAction.setTitle({
-            tabId: details.tabId,
-            title: titles[request.action]
-        });
-        browser.pageAction.show(details.tabId);
-        browser.webNavigation.onDOMContentLoaded.removeListener(arguments.callee);
+    requestDetails.set(request.tabId, {
+        title: titles[request.action],
+        action: request.action,
+        tabId: request.tabId,
+        type: request.type,
+        url: request.url,
+        target: request.redirectUrl,
+        timestamp: request.timeStamp
     });
+    browser.webNavigation.onDOMContentLoaded.addListener(showPageAction);
+}
+
+function showPageAction(event) {
+    browser.webNavigation.onDOMContentLoaded.removeListener(arguments.callee);
+
+    let details = requestDetails.get(event.tabId);
+
+    browser.pageAction.setIcon({
+        tabId: details.tabId,
+        path: {
+            19: "icons/icon-" + details.action + "@19.png",
+            38: "icons/icon-" + details.action + "@38.png"
+        }
+    });
+
+    browser.pageAction.setTitle({
+        tabId: details.tabId,
+        title: details.title
+    });
+
+    browser.pageAction.show(details.tabId);
 }
 
 function removeRuleListeners() {
@@ -310,3 +340,6 @@ function init() {
 
 myOptionsManager.loadOptions(init);
 myOptionsManager.onChanged(init);
+
+browser.runtime.onMessage.addListener(handlePageAction);
+browser.tabs.onRemoved.addListener(removeDetails);
