@@ -125,15 +125,16 @@ function applyFilterRules(url, rules) {
     // trim query parameters
     if (trimAllParams) {
         url.search = "";
-    } else if (paramsFilter.length > 0) {
-        let filterParams = new URLSearchParams();
+    } else if (paramsFilter.length > 0 && url.search.length > 0) {
+        let searchParams = url.search.substring(1).split("&");
         let pattern = new RegExp("^(" + paramsFilter.join("|").replace("*", ".*") + ")$");
-        for (let param of url.searchParams) {
-            if (!pattern.test(param[0])) {
-                filterParams.append(param[0], param[1]);
+        let i = searchParams.length;
+        while (i--) {
+            if (pattern.test(searchParams[i].split("=")[0])) {
+                searchParams.splice(i, 1);
             }
         }
-        url.search = filterParams.toString();
+        url.search = searchParams.join("");
     }
     return url;
 }
