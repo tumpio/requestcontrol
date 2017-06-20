@@ -134,7 +134,7 @@ function applyFilterRules(url, rules) {
                 searchParams.splice(i, 1);
             }
         }
-        url.search = searchParams.join("");
+        url.search = searchParams.join("&");
     }
     return url;
 }
