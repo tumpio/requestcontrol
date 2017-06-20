@@ -52,7 +52,7 @@ FilterRuleInput.prototype.constructor = FilterRuleInput;
 FilterRuleInput.prototype.updateModel = function () {
     RuleInput.prototype.updateModel.call(this);
     this.model.qs(".redirectionFilter-toggle").checked = !this.rule.skipRedirectionFilter;
-    if (Array.isArray(this.rule.paramsFilter)) {
+    if (this.rule.paramsFilter && Array.isArray(this.rule.paramsFilter)) {
         this.paramsTagsInput.setValue(this.rule.paramsFilter);
     }
     if (this.rule.pattern.allUrls) {
