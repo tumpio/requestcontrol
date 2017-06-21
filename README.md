@@ -1,3 +1,5 @@
+[![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3UN97ARSMYP3U)
+
 ## Request Control - Firefox WebExtension
 
 Control your HTTP requests with Request Control Rules.  With Request Control rules requests can be filtered preventing redirection tracking, blocked  blocking request altogether and redirected to a custom redirect URL.
