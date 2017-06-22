@@ -1,5 +1,3 @@
-[![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3UN97ARSMYP3U)
-
 ## Request Control - Firefox WebExtension
 
 Control your HTTP requests with Request Control Rules.  With Request Control rules requests can be filtered preventing redirection tracking, blocked  blocking request altogether and redirected to a custom redirect URL.
@@ -20,13 +18,6 @@ Control your HTTP requests with Request Control Rules.  With Request Control rul
 <strong><a  href="https://github.com/tumpio/requestcontrol">Source code</a></strong></br>
 <strong><a  href="https://github.com/tumpio/requestcontrol/blob/master/LICENSE">License</a></strong></br>
 
-#### API Permission requirements
-WebExtensions use API permission management. Permissions for the following APIs are required:
-- webNavigation API, for setting page action (URL icon).
-- webRequest API, for intercepting HTTP requests.
-- webRequestBlocking, for redirecting and cancelling HTTP requests.
-- storage API, for storing user configurations. 
-
 #### External Libraries
 Request control uses the following external libraries,
 - [Bootstrap](http://getbootstrap.com/) is licensed under the MIT license.
@@ -36,3 +27,8 @@ Request control uses the following external libraries,
     This Source Code Form is subject to the terms of the Mozilla Public
     License, v. 2.0. If a copy of the MPL was not distributed with this
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+#### Donate
+PayPal: [![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3UN97ARSMYP3U)
+
+bitcoin:1HZp3cUWCFSoR8EfDSRopLVeEbTZiAHz2B
