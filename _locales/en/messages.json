@@ -83,7 +83,7 @@
     "message": "Block requests before they are made."
   },
   "rule_description_redirect": {
-    "message": "Redirect requests to $ULR$",
+    "message": "Redirect requests to $URL$",
     "placeholders": {
       "url": {
         "content": "$1",
@@ -176,10 +176,16 @@
     "message": "Request Control Rules"
   },
   "options_description": {
-    "message": "Define rules for controlling HTTP requests."
+    "message": "Define rules for controlling HTTP requests"
   },
-  "show_help": {
-    "message": "Show Help"
+  "settings_title": {
+    "message": "Request Control Settings"
+  },
+  "help_title": {
+    "message": "Request Control Help"
+  },
+  "help": {
+    "message": "Help"
   },
   "see_help": {
     "message": "See help."
@@ -306,5 +312,50 @@
   },
   "request_target": {
     "message": "Request target:"
+  },
+  "rules": {
+    "message": "Rules"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "back_to_top": {
+    "message": "Back to top"
+  },
+  "export-file-name": {
+    "message": "request-control-rules.json"
+  },
+  "export_selected": {
+    "message": "Export selected"
+  },
+  "remove_selected": {
+    "message": "Remove selected"
+  },
+  "export_rules": {
+    "message": "Export rules"
+  },
+  "export_description": {
+    "message": "Export rules to a local file."
+  },
+  "export": {
+    "message": "Export"
+  },
+  "import_rules": {
+    "message": "Import rules"
+  },
+  "import_description": {
+    "message": "Import rules from a local file."
+  },
+  "restore_defaults": {
+    "message": "Restore defaults"
+  },
+  "restore_description": {
+    "message": "Restore default rules."
+  },
+  "restore": {
+    "message": "Restore"
+  },
+  "contents": {
+    "message": "Contents"
   }
 }

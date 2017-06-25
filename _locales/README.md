@@ -6,4 +6,4 @@ __Note:__ Separator for regional variant in directory name must be written with 
 
 Locale's directory content:
 - messages.json file - Includes all the localised strings including extension name and description. 
-- manual.html - Is the localised manual html-page.
+- manual.md - The localised manual written in markdown. Html page will be auto-generated from it using pandoc.

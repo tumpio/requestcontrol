@@ -19,13 +19,14 @@ pre {
 }
 
 .copyButton {
-    background: url("chrome://browser/skin/menuPanel-small.svg") no-repeat;
-    background-position-x: -31px;
-    background-position-y: 1px;
-    height: 20px;
-    width: 20px;
+    height: 26px;
+    width: 26px;
     cursor: pointer;
     margin-left: 1em;
+}
+
+.copyButton img {
+    margin-left: -8px;
 }
 
 .copyButton:hover {
