@@ -103,7 +103,7 @@ function applyRedirectRules(url, rule) {
 function applyFilterRules(url, rules) {
     let skipRedirectionFilter = true;
     let trimAllParams = false;
-    let paramsFilter = [];
+    let paramsFilter = "";
 
     for (let rule of rules) {
         if (!rule.skipRedirectionFilter) {
@@ -112,10 +112,12 @@ function applyFilterRules(url, rules) {
         if (rule.trimAllParams) {
             trimAllParams = true;
         }
-        if (Array.isArray(rule.paramsFilter)) {
-            paramsFilter = paramsFilter.concat(rule.paramsFilter);
+        if (!trimAllParams || rule.paramsFilterPattern) {
+            paramsFilter += "|" + rule.paramsFilterPattern;
         }
     }
+
+    paramsFilter = paramsFilter.substring(1);
 
     // redirection url filter
     if (!skipRedirectionFilter) {
@@ -127,7 +129,7 @@ function applyFilterRules(url, rules) {
         url.search = "";
     } else if (paramsFilter.length > 0 && url.search.length > 0) {
         let searchParams = url.search.substring(1).split("&");
-        let pattern = new RegExp("^(" + paramsFilter.join("|").replace("*", ".*") + ")$");
+        let pattern = new RegExp("^" + paramsFilter + "$");
         let i = searchParams.length;
         while (i--) {
             if (pattern.test(searchParams[i].split("=")[0])) {

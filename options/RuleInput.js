@@ -54,6 +54,7 @@ function RuleInput(rule) {
     self.pathsTagsInput = new TagsInput(self.model.qs(".path"));
     self.tldsTagsInput = new TagsInput(self.model.qs(".input-tlds"));
     self.title = "rule_title_new";
+    self.description = "";
     self.optionsPath = "rules";
     self.model.removeAttribute("id");
 
@@ -134,7 +135,7 @@ RuleInput.prototype.getRule = function () {
 
 RuleInput.prototype.change = function () {
     this.updateRule();
-    let newInput = RuleInputFactory.newInput(this.rule);
+    let newInput = RuleInputFactory.prototype.newInput(this.rule);
     this.model.parentNode.insertBefore(newInput.model, this.model);
     this.softRemove();
     newInput.toggleEdit();
@@ -370,6 +371,23 @@ FilterRuleInput.prototype.updateModel = function () {
 FilterRuleInput.prototype.updateRule = function () {
     RuleInput.prototype.updateRule.call(this);
     this.rule.paramsFilter = this.paramsTagsInput.getValue();
+
+    // construct regexp pattern of filter params
+    if (this.rule.paramsFilter.length > 0) {
+        let paramsFilterPattern = "";
+        for (let param of this.rule.paramsFilter) {
+            let testRegexp = param.match(/^\/(.*)\/$/);
+            if (testRegexp) {
+                paramsFilterPattern += "|" + testRegexp[1];
+            } else {
+                paramsFilterPattern += "|" + param.replace(/\*/g, ".*");
+            }
+        }
+        paramsFilterPattern = paramsFilterPattern.substring(1);
+        this.rule.paramsFilterPattern = paramsFilterPattern;
+    } else {
+        delete this.rule.paramsFilterPattern;
+    }
 
     if (this.model.qs(".redirectionFilter-toggle").checked) {
         delete this.rule.skipRedirectionFilter;
