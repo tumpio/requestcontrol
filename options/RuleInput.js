@@ -372,6 +372,8 @@ FilterRuleInput.prototype.updateRule = function () {
     RuleInput.prototype.updateRule.call(this);
     this.rule.paramsFilter = this.paramsTagsInput.getValue();
 
+    let regexpChars = /[.+?^${}()|[\]\\]/g; // excluding * wildcard
+
     // construct regexp pattern of filter params
     if (this.rule.paramsFilter.length > 0) {
         let paramsFilterPattern = "";
@@ -380,7 +382,7 @@ FilterRuleInput.prototype.updateRule = function () {
             if (testRegexp) {
                 paramsFilterPattern += "|" + testRegexp[1];
             } else {
-                paramsFilterPattern += "|" + param.replace(/\*/g, ".*");
+                paramsFilterPattern += "|" + param.replace(regexpChars, "\\$&").replace(/\*/g, ".*");
             }
         }
         paramsFilterPattern = paramsFilterPattern.substring(1);

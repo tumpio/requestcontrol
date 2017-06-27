@@ -110,7 +110,7 @@ function applyFilterRules(url, rules) {
         if (rule.trimAllParams) {
             trimAllParams = true;
         }
-        if (!trimAllParams || rule.paramsFilterPattern) {
+        if (!trimAllParams && rule.paramsFilterPattern) {
             paramsFilter += "|" + rule.paramsFilterPattern;
         }
     }
