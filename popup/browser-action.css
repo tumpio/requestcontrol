@@ -1,0 +1,123 @@
+pre {
+    white-space: pre-wrap;
+    -moz-user-select: text;
+    font-size: 0.8em;
+    margin-top: 4px;
+}
+
+.panel-section-footer {
+    overflow: hidden;
+}
+
+.entry > .panel-list-item {
+    cursor: pointer;
+}
+
+#records {
+    max-height: 30em;
+    overflow-y: auto;
+    min-width: 30em;
+}
+
+#details {
+    margin-top: -5px;
+}
+
+#details .panel-list-item {
+    height: auto;
+    border: 2px;
+    cursor: text;
+}
+
+#details .panel-list-item:hover {
+    background-color: inherit;
+}
+
+#details .panel-list-item.disabled {
+    color: #777;
+}
+
+body:not([data-action]) #details,
+body:not([data-action]) #records {
+    display: none;
+}
+
+.timestamp {
+    margin-right: 1em;
+    color: #444;
+}
+
+.icon {
+    margin-right: 0.7em;
+}
+
+.text-shortcut {
+    text-align: right;
+}
+
+.models {
+    display: none;
+}
+
+.requestTarget {
+    display: none;
+}
+
+body[data-action="filter"] .requestTarget,
+body[data-action="redirect"] .requestTarget {
+    display: block;
+}
+
+.copyButton {
+    height: 22px;
+    width: 22px;
+    cursor: pointer;
+    margin-left: 1em;
+    border: none;
+}
+
+.copyButton img {
+    margin-left: -8px;
+}
+
+.copyButton:hover {
+    background-color: #ebebeb;
+}
+
+/* Copied tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 0.3em;
+    border-radius: 2px;
+
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    right: 120%;
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+.copied .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    margin-top: -5px;
+    border: 5px solid;
+    border-color: transparent transparent transparent #333;
+}

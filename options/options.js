@@ -67,7 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
     Promise.all([myOptionsManager.loadOptions(), myRuleInputFactory.load()]).then(() =>
         createRuleInputs(myOptionsManager.options.rules));
     addLocalisedManual(browser.i18n.getMessage("extensionManual"));
-    translateDocument(document);
 
     document.getElementById("addNewRule").addEventListener("click", function () {
         let ruleInput = myRuleInputFactory.newInput();

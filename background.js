@@ -12,7 +12,7 @@ const substrReplacePattern = /^\/(.+?(?!\\).)\/([^|]*)(\|(.*))?/;
 const requestListeners = [];
 
 const requests = new Map();
-const requestDetails = new Map();
+const records = new Map();
 
 function RequestActionFactory(rule) {
     switch (rule.action) {
@@ -38,19 +38,17 @@ function getRequest(details) {
     return requests.get(details.requestId);
 }
 
-function getCurrentDetails(tabs) {
-    return requestDetails.get(tabs[0].id);
+function removeRecords(tabId) {
+    records.delete(tabId);
 }
 
-function removeDetails(tabId) {
-    requestDetails.delete(tabId);
-}
-
-function handlePageAction() {
+function getRecords() {
     return browser.tabs.query({
         currentWindow: true,
         active: true
-    }).then(getCurrentDetails);
+    }).then(tabs => {
+        return records.get(tabs[0].id);
+    });
 }
 
 function whitelistAction(details) {
@@ -112,7 +110,7 @@ function applyFilterRules(url, rules) {
         if (rule.trimAllParams) {
             trimAllParams = true;
         }
-        if (!trimAllParams || rule.paramsFilterPattern) {
+        if (!trimAllParams || rule.paramsFilterPattern) {
             paramsFilter += "|" + rule.paramsFilterPattern;
         }
     }
@@ -211,37 +209,40 @@ function extractSubstring(str, match, offset, length, pipe, manipulationRules) {
     return applyStringManipulation(substr, manipulationRules);
 }
 
-function addPageActionDetails(request) {
-    requestDetails.set(request.tabId, {
+function addRecord(request) {
+    let record = {
         action: request.action,
         tabId: request.tabId,
         type: request.type,
         url: request.url,
         target: request.redirectUrl,
         timestamp: request.timeStamp
-    });
-    browser.webNavigation.onDOMContentLoaded.addListener(showPageAction);
+    };
+    let recordsForTab = records.get(request.tabId);
+    if (!recordsForTab) {
+        recordsForTab = [];
+        records.set(request.tabId, recordsForTab);
+    }
+    recordsForTab.push(record);
+    updateBrowserAction(record, recordsForTab.length.toString());
 }
 
-function showPageAction(event) {
-    browser.webNavigation.onDOMContentLoaded.removeListener(arguments.callee);
-
-    let details = requestDetails.get(event.tabId);
-
-    browser.pageAction.setIcon({
+function updateBrowserAction(details, badgeText) {
+    browser.browserAction.setIcon({
         tabId: details.tabId,
         path: {
             19: "icons/icon-" + details.action + "@19.png",
             38: "icons/icon-" + details.action + "@38.png"
         }
     });
-
-    browser.pageAction.setTitle({
+    browser.browserAction.setTitle({
         tabId: details.tabId,
         title: browser.i18n.getMessage("title_" + details.action)
     });
-
-    browser.pageAction.show(details.tabId);
+    browser.browserAction.setBadgeText({
+        tabId: details.tabId,
+        text: badgeText
+    });
 }
 
 function removeRuleListeners() {
@@ -314,7 +315,7 @@ function resolveControlRules(resolve, requestId) {
         }
     }
     if (request.action) {
-        addPageActionDetails(request);
+        addRecord(request);
     }
 }
 
@@ -336,5 +337,10 @@ function init() {
 myOptionsManager.loadOptions(init);
 myOptionsManager.onChanged(init);
 
-browser.runtime.onMessage.addListener(handlePageAction);
-browser.tabs.onRemoved.addListener(removeDetails);
+browser.runtime.onMessage.addListener(getRecords);
+browser.tabs.onRemoved.addListener(removeRecords);
+browser.webNavigation.onBeforeNavigate.addListener(function (details) {
+    if (details.frameId == 0) {
+        removeRecords(details.tabId);
+    }
+});

@@ -2,7 +2,7 @@
     "name": "__MSG_extensionName__",
     "description": "__MSG_extensionDescription__",
     "default_locale": "en",
-    "version": "1.7.0beta1",
+    "version": "1.7.0beta2",
     "manifest_version": 2,
     "icons": {
         "48": "icons/icon-48.png",
@@ -26,14 +26,14 @@
         "page": "options/options.html",
         "open_in_tab": true
     },
-    "page_action": {
+    "browser_action": {
         "browser_style": true,
         "default_icon": {
-            "19": "icons/icon-filter@19.png",
-            "38": "icons/icon-filter@38.png"
+            "19": "icons/icon-blank@19.png",
+            "38": "icons/icon-blank@38.png"
         },
         "default_title": "Request Control",
-        "default_popup": "popup/page-action.html"
+        "default_popup": "popup/browser-action.html"
     },
     "background": {
         "scripts": [

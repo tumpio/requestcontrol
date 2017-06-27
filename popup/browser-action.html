@@ -5,29 +5,16 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="browser-action.css">
   <script src="/lib/i18n.js"></script>
-  <script src="page-action.js"></script>
-  <link rel="stylesheet" href="page-action.css">
+  <script src="browser-action.js"></script>
 </head>
 <body>
 <div class="panel">
   <div class="panel-arrowUp"></div>
-  <div class="panel-section panel-section-header">
-    <div class="icon-section-header">
-      <img id="icon" src="">
-    </div>
-    <div class="text-section-header">
-      <span id="title"></span>
-    </div>
-    <button id="showRules" data-i18n="show_rules"></button>
-  </div>
-  <div class="panel-section panel-section-list">
-    <div class="panel-list-item disabled">
-      <div class="text" id="type"></div>
-      <div class="text-shortcut" id="timestamp"></div>
-    </div>
+  <div id="records" class="panel-section panel-section-list"></div>
+  <div id="details" class="panel-section panel-section-list">
     <div class="requestUrl">
-      <div class="panel-section-separator"></div>
       <div class="panel-list-item disabled" data-i18n="request_url"></div>
       <div class="panel-list-item">
         <div class="text">
@@ -36,7 +23,7 @@
         <div class="text-shortcut">
           <button class="copyButton tooltip" data-copy-target="url"
                   data-i18n-title="copy_to_clipboard">
-            <img src="/icons/ionicons/ios-copy-outline.svg" width="24"/>
+            <img src="/icons/firefox/copy.svg" width="20"/>
             <span class="tooltiptext" data-i18n="copied"></span>
           </button>
         </div>
@@ -51,11 +38,28 @@
         <div class="text-shortcut">
           <button class="copyButton tooltip" data-copy-target="target"
                   data-i18n-title="copy_to_clipboard">
-            <img src="/icons/ionicons/ios-copy-outline.svg" width="24"/>
+            <img src="/icons/firefox/copy.svg" width="20"/>
             <span class="tooltiptext" data-i18n="copied"></span>
           </button>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="panel-section panel-section-footer">
+    <div id="showRules" class="panel-section-footer-button">
+      <span data-i18n="options_title"></span>
+    </div>
+  </div>
+</div>
+<div class="models">
+  <div id="entryModel" class="entry">
+    <div class="panel-list-item">
+      <div class="timestamp"></div>
+      <div class="icon">
+        <img src="/icons/icon-redirect@19.png">
+      </div>
+      <div class="text"></div>
+      <div class="text-shortcut type"></div>
     </div>
   </div>
 </div>
