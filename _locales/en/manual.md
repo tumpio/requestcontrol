@@ -8,7 +8,7 @@ intercepted taking the action of the rule.
 Request Pattern
 ---------------
 
-Request pattern contains three parts: *scheme*, *host* and *path*. Rule
+Request pattern has three parts: *scheme*, *host* and *path*. Rule
 can include one or more request patterns.
 
 ### Scheme
@@ -44,13 +44,13 @@ appear more than once. Below is examples for using path patterns.
   ------------- -------------------------------------------------------------------
   \*            Match any path.
   *path/a/b/*   Match exact path "path/a/b/".
-  *\*/b/\**     Match path that contains a component "b" somewhere in the middle.
+  *\*b\**       Match path that contains a component "b" somewhere in the middle.
   ------------- -------------------------------------------------------------------
 
 Request Types
 -------------
 
-Filter requests based on the type of the request. A type represents the
+Filter requests based on the type of a request. A type represents the
 requested resource. Rule can apply from one to many types or any type.
 All possible types are listed below.
 
@@ -110,6 +110,11 @@ Matching all URLs
 The request pattern can be set to a global pattern that matches all URLs
 under the supported schemes ("http" or "https"). The global request
 pattern is enabled by checking the Any URL button.
+
+Trim URL parameters
+-------------------
+
+
 
 Redirect using pattern capturing
 --------------------------------

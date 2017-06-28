@@ -2,6 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+
+/**
+ * Options page for Request Control rule management, settings and help page.
+ */
+
 const myOptionsManager = new OptionsManager(RequestControl.defaultOptions);
 const myRuleInputFactory = new RuleInputFactory();
 

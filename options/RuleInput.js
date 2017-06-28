@@ -2,7 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-const tldStarPattern = /^(.+\.\*,.+|.+\.\*)$/;
+
+/**
+ * Request Control Rule Input for rule creation.
+ * Prototyped inheritance is used for rule types separation.
+ * The same input model in RuleInputModel.html is used for all rule types.
+ */
+
+const hostsTLDWildcardPattern = /^(.+\.\*,.+|.+\.\*)$/;
 
 function RequestRule() {
     return {
@@ -212,7 +219,7 @@ RuleInput.prototype.validate = function () {
 };
 
 RuleInput.prototype.validateTLDPattern = function () {
-    let isTldsPattern = tldStarPattern.test(this.model.qs(".host").value);
+    let isTldsPattern = hostsTLDWildcardPattern.test(this.model.qs(".host").value);
     toggleHidden(!isTldsPattern, this.model.qs(".btn-tlds").parentNode);
     toggleHidden(!isTldsPattern, this.model.qs(".tlds-block"));
     if (isTldsPattern && this.tldsTagsInput.getValue().length === 0) {
@@ -259,7 +266,7 @@ RuleInput.prototype.updateModel = function () {
         this.model.qs(".btn-tlds > .badge").textContent = this.rule.pattern.topLevelDomains.length;
         this.tldsTagsInput.setValue(this.rule.pattern.topLevelDomains);
     }
-    toggleHidden(!tldStarPattern.test(this.model.qs(".host").value), this.model.qs(".btn-tlds").parentNode);
+    toggleHidden(!hostsTLDWildcardPattern.test(this.model.qs(".host").value), this.model.qs(".btn-tlds").parentNode);
     this.setActiveState();
 
     setButtonChecked(this.model.qs(".type[value=main_frame]"), false);
@@ -288,7 +295,7 @@ RuleInput.prototype.updateRule = function () {
         this.rule.pattern.scheme = this.model.qs(".scheme").value;
         this.rule.pattern.host = this.hostsTagsInput.getValue();
         this.rule.pattern.path = this.pathsTagsInput.getValue();
-        if (tldStarPattern.test(this.model.qs(".host").value)) {
+        if (hostsTLDWildcardPattern.test(this.model.qs(".host").value)) {
             this.rule.pattern.topLevelDomains = this.tldsTagsInput.getValue();
         }
         delete this.rule.pattern.allUrls;
