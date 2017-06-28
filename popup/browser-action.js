@@ -2,8 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/**
+ * Browser Action for displaying applied rules for current tab.
+ */
+
 function setRecords(records) {
-    let panelList = document.getElementById("records");
+    if (!records) {
+        return;
+    }
+
+    let recordsList = document.getElementById("records");
 
     function onItemClick(e) {
         let item = e.currentTarget;
@@ -15,13 +23,13 @@ function setRecords(records) {
 
     for (let i = records.length - 1; i >= 0; i--) {
         let item = newListItem(records[i]);
-        panelList.appendChild(item);
+        recordsList.appendChild(item);
         item.dataset.record = i;
         item.addEventListener("click", onItemClick);
     }
 
-    if (panelList.firstChild) {
-        onItemClick({currentTarget: panelList.firstChild});
+    if (recordsList.firstChild) {
+        onItemClick({currentTarget: recordsList.firstChild});
     }
 }
 
@@ -43,7 +51,13 @@ function timestamp(ms) {
 }
 
 function padDigit(digit, padSize) {
-    return ("0".repeat(padSize) + digit.toString()).slice(-padSize);
+    let str = digit.toString();
+    let pad = padSize - str.length;
+    if (pad > 0) {
+        return "0".repeat(pad) + str;
+    } else {
+        return str;
+    }
 }
 
 function showDetails(details) {
@@ -54,17 +68,17 @@ function showDetails(details) {
 
 function copyText(e) {
     let range = document.createRange();
-    let text = document.getElementById(e.target.dataset.copyTarget);
+    let text = document.getElementById(e.currentTarget.dataset.copyTarget);
     range.selectNodeContents(text);
-    let selelection = window.getSelection();
-    selelection.removeAllRanges();
-    selelection.addRange(range);
+    let selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
     document.execCommand("Copy");
-    e.target.classList.add("copied");
+    e.currentTarget.classList.add("copied");
 }
 
 function copied(e) {
-    e.target.classList.remove("copied");
+    e.currentTarget.classList.remove("copied");
 }
 
 function openOptionsPage() {
@@ -82,8 +96,4 @@ document.addEventListener("DOMContentLoaded", function () {
         copyButton.addEventListener("click", copyText);
         copyButton.addEventListener("mouseleave", copied);
     }
-});
-
-browser.tabs.onUpdated.addListener(function (e) {
-    console.log(e);
 });
