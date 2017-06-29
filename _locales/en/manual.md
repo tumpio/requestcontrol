@@ -9,7 +9,7 @@ Request Pattern
 ---------------
 
 Request pattern has three parts: *scheme*, *host* and *path*. Rule
-can include one or more request patterns.
+can include one to many request patterns.
 
 ### Scheme
 
@@ -91,7 +91,7 @@ There are four types of rule actions.
 Rule priorities
 ---------------
 
-Rules have the following priorities:
+Rules have following priorities:
 
 1.  Whitelist rule
 2.  Block rule
@@ -111,17 +111,27 @@ The request pattern can be set to a global pattern that matches all URLs
 under the supported schemes ("http" or "https"). The global request
 pattern is enabled by checking the Any URL button.
 
-Trim URL parameters
+Trimming URL parameters
 -------------------
 
-
+Filter rules supports URL query parameter trimming. URL parameters are
+commonly used in redirection tracking as a method to analyze the origin
+of traffic. Trimmed URL parameters are defined either as literal strings
+with support for "*" wildcard or using regular expression patterns. Below
+is examples of parameter trimming.
+  
+  ---------- -------------------------------------
+  utm_source Trim any "utm_source" param
+  utm_*      Trim any param starting with "utm_"
+  /[0-9]+/   Trim any param containing only digits
+  ---------- -------------------------------------
 
 Redirect using pattern capturing
 --------------------------------
 
 There are two ways for redirecting requests based on the original
 request. The first way is to use parameter expansion that includes
-writing the complete redirection URL but using some patterns from the
+writing the redirection URL but using some patterns from the
 original request. The second way is to use a single or multiple
 instructions to override parts of the original request (e.g. instruct
 requests to redirect to a different port).
@@ -130,12 +140,12 @@ requests to redirect to a different port).
 
     {parameter}
 
-Access a named pattern of the original request. Available named
+Access a named parameter of original request. Available named
 parameters are listed at the end of this section.
 
 Parameter expansion supports the following string manipulation formats:
 
-#### Substring expansion
+#### Substring extraction
 
     {parameter:offset:length}
 
@@ -180,10 +190,10 @@ the end of this section.
 
 ### List of named parameters
 
-The names of the supported parameters and their example outputs are
+Names of the supported parameters and their example outputs are
 listed in below table.
 
-Example address used for outputs:
+Example address used for input:
 
     https://www.example.com:8080/some/path?query=value#hash
 
