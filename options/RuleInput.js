@@ -362,8 +362,8 @@ FilterRuleInput.prototype.constructor = FilterRuleInput;
 FilterRuleInput.prototype.updateModel = function () {
     RuleInput.prototype.updateModel.call(this);
     this.model.qs(".redirectionFilter-toggle").checked = !this.rule.skipRedirectionFilter;
-    if (this.rule.paramsFilter && Array.isArray(this.rule.paramsFilter)) {
-        this.paramsTagsInput.setValue(this.rule.paramsFilter);
+    if (this.rule.paramsFilter && Array.isArray(this.rule.paramsFilter.values)) {
+        this.paramsTagsInput.setValue(this.rule.paramsFilter.values);
     }
     if (this.rule.pattern.allUrls) {
         setButtonChecked(this.model.qs(".any-url"), true);
@@ -377,25 +377,26 @@ FilterRuleInput.prototype.updateModel = function () {
 
 FilterRuleInput.prototype.updateRule = function () {
     RuleInput.prototype.updateRule.call(this);
-    this.rule.paramsFilter = this.paramsTagsInput.getValue();
+    this.rule.paramsFilter = {};
+    this.rule.paramsFilter.values = this.paramsTagsInput.getValue();
 
     let regexpChars = /[.+?^${}()|[\]\\]/g; // excluding * wildcard
+    let regexpParam = /^\/(.*)\/$/;
 
     // construct regexp pattern of filter params
-    if (this.rule.paramsFilter.length > 0) {
-        let paramsFilterPattern = "";
-        for (let param of this.rule.paramsFilter) {
-            let testRegexp = param.match(/^\/(.*)\/$/);
+    if (this.rule.paramsFilter.values.length > 0) {
+        let pattern = "";
+        for (let param of this.rule.paramsFilter.values) {
+            let testRegexp = param.match(regexpParam);
             if (testRegexp) {
-                paramsFilterPattern += "|" + testRegexp[1];
+                pattern += "|" + testRegexp[1];
             } else {
-                paramsFilterPattern += "|" + param.replace(regexpChars, "\\$&").replace(/\*/g, ".*");
+                pattern += "|" + param.replace(regexpChars, "\\$&").replace(/\*/g, ".*");
             }
         }
-        paramsFilterPattern = paramsFilterPattern.substring(1);
-        this.rule.paramsFilterPattern = paramsFilterPattern;
+        this.rule.paramsFilter.pattern = pattern.substring(1);
     } else {
-        delete this.rule.paramsFilterPattern;
+        delete this.rule.paramsFilter;
     }
 
     if (this.model.qs(".redirectionFilter-toggle").checked) {
@@ -416,8 +417,7 @@ FilterRuleInput.prototype.getDescription = function () {
     if (!this.rule.skipRedirectionFilter) {
         description.push(browser.i18n.getMessage(this.description[0]));
     }
-    if (this.rule.trimAllParams ||
-        (this.rule.paramsFilter && this.rule.paramsFilter.length > 0)) {
+    if (this.rule.trimAllParams || this.rule.paramsFilter) {
         description.push(browser.i18n.getMessage(this.description[1]));
     }
     if (description.length === 2) {

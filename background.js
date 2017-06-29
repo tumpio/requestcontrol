@@ -256,7 +256,7 @@ function processMarkedRules(resolve, requestId) {
 function applyFilterRules(requestURL, rules) {
     let skipRedirectionFilter = true;
     let trimAllParams = false;
-    let paramsFilter = "";
+    let paramsFilterPattern = "";
 
     for (let rule of rules) {
         if (!rule.skipRedirectionFilter) {
@@ -265,12 +265,12 @@ function applyFilterRules(requestURL, rules) {
         if (rule.trimAllParams) {
             trimAllParams = true;
         }
-        if (!trimAllParams && rule.paramsFilterPattern) {
-            paramsFilter += "|" + rule.paramsFilterPattern;
+        if (!trimAllParams && rule.paramsFilter) {
+            paramsFilterPattern += "|" + rule.paramsFilter.pattern;
         }
     }
 
-    paramsFilter = paramsFilter.substring(1);
+    paramsFilterPattern = paramsFilterPattern.substring(1);
 
     // redirection url filter
     if (!skipRedirectionFilter) {
@@ -280,9 +280,9 @@ function applyFilterRules(requestURL, rules) {
     // trim query parameters
     if (trimAllParams) {
         requestURL.search = "";
-    } else if (paramsFilter.length > 0 && requestURL.search.length > 0) {
+    } else if (paramsFilterPattern.length > 0 && requestURL.search.length > 0) {
         let searchParams = requestURL.search.substring(1).split("&");
-        let pattern = new RegExp("^(" + paramsFilter + ")$");
+        let pattern = new RegExp("^(" + paramsFilterPattern + ")$");
         let i = searchParams.length;
         while (i--) {
             if (pattern.test(searchParams[i].split("=")[0])) {
