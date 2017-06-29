@@ -2,7 +2,7 @@
     "name": "__MSG_extensionName__",
     "description": "__MSG_extensionDescription__",
     "default_locale": "en",
-    "version": "1.7.0beta3",
+    "version": "1.7.0",
     "manifest_version": 2,
     "icons": {
         "48": "icons/icon-48.png",
@@ -39,6 +39,7 @@
         "scripts": [
             "lib/OptionsManager.js",
             "lib/RequestControl.js",
+            "migrate.js",
             "background.js"
         ]
     }
