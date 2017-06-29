@@ -15,7 +15,7 @@ Requests can be controlled with following rules:
 <li><b>Whitelist Requests</b>
 <p>Whitelisted requests proceed normally without taking actions of any other matched rules.</p></li></ul>
 
-<strong><a  href="https://github.com/tumpio/requestcontrol/wiki/Request-Control-Help">Documentation</a></strong></br>
+<strong><a  href="https://github.com/tumpio/requestcontrol/wiki/Documentation">Documentation</a></strong></br>
 <strong><a  href="https://github.com/tumpio/requestcontrol/wiki/FAQ">FAQ</a></strong></br>
 <strong><a  href="https://github.com/tumpio/requestcontrol">Source code</a></strong></br>
 <strong><a  href="https://github.com/tumpio/requestcontrol/blob/master/LICENSE">License</a></strong></br>
