@@ -1,8 +1,9 @@
 ## Request Control - Firefox WebExtension
 
-Control your HTTP requests with Request Control Rules.  
+Control your HTTP requests with Request Control Rules. Provides frontend for Firefox [webRequest.onBeforeRequest] API
+for HTTP request management.
 
-Rules include:
+Requests can be controlled with following rules:
 <ul><li><b>Filter Requests</b>
 <p>Filter requests by filtering URL redirection and trimming URL tracking parameters. </p>
 </li><li><b>Block Requests</b>
@@ -21,9 +22,9 @@ Rules include:
 
 #### External Libraries
 Request control uses the following external libraries,
-- [Bootstrap](http://getbootstrap.com/) is licensed under the MIT license.
-- [tags-input](https://github.com/developit/tags-input) and it's fork by [@pirxpilot](https://github.com/pirxpilot/tags-input) are licensed under the MIT license.
-- [ionicons](http://ionicons.com/) is licensed under the MIT license.
+- [Bootstrap] is licensed under the MIT license.
+- [tags-input] and it's fork by [@pirxpilot] are licensed under the MIT license.
+- [ionicons] is licensed under the MIT license.
 
 #### License
     This Source Code Form is subject to the terms of the Mozilla Public
@@ -34,3 +35,9 @@ Request control uses the following external libraries,
 PayPal: [![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3UN97ARSMYP3U)
 
 bitcoin:1HZp3cUWCFSoR8EfDSRopLVeEbTZiAHz2B
+
+[webRequest.onBeforeRequest]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/onBeforeRequest
+[Bootstrap]: http://getbootstrap.com/
+[tags-input]: https://github.com/developit/tags-input
+[@pirxpilot]: https://github.com/pirxpilot/tags-input
+[ionicons]: http://ionicons.com/
