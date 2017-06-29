@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         myOptionsManager.restoreDefault("rules").then(function () {
             removeRuleInputs();
             createRuleInputs(myOptionsManager.options.rules);
-            changeTab("rules");
+            window.location.hash = "#tab-rules";
         });
     });
 
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
                 createRuleInputs(rulesImport, "new");
                 myOptionsManager.saveOption("rules", rules);
-                changeTab("rules");
+                window.location.hash = "#tab-rules";
                 document.body.scrollIntoView(false);
             } catch (ex) {
                 displayErrorMessage(ex);
