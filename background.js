@@ -313,10 +313,18 @@ function redirectionUrlParser(match, urlBegin, p1, p2, urlEnd) {
     if (p2[0] === "%") {
         p2 = decodeURIComponent(p2);
     }
-    if (/(%26|%2F)/.test(urlEnd) || urlBegin.includes("?")) {
+
+    // extract redirection url from a query parameter
+    if (urlBegin.endsWith("=")) {
         urlEnd = urlEnd.replace(/[&;].+/, "");
     }
-    return p1 + p2 + decodeURIComponent(urlEnd);
+
+    // decode encoded redirection url
+    if (urlEnd.includes("%2F")) {
+        urlEnd = decodeURIComponent(urlEnd);
+    }
+
+    return p1 + p2 + urlEnd;
 }
 
 /**
