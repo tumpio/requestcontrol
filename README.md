@@ -10,7 +10,7 @@ Requests can be controlled with following rules:
 <p>Block requests completely before they are made.</p></li>
 <li>
 <b>Redirect Requests</b>
-<p>Redirect requests to manually configured redirect URL.  Redirect URL supports pattern capturing to redirect based on the original request. Read more about <a href="https://github.com/tumpio/requestcontrol/wiki/Request-Control-Help#redirect-using-pattern-capturing">Pattern Capturing</a>.</p>
+<p>Redirect requests to manually configured redirect URL.  Redirect URL supports pattern capturing to redirect based on the original request. Read more about <a href="https://github.com/tumpio/requestcontrol/wiki/Documentation#redirect-using-pattern-capturing">Pattern Capturing</a>.</p>
 </li>
 <li><b>Whitelist Requests</b>
 <p>Whitelisted requests proceed normally without taking actions of any other matched rules.</p></li></ul>
