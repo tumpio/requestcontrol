@@ -32,7 +32,7 @@
             "19": "icons/icon-blank@19.png",
             "38": "icons/icon-blank@38.png"
         },
-        "default_title": "Request Control",
+        "default_title": "__MSG_extensionName__",
         "default_popup": "popup/browser-action.html"
     },
     "background": {

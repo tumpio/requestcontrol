@@ -547,11 +547,12 @@ function updateBrowserAction(tabId, action, badgeText) {
 browser.tabs.onRemoved.addListener(removeRecords);
 
 /**
- * Remove records before starting a new top frame web navigation.
+ * Remove records and reset browser action before starting a new top frame web navigation.
  */
 browser.webNavigation.onBeforeNavigate.addListener(function (details) {
     if (details.frameId == 0) {
         removeRecords(details.tabId);
+        updateBrowserAction(details.tabId, "blank", "");
     }
 });
 
