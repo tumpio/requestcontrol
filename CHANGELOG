@@ -1,3 +1,12 @@
+Version 1.7.0 June 29, 2017
+- Add rules export and import. #8
+- Add toolbar button to list details of applied rules on current tab. #19
+- Add tabs to options view.
+- Fix trim parameter inconsistency: support literal string params and regexp params. #17
+- Fix pageAction details bug with block rules. #19
+- Fix filter rule redirection url filtering. #20
+- Remove url status icon. #19
+
 Version 1.6.1 June 21, 2017
 - Add i18n support
 - Add request details in page action popup
