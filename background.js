@@ -122,9 +122,13 @@ function markRequest(details) {
 function RuleMarkerFactory(rule) {
     switch (rule.action) {
         case "whitelist":
-            return whitelistMarker;
+            return function (details) {
+                whitelistMarker(details);
+            };
         case "block":
-            return blockMarker;
+            return function (details) {
+                blockMarker(details);
+            };
         case "redirect":
             return function (details) {
                 redirectMarker(details, rule);
