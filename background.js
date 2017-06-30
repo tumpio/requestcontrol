@@ -535,10 +535,6 @@ function updateBrowserAction(tabId, action, badgeText) {
             38: "icons/icon-" + action + "@38.png"
         }
     });
-    browser.browserAction.setTitle({
-        tabId: tabId,
-        title: browser.i18n.getMessage("title_" + action)
-    });
     browser.browserAction.setBadgeText({
         tabId: tabId,
         text: badgeText
