@@ -314,9 +314,6 @@ const redirectionUrlPattern = /^https?:\/\/(.+)(https?)(:\/\/|%3A\/\/|%3A%2F%2F)
  * @returns {string}
  */
 function redirectionUrlParser(match, urlBegin, p1, p2, urlEnd) {
-    if (p2[0] === "%") {
-        p2 = decodeURIComponent(p2);
-    }
 
     // extract redirection url from a query parameter
     if (urlBegin.endsWith("=")) {
@@ -324,7 +321,8 @@ function redirectionUrlParser(match, urlBegin, p1, p2, urlEnd) {
     }
 
     // decode encoded redirection url
-    if (urlEnd.includes("%2F")) {
+    if (p2[0] === "%") {
+        p2 = decodeURIComponent(p2);
         urlEnd = decodeURIComponent(urlEnd);
     }
 
