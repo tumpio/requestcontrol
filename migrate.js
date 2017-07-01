@@ -4,6 +4,12 @@
 
 function handleInstalled(details) {
     if (details.reason === "update") {
+        console.log(details);
+
+        if (!details.previousVersion) {
+            details.previousVersion = "1.6.0";
+        }
+
         let versions = details.previousVersion.split(".");
 
         // migrate from < 1.7.0
@@ -15,7 +21,7 @@ function handleInstalled(details) {
 
             myOptionsManager.loadOptions(function () {
                 for (let rule of myOptionsManager.options.rules) {
-                    if (rule.action === "filter" && rule.paramsFilter) {
+                    if (rule.action === "filter" && rule.paramsFilter && !rule.paramsFilter.values) {
                         let newValue = {};
                         newValue.values = rule.paramsFilter;
 
