@@ -16,17 +16,16 @@ function handleInstalled(details) {
             myOptionsManager.loadOptions(function () {
                 for (let rule of myOptionsManager.options.rules) {
                     if (rule.action === "filter" && rule.paramsFilter) {
-                        let values = rule.paramsFilter;
-                        rule.paramsFilter = {};
-                        rule.paramsFilter.values = values;
+                        let newValue = {};
+                        newValue.values = rule.paramsFilter;
 
                         let regexpChars = /[.+?^${}()|[\]\\]/g; // excluding * wildcard
                         let regexpParam = /^\/(.*)\/$/;
 
                         // construct regexp pattern of filter params
-                        if (rule.paramsFilter.values.length > 0) {
+                        if (newValue.values.length > 0) {
                             let pattern = "";
-                            for (let param of rule.paramsFilter.values) {
+                            for (let param of newValue.values) {
                                 let testRegexp = param.match(regexpParam);
                                 if (testRegexp) {
                                     pattern += "|" + testRegexp[1];
@@ -34,7 +33,8 @@ function handleInstalled(details) {
                                     pattern += "|" + param.replace(regexpChars, "\\$&").replace(/\*/g, ".*");
                                 }
                             }
-                            rule.paramsFilter.pattern = pattern.substring(1);
+                            newValue.pattern = pattern.substring(1);
+                            rule.paramsFilter = newValue;
                             console.log(rule.paramsFilter);
                         } else {
                             delete rule.paramsFilter;
