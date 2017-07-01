@@ -116,7 +116,7 @@
     "message": "Document"
   },
   "sub_frame": {
-    "message": "Embedded document"
+    "message": "Sub document"
   },
   "stylesheet": {
     "message": "Stylesheet"
