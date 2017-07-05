@@ -259,8 +259,10 @@ function processMarkedRules(resolve, requestId) {
  */
 function applyFilterRules(requestURL, rules) {
     let skipRedirectionFilter = true;
+    let invertTrim = false;
     let trimAllParams = false;
     let paramsFilterPattern = "";
+    let invertParamsPattern = "";
 
     for (let rule of rules) {
         if (!rule.skipRedirectionFilter) {
@@ -270,8 +272,17 @@ function applyFilterRules(requestURL, rules) {
             trimAllParams = true;
         }
         if (!trimAllParams && rule.paramsFilter) {
-            paramsFilterPattern += "|" + rule.paramsFilter.pattern;
+            if (rule.paramsFilter.invert) {
+                invertTrim = true;
+                invertParamsPattern += "|" + rule.paramsFilter.pattern;
+            } else if (!invertTrim) {
+                paramsFilterPattern += "|" + rule.paramsFilter.pattern;
+            }
         }
+    }
+
+    if (invertTrim) {
+        paramsFilterPattern = invertParamsPattern;
     }
 
     paramsFilterPattern = paramsFilterPattern.substring(1);
@@ -288,9 +299,17 @@ function applyFilterRules(requestURL, rules) {
         let searchParams = requestURL.search.substring(1).split("&");
         let pattern = new RegExp("^(" + paramsFilterPattern + ")$");
         let i = searchParams.length;
-        while (i--) {
-            if (pattern.test(searchParams[i].split("=")[0])) {
-                searchParams.splice(i, 1);
+        if (invertTrim) {
+            while (i--) {
+                if (!pattern.test(searchParams[i].split("=")[0])) {
+                    searchParams.splice(i, 1);
+                }
+            }
+        } else {
+            while (i--) {
+                if (pattern.test(searchParams[i].split("=")[0])) {
+                    searchParams.splice(i, 1);
+                }
             }
         }
         requestURL.search = searchParams.join("&");

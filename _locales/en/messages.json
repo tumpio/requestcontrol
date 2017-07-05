@@ -262,6 +262,9 @@
   "trim_all": {
     "message": "Trim all"
   },
+  "invert_trim": {
+    "message": "Invert trim"
+  },
   "saved": {
     "message": "saved"
   },

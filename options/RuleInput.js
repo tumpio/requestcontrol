@@ -332,11 +332,15 @@ function FilterRuleInput(rule) {
     this.optionsPath = "rules";
     this.paramsTagsInput = new TagsInput(this.model.qs(".input-params"));
 
+    this.invertTrim = function (e) {
+        setButtonChecked(e.target, e.target.checked);
+    };
     this.toggleTrimAll = function (e) {
         setButtonChecked(e.target, e.target.checked);
         toggleHidden(e.target.checked, this.model.qs(".btn-group-params"));
     };
     this.model.qs(".trim-all-params").addEventListener("change", this.toggleTrimAll.bind(this));
+    this.model.qs(".invert-trim").addEventListener("change", this.invertTrim.bind(this));
     this.updateModel();
 }
 
@@ -364,10 +368,10 @@ FilterRuleInput.prototype.updateModel = function () {
     this.model.qs(".redirectionFilter-toggle").checked = !this.rule.skipRedirectionFilter;
     if (this.rule.paramsFilter && Array.isArray(this.rule.paramsFilter.values)) {
         this.paramsTagsInput.setValue(this.rule.paramsFilter.values);
-    }
-    if (this.rule.pattern.allUrls) {
-        setButtonChecked(this.model.qs(".any-url"), true);
-        toggleHidden(true, this.model.qs(".host").parentNode, this.model.qs(".path").parentNode, this.model.qs(".pattern"));
+
+        if (this.rule.paramsFilter.invert) {
+            setButtonChecked(this.model.qs(".invert-trim"), true);
+        }
     }
     if (this.rule.trimAllParams) {
         setButtonChecked(this.model.qs(".trim-all-params"), true);
@@ -395,6 +399,12 @@ FilterRuleInput.prototype.updateRule = function () {
             }
         }
         this.rule.paramsFilter.pattern = pattern.substring(1);
+
+        if (this.model.qs(".invert-trim").checked) {
+            this.rule.paramsFilter.invert = true;
+        } else {
+            delete this.rule.paramsFilter.invert;
+        }
     } else {
         delete this.rule.paramsFilter;
     }
