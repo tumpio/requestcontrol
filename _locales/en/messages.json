@@ -390,5 +390,8 @@
   },
   "donate": {
     "message": "Donate"
+  },
+  "browse_file": {
+    "message": "Browse..."
   }
 }

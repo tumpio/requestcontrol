@@ -93,8 +93,12 @@
       <hr/>
       <h3 data-i18n="import_rules"></h3>
       <p data-i18n="import_description"></p>
-      <input id="importRules" type="file" accept="application/json,.json"
-             autocomplete="off">
+      <label class="btn btn-default" for="importRules">
+        <input id="importRules" class="hidden"
+               type="file" accept="application/json,.json"
+               autocomplete="off">
+        <span data-i18n="browse_file"></span>
+      </label>
       <hr/>
       <h3 data-i18n="restore_defaults"></h3>
       <p data-i18n="restore_description"></p>
