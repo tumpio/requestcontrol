@@ -73,19 +73,19 @@ All possible types are listed below.
 -   Web Manifest
 -   Other
 
-<small>__\*__ Document that is retrieved in main window frame. (main frame)</small><br/>
-<small>__\*\*__ Document that is retrieved inside another document in main window frame. (sub frame)</small>
+<small>__\*__ A document that is retrieved in main window frame. (main frame)</small><br/>
+<small>__\*\*__ A document that is retrieved inside another document in main window frame. (sub frame)</small>
 
 ### Action
 
 There are four types of rule actions.
 
-  ----------------------------------- -------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  ![](/icons/icon-filter@19.png)      Filter Requests      Any request that matches a filter rule will be filtered according the filter rule configuration. With URL redirection filtering the request is taken directly to the contained redirect URL. With URL parameters trimming the configured URL parameters will be removed from requests.
-  ![](/icons/icon-block@19.png)       Block Requests       Any request that matches a block rule will be cancelled before it is made.
-  ![](/icons/icon-redirect@19.png)    Redirect Requests    Any request that matches a redirect rule will be redirected to the configured redirect URL.
-  ![](/icons/icon-whitelist@19.png)   Whitelist Requests   Any requests that match a whitelist rule will be processed normally without taking any action of any other matched rules.
-  ----------------------------------- -------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  ----------------------------------- ----------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  ![](/icons/icon-filter@19.png)      Filter      Any request that matches a filter rule will be filtered according the filter rule configuration. With URL redirection filtering the request is taken directly to the contained redirect URL. With URL parameters trimming the configured URL parameters will be removed from requests.
+  ![](/icons/icon-block@19.png)       Block       Any request that matches a block rule will be cancelled before it is made.
+  ![](/icons/icon-redirect@19.png)    Redirect    Any request that matches a redirect rule will be redirected to the configured redirect URL.
+  ![](/icons/icon-whitelist@19.png)   Whitelist   Any requests that match a whitelist rule will be processed normally without taking any action of any other matched rules.
+  ----------------------------------- ----------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Rule priorities
 ---------------
