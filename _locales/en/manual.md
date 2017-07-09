@@ -1,17 +1,16 @@
-Request Control Rule explained
-------------------------------
+Request Control Rule
+--------------------
 
 Request Control Rule consists of *request pattern*, *request types* and
 *rule action*. Requests that match a pattern of an active rule, will be
 intercepted taking the action of the rule.
 
-Request Pattern
----------------
+### Pattern
 
 Request pattern has three parts: *scheme*, *host* and *path*. Rule
 can include one to many request patterns.
 
-### Scheme
+#### Scheme
 
 Scheme matches the protocol of the request URL. The following schemes
 are supported.
@@ -22,7 +21,7 @@ are supported.
   *http/https*   Match both http and https schemes.
   -------------- ------------------------------------
 
-### Host
+#### Host
 
 Host matches the host of the request URL. It can be in one of the
 following forms.
@@ -34,7 +33,7 @@ following forms.
   *\**                Match any host.                                                                                               
   ------------------- ------------------------------------------------------------------------------------------------------------- --------------------------------------------------------------------------------------------
 
-### Path
+#### Path
 
 Path matches the request URL path. Path may subsequently contain any
 combination of "\*" wildcard and any of the characters that are allowed
@@ -47,15 +46,14 @@ appear more than once. Below is examples for using path patterns.
   *\*b\**       Match path that contains a component "b" somewhere in the middle.
   ------------- -------------------------------------------------------------------
 
-Request Types
--------------
+### Types
 
 Filter requests based on the type of a request. A type represents the
 requested resource. Rule can apply from one to many types or any type.
 All possible types are listed below.
 
--   Document
--   Sub document
+-   Document __\*__
+-   Sub document __\*\*__
 -   Stylesheet
 -   Script
 -   Image
@@ -74,10 +72,11 @@ All possible types are listed below.
 -   Imageset
 -   Web Manifest
 -   Other
--   Any Type
 
-Rule Action
------------
+<small>__\*__ Document that is retrieved in main window frame. (main frame)</small><br/>
+<small>__\*\*__ Document that is retrieved inside another document in main window frame. (sub frame)</small>
+
+### Action
 
 There are four types of rule actions.
 
