@@ -208,7 +208,16 @@ h4 {
     padding-left: 2em;
 }
 
-@media (min-height: 600px) {
+.toc .collapse {
+    display: none;
+}
+
+.license-clause {
+    width: 38em;
+    white-space: pre-wrap;
+}
+
+@media (min-height: 400px) {
     .toc {
         position: sticky;
     }

@@ -187,6 +187,12 @@
   "help": {
     "message": "Help"
   },
+  "about_title": {
+    "message": "About Request Control"
+  },
+  "about": {
+    "message": "About"
+  },
   "see_help": {
     "message": "See help."
   },
@@ -360,5 +366,29 @@
   },
   "contents": {
     "message": "Contents"
+  },
+  "about_description": {
+    "message": "A Firefox WebExtension for HTTP request management."
+  },
+  "faq": {
+    "message": "FAQ"
+  },
+  "contributors": {
+    "message": "Contributors"
+  },
+  "source_code": {
+    "message": "Source code"
+  },
+  "changelog": {
+    "message": "Changelog"
+  },
+  "license": {
+    "message": "License"
+  },
+  "license_clause": {
+    "message": "Request Control is licensed under the Mozilla Public License v2.0. A copy of the MPL is available in"
+  },
+  "donate": {
+    "message": "Donate"
   }
 }
