@@ -47,6 +47,7 @@ h4 {
 
 .input-group {
     width: 100%;
+    display: block;
 }
 
 .rule-header,
