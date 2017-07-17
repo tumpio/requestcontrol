@@ -50,6 +50,18 @@ h4 {
     display: block;
 }
 
+.editing .rule-header {
+    border-bottom: 1px solid #f5f5f5;
+    padding-top: 0.5em;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+}
+
+.editing .rule-header > div:first-child > div {
+    max-height: 10em;
+    overflow-y: auto;
+}
+
 .rule-header,
 .title,
 .description {
@@ -57,9 +69,37 @@ h4 {
     cursor: pointer;
 }
 
+.rule:not(.editing) .title,
+.rule:not(.editing) .description {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    overflow: hidden;
+    display: block;
+}
+
+.title[contenteditable],
+.description[contenteditable] {
+    -moz-user-select: text;
+    cursor: auto;
+    font-style: italic;
+}
+
+.title[contenteditable]:hover,
+.description[contenteditable]:hover,
+.title[contenteditable]:focus,
+.description[contenteditable]:focus {
+    color: #666;
+}
+
+.title-wrap {
+    display: flex;
+    align-items: flex-start;
+}
+
 .title {
     margin-bottom: 0;
-    margin-right: -19px;
+    margin-left: 5px;
 }
 
 .rule-select {

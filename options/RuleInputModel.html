@@ -6,10 +6,13 @@
         <input type="checkbox" class="select">
       </div>
       <div class="pull-left col-md-7">
-        <img class="icon" src="" alt="">
-        <label class="title" data-i18n="new_rule"></label>
-        <br/>
-        <small class="description"></small>
+        <div class="title-wrap">
+          <img class="icon" src="" alt="" height="19">
+          <label class="title" data-i18n="new_rule"></label>
+        </div>
+        <div class="description-wrap">
+          <small class="description"></small>
+        </div>
       </div>
       <div class="pull-right col-md-4 text-right">
         <div class="information">
@@ -38,11 +41,11 @@
           <div class="row no-gutter">
             <div class="col-xs-9 col-md-10 pattern">
               <div class="row no-gutter">
-                <div class="col-xs-3 col-md-2">
+                <div class="col-xs-12 col-md-2">
                   <label class="help-block text-center"
                          data-i18n="scheme"></label>
                   <div class="input-group input-group-sm scheme-group">
-                    <div class="input-group-btn" style="width:auto;">
+                    <div class="input-group-btn">
                       <select class="form-control input-sm scheme text-center">
                         <option value="http">http</option>
                         <option value="https">https</option>
@@ -51,7 +54,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-xs-5 col-md-6">
+                <div class="col-xs-12 col-md-6">
                   <label class="help-block text-center"
                          data-i18n="host"></label>
                   <div class="input-group input-group-sm host-group">
@@ -70,7 +73,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-xs-4  col-md-4">
+                <div class="col-xs-12  col-md-4">
                   <label class="help-block text-center"
                          data-i18n="path"></label>
                   <div class="input-group input-group-sm">

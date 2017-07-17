@@ -76,8 +76,25 @@ function RuleInput(rule) {
     self.model.qs(".action").addEventListener("change", self.change.bind(self));
 
     self.model.qs(".rule-header").addEventListener("dblclick", function (e) {
-        if (!["BUTTON", "INPUT"].includes(e.target.tagName)) {
+        if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT"
+            && !e.target.hasAttribute("contenteditable")) {
             self.toggleEdit();
+        }
+    });
+
+    self.model.qs(".title").addEventListener("keydown", self.onEnterKey.bind(self));
+    self.model.qs(".title").addEventListener("blur", function (e) {
+        self.setTitle(e.target.textContent);
+        if (!self.rule.title) {
+            e.target.textContent = self.getTitle();
+        }
+    });
+
+    self.model.qs(".description").addEventListener("keydown", self.onEnterKey.bind(self));
+    self.model.qs(".description").addEventListener("blur", function (e) {
+        self.setDescription(e.target.textContent);
+        if (!self.rule.description) {
+            e.target.textContent = self.getDescription();
         }
     });
 
@@ -197,7 +214,13 @@ RuleInput.prototype.toggleActive = function () {
 
 RuleInput.prototype.toggleEdit = function () {
     toggleHidden(this.model.qs(".panel-collapse"));
-    this.model.classList.toggle("editing");
+    if (this.model.classList.toggle("editing")) {
+        this.model.qs(".title").setAttribute("contenteditable", true);
+        this.model.qs(".description").setAttribute("contenteditable", true);
+    } else {
+        this.model.qs(".title").removeAttribute("contenteditable");
+        this.model.qs(".description").removeAttribute("contenteditable");
+    }
 };
 
 RuleInput.prototype.setActiveState = function () {
@@ -248,15 +271,48 @@ RuleInput.prototype.getTitle = function () {
     return browser.i18n.getMessage(this.title, hosts);
 };
 
+RuleInput.prototype.setTitle = function (str) {
+    let title = encodeURIComponent(str.trim());
+    if (title) {
+        this.rule.title = title;
+    } else {
+        delete this.rule.title;
+        delete this.rule.name;
+    }
+};
+
 RuleInput.prototype.getDescription = function () {
     return browser.i18n.getMessage(this.description);
 };
 
+RuleInput.prototype.setDescription = function (str) {
+    let description = encodeURIComponent(str.trim());
+    if (description) {
+        this.rule.description = description;
+    } else {
+        delete this.rule.description;
+    }
+};
+
+RuleInput.prototype.onEnterKey = function (e) {
+    if (e.keyCode === 13) { // Enter
+        e.target.blur();
+        e.preventDefault();
+        return false;
+    }
+};
+
 RuleInput.prototype.updateModel = function () {
+    let title = this.rule.title || this.rule.name || this.getTitle();
+    title = decodeURIComponent(title);
+    let description = this.rule.description || this.getDescription();
+    description = decodeURIComponent(description);
     this.model.setAttribute("data-type", this.rule.action);
     this.model.qs(".icon").src = "../icons/icon-" + this.rule.action + "@19.png";
-    this.model.qs(".title").textContent = this.getTitle();
-    this.model.qs(".description").textContent = this.getDescription();
+    this.model.qs(".title").textContent = title;
+    this.model.qs(".title").title = title;
+    this.model.qs(".description").textContent = description;
+    this.model.qs(".description").title = description;
     this.model.qs(".match-patterns").textContent = RequestControl.resolveUrls(this.rule.pattern).length;
     this.model.qs(".scheme").value = this.rule.pattern.scheme;
     this.hostsTagsInput.setValue(this.rule.pattern.host);
