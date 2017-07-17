@@ -31,11 +31,6 @@ Request control uses the following external libraries,
     License, v. 2.0. If a copy of the MPL was not distributed with this
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#### Donate
-PayPal: [![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3UN97ARSMYP3U)
-
-bitcoin:1HZp3cUWCFSoR8EfDSRopLVeEbTZiAHz2B
-
 [webRequest.onBeforeRequest]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/onBeforeRequest
 [Bootstrap]: http://getbootstrap.com/
 [tags-input]: https://github.com/developit/tags-input
