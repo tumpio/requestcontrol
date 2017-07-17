@@ -187,9 +187,9 @@ RuleInput.prototype.save = function () {
     this.updateRule();
     if (this.indexOfRule() === -1) {
         myOptionsManager.options[this.optionsPath].push(this.rule);
-        return myOptionsManager.saveAllOptions().then(this.updateModel.bind(this)).then(this.showSavedText.bind(this));
+        return myOptionsManager.saveAllOptions().then(this.updateHeader.bind(this)).then(this.showSavedText.bind(this));
     }
-    return myOptionsManager.saveOption(this.optionsPath).then(this.updateModel.bind(this)).then(this.showSavedText.bind(this));
+    return myOptionsManager.saveOption(this.optionsPath).then(this.updateHeader.bind(this)).then(this.showSavedText.bind(this));
 };
 
 RuleInput.prototype.showSavedText = function () {
@@ -221,6 +221,7 @@ RuleInput.prototype.toggleEdit = function () {
         this.model.qs(".title").removeAttribute("contenteditable");
         this.model.qs(".description").removeAttribute("contenteditable");
     }
+    this.updateInputs();
 };
 
 RuleInput.prototype.setActiveState = function () {
@@ -302,7 +303,7 @@ RuleInput.prototype.onEnterKey = function (e) {
     }
 };
 
-RuleInput.prototype.updateModel = function () {
+RuleInput.prototype.updateHeader = function () {
     let title = this.rule.title || this.rule.name || this.getTitle();
     title = decodeURIComponent(title);
     let description = this.rule.description || this.getDescription();
@@ -314,6 +315,9 @@ RuleInput.prototype.updateModel = function () {
     this.model.qs(".description").textContent = description;
     this.model.qs(".description").title = description;
     this.model.qs(".match-patterns").textContent = RequestControl.resolveUrls(this.rule.pattern).length;
+};
+
+RuleInput.prototype.updateInputs = function () {
     this.model.qs(".scheme").value = this.rule.pattern.scheme;
     this.hostsTagsInput.setValue(this.rule.pattern.host);
     this.pathsTagsInput.setValue(this.rule.pattern.path);
@@ -370,7 +374,7 @@ function BlockRuleInput(rule) {
     this.title = "rule_title_block";
     this.description = "rule_description_block";
     this.optionsPath = "rules";
-    this.updateModel();
+    this.updateHeader();
 }
 
 function WhitelistRuleInput(rule) {
@@ -378,7 +382,7 @@ function WhitelistRuleInput(rule) {
     this.title = "rule_title_whitelist";
     this.description = "rule_description_whitelist";
     this.optionsPath = "rules";
-    this.updateModel();
+    this.updateHeader();
 }
 
 function FilterRuleInput(rule) {
@@ -397,7 +401,7 @@ function FilterRuleInput(rule) {
     };
     this.model.qs(".trim-all-params").addEventListener("change", this.toggleTrimAll.bind(this));
     this.model.qs(".invert-trim").addEventListener("change", this.invertTrim.bind(this));
-    this.updateModel();
+    this.updateHeader();
 }
 
 function RedirectRuleInput(rule) {
@@ -405,7 +409,7 @@ function RedirectRuleInput(rule) {
     this.title = "rule_title_redirect";
     this.description = "rule_description_redirect";
     this.optionsPath = "rules";
-    this.updateModel();
+    this.updateHeader();
 
     addInputValidation(this.model.qs(".redirectUrl"), this.setAllowSave.bind(this));
 }
@@ -419,8 +423,8 @@ BlockRuleInput.prototype.constructor = BlockRuleInput;
 FilterRuleInput.prototype = Object.create(RuleInput.prototype);
 FilterRuleInput.prototype.constructor = FilterRuleInput;
 
-FilterRuleInput.prototype.updateModel = function () {
-    RuleInput.prototype.updateModel.call(this);
+FilterRuleInput.prototype.updateInputs = function () {
+    RuleInput.prototype.updateInputs.call(this);
     this.model.qs(".redirectionFilter-toggle").checked = !this.rule.skipRedirectionFilter;
     if (this.rule.paramsFilter && Array.isArray(this.rule.paramsFilter.values)) {
         this.paramsTagsInput.setValue(this.rule.paramsFilter.values);
@@ -493,8 +497,8 @@ FilterRuleInput.prototype.getDescription = function () {
     }
 };
 
-RedirectRuleInput.prototype.updateModel = function () {
-    RuleInput.prototype.updateModel.call(this);
+RedirectRuleInput.prototype.updateInputs = function () {
+    RuleInput.prototype.updateInputs.call(this);
     toggleHidden(false, this.model.qs(".redirectUrl"), this.model.qs(".redirectUrl").parentNode, this.model.qs(".redirectUrlForm"));
     this.model.qs(".redirectUrl").value = this.rule.redirectUrl || "";
 };
