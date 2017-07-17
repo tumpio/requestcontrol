@@ -55,7 +55,7 @@ requested resource. Rule can apply from one to many types or any type.
 All possible types are listed below.
 
 -   Document
--   Embedded document
+-   Sub document
 -   Stylesheet
 -   Script
 -   Image

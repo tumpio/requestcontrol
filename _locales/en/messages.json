@@ -254,7 +254,7 @@
     "message": "Use pattern capturing to redirect based on the original request."
   },
   "filter_url_redirection": {
-    "message": "Filter URL"
+    "message": "Filter URL Redirection"
   },
   "trim_url_parameters": {
     "message": "Trim URL Parameters"
