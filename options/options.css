@@ -288,14 +288,14 @@ h4 {
 }
 
 .switch:after, .switch:before {
-    background-color: #1D90CD;
+    background-color: #337ab7;
     color: #FFF;
     content: "On";
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    width: 51%;
+    width: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
