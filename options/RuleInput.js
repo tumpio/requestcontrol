@@ -136,7 +136,7 @@ function RuleInput(rule) {
         let numberOfTlds = self.tldsTagsInput.getValue().length;
         let error = numberOfTlds === 0;
         self.model.qs(".btn-tlds > .badge").textContent = numberOfTlds;
-        self.model.qs(".btn-tlds").classList.toggle("btn-danger", error);
+        self.model.qs(".btn-tlds").classList.toggle("text-danger", error);
         self.model.qs(".btn-tlds").parentNode.classList.toggle("has-error", error);
         self.setAllowSave(!error);
     });
@@ -244,12 +244,12 @@ RuleInput.prototype.validate = function () {
 
 RuleInput.prototype.validateTLDPattern = function () {
     let isTldsPattern = hostsTLDWildcardPattern.test(this.model.qs(".host").value);
-    toggleHidden(!isTldsPattern, this.model.qs(".btn-tlds").parentNode);
-    toggleHidden(!isTldsPattern, this.model.qs(".tlds-block"));
+    toggleHidden(!isTldsPattern, this.model.qs(".form-group-tlds"));
     if (isTldsPattern && this.tldsTagsInput.getValue().length === 0) {
         this.setAllowSave(false);
-        this.model.qs(".btn-tlds").classList.add("btn-danger");
+        this.model.qs(".btn-tlds").classList.add("text-danger");
         this.model.qs(".btn-tlds").parentNode.classList.add("has-error");
+        toggleHidden(!isTldsPattern, this.model.qs(".tlds-block"));
     }
 };
 
@@ -326,7 +326,7 @@ RuleInput.prototype.updateInputs = function () {
         this.model.qs(".btn-tlds > .badge").textContent = this.rule.pattern.topLevelDomains.length;
         this.tldsTagsInput.setValue(this.rule.pattern.topLevelDomains);
     }
-    toggleHidden(!hostsTLDWildcardPattern.test(this.model.qs(".host").value), this.model.qs(".btn-tlds").parentNode);
+    toggleHidden(!hostsTLDWildcardPattern.test(this.model.qs(".host").value), this.model.qs(".form-group-tlds"));
     this.setActiveState();
 
     setButtonChecked(this.model.qs(".type[value=main_frame]"), false);

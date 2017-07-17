@@ -211,6 +211,11 @@ h4 {
     font-size: 0.9em;
 }
 
+.help-block-collapse {
+    cursor: pointer;
+    -moz-user-select: none;
+}
+
 .information {
     display: inline-block;
     margin-right: 1em;

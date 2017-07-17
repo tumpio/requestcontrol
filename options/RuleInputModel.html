@@ -63,14 +63,7 @@
                            placeholder="example.com"
                            spellcheck="false"
                            required="required"
-                           pattern="^(\*|[0-9a-zA-Z]{1,2}|(\*\.)?[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+(\.\*)?)$"/>
-                    <div class="input-group-btn hidden">
-                      <button class="btn btn-info btn-tlds" type="button"
-                              data-i18n-title="title_tlds">
-                        <span data-i18n="tlds"></span>
-                        <span class="badge">0</span>
-                      </button>
-                    </div>
+                           pattern="^(\*|[0-9a-zA-Z]{1,2}|(\*\.)?[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+)(\.\*)?$"/>
                   </div>
                 </div>
                 <div class="col-sm-12  col-md-4">
@@ -102,14 +95,31 @@
               </div>
             </div>
           </div>
-          <div class="tlds-block hidden">
-            <label class="help-block"
-                   data-i18n="top_level_domains"></label>
-            <input type="text"
-                   class="form-control input-sm input-tlds tlds hidden"
-                   pattern="^([0-9a-zA-Z]{1,2}|[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+)$"
-                   spellcheck="false"
-                   required="required"/>
+        </div>
+      </div>
+      <div class="form-group form-group-tlds hidden">
+        <label class="col-sm-2 control-label"></label>
+        <div class="col-sm-10">
+          <label class="help-block btn-tlds help-block-collapse">
+            <img class="arrow" src="/icons/ionicons/android-arrow-dropdown.svg"
+                 height="16">
+            <span data-i18n="top_level_domains"></span>
+            <span class="badge">0</span>
+          </label>
+          <div class="row no-gutter">
+            <div class="col-xs-12">
+              <div class="input-group input-group-sm">
+                <div class="tlds-block hidden">
+                  <input type="text"
+                         class="form-control input-sm input-tlds tlds hidden"
+                         pattern="^([0-9a-zA-Z]{1,2}|[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+)$"
+                         spellcheck="false"
+                         autocomplete="off"
+                         data-i18n-placeholder="tlds"
+                         required="required"/>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
