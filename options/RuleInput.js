@@ -315,6 +315,7 @@ RuleInput.prototype.updateHeader = function () {
     this.model.qs(".description").textContent = description;
     this.model.qs(".description").title = description;
     this.model.qs(".match-patterns").textContent = RequestControl.resolveUrls(this.rule.pattern).length;
+    this.setActiveState();
 };
 
 RuleInput.prototype.updateInputs = function () {
@@ -327,7 +328,6 @@ RuleInput.prototype.updateInputs = function () {
         this.tldsTagsInput.setValue(this.rule.pattern.topLevelDomains);
     }
     toggleHidden(!hostsTLDWildcardPattern.test(this.model.qs(".host").value), this.model.qs(".form-group-tlds"));
-    this.setActiveState();
 
     setButtonChecked(this.model.qs(".type[value=main_frame]"), false);
 
