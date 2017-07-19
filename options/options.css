@@ -12,6 +12,7 @@ body {
 }
 
 .page-header {
+    margin-top: 20px;
     padding-bottom: 0;
     border-color: #ddd;
 }
