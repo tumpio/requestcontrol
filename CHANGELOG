@@ -1,3 +1,10 @@
+Version 1.8.0 July 19, 2017
+- Rules are now auto saved on change.
+- Rule name and description are editable.
+- Add invert URL parameter trim option.
+- Add about page.
+- Other changes to rule options display.
+
 Version 1.7.1 July 1, 2017
 - Fix whitelist/block rule request markers.
 - Fix migrate script for Firefox versions before 55.
