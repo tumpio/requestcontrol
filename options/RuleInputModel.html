@@ -17,6 +17,9 @@
       <div class="pull-right col-md-4 text-right">
         <div class="information">
           <small>
+            <label class="text-success text-saved">
+              <img src="/icons/ionicons/checkmark.svg" width="10"/>
+            </label>
             <span class="badge match-patterns"></span>
             <span data-i18n="patterns"></span>
           </small>
@@ -27,7 +30,7 @@
                 data-i18n="disable"></button>
       </div>
     </div>
-    <div class="panel-collapse collapse hidden">
+    <form class="rule-input panel-collapse collapse hidden">
       <div class="form-group">
         <div class="col-sm-2 control-label">
           <div class="row no-gutter">
@@ -112,6 +115,7 @@
                 <div class="tlds-block hidden">
                   <input type="text"
                          class="form-control input-sm input-tlds tlds hidden"
+                         disabled="disabled"
                          pattern="^([0-9a-zA-Z]{1,2}|[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+)$"
                          spellcheck="false"
                          autocomplete="off"
@@ -268,88 +272,75 @@
           </div>
         </div>
       </div>
-      <div class="form-group redirectUrlForm hidden">
-        <label class="col-sm-2 control-label"></label>
-        <div class="col-sm-10">
-          <label class="help-block"
-                 data-i18n="redirect_to"></label>
-          <input type="text" class="form-control redirectUrl hidden"
-                 spellcheck="false"
-                 data-i18n-placeholder="redirect_url" pattern=".*"
-                 required="required"/>
-          <span class="help-block small">
-            <span data-i18n="help_text_redirect"></span>
-            <a href="#tab-help#redirect-using-pattern-capturing"
-               data-i18n="see_help"></a>
-          </span>
-        </div>
-      </div>
-      <div class="form-group filterRedirectionForm hidden">
-        <label class="col-sm-2 control-label"></label>
-        <div class="col-sm-10">
-          <label class="help-block"
-                 data-i18n="filter_url_redirection"></label>
-          <div class="row no-gutter">
-            <div class="col-xs-3 col-md-2">
-              <label class="switch">
-                <input class="redirectionFilter-toggle" type="checkbox"
-                       checked="checked"/>
-                <span class="knob"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-group form-inline filterQueryStringForm hidden">
-        <label class="col-sm-2 control-label"></label>
-        <div class="col-sm-10">
-          <label class="help-block"
-                 data-i18n="trim_url_parameters"></label>
-          <div class="row no-gutter">
-            <div class="col-xs-9 col-md-10 btn-group-params">
-              <input type="text"
-                     class="form-control input-sm input-params params"
-                     data-editable-tags="true"
-                     autocomplete="off"
-                     spellcheck="false"
-                     data-i18n-placeholder="placeholder_trim_parameters"/>
-              <div class="btn-group btn-group-sm"
-                   data-toggle="buttons">
-                <label class="btn btn-default">
-                  <input class="invert-trim" type="checkbox"
-                         autocomplete="off">
-                  <span data-i18n="invert_trim"></span>
-                </label>
-              </div>
-            </div>
-            <div class="col-xs-3 col-md-2">
-              <div class="btn-group btn-group-justified btn-group-sm"
-                   data-toggle="buttons">
-                <label class="btn btn-default">
-                  <input class="trim-all-params" type="checkbox"
-                         autocomplete="off">
-                  <span data-i18n="trim_all"></span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label text-success text-saved">
-          <img src="/icons/ionicons/checkmark.svg" width="10"/>
-          <span data-i18n="saved"></span>
-        </label>
-        <div class="col-sm-10">
-          <button type="button" class="btn btn-sm btn-primary btn-save"
-                  data-i18n="save_rule"></button>
-          <button type="button"
-                  class="btn btn-sm btn-danger btn-remove pull-right">
-            <img src="/icons/ionicons/android-close.svg" width="16"/>
-            <span data-i18n="remove"></span>
-          </button>
+    </form>
+  </li>
+</ul>
+<div id="action-redirect" class="form-group redirectUrlForm">
+  <label class="col-sm-2 control-label"></label>
+  <div class="col-sm-10">
+    <label class="help-block"
+           data-i18n="redirect_to"></label>
+    <input type="text" class="form-control redirectUrl"
+           spellcheck="false"
+           data-i18n-placeholder="redirect_url" pattern=".*"
+           required="required"/>
+    <span class="help-block small">
+      <span data-i18n="help_text_redirect"></span>
+      <a href="#tab-help#redirect-using-pattern-capturing"
+         data-i18n="see_help"></a>
+    </span>
+  </div>
+</div>
+<div id="action-filter">
+  <div class="form-group filterRedirectionForm">
+    <label class="col-sm-2 control-label"></label>
+    <div class="col-sm-10">
+      <label class="help-block"
+             data-i18n="filter_url_redirection"></label>
+      <div class="row no-gutter">
+        <div class="col-xs-3 col-md-2">
+          <label class="switch">
+            <input class="redirectionFilter-toggle" type="checkbox"
+                   checked="checked"/>
+            <span class="knob"></span>
+          </label>
         </div>
       </div>
     </div>
-  </li>
-</ul>
+  </div>
+  <div class="form-group form-inline filterQueryStringForm">
+    <label class="col-sm-2 control-label"></label>
+    <div class="col-sm-10">
+      <label class="help-block"
+             data-i18n="trim_url_parameters"></label>
+      <div class="row no-gutter">
+        <div class="col-xs-9 col-md-10 btn-group-params">
+          <input type="text"
+                 class="form-control input-sm input-params params"
+                 data-editable-tags="true"
+                 autocomplete="off"
+                 spellcheck="false"
+                 data-i18n-placeholder="placeholder_trim_parameters"/>
+          <div class="btn-group btn-group-sm"
+               data-toggle="buttons">
+            <label class="btn btn-default">
+              <input class="invert-trim" type="checkbox"
+                     autocomplete="off">
+              <span data-i18n="invert_trim"></span>
+            </label>
+          </div>
+        </div>
+        <div class="col-xs-3 col-md-2">
+          <div class="btn-group btn-group-justified btn-group-sm"
+               data-toggle="buttons">
+            <label class="btn btn-default">
+              <input class="trim-all-params" type="checkbox"
+                     autocomplete="off">
+              <span data-i18n="trim_all"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
