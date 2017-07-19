@@ -124,6 +124,13 @@ is examples of parameter trimming.
   utm_*      Trim any param starting with "utm_"
   /[0-9]+/   Trim any param containing only digits
   ---------- -------------------------------------
+  
+### Invert Trim
+Keep only parameters that are defined in trimmed parameters list. All
+other parameters will be removed.
+
+### Trim All
+Remove all URL query parameters from filtered requests.
 
 Redirect using pattern capturing
 --------------------------------
