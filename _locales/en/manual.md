@@ -2,7 +2,9 @@ Request Control Rule
 --------------------
 
 Request Control Rule consists of *request pattern*, *request types* and
-*rule action*. Requests that match a pattern of an active rule, will be
+*rule action*.
+
+Requests that match a pattern of an active rule, will be
 intercepted taking the action of the rule.
 
 ### Pattern
@@ -37,48 +39,48 @@ following forms.
 
 Path matches the request URL path. Path may subsequently contain any
 combination of "\*" wildcard and any of the characters that are allowed
-in URL paths. The "\*" wildcard matches any portion of path and may
+in URL path. The "\*" wildcard matches any portion of path and may
 appear more than once. Below is examples for using path patterns.
 
   ------------- -------------------------------------------------------------------
   \*            Match any path.
   *path/a/b/*   Match exact path "path/a/b/".
   *\*b\**       Match path that contains a component "b" somewhere in the middle.
+                Match an empty path.
   ------------- -------------------------------------------------------------------
 
 ### Types
 
-Filter requests based on the type of a request. A type represents the
-requested resource. Rule can apply from one to many types or any type.
-All possible types are listed below.
-
--   Document __\*__
--   Sub document __\*\*__
--   Stylesheet
--   Script
--   Image
--   Object
--   Plugin
--   XMLHttpRequest
--   XBL
--   XSLT
--   Ping
--   Beacon
--   XML DTD
--   Font
--   Media
--   WebSocket
--   CSP report
--   Imageset
--   Web Manifest
--   Other
-
-<small>__\*__ A document that is retrieved in main window frame. (main frame)</small><br/>
-<small>__\*\*__ A document that is retrieved inside another document in main window frame. (sub frame)</small>
+Apply rule to only certain types of requests. A type indicates the requested resource.
+Rule can apply from one to many types, or any type. All possible types and their descriptions
+are listed below.
+  
+  Type            Details
+  --------------- -----------------------------------------------------------------------------------------------------------------------------------------------------
+  Document        Indicates a DOM document at the top-level that is retrieved directly within a browser tab. (main frame)
+  Sub document    Indicates a DOM document that is retrieved inside another DOM document. (sub frame)
+  Stylesheet      Indicates a stylesheet (for example, \<style\> elements).
+  Script          Indicates an executable script (such as JavaScript).  
+  Image           Indicates an image (for example, \<img\> elements).
+  Object          Indicates a generic object.
+  Plugin          Indicates a request made by a plugin. (object_subrequest)
+  XMLHttpRequest  Indicates an XMLHttpRequest.
+  XBL             Indicates an XBL binding request. 
+  XSLT            Indicates a style sheet transformation. 
+  Ping            Indicates a ping triggered by a click on an \<a\> element using the ping attribute. Only in use if browser.send_pings is enabled (default is false).
+  Beacon          Indicates a [Beacon] request.
+  XML DTD         Indicates a DTD loaded by an XML document. 
+  Font            Indicates a font loaded via @font-face rule. 
+  Media           Indicates a video or audio load. 
+  WebSocket       Indicates a [WebSocket] load.
+  CSP Report      Indicates a [Content Security Policy] report. 
+  Imageset        Indicates a request to load an \<img\> (with the srcset attribute) or \<picture\>. 
+  Web Manifest    Indicates a request to load a Web manifest.
+  Other           Indicates a request that is not classified as being any of the above types.
 
 ### Action
 
-There are four types of rule actions.
+There are four different rule actions.
 
   ----------------------------------- ----------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   ![](/icons/icon-filter@19.png)      Filter      Any request that matches a filter rule will be filtered according the filter rule configuration. With URL redirection filtering the request is taken directly to the contained redirect URL. With URL parameters trimming the configured URL parameters will be removed from requests.
@@ -130,7 +132,7 @@ Keep only parameters that are defined in trimmed parameters list. All
 other parameters will be removed.
 
 ### Trim All
-Remove all URL query parameters from filtered requests.
+Remove all URL query parameters from filtered request.
 
 Redirect using pattern capturing
 --------------------------------
@@ -142,11 +144,14 @@ original request. The second way is to use a single or multiple
 instructions to override parts of the original request (e.g. instruct
 requests to redirect to a different port).
 
+Both methods can also be used together. Redirect instructions will get
+parsed and applied to the base URL before parameter expansion.
+
 ### Parameter expansion
 
     {parameter}
 
-Access a named parameter of original request. Available named
+Access a named parameter of original request URL. Available named
 parameters are listed at the end of this section.
 
 Parameter expansion supports the following string manipulation formats:
@@ -199,7 +204,7 @@ the end of this section.
 Names of the supported parameters and their example outputs are
 listed in below table.
 
-Example address used for input:
+Example address used as input:
 
     https://www.example.com:8080/some/path?query=value#hash
 
@@ -221,9 +226,14 @@ documents and is licenced under [CC-BY-SA 2.5].
 1. [Match patterns] by [Mozilla Contributors] is licensed under [CC-BY-SA 2.5].
 2. [webRequest.ResourceType] by [Mozilla Contributors] is licensed under [CC-BY-SA 2.5].
 3. [URL] by [Mozilla Contributors] is licensed under [CC-BY-SA 2.5].
+4. [nsIContentPolicy] by [Mozilla Contributors] is licensed under [CC-BY-SA 2.5].
 
 [CC-BY-SA 2.5]: http://creativecommons.org/licenses/by-sa/2.5/
 [Match patterns]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns
 [Mozilla Contributors]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns$history
 [webRequest.ResourceType]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType
 [URL]: https://developer.mozilla.org/en-US/docs/Web/API/URL
+[nsIContentPolicy]: https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsIContentPolicy
+[WebSocket]: https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API
+[Content Security Policy]: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+[Beacon]: https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API
