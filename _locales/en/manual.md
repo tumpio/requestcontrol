@@ -15,9 +15,9 @@ Scheme matches the protocol of the request URL. The following schemes are suppor
 
 |              |                                    |
 |--------------|------------------------------------|
-| *http*       | Match a http scheme.               |
-| *https*      | Match a https scheme.              |
-| *http/https* | Match both http and https schemes. |
+| `http`       | Match a http scheme.               |
+| `https`      | Match a https scheme.              |
+| `http/https` | Match both http and https schemes. |
 
 #### Host
 
@@ -25,10 +25,10 @@ Host matches the host of the request URL. It can be in one of the following form
 
 |                   |                                                                                                             |                                                                                            |
 |-------------------|-------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
-| *www&#46;example.com* | Match a complete host.                                                                                      |                                                                                            |
-| *\*.example.com*  | Match the given host and any of its subdomains.                                                             | Will match any subdomain of example.com e.g. ***www**.example.com*, ***good**.example.com* |
-| *www&#46;example.\**  | Match the given host and all of the listed top-level domains. (can be combined with the subdomain matching) | Write the top-level domains to the top-level domain name list (e.g. *com*, *org*).         |
-| *\**              | Match any host.                                                                                             |                                                                                            |
+| `www.example.com` | Match a complete host.                                                                                      |                                                                                            |
+| `*.example.com`   | Match the given host and any of its subdomains.                                                             | Will match any subdomain of example.com e.g. ***www**.example.com*, ***good**.example.com* |
+| `www.example.*`   | Match the given host and all of the listed top-level domains. (can be combined with the subdomain matching) | Write the top-level domains to the top-level domain name list (e.g. *com*, *org*).         |
+| `*`               | Match any host.                                                                                             |                                                                                            |
 
 #### Path
 
@@ -36,9 +36,9 @@ Path matches the request URL path. Path may subsequently contain any combination
 
 |             |                                                                   |
 |-------------|-------------------------------------------------------------------|
-| \*          | Match any path.                                                   |
-| *path/a/b/* | Match exact path "path/a/b/".                                     |
-| *\*b\**     | Match path that contains a component "b" somewhere in the middle. |
+| `*`         | Match any path.                                                   |
+| `path/a/b/` | Match exact path "path/a/b/".                                     |
+| `*b*`       | Match path that contains a component "b" somewhere in the middle. |
 |             | Match an empty path.                                              |
 
 ### Types
