@@ -200,14 +200,17 @@ Example address used as input:
 
 This help page is build upon the material of the following MDN wiki documents and is licenced under [CC-BY-SA 2.5].
 
-1.  [Match patterns] by [Mozilla Contributors] is licensed under [CC-BY-SA 2.5].
-2.  [webRequest.ResourceType] by [Mozilla Contributors] is licensed under [CC-BY-SA 2.5].
-3.  [URL] by [Mozilla Contributors] is licensed under [CC-BY-SA 2.5].
-4.  [nsIContentPolicy] by [Mozilla Contributors] is licensed under [CC-BY-SA 2.5].
+1.  [Match patterns] by [Mozilla Contributors][Match patterns history] is licensed under [CC-BY-SA 2.5].
+2.  [webRequest.ResourceType] by [Mozilla Contributors][webRequest.ResourceType history] is licensed under [CC-BY-SA 2.5].
+3.  [URL] by [Mozilla Contributors][URL history] is licensed under [CC-BY-SA 2.5].
+4.  [nsIContentPolicy] by [Mozilla Contributors][nsIContentPolicy history] is licensed under [CC-BY-SA 2.5].
 
   [CC-BY-SA 2.5]: http://creativecommons.org/licenses/by-sa/2.5/
   [Match patterns]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns
-  [Mozilla Contributors]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns$history
+  [Match patterns history]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns$history
   [webRequest.ResourceType]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType
+  [webRequest.ResourceType history]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType$history
   [URL]: https://developer.mozilla.org/en-US/docs/Web/API/URL
+  [URL history]: https://developer.mozilla.org/en-US/docs/Web/API/URL$history
   [nsIContentPolicy]: https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsIContentPolicy
+  [nsIContentPolicy history]: https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsIContentPolicy$history
