@@ -265,6 +265,7 @@ RuleInput.prototype.setTitle = function (str) {
         delete this.rule.title;
         delete this.rule.name;
     }
+    this.save();
 };
 
 RuleInput.prototype.getDescription = function () {
@@ -278,6 +279,7 @@ RuleInput.prototype.setDescription = function (str) {
     } else {
         delete this.rule.description;
     }
+    this.save();
 };
 
 RuleInput.prototype.onEnterKey = function (e) {
