@@ -130,12 +130,18 @@ function RuleMarkerFactory(rule) {
                 blockMarker(details);
             };
         case "redirect":
+            let redirectRule = {redirectUrl: rule.redirectUrl};
             return function (details) {
-                redirectMarker(details, rule);
+                redirectMarker(details, redirectRule);
             };
         case "filter":
+            let filterRule = {
+                paramsFilter: rule.paramsFilter,
+                trimAllParams: rule.trimAllParams,
+                skipRedirectionFilter: rule.skipRedirectionFilter
+            };
             return function (details) {
-                filterMarker(details, rule);
+                filterMarker(details, filterRule);
             };
     }
 }

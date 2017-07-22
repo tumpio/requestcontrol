@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let ruleInput = myRuleInputFactory.newInput();
         document.getElementById("newRules").appendChild(ruleInput.model);
         ruleInput.toggleEdit();
-        ruleInput.model.qs(".host").focus();
+        ruleInput.$(".host").focus();
         ruleInput.model.scrollIntoView();
     });
 

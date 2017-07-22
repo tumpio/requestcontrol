@@ -60,6 +60,9 @@
   "rule_title_new": {
     "message": "New Rule"
   },
+  "rule_description_new": {
+    "message": "Create a new request control rule by defining its pattern, types and action."
+  },
   "rule_title_hosts": {
     "message": "$HOSTS$ and $NUM$ other",
     "placeholders": {
