@@ -70,14 +70,23 @@ function displayErrorMessage(error) {
 
 function importRules(rulesImport) {
     let rules = [];
+
     if (Array.isArray(myOptionsManager.options.rules)) {
         rules = rules.concat(myOptionsManager.options.rules);
     }
+
+    for (let rule of rulesImport) {
+        if (rule.action === "filter" && rule.paramsFilter && rule.paramsFilter.values) {
+            rule.paramsFilter.pattern = RequestControl.createTrimPattern(rule.paramsFilter.values);
+        }
+    }
+
     if (Array.isArray(rulesImport)) {
         rules = rules.concat(rulesImport);
     } else {
         rules.push(rulesImport);
     }
+
     try {
         createRuleInputs(rulesImport, "new");
         myOptionsManager.saveOption("rules", rules);
@@ -104,6 +113,14 @@ function loadDefaultRules() {
     });
 }
 
+function exportReplacer(key, value) {
+    // strip parameter trim pattern from exported rules
+    if (key === "pattern" && typeof value === "string") {
+        return undefined;
+    }
+    return value;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     Promise.all([myOptionsManager.loadOptions(), myRuleInputFactory.load()]).then(() => {
         if (!myOptionsManager.options.rules) {
@@ -126,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("exportRules").addEventListener("click", function () {
         let fileName = browser.i18n.getMessage("export-file-name");
-        exportObject(fileName, myOptionsManager.options.rules);
+        exportObject(fileName, myOptionsManager.options.rules, exportReplacer);
     });
 
     document.getElementById("importRules").addEventListener("change", function (e) {
@@ -139,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let input of getSelectedRuleInputs()) {
             rules.push(input.getRule());
         }
-        exportObject(fileName, rules);
+        exportObject(fileName, rules, exportReplacer);
     });
 
     document.getElementById("removeSelectedRules").addEventListener("click", function () {

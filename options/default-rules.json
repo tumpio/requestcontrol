@@ -65,10 +65,8 @@
     "active": true
   },
   {
+    "description": "Example of a global rule to remove any UTM query parameters from all requests. Disabled by default.",
     "pattern": {
-      "scheme": "*",
-      "host": "",
-      "path": "",
       "allUrls": true
     },
     "types": [
@@ -80,9 +78,7 @@
     "paramsFilter": {
       "values": [
         "utm_*"
-      ],
-      "pattern": "utm_.*"
-    },
-    "description": "Example of a global rule to remove any UTM query parameters from all requests. Disabled by default."
+      ]
+    }
   }
 ]

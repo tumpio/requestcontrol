@@ -351,7 +351,7 @@ RuleInput.prototype = {
     },
 
     updateInputs: function () {
-        this.$(".scheme").value = this.rule.pattern.scheme;
+        this.$(".scheme").value = this.rule.pattern.scheme || "*";
         this.hostsTagsInput.setValue(this.rule.pattern.host);
         this.pathsTagsInput.setValue(this.rule.pattern.path);
         this.$(".action").value = this.rule.action;
@@ -376,6 +376,10 @@ RuleInput.prototype = {
     updateRule: function () {
         if (this.$(".any-url").checked) {
             this.rule.pattern.allUrls = true;
+            delete this.rule.pattern.scheme;
+            delete this.rule.pattern.host;
+            delete this.rule.pattern.path;
+            delete this.rule.pattern.topLevelDomains;
         } else {
             this.rule.pattern.scheme = this.$(".scheme").value;
             this.rule.pattern.host = this.hostsTagsInput.getValue();
@@ -470,21 +474,8 @@ FilterRuleInput.prototype.updateRule = function () {
     this.rule.paramsFilter = {};
     this.rule.paramsFilter.values = this.paramsTagsInput.getValue();
 
-    let regexpChars = /[.+?^${}()|[\]\\]/g; // excluding * wildcard
-    let regexpParam = /^\/(.*)\/$/;
-
-    // construct regexp pattern of filter params
     if (this.rule.paramsFilter.values.length > 0) {
-        let pattern = "";
-        for (let param of this.rule.paramsFilter.values) {
-            let testRegexp = param.match(regexpParam);
-            if (testRegexp) {
-                pattern += "|" + testRegexp[1];
-            } else {
-                pattern += "|" + param.replace(regexpChars, "\\$&").replace(/\*/g, ".*");
-            }
-        }
-        this.rule.paramsFilter.pattern = pattern.substring(1);
+        this.rule.paramsFilter.pattern = RequestControl.createTrimPattern(this.rule.paramsFilter.values);
 
         if (this.$(".invert-trim").checked) {
             this.rule.paramsFilter.invert = true;

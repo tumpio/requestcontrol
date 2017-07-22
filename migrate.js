@@ -4,7 +4,6 @@
 
 function handleInstalled(details) {
     if (details.reason === "update") {
-        console.log(details);
 
         if (!details.previousVersion) {
             details.previousVersion = "1.6.0";
@@ -25,23 +24,9 @@ function handleInstalled(details) {
                         let newValue = {};
                         newValue.values = rule.paramsFilter;
 
-                        let regexpChars = /[.+?^${}()|[\]\\]/g; // excluding * wildcard
-                        let regexpParam = /^\/(.*)\/$/;
-
-                        // construct regexp pattern of filter params
                         if (newValue.values.length > 0) {
-                            let pattern = "";
-                            for (let param of newValue.values) {
-                                let testRegexp = param.match(regexpParam);
-                                if (testRegexp) {
-                                    pattern += "|" + testRegexp[1];
-                                } else {
-                                    pattern += "|" + param.replace(regexpChars, "\\$&").replace(/\*/g, ".*");
-                                }
-                            }
-                            newValue.pattern = pattern.substring(1);
+                            newValue.pattern = RequestControl.createTrimPattern(newValue.values);
                             rule.paramsFilter = newValue;
-                            console.log(rule.paramsFilter);
                         } else {
                             delete rule.paramsFilter;
                         }
