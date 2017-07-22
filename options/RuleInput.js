@@ -278,6 +278,12 @@ RuleInput.prototype = {
         setButtonChecked(e.target, e.target.checked);
     },
 
+    setType: function(value, bool) {
+        let type = this.$(".type[value=" + value + "]");
+        setButtonChecked(type, bool);
+        toggleHidden(false, type.parentNode);
+    },
+
     onShowMoreTypes: function (e) {
         e.stopPropagation();
         let extraTypes = this.$$(".extra-type:not(:checked)");
@@ -289,16 +295,28 @@ RuleInput.prototype = {
     },
 
     onSelectAnyUrl: function (e) {
-        let input = this.$(".any-url");
-        setButtonChecked(input, input.checked);
-        toggleHidden(e.target.checked, this.$(".host").parentNode, this.$(".path").parentNode, this.$(".pattern"));
+        this.setAnyUrl(e.target.checked);
+    },
+
+    setAnyUrl: function (bool) {
+        setButtonChecked(this.$(".any-url"), bool);
+        toggleHidden(bool, this.$(".host").parentNode, this.$(".path").parentNode, this.$(".pattern"));
         this.validateTLDPattern();
+        if (bool) {
+            this.hostsTagsInput.disable();
+        } else {
+            this.hostsTagsInput.enable();
+        }
     },
 
     onSelectAnyType: function (e) {
-        setButtonChecked(this.$(".any-type"), e.target.checked);
-        toggleHidden(e.target.checked, this.$(".btn-group-types"));
-        if (e.target.checked) {
+        this.setAnyType(e.target.checked);
+    },
+
+    setAnyType: function (bool) {
+        setButtonChecked(this.$(".any-type"), bool);
+        toggleHidden(bool, this.$(".btn-group-types"));
+        if (bool) {
             for (let type of this.$$(".type:checked")) {
                 setButtonChecked(type, false);
             }
@@ -339,30 +357,22 @@ RuleInput.prototype = {
         this.hostsTagsInput.setValue(this.rule.pattern.host);
         this.pathsTagsInput.setValue(this.rule.pattern.path);
         this.$(".action").value = this.rule.action;
-        if (this.rule.pattern.topLevelDomains) {
-            this.$(".btn-tlds > .badge").textContent = this.rule.pattern.topLevelDomains.length;
-            this.tldsTagsInput.setValue(this.rule.pattern.topLevelDomains);
-            this.tldsTagsInput.enable();
-        }
-        toggleHidden(!hostsTLDWildcardPattern.test(this.$(".host").value), this.$(".form-group-tlds"));
 
-        setButtonChecked(this.$(".type[value=main_frame]"), false);
+        if (this.rule.pattern.topLevelDomains) {
+            this.tldsTagsInput.setValue(this.rule.pattern.topLevelDomains);
+            this.onSetTLDs();
+        }
 
         if (!this.rule.types || this.rule.types.length === 0) {
-            setButtonChecked(this.$(".any-type"), true);
-            toggleHidden(true, this.$(".btn-group-types"));
+            this.setAnyType(true);
         } else {
-            for (let value of this.rule.types) {
-                let type = this.$("[value=" + value + "]");
-                setButtonChecked(type, true);
-                toggleHidden(false, type.parentNode);
+            this.setType("main_frame", false);
+            for (let type of this.rule.types) {
+                this.setType(type, true);
             }
         }
 
-        if (this.rule.pattern.allUrls) {
-            setButtonChecked(this.$(".any-url"), true);
-            toggleHidden(true, this.$(".host").parentNode, this.$(".path").parentNode, this.$(".pattern"));
-        }
+        this.setAnyUrl(this.rule.pattern.hasOwnProperty("allUrls"));
     },
 
     updateRule: function () {
@@ -406,16 +416,9 @@ WhitelistRuleInput.prototype.description = "rule_description_whitelist";
 function FilterRuleInput(rule) {
     RuleInput.call(this, rule);
 
-    this.$(".rule-input").appendChild(this.factory.getModel("action-" + rule.action));
+    this.$(".rule-input").appendChild(this.factory.getModel("action-filter"));
     this.paramsTagsInput = new TagsInput(this.$(".input-params"));
 
-    this.invertTrim = function (e) {
-        setButtonChecked(e.target, e.target.checked);
-    };
-    this.toggleTrimAll = function (e) {
-        setButtonChecked(e.target, e.target.checked);
-        toggleHidden(e.target.checked, this.$(".btn-group-params"));
-    };
     this.$(".trim-all-params").addEventListener("change", this.toggleTrimAll.bind(this));
     this.$(".invert-trim").addEventListener("change", this.invertTrim.bind(this));
 }
@@ -423,6 +426,30 @@ FilterRuleInput.prototype = Object.create(RuleInput.prototype);
 FilterRuleInput.prototype.constructor = FilterRuleInput;
 FilterRuleInput.prototype.title = "rule_title_filter";
 FilterRuleInput.prototype.description = ["rule_description_filter_url", "rule_description_filter_parameters"];
+
+FilterRuleInput.prototype.getDescription = function () {
+    let description = [];
+    if (!this.rule.skipRedirectionFilter) {
+        description.push(browser.i18n.getMessage(this.description[0]));
+    }
+    if (this.rule.trimAllParams || this.rule.paramsFilter) {
+        description.push(browser.i18n.getMessage(this.description[1]));
+    }
+    if (description.length === 2) {
+        return browser.i18n.getMessage("and", description);
+    } else {
+        return description.join();
+    }
+};
+
+FilterRuleInput.prototype.invertTrim = function (e) {
+    setButtonChecked(e.target, e.target.checked);
+};
+
+FilterRuleInput.prototype.toggleTrimAll = function (e) {
+    setButtonChecked(e.target, e.target.checked);
+    toggleHidden(e.target.checked, this.$(".btn-group-params"));
+};
 
 FilterRuleInput.prototype.updateInputs = function () {
     RuleInput.prototype.updateInputs.call(this);
@@ -485,27 +512,12 @@ FilterRuleInput.prototype.updateRule = function () {
 
 function RedirectRuleInput(rule) {
     RuleInput.call(this, rule);
-    this.$(".rule-input").appendChild(this.factory.getModel("action-" + rule.action));
+    this.$(".rule-input").appendChild(this.factory.getModel("action-redirect"));
 }
 RedirectRuleInput.prototype = Object.create(RuleInput.prototype);
 RedirectRuleInput.prototype.constructor = RedirectRuleInput;
 RedirectRuleInput.prototype.title = "rule_title_redirect";
 RedirectRuleInput.prototype.description = "rule_description_redirect";
-
-FilterRuleInput.prototype.getDescription = function () {
-    let description = [];
-    if (!this.rule.skipRedirectionFilter) {
-        description.push(browser.i18n.getMessage(this.description[0]));
-    }
-    if (this.rule.trimAllParams || this.rule.paramsFilter) {
-        description.push(browser.i18n.getMessage(this.description[1]));
-    }
-    if (description.length === 2) {
-        return browser.i18n.getMessage("and", description);
-    } else {
-        return description.join();
-    }
-};
 
 RedirectRuleInput.prototype.updateInputs = function () {
     RuleInput.prototype.updateInputs.call(this);
