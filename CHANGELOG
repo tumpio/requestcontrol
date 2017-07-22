@@ -1,3 +1,10 @@
+Version 1.8.1 July 22, 2017
+- Fix save rule on title/description change.
+- Fix any-url host input required validation.
+- Add description for default rules.
+- Load default rules from file ("/options/default-rules.json").
+- Strip paramsTrim pattern from exported rules.
+
 Version 1.8.0 July 19, 2017
 - Rules are now auto saved on change.
 - Rule name and description are editable.
