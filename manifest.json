@@ -40,6 +40,7 @@
         "scripts": [
             "lib/OptionsManager.js",
             "lib/RequestControl.js",
+            "install.js",
             "migrate.js",
             "background.js"
         ]

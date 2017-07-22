@@ -17,7 +17,7 @@ function handleInstalled(details) {
             (Number(versions[0]) === 1 && Number(versions[1]) < 7) ||
             (Number(versions[0]) === 1 && Number(versions[1]) === 7) && versions[2].startsWith("0beta")) {
 
-            let myOptionsManager = new OptionsManager(RequestControl.defaultOptions);
+            let myOptionsManager = new OptionsManager(RequestControl.optionsSchema);
 
             myOptionsManager.loadOptions(function () {
                 for (let rule of myOptionsManager.options.rules) {

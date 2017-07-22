@@ -18,7 +18,7 @@
  * Options manager initialized with default options.
  * @type {OptionsManager}
  */
-const myOptionsManager = new OptionsManager(RequestControl.defaultOptions);
+const myOptionsManager = new OptionsManager(RequestControl.optionsSchema);
 
 /**
  * Initialize on rules load.
@@ -51,6 +51,9 @@ const requestListeners = [];
  * @param rules array of rules
  */
 function addRuleListeners(rules) {
+    if (!rules) {
+        return;
+    }
     let filter, listener;
     for (let rule of rules) {
         if (!rule.active) {

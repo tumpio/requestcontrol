@@ -7,7 +7,7 @@
  * Options page for Request Control rule management, settings and help page.
  */
 
-const myOptionsManager = new OptionsManager(RequestControl.defaultOptions);
+const myOptionsManager = new OptionsManager(RequestControl.optionsSchema);
 const myRuleInputFactory = new RuleInputFactory();
 
 function removeRuleInputs() {
@@ -33,7 +33,7 @@ function getSelectedRuleInputs() {
     let selected = document.querySelectorAll(".rule.selected");
     let inputs = [];
     for (let model of selected) {
-        inputs.push(model.getRuleInput());
+        inputs.push(model);
     }
     return inputs;
 }
@@ -68,9 +68,50 @@ function displayErrorMessage(error) {
     message.parentNode.classList.toggle("show", true);
 }
 
+function importRules(rulesImport) {
+    let rules = [];
+    if (Array.isArray(myOptionsManager.options.rules)) {
+        rules = rules.concat(myOptionsManager.options.rules);
+    }
+    if (Array.isArray(rulesImport)) {
+        rules = rules.concat(rulesImport);
+    } else {
+        rules.push(rulesImport);
+    }
+    try {
+        createRuleInputs(rulesImport, "new");
+        myOptionsManager.saveOption("rules", rules);
+        window.location.hash = "#tab-rules";
+        document.body.scrollIntoView(false);
+    } catch (ex) {
+        displayErrorMessage(ex);
+    }
+}
+
+function loadDefaultRules() {
+    let request = new Request("/options/default-rules.json", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        mode: "same-origin"
+    });
+    removeRuleInputs();
+    Promise.all([myOptionsManager.reset(), fetch(request).then(response => {
+        return response.json();
+    })]).then(([, rules]) => {
+        importRules(rules);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-    Promise.all([myOptionsManager.loadOptions(), myRuleInputFactory.load()]).then(() =>
-        createRuleInputs(myOptionsManager.options.rules));
+    Promise.all([myOptionsManager.loadOptions(), myRuleInputFactory.load()]).then(() => {
+        if (!myOptionsManager.options.rules) {
+            loadDefaultRules();
+        } else {
+            createRuleInputs(myOptionsManager.options.rules)
+        }
+    });
     addLocalisedManual(browser.i18n.getMessage("extensionManual"));
 
     document.getElementById("addNewRule").addEventListener("click", function () {
@@ -81,13 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ruleInput.model.scrollIntoView();
     });
 
-    document.getElementById("reset").addEventListener("click", function () {
-        myOptionsManager.restoreDefault("rules").then(function () {
-            removeRuleInputs();
-            createRuleInputs(myOptionsManager.options.rules);
-            window.location.hash = "#tab-rules";
-        });
-    });
+    document.getElementById("reset").addEventListener("click", loadDefaultRules);
 
     document.getElementById("exportRules").addEventListener("click", function () {
         let fileName = browser.i18n.getMessage("export-file-name");
@@ -95,22 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.getElementById("importRules").addEventListener("change", function (e) {
-        importFile(e.target.files[0]).then(rulesImport => {
-            let rules = myOptionsManager.options.rules;
-            if (Array.isArray(rulesImport)) {
-                rules = rules.concat(rulesImport);
-            } else {
-                rules.push(rulesImport);
-            }
-            try {
-                createRuleInputs(rulesImport, "new");
-                myOptionsManager.saveOption("rules", rules);
-                window.location.hash = "#tab-rules";
-                document.body.scrollIntoView(false);
-            } catch (ex) {
-                displayErrorMessage(ex);
-            }
-        }).catch(displayErrorMessage);
+        importFile(e.target.files[0]).then(importRules).catch(displayErrorMessage);
     });
 
     document.getElementById("exportSelectedRules").addEventListener("click", function () {

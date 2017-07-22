@@ -66,9 +66,8 @@ function RuleInput(rule) {
     this.model = this.factory.getModel("ruleInputModel");
     this.updateHeader();
 
-    this.model.getRuleInput = function () {
-        return this;
-    };
+    this.model.getRule = this.getRule.bind(this);
+    this.model.remove = this.remove.bind(this);
 
     this.hostsTagsInput = new TagsInput(this.$(".host"));
     this.pathsTagsInput = new TagsInput(this.$(".path"));
@@ -112,7 +111,6 @@ RuleInput.prototype = {
     },
 
     getRule: function () {
-        this.updateRule();
         return this.rule;
     },
 
