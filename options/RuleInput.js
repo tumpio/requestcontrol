@@ -62,100 +62,39 @@ RuleInputFactory.prototype = {
 };
 
 function RuleInput(rule) {
-    let self = this;
-    self.rule = rule;
-    self.model = self.factory.getModel("ruleInputModel");
-    self.updateHeader();
+    this.rule = rule;
+    this.model = this.factory.getModel("ruleInputModel");
+    this.updateHeader();
 
-    self.hostsTagsInput = new TagsInput(self.$(".host"));
-    self.pathsTagsInput = new TagsInput(self.$(".path"));
-    self.tldsTagsInput = new TagsInput(self.$(".input-tlds"));
-
-    self.$(".host").addEventListener("change", self.validateTLDPattern.bind(self));
-    self.$(".btn-edit").addEventListener("click", self.toggleEdit.bind(self));
-    self.$(".btn-activate").addEventListener("click", self.toggleActive.bind(self));
-    self.$(".action").addEventListener("change", self.change.bind(self));
-
-    self.$(".rule-header").addEventListener("dblclick", function (e) {
-        if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT"
-            && !e.target.hasAttribute("contenteditable")) {
-            self.toggleEdit();
-        }
-    });
-
-    self.$(".title").addEventListener("keydown", self.onEnterKey.bind(self));
-    self.$(".title").addEventListener("blur", function (e) {
-        self.setTitle(e.target.textContent);
-        if (!self.rule.title) {
-            e.target.textContent = self.getTitle();
-        }
-    });
-
-    self.$(".description").addEventListener("keydown", self.onEnterKey.bind(self));
-    self.$(".description").addEventListener("blur", function (e) {
-        self.setDescription(e.target.textContent);
-        if (!self.rule.description) {
-            e.target.textContent = self.getDescription();
-        }
-    });
-
-    self.$(".any-url").addEventListener("change", function (e) {
-        setButtonChecked(self.$(".any-url"), e.target.checked);
-        toggleHidden(e.target.checked, self.$(".host").parentNode, self.$(".path").parentNode, self.$(".pattern"));
-        self.validateTLDPattern();
-    });
-
-    self.$(".btn-group-types").addEventListener("change", function (e) {
-        setButtonChecked(e.target, e.target.checked);
-    }, false);
-
-    self.$(".more-types").addEventListener("change", function (e) {
-        e.stopPropagation();
-        let extraTypes = self.$$(".extra-type:not(:checked)");
-        self.$(".more-types").parentNode.querySelector(".text").textContent =
-            browser.i18n.getMessage("show_more_" + !self.$(".more-types").checked);
-        for (let type of extraTypes) {
-            toggleHidden(!self.$(".more-types").checked, type.parentNode);
-        }
-    }, false);
-
-    self.$(".any-type").addEventListener("change", function (e) {
-        setButtonChecked(self.$(".any-type"), e.target.checked);
-        toggleHidden(e.target.checked, self.$(".btn-group-types"));
-        if (e.target.checked) {
-            for (let type of self.$$(".type:checked")) {
-                setButtonChecked(type, false);
-            }
-        }
-    });
-
-    self.$(".btn-tlds").addEventListener("click", function () {
-        toggleHidden(self.$(".tlds-block"));
-    });
-
-    self.$(".input-tlds").addEventListener("change", function () {
-        let numberOfTlds = self.tldsTagsInput.getValue().length;
-        let error = numberOfTlds === 0;
-        self.$(".btn-tlds > .badge").textContent = numberOfTlds;
-        self.$(".btn-tlds").classList.toggle("text-danger", error);
-        self.$(".btn-tlds").parentNode.classList.toggle("has-error", error);
-    });
-
-    self.$(".select").addEventListener("change", function () {
-        self.model.classList.toggle("selected", this.checked);
-        toggleHidden(document.querySelectorAll(".rule.selected").length === 0,
-            document.querySelector(".selected-action-buttons"));
-    });
-
-    self.model.getRuleInput = function () {
+    this.model.getRuleInput = function () {
         return this;
     };
 
-    self.$(".rule-input").addEventListener("change", function () {
-        if (this.reportValidity()) {
-            self.save();
-        }
-    });
+    this.hostsTagsInput = new TagsInput(this.$(".host"));
+    this.pathsTagsInput = new TagsInput(this.$(".path"));
+    this.tldsTagsInput = new TagsInput(this.$(".input-tlds"));
+
+    this.$(".rule-header").addEventListener("dblclick", this.onHeaderClick.bind(this));
+    this.$(".title").addEventListener("keydown", this.onEnterKey.bind(this));
+    this.$(".title").addEventListener("blur", this.onSetTitle.bind(this));
+    this.$(".description").addEventListener("keydown", this.onEnterKey.bind(this));
+    this.$(".description").addEventListener("blur", this.onSetDescription.bind(this));
+    this.$(".select").addEventListener("change", this.onSelect.bind(this));
+    this.$(".btn-edit").addEventListener("click", this.toggleEdit.bind(this));
+    this.$(".btn-activate").addEventListener("click", this.toggleActive.bind(this));
+
+    this.$(".host").addEventListener("change", this.validateTLDPattern.bind(this));
+    this.$(".any-url").addEventListener("change", this.onSelectAnyUrl.bind(this));
+    this.$(".action").addEventListener("change", this.change.bind(this));
+
+    this.$(".btn-group-types").addEventListener("change", this.onSelectType.bind(this), false);
+    this.$(".more-types").addEventListener("change", this.onShowMoreTypes.bind(this), false);
+    this.$(".any-type").addEventListener("change", this.onSelectAnyType.bind(this));
+
+    this.$(".btn-tlds").addEventListener("click", this.toggleTLDs.bind(this));
+    this.$(".input-tlds").addEventListener("change", this.onSetTLDs.bind(this));
+
+    this.$(".rule-input").addEventListener("change", this.save.bind(this));
 }
 
 RuleInput.prototype = {
@@ -167,6 +106,7 @@ RuleInput.prototype = {
     $: function (selector) {
         return this.model.querySelector(selector);
     },
+
     $$: function (selector) {
         return this.model.querySelectorAll(selector);
     },
@@ -202,6 +142,9 @@ RuleInput.prototype = {
     },
 
     save: function () {
+        if (!this.$(".rule-input").reportValidity()) {
+            return;
+        }
         this.updateRule();
         if (this.indexOfRule() === -1) {
             myOptionsManager.options[this.optionsPath].push(this.rule);
@@ -232,6 +175,10 @@ RuleInput.prototype = {
             this.$(".description").removeAttribute("contenteditable");
         }
         this.updateInputs();
+    },
+
+    toggleTLDs: function () {
+        toggleHidden(this.$(".tlds-block"));
     },
 
     setActiveState: function () {
@@ -304,6 +251,72 @@ RuleInput.prototype = {
             e.preventDefault();
             return false;
         }
+    },
+
+    onHeaderClick: function (e) {
+        if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT"
+            && !e.target.hasAttribute("contenteditable")) {
+            this.toggleEdit();
+        }
+    },
+
+    onSetTitle: function (e) {
+        this.setTitle(e.target.textContent);
+        if (!this.rule.title) {
+            e.target.textContent = this.getTitle();
+        }
+    },
+
+    onSetDescription: function (e) {
+        this.setDescription(e.target.textContent);
+        if (!this.rule.description) {
+            e.target.textContent = this.getDescription();
+        }
+    },
+
+    onSelectType: function (e) {
+        setButtonChecked(e.target, e.target.checked);
+    },
+
+    onShowMoreTypes: function (e) {
+        e.stopPropagation();
+        let extraTypes = this.$$(".extra-type:not(:checked)");
+        this.$(".more-types").parentNode.querySelector(".text").textContent =
+            browser.i18n.getMessage("show_more_" + !this.$(".more-types").checked);
+        for (let type of extraTypes) {
+            toggleHidden(!this.$(".more-types").checked, type.parentNode);
+        }
+    },
+
+    onSelectAnyUrl: function (e) {
+        let input = this.$(".any-url");
+        setButtonChecked(input, input.checked);
+        toggleHidden(e.target.checked, this.$(".host").parentNode, this.$(".path").parentNode, this.$(".pattern"));
+        this.validateTLDPattern();
+    },
+
+    onSelectAnyType: function (e) {
+        setButtonChecked(this.$(".any-type"), e.target.checked);
+        toggleHidden(e.target.checked, this.$(".btn-group-types"));
+        if (e.target.checked) {
+            for (let type of this.$$(".type:checked")) {
+                setButtonChecked(type, false);
+            }
+        }
+    },
+
+    onSetTLDs: function () {
+        let numberOfTlds = this.tldsTagsInput.getValue().length;
+        let error = numberOfTlds === 0;
+        this.$(".btn-tlds > .badge").textContent = numberOfTlds;
+        this.$(".btn-tlds").classList.toggle("text-danger", error);
+        this.$(".btn-tlds").parentNode.classList.toggle("has-error", error);
+    },
+
+    onSelect: function (e) {
+        this.model.classList.toggle("selected", e.target.checked);
+        toggleHidden(document.querySelectorAll(".rule.selected").length === 0,
+            document.querySelector(".selected-action-buttons"));
     },
 
     updateHeader: function () {
