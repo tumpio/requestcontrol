@@ -168,11 +168,14 @@ RuleInput.prototype = {
         if (this.model.classList.toggle("editing")) {
             this.$(".title").setAttribute("contenteditable", true);
             this.$(".description").setAttribute("contenteditable", true);
+            if (this.model.classList.contains("not-edited")) {
+                this.model.classList.remove("not-edited");
+                this.updateInputs();
+            }
         } else {
             this.$(".title").removeAttribute("contenteditable");
             this.$(".description").removeAttribute("contenteditable");
         }
-        this.updateInputs();
     },
 
     toggleTLDs: function () {
@@ -276,7 +279,7 @@ RuleInput.prototype = {
         setButtonChecked(e.target, e.target.checked);
     },
 
-    setType: function(value, bool) {
+    setType: function (value, bool) {
         let type = this.$(".type[value=" + value + "]");
         setButtonChecked(type, bool);
         toggleHidden(false, type.parentNode);
