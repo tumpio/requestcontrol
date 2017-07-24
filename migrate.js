@@ -16,10 +16,8 @@ function handleInstalled(details) {
             (Number(versions[0]) === 1 && Number(versions[1]) < 7) ||
             (Number(versions[0]) === 1 && Number(versions[1]) === 7) && versions[2].startsWith("0beta")) {
 
-            let myOptionsManager = new OptionsManager(RequestControl.optionsSchema);
-
-            myOptionsManager.loadOptions(function () {
-                for (let rule of myOptionsManager.options.rules) {
+            browser.storage.local.get("rules").then(options => {
+                for (let rule of options.rules) {
                     if (rule.action === "filter" && rule.paramsFilter && !rule.paramsFilter.values) {
                         let newValue = {};
                         newValue.values = rule.paramsFilter;
@@ -32,7 +30,7 @@ function handleInstalled(details) {
                         }
                     }
                 }
-                myOptionsManager.saveAllOptions();
+                browser.storage.local.set({rules: options.rules});
             });
         }
     }

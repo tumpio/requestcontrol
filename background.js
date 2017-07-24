@@ -15,27 +15,25 @@
  */
 
 /**
- * Options manager initialized with default options.
- * @type {OptionsManager}
- */
-const myOptionsManager = new OptionsManager(RequestControl.optionsSchema);
-
-/**
  * Initialize on rules load.
  */
-myOptionsManager.loadOptions(init);
+browser.storage.local.get("rules").then(init);
 
 /**
  * Reload on rules change.
  */
-myOptionsManager.onChanged(init);
+browser.storage.onChanged.addListener(init);
 
 /**
  * Init rule listeners.
  */
-function init() {
+function init(options) {
+    let rules = options.rules;
+    if (rules.newValue) {
+        rules = rules.newValue;
+    }
     removeRuleListeners();
-    addRuleListeners(myOptionsManager.options.rules);
+    addRuleListeners(rules);
     browser.webRequest.handlerBehaviorChanged();
 }
 
