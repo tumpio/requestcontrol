@@ -298,7 +298,10 @@ function applyFilterRules(requestURL, rules) {
 
     // redirection url filter
     if (!skipRedirectionFilter) {
-        requestURL = new URL(requestURL.href.replace(redirectionUrlPattern, redirectionUrlParser));
+        let redirectionUrl = RequestControl.parseRedirectionUrl(requestURL.href);
+        if (redirectionUrl) {
+            requestURL = new URL(redirectionUrl);
+        }
     }
 
     // trim query parameters
@@ -324,37 +327,6 @@ function applyFilterRules(requestURL, rules) {
         requestURL.search = searchParams.join("&");
     }
     return requestURL;
-}
-
-/**
- * Pattern for redirection url.
- * @type {RegExp}
- */
-const redirectionUrlPattern = /^https?:\/\/(.+)(https?)(:\/\/|%3A\/\/|%3A%2F%2F)(.+)$/;
-
-/**
- * Parser for redirection url.
- * @param match whole match
- * @param urlBegin begin of url before contained redirection url
- * @param p1 redirection url protocol
- * @param p2 ://
- * @param urlEnd end of url containing redirection url
- * @returns {string}
- */
-function redirectionUrlParser(match, urlBegin, p1, p2, urlEnd) {
-
-    // extract redirection url from a query parameter
-    if (urlBegin.endsWith("=")) {
-        urlEnd = urlEnd.replace(/[&;].+/, "");
-    }
-
-    // decode encoded redirection url
-    if (p2[0] === "%") {
-        p2 = decodeURIComponent(p2);
-        urlEnd = decodeURIComponent(urlEnd);
-    }
-
-    return p1 + p2 + urlEnd;
 }
 
 /**
