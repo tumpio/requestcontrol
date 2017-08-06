@@ -165,4 +165,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         toggleHidden(document.querySelector(".selected-action-buttons"));
     });
+
+    browser.management.getSelf(info => {
+        document.getElementById("version").textContent =
+            browser.i18n.getMessage("version", info.version);
+    })
 });

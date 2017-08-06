@@ -396,5 +396,16 @@
   },
   "browse_file": {
     "message": "Browse..."
+  },
+  "version": {
+    "message": "Version $VERSION$",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "home_page": {
+    "message": "Home page"
   }
 }
