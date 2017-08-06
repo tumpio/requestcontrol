@@ -1,3 +1,7 @@
+Version 1.8.2 August 6, 2017
+- Fix Filter rule to always decode redirection URL.
+- Add version in about page.
+
 Version 1.8.1 July 22, 2017
 - Fix save rule on title/description change.
 - Fix any-url host input required validation.
