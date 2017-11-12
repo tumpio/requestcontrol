@@ -131,7 +131,7 @@ function RuleMarkerFactory(rule) {
                 blockMarker(details);
             };
         case "redirect":
-            let redirectRule = {redirectUrl: rule.redirectUrl};
+            let redirectRule = new RedirectRule(rule.redirectUrl);
             return function (details) {
                 redirectMarker(details, redirectRule);
             };
@@ -222,19 +222,19 @@ function processMarkedRules(resolve, requestId) {
         request.action = "block";
     }
     else {
-        let requestUrl = new URL(request.url);
+        let requestURL = new URL(request.url);
 
         if (request.redirect) {
-            requestUrl = request.redirectRules.reduce(applyRedirectRule, requestUrl);
+            requestURL = applyRedirectRules(requestURL, request.redirectRules);
             request.action = "redirect";
         }
         if (request.filter) {
-            requestUrl = applyFilterRules(requestUrl, request.filterRules);
+            requestURL = applyFilterRules(requestURL, request.filterRules);
             request.action = "filter";
         }
 
-        if (requestUrl.href !== request.url) {
-            request.redirectUrl = requestUrl.href;
+        if (requestURL.href !== request.url) {
+            request.redirectUrl = requestURL.href;
 
             // Filter sub frame redirection requests (e.g. Google search link tracking)
             if (request.filter && request.type === "sub_frame" && !request.skipRedirectionFilter) {
@@ -296,7 +296,7 @@ function applyFilterRules(requestURL, rules) {
 
     // redirection url filter
     if (!skipRedirectionFilter) {
-        let redirectionUrl = RequestControl.parseRedirectionUrl(requestURL.href);
+        let redirectionUrl = RequestControl.parseInlineRedirectionUrl(requestURL.href);
         if (redirectionUrl) {
             requestURL = new URL(redirectionUrl);
         }
@@ -331,147 +331,20 @@ function applyFilterRules(requestURL, rules) {
  * Apply redirect rule.
  * Resolve redirect instructions and parameter expansions from redirect url of rule.
  * @param requestURL
- * @param rule
+ * @param redirectRules
  * @returns {URL}
  */
-function applyRedirectRule(requestURL, rule) {
-    let [instrURL, redirectUrl] = applyRedirectInstructions(requestURL, rule.redirectUrl);
-    let paramsExpandedUrl = resolveParamExpansion(instrURL.href, redirectUrl);
-
-    try {
-        return new URL(paramsExpandedUrl);
-    } catch (e) {
-        return instrURL;
+function applyRedirectRules(requestURL, redirectRules) {
+    for (let rule of redirectRules) {
+        requestURL = rule.apply(requestURL);
     }
-}
-
-/**
- * Pattern of redirection instruction: [parameter=value]
- * @type {RegExp}
- */
-const redirectInstrPattern = /\[([a-z]+)=(.+?)]/g;
-
-/**
- * Applies all parsed redirection instructions.
- * @param requestURL where instructions are applied.
- * @param redirectUrl where instructions are parsed.
- * @returns {[URL, String]} array containing modified URL and redirectUrl with instructions removed
- */
-function applyRedirectInstructions(requestURL, redirectUrl) {
-    let redirectInstrParser = function (match, param, value) {
-        if (param in requestURL && typeof requestURL[param] === "string") {
-            requestURL[param] = value;
-        }
-        return "";
-    };
-    return [requestURL, redirectUrl.replace(redirectInstrPattern, redirectInstrParser)];
-}
-
-/**
- * Pattern of parameter expansion {parameter[manipulation|manipulation|...|manipulation]?}
- * @type {RegExp}
- */
-const paramExpanPattern = /{([a-z]+)(.*?)}/g;
-
-/**
- * Resolve parameter expansion and apply string manipulation rules for extracted parameter values.
- * @param requestUrl string
- * @param redirectUrl string
- * @returns {URL}
- */
-function resolveParamExpansion(requestUrl, redirectUrl) {
-    let paramExpansionParser = function (match, param, manipulationRules) {
-        let url = new URL(requestUrl);
-        if (param in url && typeof url[param] === "string") {
-            return applyStringManipulation(url[param], manipulationRules);
-        }
-        return "";
-    };
-    return redirectUrl.replace(paramExpanPattern, paramExpansionParser);
-}
-
-/**
- * Process string manipulation rules (substring extraction or substring replacing) recursively.
- * @param str value
- * @param rules string manipulation rules
- * @returns {string}
- */
-function applyStringManipulation(str, rules) {
-    if (typeof rules !== "string" || rules.length === 0) {
-        return str;
-    }
-    if (substrReplacePattern.test(rules)) {
-        return replaceSubstring(str, ...rules.match(substrReplacePattern));
-    } else if (substrExtractPattern.test(rules)) {
-        return extractSubstring(str, ...rules.match(substrExtractPattern));
-    }
-    return str;
-}
-
-/**
- * Pattern of substring replace manipulation rule. e.g {parameter/[a-z]{4}/centi} => centimeter
- * @type {RegExp}
- */
-const substrReplacePattern = /^\/(.+?(?!\\).)\/([^|]*)(\|(.*))?/;
-
-/**
- * Apply substring replace manipulation rule.
- * @param str value
- * @param match whole match
- * @param pattern regular expression pattern of string to replace.
- * @param replacement which replaces pattern.
- * @param pipe extract | char that is chaining manipulation rules.
- * @param manipulationRules trailing manipulation rules.
- * @returns {string}
- */
-function replaceSubstring(str, match, pattern, replacement, pipe, manipulationRules) {
-    let newStr = str.replace(new RegExp(pattern), replacement);
-    return applyStringManipulation(newStr, manipulationRules);
-}
-
-
-/**
- * Patter of substring extraction manipulation rule. {parameter:2:-4} => ram
- * @type {RegExp}
- */
-const substrExtractPattern = /^(:-?\d*)(:-?\d*)?(\|(.*))?/;
-
-/**
- * Extract a substring.
- * @param str value
- * @param match
- * @param offset the begin of sub string extraction.
- *  Negative offset is counted from end of string.
- * @param length the length of extracted substring.
- *  Negative length reduces the length of extracted substring starting from end.
- * @param pipe extract | char that is chaining manipulation rules.
- * @param manipulationRules trailing manipulation rules.
- * @returns {string}
- */
-function extractSubstring(str, match, offset, length, pipe, manipulationRules) {
-    let substr;
-    let i = (offset === ":" ? 0 : parseInt(offset.substring(1)));
-    if (i < 0) {
-        substr = str.slice(i);
-    } else {
-        substr = str.substring(i);
-    }
-    if (length) {
-        let l = (length === ":" ? 0 : parseInt(length.substring(1)));
-        if (l < 0) {
-            substr = substr.substring(0, substr.length + l);
-        } else {
-            substr = substr.substring(0, l);
-        }
-    }
-    return applyStringManipulation(substr, manipulationRules);
+    return requestURL;
 }
 
 /**
  * Records of resolved requests for tabs.
  * @type {Map} tabId -> array of records
  */
-
 const records = new Map();
 
 /**
