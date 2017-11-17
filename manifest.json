@@ -2,7 +2,7 @@
     "name": "__MSG_extensionName__",
     "description": "__MSG_extensionDescription__",
     "default_locale": "en",
-    "version": "1.8.3pre1",
+    "version": "1.8.3pre2",
     "manifest_version": 2,
     "icons": {
         "48": "icons/icon-48.png",
@@ -23,7 +23,7 @@
         "webRequestBlocking"
     ],
     "options_ui": {
-        "page": "options/options.html",
+        "page": "src/options/options.html",
         "open_in_tab": true,
         "browser_style": false
     },
@@ -34,14 +34,14 @@
             "38": "icons/icon-blank@38.png"
         },
         "default_title": "__MSG_extensionName__",
-        "default_popup": "popup/browser-action.html"
+        "default_popup": "src/popup/browser-action.html"
     },
     "background": {
         "scripts": [
-            "lib/RequestControl.js",
-            "install.js",
-            "migrate.js",
-            "background.js"
+            "src/RequestControl.js",
+            "src/install.js",
+            "src/migrate.js",
+            "src/background.js"
         ]
     }
 }

@@ -221,11 +221,11 @@ RequestControl.optionsSchema = {
  * @param url
  * @returns {string}
  */
-RequestControl.parseInlineRedirectionUrl = function (url) {
+RequestControl.parseInlineUrl = function (url) {
     let i = url.indexOf("http", 1);
 
     if (i < 0) {
-        return "";
+        return null;
     }
 
     let inlineUrl = url.slice(i);
@@ -235,14 +235,18 @@ RequestControl.parseInlineRedirectionUrl = function (url) {
         inlineUrl = inlineUrl.replace(/[&;].*/, "");
     }
 
-    inlineUrl = decodeURIComponent(inlineUrl);
-
     let j = 4;
     if (inlineUrl.charAt(j) === "s") {
         j++;
     }
+    if (inlineUrl.startsWith("%3", j)) {
+        inlineUrl = inlineUrl.replace(/\?.*/, "");
+    }
+
+    inlineUrl = decodeURIComponent(inlineUrl);
+
     if (!inlineUrl.startsWith("://", j)) {
-        return "";
+        return null;
     }
 
     return inlineUrl;
@@ -356,3 +360,35 @@ RequestControl.parseStringManipulations = function (rules) {
     }
     return manipulations;
 };
+
+RequestControl.trimQueryParameters = function (search, trimPattern, invert) {
+    let trimmedSearch = "";
+    let queries = search.substring(1).split("?");
+    let pattern = new RegExp("^(" + trimPattern + ")$");
+
+    for (let query of queries) {
+        let searchParams = query.split("&");
+        let i = searchParams.length;
+        if (invert) {
+            while (i--) {
+                if (!pattern.test(searchParams[i].split("=")[0])) {
+                    searchParams.splice(i, 1);
+                }
+            }
+        } else {
+            while (i--) {
+                if (pattern.test(searchParams[i].split("=")[0])) {
+                    searchParams.splice(i, 1);
+                }
+            }
+        }
+        if (searchParams.length > 0) {
+            trimmedSearch += "?" + searchParams.join("&");
+        }
+    }
+    return trimmedSearch;
+};
+
+if (typeof exports !== 'undefined') {
+    exports.RequestControl = RequestControl;
+}

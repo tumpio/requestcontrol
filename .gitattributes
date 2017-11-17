@@ -3,3 +3,6 @@
 .gitignore export-ignore
 .gitmodules export-ignore
 manual.md export-ignore
+package.json export-ignore
+*.test.js export-ignore
+*.md export-ignore

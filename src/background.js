@@ -296,7 +296,7 @@ function applyFilterRules(requestURL, rules) {
 
     // redirection url filter
     if (!skipRedirectionFilter) {
-        let redirectionUrl = RequestControl.parseInlineRedirectionUrl(requestURL.href);
+        let redirectionUrl = RequestControl.parseInlineUrl(requestURL.href);
         if (redirectionUrl) {
             requestURL = new URL(redirectionUrl);
         }
@@ -306,23 +306,7 @@ function applyFilterRules(requestURL, rules) {
     if (trimAllParams) {
         requestURL.search = "";
     } else if (paramsFilterPattern.length > 0 && requestURL.search.length > 0) {
-        let searchParams = requestURL.search.substring(1).split("&");
-        let pattern = new RegExp("^(" + paramsFilterPattern + ")$");
-        let i = searchParams.length;
-        if (invertTrim) {
-            while (i--) {
-                if (!pattern.test(searchParams[i].split("=")[0])) {
-                    searchParams.splice(i, 1);
-                }
-            }
-        } else {
-            while (i--) {
-                if (pattern.test(searchParams[i].split("=")[0])) {
-                    searchParams.splice(i, 1);
-                }
-            }
-        }
-        requestURL.search = searchParams.join("&");
+        requestURL.search = RequestControl.trimQueryParameters(requestURL, paramsFilterPattern, invertTrim);
     }
     return requestURL;
 }

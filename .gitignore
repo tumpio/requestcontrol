@@ -2,3 +2,5 @@
 .idea/
 releases/
 manual.html
+package-lock.json
+node_modules

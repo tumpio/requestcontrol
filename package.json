@@ -1,0 +1,14 @@
+{
+  "name": "requestcontrol",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "value": "git+https://github.com/tumpio/requestcontrol.git"
+  },
+  "scripts": {
+    "test": "ava -v"
+  },
+  "devDependencies": {
+    "ava": "latest"
+  }
+}
