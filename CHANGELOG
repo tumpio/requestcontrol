@@ -1,5 +1,6 @@
-Version 1.8.3pre1
+Version 1.8.3
 - Fix regex repetition quantifier not supported in pattern captures. #45 #47
+- Fix query parameters trimming on non-standard urls. #48 #40
 
 Version 1.8.2 August 6, 2017
 - Fix Filter rule to always decode redirection URL.
