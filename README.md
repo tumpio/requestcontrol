@@ -1,24 +1,33 @@
-## Request Control - Firefox WebExtension
+## Request Control - Firefox extension
 
-Control your HTTP requests with Request Control Rules. Provides frontend for Firefox [webRequest.onBeforeRequest] API
-for HTTP request management.
+An extension to control HTTP requests. Provides a front-end for Firefox [webRequest.onBeforeRequest] API for
+HTTP request management.
 
-Requests can be controlled with following rules:
-<ul><li><b>Filter Requests</b>
-<p>Filter requests by filtering URL redirection and trimming URL tracking parameters. </p>
-</li><li><b>Block Requests</b>
-<p>Block requests completely before they are made.</p></li>
+Requests can be controlled with the following rules:
+<ul>
 <li>
-<b>Redirect Requests</b>
-<p>Redirect requests to manually configured redirect URL.  Redirect URL supports pattern capturing to redirect based on the original request. Read more about <a href="https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.md#redirect-using-pattern-capturing">Pattern Capturing</a>.</p>
+<b>Filter Request Rule</b>
+<p>Filter requests by skipping URL redirection and trimming URL query parameters.</p>
 </li>
-<li><b>Whitelist Requests</b>
-<p>Whitelisted requests proceed normally without taking actions of any other matched rules.</p></li></ul>
+<li>
+<b>Redirect Request Rule</b>
+<p>Redirect requests to a manually set redirect URL. Redirect rule supports redirection based on
+the original request. Read more about the <a href="https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.md#redirect-using-pattern-capturing">Pattern Capturing</a>.</p>
+</li>
+<li>
+<b>Block Request Rule</b>
+<p>Block requests before they are made.</p>
+</li>
+<li>
+<b>Whitelist Request Rule</b>
+<p>Whitelist requests to proceed normally without taking actions of any other matched rules.</p>
+</li>
+</ul>
 
-<strong><a  href="https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.md">Documentation</a></strong></br>
-<strong><a  href="https://github.com/tumpio/requestcontrol/wiki/FAQ">FAQ</a></strong></br>
-<strong><a  href="https://github.com/tumpio/requestcontrol">Source code</a></strong></br>
-<strong><a  href="https://github.com/tumpio/requestcontrol/blob/master/LICENSE">License</a></strong></br>
+<strong><a href="https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.md">Documentation</a></strong></br>
+<strong><a href="https://github.com/tumpio/requestcontrol/wiki/FAQ">FAQ</a></strong></br>
+<strong><a href="https://github.com/tumpio/requestcontrol">Source code</a></strong></br>
+<strong><a href="https://github.com/tumpio/requestcontrol/blob/master/LICENSE">License</a></strong></br>
 
 #### External Libraries
 Request control uses the following external libraries,
