@@ -344,7 +344,7 @@ RuleInput.prototype = {
         let description = this.rule.description || this.getDescription();
         description = decodeURIComponent(description);
         this.model.setAttribute("data-type", this.rule.action);
-        this.$(".icon").src = "../icons/icon-" + this.rule.action + "@19.png";
+        this.$(".icon").src = "/icons/icon-" + this.rule.action + "@19.png";
         this.$(".title").textContent = title;
         this.$(".title").title = title;
         this.$(".description").textContent = description;
