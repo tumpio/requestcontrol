@@ -306,7 +306,7 @@ function applyFilterRules(requestURL, rules) {
     if (trimAllParams) {
         requestURL.search = "";
     } else if (paramsFilterPattern.length > 0 && requestURL.search.length > 0) {
-        requestURL.search = RequestControl.trimQueryParameters(requestURL, paramsFilterPattern, invertTrim);
+        requestURL.search = RequestControl.trimQueryParameters(requestURL.search, paramsFilterPattern, invertTrim);
     }
     return requestURL;
 }

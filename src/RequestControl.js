@@ -361,9 +361,9 @@ RequestControl.parseStringManipulations = function (rules) {
     return manipulations;
 };
 
-RequestControl.trimQueryParameters = function (search, trimPattern, invert) {
-    let trimmedSearch = "";
-    let queries = search.substring(1).split("?");
+RequestControl.trimQueryParameters = function (queryString, trimPattern, invert) {
+    let trimmedQuery = "";
+    let queries = queryString.substring(1).split("?");
     let pattern = new RegExp("^(" + trimPattern + ")$");
 
     for (let query of queries) {
@@ -383,10 +383,10 @@ RequestControl.trimQueryParameters = function (search, trimPattern, invert) {
             }
         }
         if (searchParams.length > 0) {
-            trimmedSearch += "?" + searchParams.join("&");
+            trimmedQuery += "?" + searchParams.join("&");
         }
     }
-    return trimmedSearch;
+    return trimmedQuery;
 };
 
 if (typeof exports !== 'undefined') {
