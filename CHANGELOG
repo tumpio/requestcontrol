@@ -1,4 +1,11 @@
-Version 1.8.3
+Version 1.8.5 Nov. 25, 2017
+- Fix query parameter trimming. #50
+- Fix icons not showing in rules view.
+
+Version 1.8.4 Nov. 18, 2017
+- Fix build.
+
+Version 1.8.3 Nov. 17, 2017
 - Fix regex repetition quantifier not supported in pattern captures. #45 #47
 - Fix query parameters trimming on non-standard urls. #48 #40
 
