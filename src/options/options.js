@@ -75,12 +75,6 @@ function importRules(rulesImport) {
         rules = rules.concat(myOptionsManager.options.rules);
     }
 
-    for (let rule of rulesImport) {
-        if (rule.action === "filter" && rule.paramsFilter && rule.paramsFilter.values) {
-            rule.paramsFilter.pattern = RequestControl.createTrimPattern(rule.paramsFilter.values);
-        }
-    }
-
     if (Array.isArray(rulesImport)) {
         rules = rules.concat(rulesImport);
     } else {

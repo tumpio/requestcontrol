@@ -20,6 +20,31 @@ const replacePattern = /^\/(.+?(?!\\).)\/([^|]*)(\|(.*))?/;
  */
 const extractPattern = /^(:-?\d*)(:-?\d*)?(\|(.*))?/;
 
+class FilterRule {
+    constructor(paramsFilter, removeQueryString, skipInlineUrlFilter) {
+        this.queryParamsPattern = (paramsFilter) ? RequestControl.createTrimPattern(paramsFilter.values) : "";
+        this.invertQueryFilter = (paramsFilter) ? paramsFilter.invert : false;
+        this.removeQueryString = removeQueryString;
+        this.skipInlineUrlFilter = skipInlineUrlFilter;
+    }
+
+    apply(requestURL) {
+        if (!this.skipInlineUrlFilter) {
+            let redirectionUrl = RequestControl.parseInlineUrl(requestURL.href);
+            if (redirectionUrl) {
+                requestURL = new URL(redirectionUrl);
+            }
+        }
+        if (this.removeQueryString) {
+            requestURL.search = "";
+        } else if (this.queryParamsPattern.length > 0 && requestURL.search.length > 0) {
+            requestURL.search = RequestControl.trimQueryParameters(requestURL.search, this.queryParamsPattern,
+                this.invertQueryFilter);
+        }
+        return requestURL;
+    }
+}
+
 class RedirectRule {
     constructor(redirectUrl) {
         let [parsedUrl, instructions] = RequestControl.parseRedirectInstructions(redirectUrl);

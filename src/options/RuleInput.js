@@ -478,8 +478,6 @@ FilterRuleInput.prototype.updateRule = function () {
     this.rule.paramsFilter.values = this.paramsTagsInput.getValue();
 
     if (this.rule.paramsFilter.values.length > 0) {
-        this.rule.paramsFilter.pattern = RequestControl.createTrimPattern(this.rule.paramsFilter.values);
-
         if (this.$(".invert-trim").checked) {
             this.rule.paramsFilter.invert = true;
         } else {

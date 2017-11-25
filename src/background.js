@@ -62,7 +62,7 @@ function addRuleListeners(rules) {
             urls: urls,
             types: rule.types
         };
-        listener = new RuleMarkerFactory(rule);
+        listener = new RuleListener(rule);
         browser.webRequest.onBeforeRequest.addListener(listener, filter);
         requestListeners.push(listener);
     }
@@ -116,11 +116,11 @@ function markRequest(details) {
 }
 
 /**
- * Create new rule marker based on the action of the rule.
+ * Create a new rule listener.
  * @param rule
- * @returns {*} rule marker for request listener.
+ * @returns {*} listener
  */
-function RuleMarkerFactory(rule) {
+function RuleListener(rule) {
     switch (rule.action) {
         case "whitelist":
             return function (details) {
@@ -136,11 +136,7 @@ function RuleMarkerFactory(rule) {
                 redirectMarker(details, redirectRule);
             };
         case "filter":
-            let filterRule = {
-                paramsFilter: rule.paramsFilter,
-                trimAllParams: rule.trimAllParams,
-                skipRedirectionFilter: rule.skipRedirectionFilter
-            };
+            let filterRule = new FilterRule(rule.paramsFilter, rule.trimAllParams, rule.skipRedirectionFilter);
             return function (details) {
                 filterMarker(details, filterRule);
             };
@@ -197,10 +193,6 @@ function filterMarker(details, rule) {
     } else {
         request.filterRules.push(rule);
     }
-
-    if (rule.skipRedirectionFilter) {
-        request.skipRedirectionFilter = true;
-    }
 }
 
 /**
@@ -225,11 +217,15 @@ function processMarkedRules(resolve, requestId) {
         let requestURL = new URL(request.url);
 
         if (request.redirect) {
-            requestURL = applyRedirectRules(requestURL, request.redirectRules);
+            for (let rule of request.redirectRules) {
+                requestURL = rule.apply(requestURL);
+            }
             request.action = "redirect";
         }
         if (request.filter) {
-            requestURL = applyFilterRules(requestURL, request.filterRules);
+            for (let rule of request.filterRules) {
+                requestURL = rule.apply(requestURL);
+            }
             request.action = "filter";
         }
 
@@ -254,75 +250,6 @@ function processMarkedRules(resolve, requestId) {
     if (request.action) {
         addRecord(request);
     }
-}
-
-/**
- * Apply filter rules.
- * Parses redirection url if any of the rules is not skipping it.
- * Trims query parameters defined in rules, or all if any of the rules is configured to apply it.
- * @param requestURL
- * @param rules
- * @returns {URL}
- */
-function applyFilterRules(requestURL, rules) {
-    let skipRedirectionFilter = true;
-    let invertTrim = false;
-    let trimAllParams = false;
-    let paramsFilterPattern = "";
-    let invertParamsPattern = "";
-
-    for (let rule of rules) {
-        if (!rule.skipRedirectionFilter) {
-            skipRedirectionFilter = false;
-        }
-        if (rule.trimAllParams) {
-            trimAllParams = true;
-        }
-        if (!trimAllParams && rule.paramsFilter) {
-            if (rule.paramsFilter.invert) {
-                invertTrim = true;
-                invertParamsPattern += "|" + rule.paramsFilter.pattern;
-            } else if (!invertTrim) {
-                paramsFilterPattern += "|" + rule.paramsFilter.pattern;
-            }
-        }
-    }
-
-    if (invertTrim) {
-        paramsFilterPattern = invertParamsPattern;
-    }
-
-    paramsFilterPattern = paramsFilterPattern.substring(1);
-
-    // redirection url filter
-    if (!skipRedirectionFilter) {
-        let redirectionUrl = RequestControl.parseInlineUrl(requestURL.href);
-        if (redirectionUrl) {
-            requestURL = new URL(redirectionUrl);
-        }
-    }
-
-    // trim query parameters
-    if (trimAllParams) {
-        requestURL.search = "";
-    } else if (paramsFilterPattern.length > 0 && requestURL.search.length > 0) {
-        requestURL.search = RequestControl.trimQueryParameters(requestURL.search, paramsFilterPattern, invertTrim);
-    }
-    return requestURL;
-}
-
-/**
- * Apply redirect rule.
- * Resolve redirect instructions and parameter expansions from redirect url of rule.
- * @param requestURL
- * @param redirectRules
- * @returns {URL}
- */
-function applyRedirectRules(requestURL, redirectRules) {
-    for (let rule of redirectRules) {
-        requestURL = rule.apply(requestURL);
-    }
-    return requestURL;
 }
 
 /**
