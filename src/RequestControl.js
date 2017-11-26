@@ -7,8 +7,8 @@ const RequestControl = {};
 /**
  *  Parameters of URL object.
  */
-const urlParameters = ["hash", "host", "href", "origin", "pathname", "password", "port", "protocol", "search",
-    "username"];
+const urlParameters = ["hash", "host", "hostname", "href", "origin", "password", "pathname", "port", "protocol",
+    "search", "username"];
 
 /**
  * Pattern of substring replace manipulation rule. e.g {parameter/[a-z]{4}/centi} => centimeter
@@ -32,7 +32,7 @@ class FilterRule {
         if (!this.skipInlineUrlFilter) {
             let redirectionUrl = RequestControl.parseInlineUrl(requestURL.href);
             if (redirectionUrl) {
-                requestURL = new URL(redirectionUrl);
+                requestURL.href = redirectionUrl;
             }
         }
         if (this.removeQueryString) {
@@ -54,18 +54,21 @@ class RedirectRule {
     }
 
     apply(requestURL) {
+        if (this.patterns.length > 0) {
+            let redirectUrl = "";
+            for (let pattern of this.patterns) {
+                redirectUrl += pattern.resolve(requestURL);
+            }
+            try {
+                requestURL.href = redirectUrl;
+            } catch (e) {
+                // TODO: Inform user that redirect rule resulted in invalid URL
+            }
+        }
         for (let instruction of this.instructions) {
             instruction.apply(requestURL);
         }
-        let redirectUrl = "";
-        for (let pattern of this.patterns) {
-            redirectUrl += pattern.resolve(requestURL);
-        }
-        try {
-            return new URL(redirectUrl);
-        } catch (e) {
-            return requestURL;
-        }
+        return requestURL;
     }
 }
 
@@ -86,7 +89,7 @@ class BaseRedirectPattern {
     }
 
     resolve() {
-        return value;
+        return this.value;
     }
 }
 
@@ -416,4 +419,6 @@ RequestControl.trimQueryParameters = function (queryString, trimPattern, invert)
 
 if (typeof exports !== 'undefined') {
     exports.RequestControl = RequestControl;
+    exports.FilterRule = FilterRule;
+    exports.RedirectRule = RedirectRule;
 }
