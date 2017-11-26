@@ -9,16 +9,41 @@
     "ignore": "test/ **/*.md **/package*.json"
   },
   "scripts": {
-    "test": "ava -v",
+    "test": "NODE_ENV=test nyc ava -v",
+    "coverage": "NODE_ENV=test nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "start": "web-ext run -i=$npm_package_config_ignore -f=nightly --bc --url about:debugging#addons",
     "lint": "web-ext lint -i=$npm_package_config_ignore ; eslint src/ test/",
     "build": "web-ext build -i=$npm_package_config_ignore --overwrite-dest --artifacts-dir=.releases --verbose"
   },
   "devDependencies": {
     "ava": "latest",
+    "babel-cli": "latest",
+    "babel-plugin-istanbul": "latest",
+    "babel-preset-env": "latest",
+    "codecov": "latest",
     "eslint": "latest",
     "eslint-plugin-ava": "latest",
+    "nyc": "latest",
     "web-ext": "latest"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
+  "nyc": {
+    "require": [
+      "babel-register"
+    ],
+    "sourceMap": false,
+    "instrument": false
   },
   "eslintConfig": {
     "env": {
