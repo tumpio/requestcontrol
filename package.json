@@ -5,11 +5,32 @@
     "type": "git",
     "value": "git+https://github.com/tumpio/requestcontrol.git"
   },
+  "config": {
+    "ignore": "test/ **/*.md **/package*.json"
+  },
   "scripts": {
-    "test": "ava -v"
+    "test": "ava -v",
+    "start": "web-ext run -i=$npm_package_config_ignore -f=nightly --bc --url about:debugging#addons",
+    "lint": "web-ext lint -i=$npm_package_config_ignore ; eslint src/ test/",
+    "build": "web-ext build -i=$npm_package_config_ignore --overwrite-dest --artifacts-dir=.releases --verbose"
   },
   "devDependencies": {
     "ava": "latest",
-    "url-polyfill": "latest"
+    "eslint": "latest",
+    "eslint-plugin-ava": "latest",
+    "url-polyfill": "latest",
+    "web-ext": "latest"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 2017,
+      "sourceType": "module"
+    },
+    "plugins": [
+      "ava"
+    ]
   }
 }

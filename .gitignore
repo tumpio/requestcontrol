@@ -1,6 +1,6 @@
 
 .idea/
-releases/
+.releases/
 manual.html
 package-lock.json
 node_modules

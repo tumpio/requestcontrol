@@ -29,6 +29,41 @@ the original request. Read more about the <a href="https://github.com/tumpio/req
 <strong><a href="https://github.com/tumpio/requestcontrol">Source code</a></strong></br>
 <strong><a href="https://github.com/tumpio/requestcontrol/blob/master/LICENSE">License</a></strong></br>
 
+### Support
+
+* Report bugs
+* Suggest new features
+* Help to translate
+* Contribute
+* Donate
+
+### Development
+Clone repository and setup dev environment with [npm]
+
+```
+git clone https://github.com/tumpio/requestcontrol.git
+cd requestcontrol
+npm install
+```
+
+Run in Firefox-nightly
+
+```
+npm run start
+```
+
+Run unit tests and lint
+
+```
+npm run test ; npm run lint
+```
+
+Build extension
+
+```
+npm run build
+```
+
 #### External Libraries
 Request control uses the following external libraries,
 - [Bootstrap] is licensed under the MIT license.
@@ -45,3 +80,4 @@ Request control uses the following external libraries,
 [tags-input]: https://github.com/developit/tags-input
 [@pirxpilot]: https://github.com/pirxpilot/tags-input
 [ionicons]: http://ionicons.com/
+[npm]: https://www.npmjs.com/
