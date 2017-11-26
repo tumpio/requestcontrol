@@ -11,7 +11,7 @@
   "scripts": {
     "test": "NODE_ENV=test nyc ava -v",
     "coverage": "NODE_ENV=test nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "start": "web-ext run -i=$npm_package_config_ignore -f=nightly --bc --url about:debugging#addons",
+    "start": "web-ext run -i=$npm_package_config_ignore --bc --url about:debugging#addons",
     "lint": "web-ext lint -i=$npm_package_config_ignore ; eslint src/ test/",
     "build": "web-ext build -i=$npm_package_config_ignore --overwrite-dest --artifacts-dir=.releases --verbose"
   },
