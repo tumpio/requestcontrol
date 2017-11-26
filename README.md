@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/tumpio/requestcontrol.svg?branch=master)](https://travis-ci.org/tumpio/requestcontrol)
+[![codecov](https://codecov.io/gh/tumpio/requestcontrol/branch/master/graph/badge.svg)](https://codecov.io/gh/tumpio/requestcontrol)
+
 ## Request Control - Firefox extension
 
 An extension to control HTTP requests. Provides a front-end for Firefox [webRequest.onBeforeRequest] API for
