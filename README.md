@@ -5,20 +5,20 @@ HTTP request management.
 
 Requests can be controlled with the following rules:
 <ul>
-<li>
+<li><img src="/icons/icon-filter@19.png"/>
 <b>Filter Request Rule</b>
 <p>Filter requests by skipping URL redirection and trimming URL query parameters.</p>
 </li>
-<li>
+<li><img src="/icons/icon-redirect@19.png"/>
 <b>Redirect Request Rule</b>
 <p>Redirect requests to a manually set redirect URL. Redirect rule supports redirection based on
 the original request. Read more about the <a href="https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.md#redirect-using-pattern-capturing">Pattern Capturing</a>.</p>
 </li>
-<li>
+<li><img src="/icons/icon-block@19.png"/>
 <b>Block Request Rule</b>
 <p>Block requests before they are made.</p>
 </li>
-<li>
+<li><img src="/icons/icon-whitelist@19.png"/>
 <b>Whitelist Request Rule</b>
 <p>Whitelist requests to proceed normally without taking actions of any other matched rules.</p>
 </li>
