@@ -1,7 +1,7 @@
 import test from 'ava';
 import {RequestControl} from '../src/RequestControl';
 
-test('inline url parsing', t => {
+test('Inline url parsing', t => {
     t.is(RequestControl.parseInlineUrl("https://steamcommunity.com/linkfilter/?url=https://addons.mozilla.org/"),
         "https://addons.mozilla.org/");
     t.is(RequestControl.parseInlineUrl("https://outgoing.prod.mozaws.net/v1/ca408bc92003166eec54f20e68d7c771ae749b005b72d054ada33f0ef261367d/https%3A//github.com/tumpio/requestcontrol"),
@@ -20,20 +20,38 @@ test('inline url parsing', t => {
         "https://internethealthreport.org/v01/");
     t.is(RequestControl.parseInlineUrl("http://site3.com/?r=https%3A%2F%2Fwww.yr.no%2Fplace%2FNorway%2FNordland%2FBr%C3%B8nn%C3%B8y%2FBr%C3%B8nn%C3%B8ysund%2Fhour_by_hour.html?key=ms&ww=51802"),
         "https://www.yr.no/place/Norway/Nordland/Brønnøy/Brønnøysund/hour_by_hour.html");
+    t.is(RequestControl.parseInlineUrl("http://www.deviantart.com/users/outgoing?https://scontent.ftpa1-1.fna.fbcdn.net/v/t1.0-9/19437615_10154946431942669_5896185388243732024_n.jpg?oh=f7eb69d10ee9217944c18955d3a631ad&oe=5A0F78B4"),
+        "https://scontent.ftpa1-1.fna.fbcdn.net/v/t1.0-9/19437615_10154946431942669_5896185388243732024_n.jpg?oh=f7eb69d10ee9217944c18955d3a631ad&oe=5A0F78B4");
     t.is(RequestControl.parseInlineUrl("http://site.com/?r=https&foo=bar%3A%2F%2Fwww.yr.no%2Fplace%2FNorway%2FNordland%2FBr%C3%B8nn%C3%B8y%2FBr%C3%B8nn%C3%B8ysund%2Fhour_by_hour.html?key=ms&ww=51802"),
         null);
     t.is(RequestControl.parseInlineUrl("http://site.com/?r=www.example.com"),
         null);
 });
 
-test('query parameter trimming', t => {
+test('Query parameter trimming', t => {
     t.is(RequestControl.trimQueryParameters("?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        "utm_source|utm_medium|utm_term|utm_content|utm_campaign|utm_reader|utm_place"),
+        RequestControl.createTrimPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
+            "utm_reader", "utm_place"])),
         "?parameter&key=value?parameter?key=value");
+    t.is(RequestControl.trimQueryParameters("?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
+        RequestControl.createTrimPattern(["utm_medium", "utm_term", "utm_content", "utm_campaign",
+            "utm_reader", "utm_place"])),
+        "?parameter&utm_source&key=value?parameter?key=value");
     t.is(RequestControl.trimQueryParameters("??utm_source&parameter&utm_source&key=value???utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        "utm_source|utm_medium|utm_term|utm_content|utm_campaign|utm_reader|utm_place"),
+        RequestControl.createTrimPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
+            "utm_reader", "utm_place"])),
+        "??parameter&key=value???parameter?key=value");
+    t.is(RequestControl.trimQueryParameters("??utm_source&parameter&utm_source&key=value???utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
+        RequestControl.createTrimPattern(["utm_*"])),
         "??parameter&key=value???parameter?key=value");
     t.is(RequestControl.trimQueryParameters("?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        "utm_source|utm_medium|utm_term|utm_content|utm_campaign|utm_reader|utm_place", true),
+        RequestControl.createTrimPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
+            "utm_reader", "utm_place"]), true),
         "?utm_source?utm_medium=abc&utm_term?utm_medium=abc");
+    t.is(RequestControl.trimQueryParameters("?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
+        RequestControl.createTrimPattern(["/[parmetr]+/"]), true),
+        "?parameter?parameter");
+    t.is(RequestControl.trimQueryParameters("?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
+        RequestControl.createTrimPattern(["/...\_.{5,}/"]), false),
+        "?parameter&key=value?parameter&utm_term?key=value");
 });

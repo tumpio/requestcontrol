@@ -9,6 +9,7 @@
     "test": "ava -v"
   },
   "devDependencies": {
-    "ava": "latest"
+    "ava": "latest",
+    "url-polyfill": "latest"
   }
 }
