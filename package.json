@@ -18,7 +18,6 @@
     "ava": "latest",
     "eslint": "latest",
     "eslint-plugin-ava": "latest",
-    "url-polyfill": "latest",
     "web-ext": "latest"
   },
   "eslintConfig": {
