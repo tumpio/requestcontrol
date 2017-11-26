@@ -1,3 +1,8 @@
+Version 1.8.6 Nov. 26, 2017
+- Fix Redirect to static url.
+- Fix combining parameter expansion with redirect instructions.
+- Add unit tests.
+
 Version 1.8.5 Nov. 25, 2017
 - Fix query parameter trimming. #50
 - Fix icons not showing in rules view.
