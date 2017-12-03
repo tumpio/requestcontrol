@@ -1,13 +1,16 @@
 language: node_js
 node_js:
   - "node"
-env:
-  - MOZ_HEADLESS=1
-addons:
-  firefox: "latest"
+#env:
+#  - MOZ_HEADLESS=1
+#addons:
+#  firefox: "latest"
+before_install:
+- sudo apt-get update -qq
+- sudo apt-get install -qq pandoc
 script:
-  - npm run test
   - npm run lint
+  - npm run test
   - npm run build
 after_success:
   - npm run coverage

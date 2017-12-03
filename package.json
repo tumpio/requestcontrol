@@ -6,7 +6,7 @@
     "value": "git+https://github.com/tumpio/requestcontrol.git"
   },
   "config": {
-    "ignore": "test/ **/*.md **/package*.json"
+    "ignore": "test/ *.rst package*.json"
   },
   "scripts": {
     "test": "NODE_ENV=test nyc ava -v",
@@ -17,7 +17,8 @@
     "bootstrap-prefix": "BROWSERSLIST=\"Firefox ESR\" postcss --use autoprefixer --no-map --replace \"./node_modules/bootstrap/dist/css/bootstrap.css\"",
     "bootstrap-minify": "cleancss --output ./lib/bootstrap/bootstrap.min.css ./node_modules/bootstrap/dist/css/bootstrap.css",
     "bootstrap-build": "npm run bootstrap-compile && npm run bootstrap-prefix && npm run bootstrap-minify",
-    "build": "npm run bootstrap-build && web-ext build -i=$npm_package_config_ignore --overwrite-dest --artifacts-dir=.releases --verbose"
+    "build-manual": "find ./_locales/ -iname \"manual.rst\" -type f -exec sh -c 'pandoc \"$0\" --from=rst --to=html --output \"${0%.rst}.html\"' {} \\;",
+    "build": "npm run bootstrap-build && npm run build-manual && web-ext build -i=$npm_package_config_ignore --overwrite-dest --artifacts-dir=.releases --verbose"
   },
   "devDependencies": {
     "autoprefixer": "latest",
