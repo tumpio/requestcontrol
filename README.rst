@@ -28,10 +28,10 @@ Requests can be controlled with the following rules:
    Whitelist requests to proceed normally without taking actions of any
    other matched rules.
 
-| **`Manual`_**
-| **`FAQ`_**
-| **`Source code`_**
-| **`License`_**
+| `Manual`_
+| `FAQ`_
+| `Source code`_
+| `License`_
 
 Support
 ~~~~~~~
@@ -91,7 +91,7 @@ License
 
 .. _webRequest.onBeforeRequest: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/onBeforeRequest
 .. _Pattern Capturing: https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.md#redirect-using-pattern-capturing
-.. _Manual: https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.md
+.. _Manual: https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.rst
 .. _FAQ: https://github.com/tumpio/requestcontrol/wiki/FAQ
 .. _Source code: https://github.com/tumpio/requestcontrol
 .. _License: https://github.com/tumpio/requestcontrol/blob/master/LICENSE
