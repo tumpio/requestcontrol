@@ -74,6 +74,7 @@ function RuleInput(rule) {
     this.tldsTagsInput = new TagsInput(this.$(".input-tlds"));
 
     this.$(".rule-header").addEventListener("dblclick", this.onHeaderClick.bind(this));
+    this.$(".rule-header").addEventListener("click", this.onHeaderClick.bind(this));
     this.$(".title").addEventListener("keydown", this.onEnterKey.bind(this));
     this.$(".title").addEventListener("blur", this.onSetTitle.bind(this));
     this.$(".description").addEventListener("keydown", this.onEnterKey.bind(this));
@@ -84,7 +85,6 @@ function RuleInput(rule) {
 
     this.$(".host").addEventListener("change", this.validateTLDPattern.bind(this));
     this.$(".any-url").addEventListener("change", this.onSelectAnyUrl.bind(this));
-    this.$(".action").addEventListener("change", this.change.bind(this));
 
     this.$(".btn-group-types").addEventListener("change", this.onSelectType.bind(this), false);
     this.$(".more-types").addEventListener("change", this.onShowMoreTypes.bind(this), false);
@@ -94,6 +94,10 @@ function RuleInput(rule) {
     this.$(".input-tlds").addEventListener("change", this.onSetTLDs.bind(this));
 
     this.$(".rule-input").addEventListener("change", this.save.bind(this));
+
+    for (let action of this.$$(".action")) {
+        action.addEventListener("click", this.onChange.bind(this));
+    }
 }
 
 RuleInput.prototype = {
@@ -101,6 +105,7 @@ RuleInput.prototype = {
     description: "rule_description_new",
     optionsPath: "rules",
     factory: new RuleInputFactory(),
+    headerClickTimeout: 0,
 
     $: function (selector) {
         return this.model.querySelector(selector);
@@ -112,14 +117,6 @@ RuleInput.prototype = {
 
     getRule: function () {
         return this.rule;
-    },
-
-    change: function () {
-        this.updateRule();
-        let newInput = this.factory.newInput(this.rule);
-        this.model.parentNode.insertBefore(newInput.model, this.model);
-        this.softRemove();
-        newInput.toggleEdit();
     },
 
     remove: function () {
@@ -176,6 +173,10 @@ RuleInput.prototype = {
             this.$(".title").removeAttribute("contenteditable");
             this.$(".description").removeAttribute("contenteditable");
         }
+    },
+
+    toggleSelect: function () {
+        this.select(!this.model.classList.contains("selected"));
     },
 
     toggleTLDs: function () {
@@ -246,6 +247,14 @@ RuleInput.prototype = {
         this.save();
     },
 
+    onChange: function (e) {
+        this.updateRule();
+        let newInput = this.factory.newInput(this.rule);
+        this.model.parentNode.insertBefore(newInput.model, this.model);
+        this.softRemove();
+        newInput.toggleEdit();
+    },
+
     onEnterKey: function (e) {
         if (e.keyCode === 13) { // Enter
             e.target.blur();
@@ -255,9 +264,17 @@ RuleInput.prototype = {
     },
 
     onHeaderClick: function (e) {
+        clearTimeout(this.headerClickTimeout);
         if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT"
             && !e.target.hasAttribute("contenteditable")) {
-            this.toggleEdit();
+            switch (e.type) {
+                case "dblclick":
+                    this.toggleEdit();
+                    break;
+                case "click":
+                    this.headerClickTimeout = setTimeout(this.toggleSelect.bind(this), 250);
+                    break;
+            }
         }
     },
 
@@ -333,9 +350,14 @@ RuleInput.prototype = {
     },
 
     onSelect: function (e) {
-        this.model.classList.toggle("selected", e.target.checked);
-        toggleHidden(document.querySelectorAll(".rule.selected").length === 0,
-            document.querySelector(".selected-action-buttons"));
+        this.select(e.target.checked);
+    },
+
+    select: function (isSelected) {
+        this.$(".select").checked = isSelected;
+        this.model.classList.toggle("selected", isSelected);
+        toggleDisabled(document.querySelectorAll(".rule.selected").length === 0,
+            ...document.querySelectorAll(".btn-select-action"));
     },
 
     updateHeader: function () {
@@ -357,7 +379,10 @@ RuleInput.prototype = {
         this.$(".scheme").value = this.rule.pattern.scheme || "*";
         this.hostsTagsInput.setValue(this.rule.pattern.host);
         this.pathsTagsInput.setValue(this.rule.pattern.path);
-        this.$(".action").value = this.rule.action;
+
+        if (this.rule.action) {
+            setButtonChecked(this.$(".action[value=" + this.rule.action + "]"), true);
+        }
 
         if (this.rule.pattern.topLevelDomains) {
             this.tldsTagsInput.setValue(this.rule.pattern.topLevelDomains);
@@ -398,13 +423,14 @@ RuleInput.prototype = {
             delete this.rule.types;
         }
 
-        this.rule.action = this.$(".action").value;
+        this.rule.action = this.$(".action:checked").value;
     },
 };
 
 function BlockRuleInput(rule) {
     RuleInput.call(this, rule);
 }
+
 BlockRuleInput.prototype = Object.create(RuleInput.prototype);
 BlockRuleInput.prototype.constructor = BlockRuleInput;
 BlockRuleInput.prototype.title = "rule_title_block";
@@ -413,6 +439,7 @@ BlockRuleInput.prototype.description = "rule_description_block";
 function WhitelistRuleInput(rule) {
     RuleInput.call(this, rule);
 }
+
 WhitelistRuleInput.prototype = Object.create(RuleInput.prototype);
 WhitelistRuleInput.prototype.constructor = WhitelistRuleInput;
 WhitelistRuleInput.prototype.title = "rule_title_whitelist";
@@ -426,7 +453,9 @@ function FilterRuleInput(rule) {
 
     this.$(".trim-all-params").addEventListener("change", this.toggleTrimAll.bind(this));
     this.$(".invert-trim").addEventListener("change", this.invertTrim.bind(this));
+    this.$(".redirectionFilter-toggle").addEventListener("change", this.skipRedirectionFilter.bind(this));
 }
+
 FilterRuleInput.prototype = Object.create(RuleInput.prototype);
 FilterRuleInput.prototype.constructor = FilterRuleInput;
 FilterRuleInput.prototype.title = "rule_title_filter";
@@ -447,6 +476,10 @@ FilterRuleInput.prototype.getDescription = function () {
     }
 };
 
+FilterRuleInput.prototype.skipRedirectionFilter = function (e) {
+    setButtonChecked(e.target, e.target.checked);
+};
+
 FilterRuleInput.prototype.invertTrim = function (e) {
     setButtonChecked(e.target, e.target.checked);
 };
@@ -458,7 +491,7 @@ FilterRuleInput.prototype.toggleTrimAll = function (e) {
 
 FilterRuleInput.prototype.updateInputs = function () {
     RuleInput.prototype.updateInputs.call(this);
-    this.$(".redirectionFilter-toggle").checked = !this.rule.skipRedirectionFilter;
+    setButtonChecked(this.$(".redirectionFilter-toggle"), !this.rule.skipRedirectionFilter);
     if (this.rule.paramsFilter && Array.isArray(this.rule.paramsFilter.values)) {
         this.paramsTagsInput.setValue(this.rule.paramsFilter.values);
 
@@ -504,6 +537,7 @@ function RedirectRuleInput(rule) {
     RuleInput.call(this, rule);
     this.$(".rule-input").appendChild(this.factory.getModel("action-redirect"));
 }
+
 RedirectRuleInput.prototype = Object.create(RuleInput.prototype);
 RedirectRuleInput.prototype.constructor = RedirectRuleInput;
 RedirectRuleInput.prototype.title = "rule_title_redirect";

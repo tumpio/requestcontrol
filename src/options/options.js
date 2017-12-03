@@ -4,7 +4,7 @@
 
 
 /**
- * Options page for Request Control rule management, settings and help page.
+ * Options page for Request Control rule management, settings and manual page.
  */
 
 const myOptionsManager = new OptionsManager(RequestControl.optionsSchema);
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let input of getSelectedRuleInputs()) {
             input.remove();
         }
-        toggleHidden(document.querySelector(".selected-action-buttons"));
+        toggleDisabled(true, ...document.querySelectorAll(".btn-select-action"));
     });
 
     browser.management.getSelf(info => {

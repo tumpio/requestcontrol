@@ -6,3 +6,4 @@ package-lock.json
 node_modules
 .nyc_output/
 coverage.lcov
+*.min.css

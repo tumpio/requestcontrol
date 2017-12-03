@@ -184,11 +184,11 @@
   "settings_title": {
     "message": "Request Control Settings"
   },
-  "help_title": {
-    "message": "Request Control Help"
+  "manual_title": {
+    "message": "Request Control Manual"
   },
-  "help": {
-    "message": "Help"
+  "manual": {
+    "message": "Manual"
   },
   "about_title": {
     "message": "About Request Control"
@@ -196,8 +196,8 @@
   "about": {
     "message": "About"
   },
-  "see_help": {
-    "message": "See help."
+  "see_manual": {
+    "message": "See manual."
   },
   "create_new_rule": {
     "message": "Create new rule"
@@ -259,7 +259,7 @@
   "redirect_to": {
     "message": "Redirect To"
   },
-  "help_text_redirect": {
+  "manual_text_redirect": {
     "message": "Use pattern capturing to redirect based on the original request."
   },
   "filter_url_redirection": {
@@ -407,5 +407,14 @@
   },
   "home_page": {
     "message": "Home page"
+  },
+  "name": {
+    "message": "Name:"
+  },
+  "description": {
+    "message": "Description:"
+  },
+  "id": {
+    "message": "ID:"
   }
 }

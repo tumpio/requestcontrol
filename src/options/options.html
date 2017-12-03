@@ -5,7 +5,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/lib/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="/lib/tags-input/src/tags-input.css">
   <link rel="stylesheet" href="options.css">
   <script src="/lib/tags-input/src/tags-input.js"></script>
@@ -17,139 +17,121 @@
   <script src="/lib/bootstrapHelpers.js"></script>
   <script src="RuleInput.js"></script>
   <script src="options.js"></script>
-  <title data-i18n="options_title"></title>
-</head>
+  <title data-i18n="options_title"></title></head>
 <body>
-<div class="container">
-  <div class="row header">
-    <div class="col-lg-7">
-      <h1 id="pageTitle" class="page-header" data-i18n="options_title"></h1>
-    </div>
-    <div class="col-lg-5">
-      <ul id="tabs" class="nav nav-tabs page-header nav-justified">
-        <li class="active">
-          <a href="#tab-rules" data-tab="rules" class="tab-selector"
-             data-tab-title="options_title">
-            <img src="/icons/ionicons/android-list.svg" width="24"/>
-            <span data-i18n="rules"></span>
-          </a>
-        </li>
-        <li>
-          <a href="#tab-settings" data-tab="settings" class="tab-selector"
-             data-tab-title="settings_title">
-            <img src="/icons/ionicons/android-options.svg" width="24"/>
-            <span data-i18n="settings"></span>
-          </a>
-        </li>
-        <li>
-          <a href="#tab-help" data-tab="help" class="tab-selector"
-             data-tab-title="help_title">
-            <img src="/icons/ionicons/help.svg" width="24"/>
-            <span data-i18n="help"></span>
-          </a>
-        </li>
-        <li>
-          <a href="#tab-about" data-tab="about" class="tab-selector"
-             data-tab-title="about_title">
-            <img src="/icons/ionicons/android-bookmark.svg" width="24"/>
-            <span data-i18n="about"></span>
-          </a>
-        </li>
-      </ul>
-    </div>
+<h1 id="pageTitle" class="page-header" data-i18n="options_title"></h1>
+<div class="card">
+  <div class="card-header">
+    <ul id="tabs" class="nav nav-tabs card-header-tabs">
+      <li class="nav-item"><a href="#tab-rules" data-tab="rules"
+                              class="tab-selector nav-link active" data-tab-title="options_title">
+        <img src="/icons/ionicons/android-list.svg" width="24"/>
+        <span data-i18n="rules"></span>
+      </a></li>
+      <li class="nav-item"><a href="#tab-settings" data-tab="settings" class="tab-selector nav-link"
+                              data-tab-title="settings_title">
+        <img src="/icons/ionicons/android-options.svg" width="24"/>
+        <span data-i18n="settings"></span>
+      </a></li>
+      <li class="nav-item"><a href="#tab-manual" data-tab="manual" class="tab-selector nav-link"
+                              data-tab-title="manual_title">
+        <img src="/icons/ionicons/help.svg" width="24"/>
+        <span data-i18n="manual"></span>
+      </a></li>
+      <li class="nav-item"><a href="#tab-about" data-tab="about" class="tab-selector nav-link"
+                              data-tab-title="about_title">
+        <img src="/icons/ionicons/android-bookmark.svg" width="24"/>
+        <span data-i18n="about"></span>
+      </a></li>
+    </ul>
   </div>
-  <div class="tab-content">
-    <div id="rulesTab" class="tab-pane active">
-      <p id="pageDescription" class="lead" data-i18n="options_description"></p>
-      <ul id="filter" class="list-group rule-list form-horizontal"></ul>
-      <ul id="redirect" class="list-group rule-list form-horizontal"></ul>
-      <ul id="block" class="list-group rule-list form-horizontal"></ul>
-      <ul id="whitelist" class="list-group rule-list form-horizontal"></ul>
-      <ul id="newRules" class="list-group rule-list form-horizontal"></ul>
-      <button id="addNewRule" class="btn btn-default">
-        <img src="/icons/ionicons/android-add.svg" width="16"/>
-        <span data-i18n="create_new_rule"></span>
-      </button>
-      <div class="selected-action-buttons hidden">
-        <div class="btn-group shadow">
-          <button id="exportSelectedRules" class="btn btn-primary">
+  <div class="card-body">
+    <div class="tab-content">
+      <div id="rulesTab" class="tab-pane active">
+        <p id="pageDescription" class="lead" data-i18n="options_description"></p>
+        <div class="mb-3">
+          <ul id="filter" class="list-group list-group-flush rule-list"></ul>
+          <ul id="redirect" class="list-group list-group-flush rule-list"></ul>
+          <ul id="block" class="list-group list-group-flush rule-list"></ul>
+          <ul id="whitelist" class="list-group list-group-flush rule-list"></ul>
+          <ul id="newRules" class="list-group list-group-flush rule-list"></ul>
+        </div>
+        <div class="d-flex">
+          <button id="addNewRule" class="btn btn-primary mr-auto m-1">
+            <img src="/icons/ionicons/android-add.svg" width="16"/>
+            <span data-i18n="create_new_rule"></span>
+          </button>
+          <button id="exportSelectedRules" class="btn btn-info m-1 btn-select-action"
+                  disabled="disabled" autocomplete="off">
             <img src="/icons/ionicons/code-download.svg" width="16"/>
             <span data-i18n="export_selected"></span>
           </button>
-        </div>
-        <div class="btn-group pull-right shadow">
-          <button id="removeSelectedRules" class="btn btn-danger">
+          <button id="removeSelectedRules" class="btn btn-danger m-1 btn-select-action"
+                  disabled="disabled" autocomplete="off">
             <img src="/icons/ionicons/android-close.svg" width="16"/>
             <span data-i18n="remove_selected"></span>
           </button>
         </div>
       </div>
-    </div>
-    <div id="settingsTab" class="tab-pane">
-      <h3 data-i18n="export_rules"></h3>
-      <p data-i18n="export_description"></p>
-      <button id="exportRules" class="btn btn-default"
-              data-i18n="export"></button>
-      <hr/>
-      <h3 data-i18n="import_rules"></h3>
-      <p data-i18n="import_description"></p>
-      <label class="btn btn-default" for="importRules">
-        <input id="importRules" class="hidden"
-               type="file" accept="application/json,.json"
-               autocomplete="off">
-        <span data-i18n="browse_file"></span>
-      </label>
-      <hr/>
-      <h3 data-i18n="restore_defaults"></h3>
-      <p data-i18n="restore_description"></p>
-      <button id="reset" class="btn btn-default" data-i18n="restore"></button>
-    </div>
-    <div id="helpTab" class="tab-pane">
-      <div id="contents" class="toc pull-right">
-        <label data-i18n="contents"></label>
+      <div id="settingsTab" class="tab-pane"><h3 data-i18n="export_rules"></h3>
+        <p data-i18n="export_description"></p>
+        <button id="exportRules" class="btn btn-secondary" data-i18n="export"></button>
+        <hr/>
+        <h3 data-i18n="import_rules"></h3>
+        <p data-i18n="import_description"></p>
+        <label class="btn btn-secondary" for="importRules">
+          <input id="importRules" class="d-none" type="file" accept="application/json,.json"
+                 autocomplete="off">
+          <span data-i18n="browse_file"></span>
+        </label>
+        <hr/>
+        <h3 data-i18n="restore_defaults"></h3>
+        <p data-i18n="restore_description"></p>
+        <button id="reset" class="btn btn-secondary" data-i18n="restore"></button>
       </div>
-      <div id="manual" class="help-content"></div>
+      <div id="manualTab" class="tab-pane">
+        <div id="contents" class="toc float-right">
+          <label data-i18n="contents"></label>
+        </div>
+        <div id="manual" class="manual-content"></div>
+      </div>
+      <div id="aboutTab" class="tab-pane">
+        <p>
+          <span id="version"></span>
+          (<a target="_blank" data-i18n="changelog" href="/CHANGELOG"></a>)
+        </p>
+        <p><a target="_blank" href="https://github.com/tumpio/requestcontrol/wiki/FAQ">
+          <strong data-i18n="faq"></strong>
+        </a>
+          <br/>
+          <a target="_blank" href="https://github.com/tumpio/requestcontrol/graphs/contributors">
+            <strong data-i18n="contributors"></strong>
+          </a>
+          <br/>
+          <a target="_blank" href="https://github.com/tumpio/requestcontrol">
+            <strong data-i18n="source_code"></strong>
+          </a>
+          <br/>
+          <a target="_blank" href="https://addons.mozilla.org/addon/requestcontrol">
+            <strong data-i18n="home_page"></strong>
+          </a>
+          <br/>
+        </p>
+        <h4 data-i18n="license"></h4>
+        <pre class="license-clause"><code><span data-i18n="license_clause"></span> <a
+            target="_blank" href="/LICENSE">LICENSE</a>.</code></pre>
+        <h4 data-i18n="donate"></h4>
+        <p>PayPal: <a href="https://addons.mozilla.org/addon/requestcontrol/developers">
+          <img src="/icons/btn_donate_SM.gif" alt="PayPal"/>
+        </a></p>
+        <p>bitcoin:1HZp3cUWCFSoR8EfDSRopLVeEbTZiAHz2B</p></div>
     </div>
-    <div id="aboutTab" class="tab-pane">
-      <p>
-        <span id="version"></span>
-        (<a target="_blank" data-i18n="changelog" href="/CHANGELOG"></a>)
-      </p>
-      <p><a target="_blank"
-            href="https://github.com/tumpio/requestcontrol/wiki/FAQ">
-        <strong data-i18n="faq"></strong>
-      </a>
-        <br/>
-        <a target="_blank"
-           href="https://github.com/tumpio/requestcontrol/graphs/contributors">
-          <strong data-i18n="contributors"></strong>
-        </a>
-        <br/>
-        <a target="_blank" href="https://github.com/tumpio/requestcontrol">
-          <strong data-i18n="source_code"></strong>
-        </a>
-        <br/>
-        <a target="_blank" href="https://addons.mozilla.org/addon/requestcontrol">
-          <strong data-i18n="home_page"></strong>
-        </a>
-        <br/>
-      </p>
-      <h4 data-i18n="license"></h4>
-      <pre class="license-clause"><code><span data-i18n="license_clause"></span> <a
-          target="_blank" href="/LICENSE">LICENSE</a>.</code></pre>
-      <h4 data-i18n="donate"></h4>
-      <p>PayPal: <a
-          href="https://addons.mozilla.org/addon/requestcontrol/developers">
-        <img src="/icons/btn_donate_SM.gif" alt="PayPal"/>
-      </a></p>
-      <p>bitcoin:1HZp3cUWCFSoR8EfDSRopLVeEbTZiAHz2B</p></div>
   </div>
   <div class="alert alert-danger alert-dismissible shadow">
     <button class="close">
       <img src="/icons/ionicons/android-close.svg" width="24"/>
     </button>
-    <p id="errorMessage"></p>
-  </div>
+    <p id="errorMessage"></p></div>
 </div>
 </body>
 </html>
