@@ -229,7 +229,8 @@
                 <span data-i18n="block"></span>
               </label>
               <label class="btn btn-sm btn-light">
-                <input class="action" value="whitelist" type="radio" name="action" autocomplete="off">
+                <input class="action" value="whitelist" type="radio" name="action"
+                       autocomplete="off">
                 <img class="icon" src="/icons/icon-whitelist@19.png" height="19">
                 <span data-i18n="whitelist"></span>
               </label>
@@ -267,13 +268,13 @@
     <label class="col-form-label"></label>
     <label class="help-block" data-i18n="trim_url_parameters"></label>
     <div class="row no-gutter">
-      <div class="col-xs-9 col-md-10 btn-group-params">
-        <input type="text" class="form-control form-control-sm input-params params"
-               data-editable-tags="true"
-               autocomplete="off" spellcheck="false"
-               data-i18n-placeholder="placeholder_trim_parameters"/>
-        <div>
-          <div class="btn-group" data-toggle="buttons">
+      <div class="col-xs-9 col-md-10">
+        <div class="d-flex flex-row align-items-start">
+          <input type="text" class="form-control form-control-sm input-params params mr-auto w-100"
+                 data-editable-tags="true"
+                 autocomplete="off" spellcheck="false"
+                 data-i18n-placeholder="placeholder_trim_parameters"/>
+          <div class="btn-group ml-2" data-toggle="buttons">
             <label class="btn btn-sm btn-light">
               <input class="invert-trim" type="checkbox" autocomplete="off">
               <span data-i18n="invert_trim"></span>

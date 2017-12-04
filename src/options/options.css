@@ -11,6 +11,10 @@ body {
     font-size: 16px;
 }
 
+#pageTitle {
+    font-size: 2rem;
+}
+
 .page-header {
     margin-top: 20px;
     padding-bottom: 0;
@@ -51,9 +55,13 @@ h4 {
     display: block;
 }
 
-.rule-header,
-.rule-input {
+.rule-header {
     padding-left: .6em;
+}
+
+.rule-input {
+    margin-left: 1em;
+    margin-bottom: 1em;
 }
 
 .editing .rule-header {
@@ -144,15 +152,6 @@ h4 {
 
 #errorMessage {
     margin-right: 2em;
-}
-
-.btn-group-params {
-    display: flex;
-}
-
-.btn-group-params > .tags-input {
-    flex: 1;
-    margin-right: 1em;
 }
 
 .rule-input .btn.active > input + span:before {

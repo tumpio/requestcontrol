@@ -6,7 +6,7 @@
     "value": "git+https://github.com/tumpio/requestcontrol.git"
   },
   "config": {
-    "ignore": "test/ *.rst package*.json"
+    "ignore": "test/ **/*.rst *.rst **/manual.rst *.lcov package*.json **/*.scss"
   },
   "scripts": {
     "test": "NODE_ENV=test nyc ava -v",
