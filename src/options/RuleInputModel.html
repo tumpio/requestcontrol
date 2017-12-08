@@ -6,7 +6,7 @@
       <div class="p-2 rule-select">
         <input type="checkbox" class="select" autocomplete="off">
       </div>
-      <div class="p-2 mr-auto w-75">
+      <div class="p-2 mr-auto w-50">
         <div class="title-wrap w-100">
           <img class="icon" src="" alt="" height="19">
           <small class="badge badge-light edit-label" data-i18n="name"></small>
@@ -16,15 +16,20 @@
           <small class="badge badge-light edit-label" data-i18n="description"></small>
           <small class="description"></small>
         </div>
+        <div class="tag-wrap w-100">
+          <small class="badge badge-light edit-label" data-i18n="tag"></small>
+          <button type="button" class="badge btn btn-sm btn-secondary add-tag" data-i18n="add_tag"></button>
+          <small class="tag"></small>
+        </div>
       </div>
       <div class="p-2">
         <div class="information">
-          <label class="text-success text-saved">
-            <img src="/icons/ionicons/checkmark.svg" width="10"/>
-          </label>
-          <div class="badge">
+          <div class="badge badge-light">
             <span class="match-patterns"></span>
             <span data-i18n="patterns"></span>
+          </div>
+          <div class="badge badge-dark">
+            <span class="tag-badge"></span>
           </div>
         </div>
         <button type="button" class="btn btn-sm  btn-secondary btn-edit" data-i18n="edit"></button>

@@ -21,6 +21,9 @@ pre {
 
 #details {
     margin-top: -5px;
+    max-width: 60%;
+    width: 800px;
+    min-width: 100%;
 }
 
 #details .panel-list-item {
@@ -34,6 +37,7 @@ pre {
 }
 
 #details .panel-list-item.disabled {
+    font-size: 0.8em;
     color: #777;
 }
 
@@ -43,12 +47,14 @@ body:not([data-action]) #records {
 }
 
 .timestamp {
-    margin-right: 1em;
-    color: #444;
+    margin-right: 1.5em;
+    color: #777;
 }
 
 .icon {
-    margin-right: 0.7em;
+    margin-right: 0.4em;
+    vertical-align: center;
+    display: inline-flex;
 }
 
 .text-shortcut {
@@ -59,12 +65,12 @@ body:not([data-action]) #records {
     display: none;
 }
 
-.requestTarget {
+.newTarget {
     display: none;
 }
 
-body[data-action="filter"] .requestTarget,
-body[data-action="redirect"] .requestTarget {
+body[data-action="filter"] .newTarget,
+body[data-action="redirect"] .newTarget {
     display: block;
 }
 
@@ -120,4 +126,28 @@ body[data-action="redirect"] .requestTarget {
     margin-top: -5px;
     border: 5px solid;
     border-color: transparent transparent transparent #333;
+}
+
+.tag {
+    margin-right: 1em;
+}
+
+.badge-dark {
+    color: #fff;
+    background-color: #343a40;
+}
+.badge-info {
+    color: #fff;
+    background-color: #17a2b8;
+}
+.badge {
+    display: inline-block;
+    padding: .25em .4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
 }

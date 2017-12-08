@@ -89,16 +89,23 @@ h4 {
     display: block;
 }
 
+.rule:not(.editing) .tag-wrap {
+    display: none;
+}
+
 .title[contenteditable],
-.description[contenteditable] {
+.description[contenteditable],
+.tag[contenteditable] {
     -moz-user-select: text;
     cursor: auto;
 }
 
 .title[contenteditable]:hover,
 .description[contenteditable]:hover,
+.tag[contenteditable]:hover,
 .title[contenteditable]:focus,
-.description[contenteditable]:focus {
+.description[contenteditable]:focus,
+.tag[contenteditable]:focus {
     color: #666;
 }
 

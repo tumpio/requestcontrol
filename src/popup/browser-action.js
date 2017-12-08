@@ -35,10 +35,18 @@ function setRecords(records) {
 
 function newListItem(details) {
     let model = document.getElementById("entryModel").cloneNode(true);
+    model.removeAttribute("id");
     model.querySelector(".type").textContent = browser.i18n.getMessage(details.type);
     model.querySelector(".timestamp").textContent = timestamp(details.timestamp);
     model.querySelector(".icon > img").src = "/icons/icon-" + details.action + "@19.png";
     model.querySelector(".text").textContent = browser.i18n.getMessage("title_" + details.action);
+
+    if (details.tag) {
+        model.querySelector(".tag").textContent = details.tag;
+    } else {
+        let tag = model.querySelector(".tag");
+        tag.parentNode.removeChild(tag);
+    }
     return model;
 }
 

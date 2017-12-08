@@ -124,20 +124,24 @@ function RuleListener(rule) {
     switch (rule.action) {
         case "whitelist":
             return function (details) {
+                details.tag = rule.tag;
                 whitelistMarker(details);
             };
         case "block":
             return function (details) {
+                details.tag = rule.tag;
                 blockMarker(details);
             };
         case "redirect":
             let redirectRule = new RedirectRule(rule.redirectUrl);
             return function (details) {
+                details.tag = rule.tag;
                 redirectMarker(details, redirectRule);
             };
         case "filter":
             let filterRule = new FilterRule(rule.paramsFilter, rule.trimAllParams, rule.skipRedirectionFilter);
             return function (details) {
+                details.tag = rule.tag;
                 filterMarker(details, filterRule);
             };
     }
@@ -290,7 +294,8 @@ function addRecord(request) {
         type: request.type,
         url: request.url,
         target: request.redirectUrl,
-        timestamp: request.timeStamp
+        timestamp: request.timeStamp,
+        tag: request.tag
     };
     let recordsForTab = records.get(request.tabId);
     if (!recordsForTab) {

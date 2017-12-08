@@ -1,6 +1,7 @@
 [
   {
     "description": "Filter rule to skip and prevent redirection tracking on multiple hosts.",
+    "tag": "filter-multiple",
     "pattern": {
       "scheme": "*",
       "host": ["clk.tradedoubler.com", "out.reddit.com", "steamcommunity.com"],
@@ -13,6 +14,7 @@
   {
     "name": "Stop Google search link tracking",
     "description": "This filter rule prevents Google from obtaining the URL of clicked search link via URL redirection. The tracking request done in background is classified as a Sub Document type. This rule provides an example of using the top-level domains pattern.",
+    "tag": "filter-google",
     "pattern": {
       "scheme": "*",
       "host": "*.google.*",
@@ -40,6 +42,7 @@
   },
   {
     "name": "Skip outgoing page confirmation on DeviantArt",
+    "tag": "filter-deviantArt",
     "pattern": {
       "scheme": "*",
       "host": "*.deviantart.com",
@@ -53,6 +56,7 @@
   },
   {
     "name": "Filter rule for Mozilla's outgoing link redirection service",
+    "tag": "filter-mozilla",
     "pattern": {
       "scheme": "*",
       "host": "outgoing.prod.mozaws.net",
@@ -66,6 +70,7 @@
   },
   {
     "description": "Example of a global rule to remove any UTM query parameters from all requests. Disabled by default.",
+    "tag": "filter-utm",
     "pattern": {
       "allUrls": true
     },

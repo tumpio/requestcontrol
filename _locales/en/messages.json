@@ -322,8 +322,8 @@
   "copied": {
     "message": "Copied!"
   },
-  "request_target": {
-    "message": "Request target:"
+  "new_target": {
+    "message": "New target:"
   },
   "rules": {
     "message": "Rules"
@@ -414,7 +414,10 @@
   "description": {
     "message": "Description:"
   },
-  "id": {
-    "message": "ID:"
+  "add_tag": {
+    "message": "Add tag"
+  },
+  "tag": {
+    "message": "Tag:"
   }
 }

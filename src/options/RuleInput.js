@@ -79,6 +79,9 @@ function RuleInput(rule) {
     this.$(".title").addEventListener("blur", this.onSetTitle.bind(this));
     this.$(".description").addEventListener("keydown", this.onEnterKey.bind(this));
     this.$(".description").addEventListener("blur", this.onSetDescription.bind(this));
+    this.$(".tag").addEventListener("keydown", this.onEnterKey.bind(this));
+    this.$(".tag").addEventListener("blur", this.onSetTag.bind(this));
+    this.$(".add-tag").addEventListener("click", this.onAddTag.bind(this));
     this.$(".select").addEventListener("change", this.onSelect.bind(this));
     this.$(".btn-edit").addEventListener("click", this.toggleEdit.bind(this));
     this.$(".btn-activate").addEventListener("click", this.toggleActive.bind(this));
@@ -145,12 +148,12 @@ RuleInput.prototype = {
         this.updateRule();
         if (this.indexOfRule() === -1) {
             myOptionsManager.options[this.optionsPath].push(this.rule);
-            return myOptionsManager.saveAllOptions().then(this.updateHeader.bind(this)).then(this.showSavedText.bind(this));
+            return myOptionsManager.saveAllOptions().then(this.updateHeader.bind(this)).then(this.toggleSaved.bind(this));
         }
-        return myOptionsManager.saveOption(this.optionsPath).then(this.updateHeader.bind(this)).then(this.showSavedText.bind(this));
+        return myOptionsManager.saveOption(this.optionsPath).then(this.updateHeader.bind(this)).then(this.toggleSaved.bind(this));
     },
 
-    showSavedText: function () {
+    toggleSaved: function () {
         let input = this.model;
         input.classList.add("saved");
         setTimeout(function () {
@@ -171,6 +174,7 @@ RuleInput.prototype = {
         if (this.model.classList.toggle("editing")) {
             this.$(".title").setAttribute("contenteditable", true);
             this.$(".description").setAttribute("contenteditable", true);
+            this.$(".tag").setAttribute("contenteditable", true);
             if (this.model.classList.contains("not-edited")) {
                 this.model.classList.remove("not-edited");
                 this.updateInputs();
@@ -178,6 +182,7 @@ RuleInput.prototype = {
         } else {
             this.$(".title").removeAttribute("contenteditable");
             this.$(".description").removeAttribute("contenteditable");
+            this.$(".tag").removeAttribute("contenteditable");
         }
     },
 
@@ -253,6 +258,16 @@ RuleInput.prototype = {
         this.save();
     },
 
+    setTag: function (str) {
+        let tag = encodeURIComponent(str.trim());
+        if (tag) {
+            this.rule.tag = tag;
+        } else {
+            delete this.rule.tag;
+        }
+        this.save();
+    },
+
     onChange: function (e) {
         this.updateRule();
         let newInput = this.factory.newInput(this.rule);
@@ -296,6 +311,15 @@ RuleInput.prototype = {
         if (!this.rule.description) {
             e.target.textContent = this.getDescription();
         }
+    },
+
+    onAddTag: function (e) {
+        toggleHidden(e.target);
+        this.$(".tag").focus();
+    },
+
+    onSetTag: function (e) {
+        this.setTag(e.target.textContent);
     },
 
     onSelectType: function (e) {
@@ -371,13 +395,19 @@ RuleInput.prototype = {
         title = decodeURIComponent(title);
         let description = this.rule.description || this.getDescription();
         description = decodeURIComponent(description);
+        let tag = this.rule.tag || "";
+        tag = decodeURIComponent(tag);
         this.model.setAttribute("data-type", this.rule.action);
         this.$(".icon").src = "/icons/icon-" + this.rule.action + "@19.png";
         this.$(".title").textContent = title;
         this.$(".title").title = title;
         this.$(".description").textContent = description;
         this.$(".description").title = description;
+        this.$(".tag").textContent = tag;
+        this.$(".tag-badge").textContent = tag;
         this.$(".match-patterns").textContent = RequestControl.resolveUrls(this.rule.pattern).length;
+        toggleHidden(tag.length == 0, this.$(".tag-badge").parentNode);
+        toggleHidden(tag.length > 0, this.$(".add-tag"));
         this.setActiveState();
     },
 
