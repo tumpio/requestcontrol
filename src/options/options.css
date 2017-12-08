@@ -7,26 +7,16 @@ body {
     padding: 0 28px 28px;
 }
 
+.btn-light:not(.active) {
+    border: 1px solid #ced4da;;
+}
+
 .lead {
     font-size: 16px;
 }
 
 #pageTitle {
     font-size: 2rem;
-}
-
-.page-header {
-    margin-top: 20px;
-    padding-bottom: 0;
-    border-color: #ddd;
-}
-
-.header {
-    padding: 0 15px;
-}
-
-.header > div {
-    padding: 0;
 }
 
 #pageTitle {
@@ -168,16 +158,26 @@ h4 {
     width: 2px;
 }
 
+
+.rule.editing:before {
+    background-color: #c6c8ca;
+}
+
 .rule.selected:before {
     background-color: #2e6da4;
 }
 
+.rule.saved:before,
 .rule.new:before {
     background-color: #3c763d;
 }
 
-.rule.disabled,
-.rule:not(.editing):hover {
+.rule.error:before {
+    background-color: #cc0d13;
+}
+
+.rule-header.disabled,
+.rule-header:hover {
     background-color: #F8F8F8;
 }
 

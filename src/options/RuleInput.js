@@ -138,8 +138,10 @@ RuleInput.prototype = {
 
     save: function () {
         if (!this.$(".rule-input").reportValidity()) {
+            this.model.classList.add("error");
             return;
         }
+        this.model.classList.remove("error");
         this.updateRule();
         if (this.indexOfRule() === -1) {
             myOptionsManager.options[this.optionsPath].push(this.rule);
@@ -149,7 +151,11 @@ RuleInput.prototype = {
     },
 
     showSavedText: function () {
-        toggleFade(this.$(".text-saved"));
+        let input = this.model;
+        input.classList.add("saved");
+        setTimeout(function () {
+            input.classList.remove("saved");
+        }, 2000);
     },
 
     toggleActive: function () {
