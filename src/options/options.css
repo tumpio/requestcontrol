@@ -165,7 +165,6 @@ h4 {
     width: 2px;
 }
 
-
 .rule.editing:before {
     background-color: #c6c8ca;
 }
@@ -283,12 +282,19 @@ input:not(:checked) + .icon {
     display: none;
 }
 
+.toolbar {
+    bottom: 0;
+    background: white;
+    z-index: 999;
+}
+
 .license-clause {
     width: 38em;
     white-space: pre-wrap;
 }
 
 @media (min-height: 400px) {
+    .toolbar,
     .toc {
         position: sticky;
     }
