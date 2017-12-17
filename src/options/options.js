@@ -20,9 +20,10 @@ function removeRuleInputs() {
 }
 
 function createRuleInputs(rules, className) {
-    for (let rule of rules) {
-        let input = myRuleInputFactory.newInput(rule);
-        document.getElementById(rule.action).appendChild(input.model);
+    for (let i = 0; i < rules.length; i++) {
+        let input = myRuleInputFactory.newInput(rules[i]);
+        input.model.id = "rule-" + i;
+        document.getElementById(rules[i].action).appendChild(input.model);
         if (className) {
             input.model.classList.add(className);
         }
@@ -120,7 +121,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!myOptionsManager.options.rules) {
             loadDefaultRules();
         } else {
-            createRuleInputs(myOptionsManager.options.rules)
+            createRuleInputs(myOptionsManager.options.rules);
+            let query = new URLSearchParams(location.search);
+            if (query.has("edit")) {
+                let rules = query.getAll("edit");
+                let ruleInputs = document.querySelectorAll(".rule");
+                for (let rule of rules) {
+                    let i = parseInt(rule);
+                    ruleInputs[i].edit();
+                    ruleInputs[i].select();
+                }
+                ruleInputs[rules[0]].scrollIntoView();
+            }
         }
     });
     addLocalisedManual(browser.i18n.getMessage("extensionManual"));

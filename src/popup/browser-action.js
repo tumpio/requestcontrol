@@ -6,6 +6,13 @@
  * Browser Action for displaying applied rules for current tab.
  */
 
+const RECORD_TITLES = {};
+RECORD_TITLES[WHITELIST_ACTION] = browser.i18n.getMessage("title_whitelist");
+RECORD_TITLES[BLOCK_ACTION] = browser.i18n.getMessage("title_block");
+RECORD_TITLES[FILTER_ACTION] = browser.i18n.getMessage("title_filter");
+RECORD_TITLES[REDIRECT_ACTION] = browser.i18n.getMessage("title_redirect");
+RECORD_TITLES[NO_ACTION] = "";
+
 function setRecords(records) {
     if (!records) {
         return;
@@ -13,24 +20,34 @@ function setRecords(records) {
 
     let recordsList = document.getElementById("records");
 
-    function onItemClick(e) {
-        let item = e.currentTarget;
-        let i = item.dataset.record;
-        let details = document.getElementById("details");
-        item.appendChild(details);
-        showDetails(records[i]);
-    }
-
     for (let i = records.length - 1; i >= 0; i--) {
         let item = newListItem(records[i]);
         recordsList.appendChild(item);
         item.dataset.record = i;
-        item.addEventListener("click", onItemClick);
+        item.querySelector(".entry-header").addEventListener("click", function () {
+            let details = document.getElementById("details");
+            item.appendChild(details);
+            showDetails(records[i]);
+        });
     }
 
     if (recordsList.firstChild) {
-        onItemClick({currentTarget: recordsList.firstChild});
+        let details = document.getElementById("details");
+        recordsList.firstChild.appendChild(details);
+        showDetails(records[records.length - 1]);
     }
+}
+
+function getTags(rules) {
+    let tags = [];
+    return browser.storage.local.get("rules").then(function (options) {
+        for (let rule of rules) {
+            if (options.rules[rule].tag) {
+                tags.push(options.rules[rule].tag);
+            }
+        }
+        return tags;
+    });
 }
 
 function newListItem(details) {
@@ -38,15 +55,16 @@ function newListItem(details) {
     model.removeAttribute("id");
     model.querySelector(".type").textContent = browser.i18n.getMessage(details.type);
     model.querySelector(".timestamp").textContent = timestamp(details.timestamp);
-    model.querySelector(".icon > img").src = "/icons/icon-" + details.action + "@19.png";
-    model.querySelector(".text").textContent = browser.i18n.getMessage("title_" + details.action);
-
-    if (details.tag) {
-        model.querySelector(".tag").textContent = details.tag;
-    } else {
-        let tag = model.querySelector(".tag");
-        tag.parentNode.removeChild(tag);
-    }
+    model.querySelector(".icon > img").src = REQUEST_CONTROL_ICONS[details.action][19];
+    model.querySelector(".text").textContent = RECORD_TITLES[details.action];
+    getTags(details.rules).then(tags => {
+        let tagsNode = model.querySelector(".tags");
+        if (tags.length === 0) {
+            tagsNode.parentNode.removeChild(tagsNode);
+        } else {
+            tagsNode.textContent = tags.join(", ");
+        }
+    });
     return model;
 }
 
@@ -71,7 +89,10 @@ function padDigit(digit, padSize) {
 function showDetails(details) {
     document.getElementById("url").textContent = details.url;
     document.getElementById("target").textContent = details.target;
-    document.body.dataset.action = details.action;
+    document.body.dataset.action = details.action == REDIRECT_ACTION || details.action == FILTER_ACTION ? "newTarget"
+        : "";
+    document.getElementById("editLink").href = browser.runtime.getURL("src/options/options.html")
+        + "?edit=" + details.rules.join("&edit=");
 }
 
 function copyText(e) {

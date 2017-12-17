@@ -68,6 +68,8 @@ function RuleInput(rule) {
 
     this.model.getRule = this.getRule.bind(this);
     this.model.remove = this.remove.bind(this);
+    this.model.edit = this.toggleEdit.bind(this);
+    this.model.select = this.toggleSelect.bind(this);
 
     this.hostsTagsInput = new TagsInput(this.$(".host"));
     this.pathsTagsInput = new TagsInput(this.$(".path"));

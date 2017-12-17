@@ -69,8 +69,7 @@ body:not([data-action]) #records {
     display: none;
 }
 
-body[data-action="filter"] .newTarget,
-body[data-action="redirect"] .newTarget {
+body[data-action="newTarget"] .newTarget {
     display: block;
 }
 
@@ -128,7 +127,7 @@ body[data-action="redirect"] .newTarget {
     border-color: transparent transparent transparent #333;
 }
 
-.tag {
+.tags {
     margin-right: 1em;
 }
 

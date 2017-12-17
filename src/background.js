@@ -14,19 +14,16 @@
  * added to the records.
  */
 
-/**
- * Initialize on rules load.
- */
+const requestListeners = [];
+const markedRequests = new Map();
+const records = new Map();
+
 browser.storage.local.get("rules").then(init);
-
-/**
- * Reload on rules change.
- */
 browser.storage.onChanged.addListener(init);
+browser.tabs.onRemoved.addListener(removeRecords);
+browser.webNavigation.onBeforeNavigate.addListener(resetBrowserAction);
+browser.runtime.onMessage.addListener(getRecords);
 
-/**
- * Init rule listeners.
- */
 function init(options) {
     let rules = options.rules;
     if (rules.newValue) {
@@ -38,12 +35,6 @@ function init(options) {
 }
 
 /**
- * Array of added request listeners for each rule and request control listener.
- * @type {Array}
- */
-const requestListeners = [];
-
-/**
  * Add rule marker request listener for each active rule.
  * Add requestControlListener for listening all requests for rule processing.
  * @param rules array of rules
@@ -52,34 +43,34 @@ function addRuleListeners(rules) {
     if (!rules) {
         return;
     }
-    let filter, listener;
-    for (let rule of rules) {
-        if (!rule.active) {
+    for (let i = 0; i < rules.length; i++) {
+        if (!rules[i].active) {
             continue;
         }
-        let urls = RequestControl.resolveUrls(rule.pattern);
-        filter = {
+        let rule = RequestControl.createRule(i, rules[i]);
+        let urls = RequestControl.resolveUrls(rules[i].pattern);
+        let filter = {
             urls: urls,
-            types: rule.types
+            types: rules[i].types
         };
-        listener = new RuleListener(rule);
+        let listener = function (details) {
+            let request = markRequest(details);
+            rule.markRequest(request);
+        };
         browser.webRequest.onBeforeRequest.addListener(listener, filter);
         requestListeners.push(listener);
     }
-    browser.webRequest.onBeforeRequest.addListener(requestControlListener,
+    browser.webRequest.onBeforeRequest.addListener(requestControlMainListener,
         {urls: ["<all_urls>"]}, ["blocking"]);
 }
 
-/**
- * Remove all set rule marker request listeners and the requestControlListener.
- */
 function removeRuleListeners() {
     let listener;
     while (requestListeners.length) {
         listener = requestListeners.pop();
         browser.webRequest.onBeforeRequest.removeListener(listener);
     }
-    browser.webRequest.onBeforeRequest.removeListener(requestControlListener);
+    browser.webRequest.onBeforeRequest.removeListener(requestControlMainListener);
 }
 
 /**
@@ -88,7 +79,7 @@ function removeRuleListeners() {
  * @param details request details
  * @returns {Promise} a new promise that is resolved after processing rules, if not marked return null
  */
-function requestControlListener(details) {
+function requestControlMainListener(details) {
     if (markedRequests.has(details.requestId)) {
         return new Promise(function (resolve) {
             processMarkedRules(resolve, details.requestId);
@@ -96,12 +87,6 @@ function requestControlListener(details) {
     }
     return null;
 }
-
-/**
- * Requests marked for rule processing.
- * @type {Map} requestId -> request details from onBeforeListener.
- */
-const markedRequests = new Map();
 
 /**
  * Mark request for rule processing.
@@ -116,90 +101,6 @@ function markRequest(details) {
 }
 
 /**
- * Create a new rule listener.
- * @param rule
- * @returns {*} listener
- */
-function RuleListener(rule) {
-    switch (rule.action) {
-        case "whitelist":
-            return function (details) {
-                details.tag = rule.tag;
-                whitelistMarker(details);
-            };
-        case "block":
-            return function (details) {
-                details.tag = rule.tag;
-                blockMarker(details);
-            };
-        case "redirect":
-            let redirectRule = new RedirectRule(rule.redirectUrl);
-            return function (details) {
-                details.tag = rule.tag;
-                redirectMarker(details, redirectRule);
-            };
-        case "filter":
-            let filterRule = new FilterRule(rule.paramsFilter, rule.trimAllParams, rule.skipRedirectionFilter);
-            return function (details) {
-                details.tag = rule.tag;
-                filterMarker(details, filterRule);
-            };
-    }
-}
-
-/**
- * Mark request for whitelist rule.
- * @param details
- */
-function whitelistMarker(details) {
-    let request = markRequest(details);
-    request.whitelist = true;
-}
-
-/**
- * Mark request for block rule.
- * @param details
- */
-function blockMarker(details) {
-    let request = markRequest(details);
-    request.block = true;
-}
-
-/**
- * Mark request for redirect rule and
- * add rule for processing.
- * @param details
- * @param rule
- */
-function redirectMarker(details, rule) {
-    let request = markRequest(details);
-    request.redirect = true;
-
-    if (!request.redirectRules) {
-        request.redirectRules = [rule];
-    } else {
-        request.redirectRules.push(rule);
-    }
-}
-
-/**
- * Mark request for filter rule and
- * add rule for processing.
- * @param details
- * @param rule
- */
-function filterMarker(details, rule) {
-    let request = markRequest(details);
-    request.filter = true;
-
-    if (!request.filterRules) {
-        request.filterRules = [rule];
-    } else {
-        request.filterRules.push(rule);
-    }
-}
-
-/**
  * Process rules marked for request. Add record of processed request.
  * Rule processing follows rule priorities described in the manual.
  * @param resolve when rules processing is finished.
@@ -209,58 +110,62 @@ function processMarkedRules(resolve, requestId) {
     let request = markedRequests.get(requestId);
     markedRequests.delete(requestId);
 
-    if (request.whitelist) {
-        resolve(null);
-        request.action = "whitelist";
+    if (request[WHITELIST_ACTION]) {
+        WhitelistRule.resolveRequest(resolve, request);
+        addRecord(request, WHITELIST_ACTION, request[WHITELIST_ACTION]);
     }
-    else if (request.block) {
-        resolve({cancel: true});
-        request.action = "block";
+    else if (request[BLOCK_ACTION]) {
+        BlockRule.resolveRequest(resolve, request);
+        addRecord(request, BLOCK_ACTION, request[BLOCK_ACTION]);
     }
-    else {
+    else { // process both filter and redirect rules
         let requestURL = new URL(request.url);
+        let skipRedirectionFilter = false;
+        let appliedRules = [];
+        let action = null;
 
-        if (request.redirect) {
-            for (let rule of request.redirectRules) {
+        if (request[FILTER_ACTION]) {
+            for (let rule of request[FILTER_ACTION]) {
                 requestURL = rule.apply(requestURL);
+                if (rule.skipRedirectionFilter) {
+                    skipRedirectionFilter = true;
+                }
+                if (requestURL.href !== request.url) {
+                    appliedRules.push(rule);
+                    action = FILTER_ACTION;
+                }
             }
-            request.action = "redirect";
         }
-        if (request.filter) {
-            for (let rule of request.filterRules) {
+
+        if (request[REDIRECT_ACTION]) {
+            for (let rule of request[REDIRECT_ACTION]) {
                 requestURL = rule.apply(requestURL);
+                if (requestURL.href !== request.url) {
+                    appliedRules.push(rule);
+                    action = REDIRECT_ACTION;
+                }
             }
-            request.action = "filter";
         }
 
-        if (requestURL.href !== request.url) {
-            request.redirectUrl = requestURL.href;
+        if (appliedRules.length === 0) {
+            WhitelistRule.resolveRequest(resolve);
+            return;
+        }
 
-            // Filter sub frame redirection requests (e.g. Google search link tracking)
-            if (request.filter && request.type === "sub_frame" && !request.skipRedirectionFilter) {
-                resolve({cancel: true});
-                browser.tabs.update(request.tabId, {
-                    url: request.redirectUrl
-                });
-            } else {
-                resolve({redirectUrl: request.redirectUrl});
-            }
+        request.redirectUrl = requestURL.href;
+
+        // Filter sub frame redirection requests (e.g. Google search link tracking)
+        if (request[FILTER_ACTION] && request.type === "sub_frame" && !skipRedirectionFilter) {
+            BlockRule.resolveRequest(resolve);
+            browser.tabs.update(request.tabId, {
+                url: request.redirectUrl
+            });
         } else {
-            resolve(null);
-            request.action = null;
+            RedirectRule.resolveRequest(resolve, request.redirectUrl);
         }
-    }
-
-    if (request.action) {
-        addRecord(request);
+        addRecord(request, action, appliedRules);
     }
 }
-
-/**
- * Records of resolved requests for tabs.
- * @type {Map} tabId -> array of records
- */
-const records = new Map();
 
 /**
  * Get records for current tab.
@@ -286,16 +191,18 @@ function removeRecords(tabId) {
 /**
  * Add new record of resolved request.
  * @param request
+ * @param action
+ * @param rules
  */
-function addRecord(request) {
+function addRecord(request, action, rules) {
     let record = {
-        action: request.action,
+        action: action,
         tabId: request.tabId,
         type: request.type,
         url: request.url,
         target: request.redirectUrl,
         timestamp: request.timeStamp,
-        tag: request.tag
+        rules: rules.map(rule => rule.id)
     };
     let recordsForTab = records.get(request.tabId);
     if (!recordsForTab) {
@@ -303,22 +210,19 @@ function addRecord(request) {
         records.set(request.tabId, recordsForTab);
     }
     recordsForTab.push(record);
-    updateBrowserAction(record.tabId, record.action, recordsForTab.length.toString());
+    updateBrowserAction(record.tabId, REQUEST_CONTROL_ICONS[action], recordsForTab.length.toString());
 }
 
 /**
  * Update browserAction icon, title and badgeText.
  * @param tabId
- * @param action for icon
+ * @param badgeIcon
  * @param badgeText number of resolved request on current web navigation cycle.
  */
-function updateBrowserAction(tabId, action, badgeText) {
+function updateBrowserAction(tabId, badgeIcon, badgeText) {
     browser.browserAction.setIcon({
         tabId: tabId,
-        path: {
-            19: "icons/icon-" + action + "@19.png",
-            38: "icons/icon-" + action + "@38.png"
-        }
+        path: badgeIcon
     });
     browser.browserAction.setBadgeText({
         tabId: tabId,
@@ -326,23 +230,9 @@ function updateBrowserAction(tabId, action, badgeText) {
     });
 }
 
-/**
- * Remove records on tab removal.
- */
-browser.tabs.onRemoved.addListener(removeRecords);
-
-/**
- * Remove records and reset browser action before starting a new top frame web navigation.
- */
-browser.webNavigation.onBeforeNavigate.addListener(function (details) {
+function resetBrowserAction(details) {
     if (details.frameId == 0) {
         removeRecords(details.tabId);
-        updateBrowserAction(details.tabId, "blank", "");
+        updateBrowserAction(details.tabId, REQUEST_CONTROL_ICONS[NO_ACTION], "");
     }
-});
-
-/**
- *  Get records on message from browserAction. getRecords returns a promise
- *  that is returned as asynchronous response.
- */
-browser.runtime.onMessage.addListener(getRecords);
+}

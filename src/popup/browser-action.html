@@ -7,6 +7,7 @@
   <meta charset="utf-8">
   <link rel="stylesheet" href="browser-action.css">
   <script src="/lib/i18n.js"></script>
+  <script src="/src/RequestControl.js"></script>
   <script src="browser-action.js"></script>
 </head>
 <body>
@@ -21,13 +22,13 @@
 </div>
 <div class="models">
   <div id="entryModel" class="entry">
-    <div class="panel-list-item">
+    <div class="panel-list-item entry-header">
       <small class="timestamp"></small>
       <div class="icon">
         <img src="/icons/icon-redirect@19.png">
       </div>
       <div class="text"></div>
-      <div class="tag badge badge-dark"></div>
+      <div class="tags badge badge-dark"></div>
       <div class="type badge badge-info"></div>
     </div>
   </div>
@@ -61,6 +62,9 @@
           </button>
         </div>
       </div>
+    </div>
+    <div class="panel-list-item">
+      <a id="editLink" href="" target="_blank" data-i18n="edit"></a>
     </div>
   </div>
 </div>

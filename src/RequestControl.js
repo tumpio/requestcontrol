@@ -3,25 +3,79 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 const RequestControl = {};
-
-/**
- *  Parameters of URL object.
- */
-const urlParameters = ["hash", "host", "hostname", "href", "origin", "password", "pathname", "port", "protocol",
+const URL_PARAMETER_NAMES = ["hash", "host", "hostname", "href", "origin", "password", "pathname", "port", "protocol",
     "search", "username"];
+const WHITELIST_ACTION = 0;
+const BLOCK_ACTION = 1;
+const FILTER_ACTION = 2;
+const REDIRECT_ACTION = 3;
+const NO_ACTION = 4;
+const REQUEST_CONTROL_ICONS = {};
 
-/**
- * Pattern of substring replace manipulation rule. e.g {parameter/[a-z]{4}/centi} => centimeter
- */
-const replacePattern = /^\/(.+?(?!\\).)\/([^|]*)(\|(.*))?/;
+REQUEST_CONTROL_ICONS[WHITELIST_ACTION] = {
+    19: "/icons/icon-whitelist@19.png",
+    38: "/icons/icon-whitelist@38.png"
+};
+REQUEST_CONTROL_ICONS[BLOCK_ACTION] = {
+    19: "/icons/icon-block@19.png",
+    38: "/icons/icon-block@38.png"
+};
+REQUEST_CONTROL_ICONS[FILTER_ACTION] = {
+    19: "/icons/icon-filter@19.png",
+    38: "/icons/icon-filter@38.png"
+};
+REQUEST_CONTROL_ICONS[REDIRECT_ACTION] = {
+    19: "/icons/icon-redirect@19.png",
+    38: "/icons/icon-redirect@38.png"
+};
+REQUEST_CONTROL_ICONS[NO_ACTION] = {
+    19: "/icons/icon-blank@19.png",
+    38: "/icons/icon-blank@38.png"
+};
 
-/**
- * Patter of substring extraction manipulation rule. {parameter:2:-4} => ram
- */
-const extractPattern = /^(:-?\d*)(:-?\d*)?(\|(.*))?/;
+class ControlRule {
+    constructor(id) {
+        this.id = id;
+    }
+}
 
-class FilterRule {
-    constructor(paramsFilter, removeQueryString, skipInlineUrlFilter) {
+class WhitelistRule extends ControlRule {
+    constructor(id) {
+        super(id);
+    }
+
+    markRequest(request) {
+        if (!request[WHITELIST_ACTION]) {
+            request[WHITELIST_ACTION] = [];
+        }
+        request[WHITELIST_ACTION].push(this);
+    }
+
+    static resolveRequest(resolve) {
+        resolve(null);
+    }
+}
+
+class BlockRule extends ControlRule {
+    constructor(id) {
+        super(id);
+    }
+
+    markRequest(request) {
+        if (!request[BLOCK_ACTION]) {
+            request[BLOCK_ACTION] = [];
+        }
+        request[BLOCK_ACTION].push(this);
+    }
+
+    static resolveRequest(resolve) {
+        resolve({cancel: true});
+    }
+}
+
+class FilterRule extends ControlRule {
+    constructor(id, paramsFilter, removeQueryString, skipInlineUrlFilter) {
+        super(id);
         this.queryParamsPattern = (paramsFilter) ? RequestControl.createTrimPattern(paramsFilter.values) : "";
         this.invertQueryFilter = (paramsFilter) ? paramsFilter.invert : false;
         this.removeQueryString = removeQueryString;
@@ -43,10 +97,18 @@ class FilterRule {
         }
         return requestURL;
     }
+
+    markRequest(request) {
+        if (!request[FILTER_ACTION]) {
+            request[FILTER_ACTION] = [];
+        }
+        request[FILTER_ACTION].push(this);
+    }
 }
 
-class RedirectRule {
-    constructor(redirectUrl) {
+class RedirectRule extends ControlRule {
+    constructor(id, redirectUrl) {
+        super(id);
         let [parsedUrl, instructions] = RequestControl.parseRedirectInstructions(redirectUrl);
         let patterns = RequestControl.parseRedirectParameters(parsedUrl);
         this.instructions = instructions;
@@ -69,6 +131,17 @@ class RedirectRule {
             instruction.apply(requestURL);
         }
         return requestURL;
+    }
+
+    markRequest(request) {
+        if (!request[REDIRECT_ACTION]) {
+            request[REDIRECT_ACTION] = [];
+        }
+        request[REDIRECT_ACTION].push(this);
+    }
+
+    static resolveRequest(resolve, redirectUrl) {
+        resolve({redirectUrl: redirectUrl});
     }
 }
 
@@ -180,6 +253,27 @@ class ExtractManipulation extends BaseStringManipulation {
 }
 
 /**
+ * Create a new rule listener.
+ * @param index
+ * @param rule
+ * @returns {ControlRule} rule
+ */
+RequestControl.createRule = function (index, rule) {
+    switch (rule.action) {
+        case "whitelist":
+            return new WhitelistRule(index);
+        case "block":
+            return new BlockRule(index);
+        case "redirect":
+            return new RedirectRule(index, rule.redirectUrl);
+        case "filter":
+            return new FilterRule(index, rule.paramsFilter, rule.trimAllParams, rule.skipRedirectionFilter);
+        default:
+            break;
+    }
+};
+
+/**
  * Construct array of urls from given rule pattern
  * @param pattern pattern of request control rule
  * @returns {*} array of urls
@@ -288,7 +382,7 @@ RequestControl.parseRedirectInstructions = function (redirectUrl) {
 
     for (let i = 0; i < redirectUrl.length; i++) {
         if (redirectUrl.charAt(i) == "[" && !instruction) {
-            for (let name of urlParameters) {
+            for (let name of URL_PARAMETER_NAMES) {
                 if (redirectUrl.startsWith(name, i + 1)) {
                     if (redirectUrl.charAt(i + name.length + 1) == "=") {
                         instruction = {
@@ -328,7 +422,7 @@ RequestControl.parseRedirectParameters = function (redirectUrl) {
             }
 
             // Look up parameter name
-            for (let name of urlParameters) {
+            for (let name of URL_PARAMETER_NAMES) {
                 if (redirectUrl.startsWith(name, i + 1)) {
                     parameter = {
                         offset: i,
@@ -369,6 +463,8 @@ RequestControl.parseRedirectParameters = function (redirectUrl) {
 
 RequestControl.parseStringManipulations = function (rules) {
     let manipulations = [];
+    let replacePattern = /^\/(.+?(?!\\).)\/([^|]*)(\|(.*))?/;
+    let extractPattern = /^(:-?\d*)(:-?\d*)?(\|(.*))?/;
     while (typeof rules === "string" && rules.length > 0) {
         let match = replacePattern.exec(rules);
         if (match != null) {
