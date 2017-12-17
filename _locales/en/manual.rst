@@ -1,26 +1,24 @@
-Manual
-======
+Request Control Manual
+======================
 
 Request Control Rule
 --------------------
 
-Request Control Rule consists of *request pattern*, *request types* and
-*rule action*.
+Request Control Rule consists of a `Pattern`_, `Types`_ and `Action`_.
 
-Requests that match a pattern of an active rule, will be intercepted
-taking the action of the rule.
+Requests that match a pattern and types of an active rule will be
+intercepted taking the action of the rule.
 
 Pattern
 ~~~~~~~
 
-Request pattern has three parts: *scheme*, *host* and *path*. Rule can
-include one to many request patterns.
+Pattern consists of a `Scheme`_, `Host`_ and `Path`_. Rule can
+include one to many patterns.
 
 Scheme
 ^^^^^^
 
-Scheme matches the protocol of the request URL. The following schemes
-are supported.
+Supported schemes in patterns are ``http`` and ``https``.
 
 +----------------+------------------------------------+
 | ``http``       | Match a http scheme.               |
@@ -33,8 +31,7 @@ are supported.
 Host
 ^^^^
 
-Host matches the host of the request URL. It can be in one of the
-following forms.
+Host may match the request URL's host in the following ways:
 
 +-----------------------+-----------------------+-----------------------+
 | ``www.example.com``   | Match a complete      |                       |
@@ -43,10 +40,8 @@ following forms.
 | ``*.example.com``     | Match the given host  | Will match any        |
 |                       | and any of its        | subdomain of          |
 |                       | subdomains.           | example.com e.g.      |
-|                       |                       | ***www**.example.com* |
-|                       |                       | ,                     |
-|                       |                       | ***good**.example.com |
-|                       |                       | *                     |
+|                       |                       | **www**.example.com , |
+|                       |                       | **good**.example.com  |
 +-----------------------+-----------------------+-----------------------+
 | ``www.example.*``     | Match the given host  | Write the top-level   |
 |                       | and all of the listed | domains to the        |
@@ -61,10 +56,11 @@ following forms.
 Path
 ^^^^
 
-Path matches the request URL path. Path may subsequently contain any
-combination of "*" wildcard and any of the characters that are allowed
-in URL path. The "*" wildcard matches any portion of path and may appear
-more than once. Below is examples for using path patterns.
+Path in pattern may subsequently contain any combination of "\*"
+wildcard and any of the characters that are allowed in URL path. The "\*"
+wildcard matches any portion of path and it may appear more than once.
+
+Below is examples for using path in patterns.
 
 +-----------------------------------+-----------------------------------+
 | ``*``                             | Match any path.                   |
@@ -81,9 +77,8 @@ more than once. Below is examples for using path patterns.
 Types
 ~~~~~
 
-Apply rule to certain types of requests. A type indicates the requested
-resource. Rule can apply from one to many types, or any type. All
-possible types and their descriptions are listed below.
+A type indicates the requested resource. Rule can apply from one to many
+types, or any type. All the possible types are listed below.
 
 +-----------------------------------+-----------------------------------+
 | Type                              | Details                           |
@@ -154,38 +149,25 @@ possible types and their descriptions are listed below.
 Action
 ~~~~~~
 
-There are four different rule actions.
+|image4| Filter
+    Any request that matches a filter rule will be filtered according the filter rule
+    configuration:
 
-+-----------------------------------+-----------------------------------+
-| |image4| Filter                   | Any request that matches a filter |
-|                                   | rule will be filtered according   |
-|                                   | the filter rule configuration.    |
-|                                   | With URL redirection filtering    |
-|                                   | the request is taken directly to  |
-|                                   | the contained redirect URL. With  |
-|                                   | URL parameters trimming the       |
-|                                   | configured URL parameters will be |
-|                                   | removed from requests.            |
-+-----------------------------------+-----------------------------------+
-| |image5| Block                    | Any request that matches a block  |
-|                                   | rule will be cancelled before it  |
-|                                   | is made.                          |
-+-----------------------------------+-----------------------------------+
-| |image6| Redirect                 | Any request that matches a        |
-|                                   | redirect rule will be redirected  |
-|                                   | to the configured redirect URL.   |
-+-----------------------------------+-----------------------------------+
-| |image7| Whitelist                | Any requests that match a         |
-|                                   | whitelist rule will be processed  |
-|                                   | normally without taking any       |
-|                                   | action of any other matched       |
-|                                   | rules.                            |
-+-----------------------------------+-----------------------------------+
+    - With URL redirection filtering the request is taken directly to the contained redirect URL.
+    - With URL parameters trimming the configured URL parameters will be removed from requests.
+
+|image5| Block
+    Any request that matches a block rule will be cancelled before it is made.
+
+|image6| Redirect
+    Any request that matches a redirect rule will be redirected to the configured redirect URL.
+
+|image7| Whitelist
+    Any requests that match a whitelist rule will proceed normally without taking any action of
+    any other matched rules.
 
 Rule priorities
 ---------------
-
-Rules have following priorities:
 
 1. Whitelist rule
 2. Block rule
@@ -193,7 +175,7 @@ Rules have following priorities:
 4. Filter rule
 
 Whitelist rules have the highest priority and they revoke all other
-rules. Next are block rules and they revoke redirect and filter rules.
+rules. Next come block rules and they revoke redirect and filter rules.
 Finally redirect rules will be applied before filter rules. If more than
 one redirect or filter rule matches a single request they will all be
 applied one by one.
@@ -202,17 +184,18 @@ Matching all URLs
 -----------------
 
 The request pattern can be set to a global pattern that matches all URLs
-under the supported schemes ("http" or "https"). The global request
-pattern is enabled by checking the Any URL button.
+under the supported schemes ("http" or "https") by checking the Any URL button.
 
 Trimming URL parameters
 -----------------------
 
-Filter rules supports URL query parameter trimming. URL parameters are
-commonly used in redirection tracking as a method to analyze the origin
-of traffic. Trimmed URL parameters are defined either as literal strings
-with support for "*" wildcard or using regular expression patterns.
-Below is examples of parameter trimming.
+Filter rule supports URL query parameter trimming. URL query parameters
+are commonly used in redirection tracking as a method to analyze the
+origin of traffic. Trimmed URL parameters are defined either as literal
+strings with support for "*" wildcard or using regular expression
+patterns.
+
+Below is examples of parameter trimming patterns.
 
 +------------+---------------------------------------+
 | utm_source | Trim any "utm_source" param           |
@@ -222,29 +205,28 @@ Below is examples of parameter trimming.
 | /[0-9]+/   | Trim any param containing only digits |
 +------------+---------------------------------------+
 
-Invert Trim
-~~~~~~~~~~~
+Invert Trim Option
+~~~~~~~~~~~~~~~~~~
 
-Keep only parameters that are defined in trimmed parameters list. All
+Keeps only parameters that are defined in trimmed parameters list. All
 other parameters will be removed.
 
-Trim All
-~~~~~~~~
+Trim All Option
+~~~~~~~~~~~~~~~
 
 Remove all URL query parameters from filtered request.
 
 Redirect using pattern capturing
 --------------------------------
 
-There are two ways for redirecting requests based on the original
-request. The first way is to use parameter expansion that includes
-writing the redirection URL but using some patterns from the original
-request. The second way is to use a single or multiple instructions to
-override parts of the original request (e.g. instruct requests to
+Redirect rule supports redirecting requests to a manually configured URL. The redirect URL may be
+parametrized using parameter expansion and redirect instructions. Parameter expansion allows to
+access a set of named parameters of the original URL. Redirect instructions can be used to modify
+the original request by changing the parts of the original URL (e.g. by instructing requests to
 redirect to a different port).
 
-Both methods can also be used together. Redirect instructions will get
-parsed and applied to the base URL before parameter expansion.
+Both methods may be used together. Redirect instructions will be parsed and applied first to the
+request URL before parameter expansion.
 
 Parameter expansion
 ~~~~~~~~~~~~~~~~~~~
@@ -253,21 +235,10 @@ Parameter expansion
 
     {parameter}
 
-Access a named parameter of original request URL. Available named
+Access a named parameter of the original request URL. Available named
 parameters are listed at the end of this section.
 
 Parameter expansion supports the following string manipulation formats:
-
-Substring extraction
-^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    {parameter:offset:length}
-
-Include only a part of the expanded parameter. Offset determines the
-starting position. It begins from 0 and can be a negative value counting
-from the end of the string.
 
 Substring replacing
 ^^^^^^^^^^^^^^^^^^^
@@ -276,8 +247,35 @@ Substring replacing
 
     {parameter/pattern/replacement}
 
-Replace a matched substring in the extracted parameter. Pattern is
-written in regular expression.
+Replace a matched substring in the extracted parameter. The pattern is
+written in regular expression. A number of special replacement patterns
+are supported, including referencing of capture groups which are described
+below.
+
++-------+--------------------------------------------------------------+
+| `$n`  | Inserts the n-th captured group counting from 1.             |
++-------+--------------------------------------------------------------+
+| `$\`` | Inserts the portion of the string that precedes the matched  |
+|       | substring.                                                   |
++-------+--------------------------------------------------------------+
+| `$'`  | Inserts the portion of the string that follows the matched   |
+|       | substring.                                                   |
++-------+--------------------------------------------------------------+
+| `$&`  | Inserts the matched substring.                               |
++-------+--------------------------------------------------------------+
+| `$$`  | Inserts a "$".                                               |
++-------+--------------------------------------------------------------+
+
+Substring extraction
+^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    {parameter:offset:length}
+
+Extract a part of the expanded parameter. Offset determines the
+starting position. It begins from 0 and can be a negative value counting
+from the end of the string.
 
 Combining manipulation rules
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -292,19 +290,21 @@ character. The output is the result of the manipulations chain.
 Examples
 ^^^^^^^^
 
-+-----------------------------------+-----------------------------------+
-| \https://{hostname}/some/new/path | Uses the hostname of the original |
-|                                   | request.                          |
-+-----------------------------------+-----------------------------------+
-| \https://{hostname::-3|/\.co$/.co | Uses the hostname of the original |
-| m}/some/new/path                  | request but manipulates its       |
-|                                   | length by three cutting it from   |
-|                                   | the end and replaces ".co" with   |
-|                                   | ".com".                           |
-+-----------------------------------+-----------------------------------+
++-------------------------------+---------------------------------------+
+| \https://{hostname}/new/path  | Uses the hostname of the original     |
+|                               | request.                              |
++-------------------------------+---------------------------------------+
+| \https://{hostname/([a-z]{2}) | Captures a part of the hostname of    |
+| .*/$1}/new/path               | the original request.                 |
++-------------------------------+---------------------------------------+
+| \https://{hostname::-3|/.co/. | Uses the hostname of the original     |
+| com}/new/path                 | request but manipulate its length by  |
+|                               | three cutting it from the end and     |
+|                               | replace ".co" with ".com".            |
++-------------------------------+---------------------------------------+
 
-Redirect instructions
-~~~~~~~~~~~~~~~~~~~~~
+Redirect instruction
+~~~~~~~~~~~~~~~~~~~~
 
 ::
 
@@ -355,7 +355,7 @@ Example address used as input:
 +----------+--------------------------------------------------------------+
 | origin   | ``https://www.example.com:8080``                             |
 +----------+--------------------------------------------------------------+
-| href     | ``https://www.example.com:8080/some/path?query=value\#hash`` |
+| href     | ``https://www.example.com:8080/some/path?query=value#hash``  |
 +----------+--------------------------------------------------------------+
 
 This manual page is build upon the material of the following MDN wiki

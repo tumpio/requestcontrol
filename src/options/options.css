@@ -262,6 +262,10 @@ input:not(:checked) + .icon {
     padding: 0;
 }
 
+.manual-content h1 {
+    display: none;
+}
+
 .toc {
     padding: 2em;
     top: 0;
