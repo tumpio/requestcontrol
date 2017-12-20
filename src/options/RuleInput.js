@@ -227,7 +227,8 @@ RuleInput.prototype = {
         } else if (Array.isArray(this.rule.pattern.host)) {
             hosts = this.rule.pattern.host.slice(0, 3).join(", ").replace(/\*\.|\.\*/g, "");
             if (this.rule.pattern.host.length > 3) {
-                hosts = browser.i18n.getMessage("rule_title_hosts", [hosts, (this.rule.pattern.host.length - 3)]);
+                hosts = browser.i18n.getMessage("rule_title_hosts", [hosts,
+                    (this.rule.pattern.host.length - 3)]);
             }
         } else {
             hosts = this.rule.pattern.host.replace(/\*\.|\.\*/g, "");
@@ -276,6 +277,9 @@ RuleInput.prototype = {
         this.model.parentNode.insertBefore(newInput.model, this.model);
         this.softRemove();
         newInput.toggleEdit();
+        if (newInput.$(".rule-input").reportValidity()) {
+            newInput.save();
+        }
     },
 
     onEnterKey: function (e) {
@@ -397,7 +401,7 @@ RuleInput.prototype = {
         title = decodeURIComponent(title);
         let description = this.rule.description || this.getDescription();
         description = decodeURIComponent(description);
-        let tag = this.rule.tag || "";
+        let tag = this.rule.tag || "";
         tag = decodeURIComponent(tag);
         this.model.setAttribute("data-type", this.rule.action);
         this.$(".icon").src = "/icons/icon-" + this.rule.action + "@19.png";
@@ -497,7 +501,8 @@ function FilterRuleInput(rule) {
 FilterRuleInput.prototype = Object.create(RuleInput.prototype);
 FilterRuleInput.prototype.constructor = FilterRuleInput;
 FilterRuleInput.prototype.title = "rule_title_filter";
-FilterRuleInput.prototype.description = ["rule_description_filter_url", "rule_description_filter_parameters"];
+FilterRuleInput.prototype.description = ["rule_description_filter_url",
+    "rule_description_filter_parameters"];
 
 FilterRuleInput.prototype.getDescription = function () {
     let description = [];
@@ -524,7 +529,7 @@ FilterRuleInput.prototype.invertTrim = function (e) {
 
 FilterRuleInput.prototype.toggleTrimAll = function (e) {
     setButtonChecked(e.target, e.target.checked);
-    toggleHidden(e.target.checked, this.$(".btn-group-params"));
+    toggleHidden(e.target.checked, this.$(".col-trim-parameters"));
 };
 
 FilterRuleInput.prototype.updateInputs = function () {
@@ -539,7 +544,7 @@ FilterRuleInput.prototype.updateInputs = function () {
     }
     if (this.rule.trimAllParams) {
         setButtonChecked(this.$(".trim-all-params"), true);
-        toggleHidden(true, this.$(".btn-group-params"));
+        toggleHidden(true, this.$(".col-trim-parameters"));
     }
 };
 

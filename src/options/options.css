@@ -187,8 +187,8 @@ h4 {
     background-color: #F8F8F8;
 }
 
-.icon {
-    margin: 5px;
+.rule-header .icon {
+    margin-right: 5px;
 }
 
 .disabled .icon {
@@ -232,9 +232,8 @@ input:not(:checked) + .icon {
     content: "/";
 }
 
-.manual-block,
-.control-label {
-    font-size: 0.9em;
+.form-group {
+    margin-bottom: 0;
 }
 
 .manual-block-collapse {
