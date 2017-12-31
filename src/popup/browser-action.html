@@ -13,7 +13,7 @@
 <body>
 <div class="panel">
   <div class="panel-arrowUp"></div>
-  <div id="records" class="panel-section panel-section-list"></div>
+  <div id="records" class="panel-section panel-section-list hidden"></div>
   <div class="panel-section panel-section-footer">
     <div id="showRules" class="panel-section-footer-button">
       <span data-i18n="options_title"></span>
@@ -32,7 +32,7 @@
       <div class="type badge badge-info"></div>
     </div>
   </div>
-  <div id="details" class="panel-section panel-section-list">
+  <div id="details" class="panel-section panel-section-list hidden">
     <div class="requestUrl">
       <div class="panel-list-item disabled" data-i18n="request_url"></div>
       <div class="panel-list-item">
@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <div class="newTarget">
+    <div id="targetBlock" class="hidden">
       <div class="panel-list-item disabled" data-i18n="new_target"></div>
       <div class="panel-list-item">
         <div class="text">

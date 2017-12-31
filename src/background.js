@@ -3,15 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /**
- * Request Control background script for processing request control rules,
- * adding request listeners and keeping record of resolved requests.
+ * Background script for processing Request Control rules, adding request listeners and keeping
+ * record of controlled requests.
  *
- * Request listener (webRequest.onBeforeListener) is added for each rule.
- * When request matches a rule it will be marked for rule processing.
- *
- * If request is marked for any rule, requestControlListener that listens for all requests calls
- * resolveControlRules to process all marked rules, and a record of the resolved request is
- * added to the records.
+ * Request listener (webRequest.onBeforeListener) is added for each active rule. When request
+ * matches a rule it will be marked for rule processing. The request is then resolved according
+ * the marked rules.
  */
 
 const requestListeners = [];
@@ -43,6 +40,9 @@ function addRuleListeners(rules) {
     if (!rules) {
         return;
     }
+    rules.sort(function (a, b) {
+        return a.action - b.action;
+    });
     for (let i = 0; i < rules.length; i++) {
         if (!rules[i].active) {
             continue;
@@ -55,12 +55,12 @@ function addRuleListeners(rules) {
         };
         let listener = function (details) {
             let request = markRequest(details);
-            rule.markRequest(request);
+            RequestControl.markRule(request, rule);
         };
         browser.webRequest.onBeforeRequest.addListener(listener, filter);
         requestListeners.push(listener);
     }
-    browser.webRequest.onBeforeRequest.addListener(requestControlMainListener,
+    browser.webRequest.onBeforeRequest.addListener(requestControlListener,
         {urls: ["<all_urls>"]}, ["blocking"]);
 }
 
@@ -70,107 +70,41 @@ function removeRuleListeners() {
         listener = requestListeners.pop();
         browser.webRequest.onBeforeRequest.removeListener(listener);
     }
-    browser.webRequest.onBeforeRequest.removeListener(requestControlMainListener);
+    browser.webRequest.onBeforeRequest.removeListener(requestControlListener);
 }
 
-/**
- * Listen all requests for rule processing.
- * If request has been marked, process marked rules.
- * @param details request details
- * @returns {Promise} a new promise that is resolved after processing rules, if not marked return null
- */
-function requestControlMainListener(details) {
+function requestControlListener(details) {
     if (markedRequests.has(details.requestId)) {
-        return new Promise(function (resolve) {
-            processMarkedRules(resolve, details.requestId);
-        });
+        let request = removeMarkedRequest(details.requestId);
+        return request.resolve(requestControlCallback);
     }
     return null;
 }
 
-/**
- * Mark request for rule processing.
- * @param details request detail
- * @returns {details} marked request details
- */
+function requestControlCallback(request, action, updateTab) {
+    let tabRecordsCount = addRecord(request);
+    updateBrowserAction(request.tabId, REQUEST_CONTROL_ICONS[action], tabRecordsCount.toString());
+    if (updateTab) {
+        browser.tabs.update(request.tabId, {
+            url: request.redirectUrl
+        });
+    }
+}
+
 function markRequest(details) {
     if (!markedRequests.has(details.requestId)) {
         markedRequests.set(details.requestId, details);
+        return details;
     }
     return markedRequests.get(details.requestId);
 }
 
-/**
- * Process rules marked for request. Add record of processed request.
- * Rule processing follows rule priorities described in the manual.
- * @param resolve when rules processing is finished.
- * @param requestId
- */
-function processMarkedRules(resolve, requestId) {
+function removeMarkedRequest(requestId) {
     let request = markedRequests.get(requestId);
     markedRequests.delete(requestId);
-
-    if (request[WHITELIST_ACTION]) {
-        WhitelistRule.resolveRequest(resolve, request);
-        addRecord(request, WHITELIST_ACTION, request[WHITELIST_ACTION]);
-    }
-    else if (request[BLOCK_ACTION]) {
-        BlockRule.resolveRequest(resolve, request);
-        addRecord(request, BLOCK_ACTION, request[BLOCK_ACTION]);
-    }
-    else { // process both filter and redirect rules
-        let requestURL = new URL(request.url);
-        let skipRedirectionFilter = false;
-        let appliedRules = [];
-        let action = null;
-
-        if (request[FILTER_ACTION]) {
-            for (let rule of request[FILTER_ACTION]) {
-                requestURL = rule.apply(requestURL);
-                if (rule.skipRedirectionFilter) {
-                    skipRedirectionFilter = true;
-                }
-                if (requestURL.href !== request.url) {
-                    appliedRules.push(rule);
-                    action = FILTER_ACTION;
-                }
-            }
-        }
-
-        if (request[REDIRECT_ACTION]) {
-            for (let rule of request[REDIRECT_ACTION]) {
-                requestURL = rule.apply(requestURL);
-                if (requestURL.href !== request.url) {
-                    appliedRules.push(rule);
-                    action = REDIRECT_ACTION;
-                }
-            }
-        }
-
-        if (appliedRules.length === 0) {
-            WhitelistRule.resolveRequest(resolve);
-            return;
-        }
-
-        request.redirectUrl = requestURL.href;
-
-        // Filter sub frame redirection requests (e.g. Google search link tracking)
-        if (request[FILTER_ACTION] && request.type === "sub_frame" && !skipRedirectionFilter) {
-            BlockRule.resolveRequest(resolve);
-            browser.tabs.update(request.tabId, {
-                url: request.redirectUrl
-            });
-        } else {
-            RedirectRule.resolveRequest(resolve, request.redirectUrl);
-        }
-        addRecord(request, action, appliedRules);
-    }
+    return request;
 }
 
-/**
- * Get records for current tab.
- * @returns {Promise}
- */
 function getRecords() {
     return browser.tabs.query({
         currentWindow: true,
@@ -180,29 +114,19 @@ function getRecords() {
     });
 }
 
-/**
- * Remove records for tab.
- * @param tabId
- */
 function removeRecords(tabId) {
     records.delete(tabId);
 }
 
-/**
- * Add new record of resolved request.
- * @param request
- * @param action
- * @param rules
- */
-function addRecord(request, action, rules) {
+function addRecord(request) {
     let record = {
-        action: action,
+        action: request.action,
         tabId: request.tabId,
         type: request.type,
         url: request.url,
         target: request.redirectUrl,
         timestamp: request.timeStamp,
-        rules: rules.map(rule => rule.id)
+        rules: request.rules.map(rule => rule.id)
     };
     let recordsForTab = records.get(request.tabId);
     if (!recordsForTab) {
@@ -210,15 +134,9 @@ function addRecord(request, action, rules) {
         records.set(request.tabId, recordsForTab);
     }
     recordsForTab.push(record);
-    updateBrowserAction(record.tabId, REQUEST_CONTROL_ICONS[action], recordsForTab.length.toString());
+    return recordsForTab.length;
 }
 
-/**
- * Update browserAction icon, title and badgeText.
- * @param tabId
- * @param badgeIcon
- * @param badgeText number of resolved request on current web navigation cycle.
- */
 function updateBrowserAction(tabId, badgeIcon, badgeText) {
     browser.browserAction.setIcon({
         tabId: tabId,
@@ -231,8 +149,16 @@ function updateBrowserAction(tabId, badgeIcon, badgeText) {
 }
 
 function resetBrowserAction(details) {
-    if (details.frameId == 0) {
-        removeRecords(details.tabId);
-        updateBrowserAction(details.tabId, REQUEST_CONTROL_ICONS[NO_ACTION], "");
+    if (details.frameId === 0 && records.has(details.tabId)) {
+        let tabRecords = records.get(details.tabId);
+        let lastRecord = tabRecords[tabRecords.length - 1];
+        if (lastRecord.target === details.url) {
+            // Keep record of the new main frame request
+            records.set(details.tabId, [lastRecord]);
+            updateBrowserAction(details.tabId, REQUEST_CONTROL_ICONS[lastRecord.action], 1);
+        } else {
+            removeRecords(details.tabId);
+            updateBrowserAction(details.tabId, REQUEST_CONTROL_ICONS[NO_ACTION], "");
+        }
     }
 }

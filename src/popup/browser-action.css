@@ -41,8 +41,7 @@ pre {
     color: #777;
 }
 
-body:not([data-action]) #details,
-body:not([data-action]) #records {
+.hidden {
     display: none;
 }
 
@@ -63,14 +62,6 @@ body:not([data-action]) #records {
 
 .models {
     display: none;
-}
-
-.newTarget {
-    display: none;
-}
-
-body[data-action="newTarget"] .newTarget {
-    display: block;
 }
 
 .copyButton {

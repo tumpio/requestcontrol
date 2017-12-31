@@ -412,7 +412,7 @@ RuleInput.prototype = {
         this.$(".tag").textContent = tag;
         this.$(".tag-badge").textContent = tag;
         this.$(".match-patterns").textContent = RequestControl.resolveUrls(this.rule.pattern).length;
-        toggleHidden(tag.length == 0, this.$(".tag-badge").parentNode);
+        toggleHidden(tag.length === 0, this.$(".tag-badge").parentNode);
         toggleHidden(tag.length > 0, this.$(".add-tag"));
         this.setActiveState();
     },

@@ -12,6 +12,7 @@ RECORD_TITLES[BLOCK_ACTION] = browser.i18n.getMessage("title_block");
 RECORD_TITLES[FILTER_ACTION] = browser.i18n.getMessage("title_filter");
 RECORD_TITLES[REDIRECT_ACTION] = browser.i18n.getMessage("title_redirect");
 RECORD_TITLES[NO_ACTION] = "";
+RECORD_TITLES[FILTER_ACTION | REDIRECT_ACTION] = RECORD_TITLES[FILTER_ACTION];
 
 function setRecords(records) {
     if (!records) {
@@ -36,6 +37,8 @@ function setRecords(records) {
         recordsList.firstChild.appendChild(details);
         showDetails(records[records.length - 1]);
     }
+    document.getElementById("records").classList.remove("hidden");
+    document.getElementById("details").classList.remove("hidden");
 }
 
 function getTags(rules) {
@@ -88,9 +91,12 @@ function padDigit(digit, padSize) {
 
 function showDetails(details) {
     document.getElementById("url").textContent = details.url;
-    document.getElementById("target").textContent = details.target;
-    document.body.dataset.action = details.action == REDIRECT_ACTION || details.action == FILTER_ACTION ? "newTarget"
-        : "";
+    if (details.target) {
+        document.getElementById("target").textContent = details.target;
+        document.getElementById("targetBlock").classList.remove("hidden");
+    } else {
+        document.getElementById("targetBlock").classList.add("hidden");
+    }
     document.getElementById("editLink").href = browser.runtime.getURL("src/options/options.html")
         + "?edit=" + details.rules.join("&edit=");
 }

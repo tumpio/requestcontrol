@@ -3,13 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 const RequestControl = {};
-const URL_PARAMETER_NAMES = ["hash", "host", "hostname", "href", "origin", "password", "pathname", "port", "protocol",
-    "search", "username"];
-const WHITELIST_ACTION = 0;
-const BLOCK_ACTION = 1;
-const FILTER_ACTION = 2;
-const REDIRECT_ACTION = 3;
-const NO_ACTION = 4;
+const URL_PARAMETER_NAMES = ["hash", "host", "hostname", "href", "origin", "password", "pathname",
+    "port", "protocol", "search", "username"];
+const NO_ACTION = 0;
+const WHITELIST_ACTION = 1 << 1;
+const BLOCK_ACTION = 1 << 2;
+const REDIRECT_ACTION = 1 << 3;
+const FILTER_ACTION = 1 << 4;
 const REQUEST_CONTROL_ICONS = {};
 
 REQUEST_CONTROL_ICONS[WHITELIST_ACTION] = {
@@ -32,6 +32,7 @@ REQUEST_CONTROL_ICONS[NO_ACTION] = {
     19: "/icons/icon-blank@19.png",
     38: "/icons/icon-blank@38.png"
 };
+REQUEST_CONTROL_ICONS[FILTER_ACTION | REDIRECT_ACTION] = REQUEST_CONTROL_ICONS[FILTER_ACTION];
 
 class ControlRule {
     constructor(id) {
@@ -44,15 +45,9 @@ class WhitelistRule extends ControlRule {
         super(id);
     }
 
-    markRequest(request) {
-        if (!request[WHITELIST_ACTION]) {
-            request[WHITELIST_ACTION] = [];
-        }
-        request[WHITELIST_ACTION].push(this);
-    }
-
-    static resolveRequest(resolve) {
-        resolve(null);
+    static resolve(callback) {
+        callback(this, WHITELIST_ACTION);
+        return null;
     }
 }
 
@@ -61,15 +56,9 @@ class BlockRule extends ControlRule {
         super(id);
     }
 
-    markRequest(request) {
-        if (!request[BLOCK_ACTION]) {
-            request[BLOCK_ACTION] = [];
-        }
-        request[BLOCK_ACTION].push(this);
-    }
-
-    static resolveRequest(resolve) {
-        resolve({cancel: true});
+    static resolve(callback) {
+        callback(this, BLOCK_ACTION);
+        return {cancel: true};
     }
 }
 
@@ -96,13 +85,6 @@ class FilterRule extends ControlRule {
                 this.invertQueryFilter);
         }
         return requestURL;
-    }
-
-    markRequest(request) {
-        if (!request[FILTER_ACTION]) {
-            request[FILTER_ACTION] = [];
-        }
-        request[FILTER_ACTION].push(this);
     }
 }
 
@@ -131,17 +113,6 @@ class RedirectRule extends ControlRule {
             instruction.apply(requestURL);
         }
         return requestURL;
-    }
-
-    markRequest(request) {
-        if (!request[REDIRECT_ACTION]) {
-            request[REDIRECT_ACTION] = [];
-        }
-        request[REDIRECT_ACTION].push(this);
-    }
-
-    static resolveRequest(resolve, redirectUrl) {
-        resolve({redirectUrl: redirectUrl});
     }
 }
 
@@ -191,18 +162,8 @@ class ParameterManipulation extends BaseRedirectPattern {
     }
 }
 
-class BaseStringManipulation {
-    constructor() {
-    }
-
-    apply(str) {
-        return str;
-    }
-}
-
-class ReplaceManipulation extends BaseStringManipulation {
+class ReplaceStringManipulation {
     constructor(pattern, replacement) {
-        super();
         this.pattern = new RegExp(pattern);
         this.replacement = replacement;
     }
@@ -212,15 +173,14 @@ class ReplaceManipulation extends BaseStringManipulation {
     }
 }
 
-class ExtractManipulation extends BaseStringManipulation {
+class ExtractStringManipulation {
     constructor(offset, length) {
-        super();
         this.offset = offset;
         this.length = length;
     }
 
     apply(str) {
-        return ExtractManipulation.extractSubstring(str, this.offset, this.length);
+        return ExtractStringManipulation.extractSubstring(str, this.offset, this.length);
     }
 
     /**
@@ -252,12 +212,50 @@ class ExtractManipulation extends BaseStringManipulation {
     }
 }
 
-/**
- * Create a new rule listener.
- * @param index
- * @param rule
- * @returns {ControlRule} rule
- */
+RequestControl.markRule = function (request, rule) {
+    if (typeof request.rulePriority === "undefined"
+        || rule.priority > request.rulePriority) {
+        request.rulePriority = rule.priority;
+        request.rules = [rule];
+        request.resolve = rule.resolve;
+        request.action = rule.action;
+    } else if (rule.priority === request.rulePriority) {
+        request.rules.push(rule);
+        request.action |= rule.action;
+    }
+};
+
+RequestControl.processRedirectRules = function (callback) {
+    let requestURL = new URL(this.url);
+    let skipRedirectionFilter = false;
+    let appliedRules = [];
+    let action = this.action & (FILTER_ACTION | REDIRECT_ACTION);
+
+    for (let rule of this.rules) {
+        requestURL = rule.apply(requestURL);
+        if (rule.skipRedirectionFilter) {
+            skipRedirectionFilter = true;
+        }
+        if (requestURL.href !== this.url) {
+            appliedRules.push(rule);
+        }
+    }
+
+    if (appliedRules.length > 0) {
+        this.redirectUrl = requestURL.href;
+
+        if (this.action & FILTER_ACTION && this.type === "sub_frame"
+            && !skipRedirectionFilter) {
+            callback(this, action, true);
+            return {cancel: true};
+        } else {
+            callback(this, action);
+            return {redirectUrl: this.redirectUrl};
+        }
+    }
+    return null;
+};
+
 RequestControl.createRule = function (index, rule) {
     switch (rule.action) {
         case "whitelist":
@@ -381,10 +379,10 @@ RequestControl.parseRedirectInstructions = function (redirectUrl) {
     let previousEnd = -1;
 
     for (let i = 0; i < redirectUrl.length; i++) {
-        if (redirectUrl.charAt(i) == "[" && !instruction) {
+        if (redirectUrl.charAt(i) === "[" && !instruction) {
             for (let name of URL_PARAMETER_NAMES) {
                 if (redirectUrl.startsWith(name, i + 1)) {
-                    if (redirectUrl.charAt(i + name.length + 1) == "=") {
+                    if (redirectUrl.charAt(i + name.length + 1) === "=") {
                         instruction = {
                             offset: i,
                             name: name,
@@ -394,7 +392,7 @@ RequestControl.parseRedirectInstructions = function (redirectUrl) {
                     }
                 }
             }
-        } else if (redirectUrl.charAt(i) == "]" && instruction) {
+        } else if (redirectUrl.charAt(i) === "]" && instruction) {
             instruction.end = i;
             instruction.value = redirectUrl.substring(instruction.valueStart, instruction.end);
             parsedInstructions.push(new RedirectInstruction(instruction.name, instruction.value));
@@ -414,7 +412,7 @@ RequestControl.parseRedirectParameters = function (redirectUrl) {
     let previousEnd = -1;
 
     for (let i = 0; i < redirectUrl.length; i++) {
-        if (redirectUrl.charAt(i) == "{") {
+        if (redirectUrl.charAt(i) === "{") {
             inlineCount++;
 
             if (parameter) {
@@ -432,19 +430,19 @@ RequestControl.parseRedirectParameters = function (redirectUrl) {
                     i += parameter.name.length;
                 }
             }
-        } else if (redirectUrl.charAt(i) == "}" && parameter) {
+        } else if (redirectUrl.charAt(i) === "}" && parameter) {
             inlineCount--;
 
-            if (inlineCount == 0) {
+            if (inlineCount === 0) {
                 parameter.end = i;
                 let parameterExpansion = new ParameterExpansion(parameter.name);
 
-                if (previousEnd + 1 != parameter.offset) {
+                if (previousEnd + 1 !== parameter.offset) {
                     parsedParameters.push(new BaseRedirectPattern(
                         redirectUrl.substring(previousEnd + 1, parameter.offset)));
                 }
 
-                if (parameter.end != parameter.ruleStart) {
+                if (parameter.end !== parameter.ruleStart) {
                     parsedParameters.push(new ParameterManipulation(parameterExpansion,
                         redirectUrl.substring(parameter.ruleStart, parameter.end)));
                 } else {
@@ -467,16 +465,16 @@ RequestControl.parseStringManipulations = function (rules) {
     let extractPattern = /^(:-?\d*)(:-?\d*)?(\|(.*))?/;
     while (typeof rules === "string" && rules.length > 0) {
         let match = replacePattern.exec(rules);
-        if (match != null) {
+        if (match !== null) {
             let [, pattern, replacement, , end] = match;
-            manipulations.push(new ReplaceManipulation(pattern, replacement));
+            manipulations.push(new ReplaceStringManipulation(pattern, replacement));
             rules = end;
             continue;
         }
         match = extractPattern.exec(rules);
-        if (match != null) {
+        if (match !== null) {
             let [, offset, length, , end] = match;
-            manipulations.push(new ExtractManipulation(offset, length));
+            manipulations.push(new ExtractStringManipulation(offset, length));
             rules = end;
         } else {
             break;
@@ -513,8 +511,25 @@ RequestControl.trimQueryParameters = function (queryString, trimPattern, invert)
     return trimmedQuery;
 };
 
-if (typeof exports !== 'undefined') {
+WhitelistRule.prototype.priority = 0;
+WhitelistRule.prototype.action = WHITELIST_ACTION;
+WhitelistRule.prototype.resolve = WhitelistRule.resolve;
+
+BlockRule.prototype.priority = -1;
+BlockRule.prototype.action = BLOCK_ACTION;
+BlockRule.prototype.resolve = BlockRule.resolve;
+
+FilterRule.prototype.priority = -2;
+FilterRule.prototype.action = FILTER_ACTION;
+FilterRule.prototype.resolve = RequestControl.processRedirectRules;
+
+RedirectRule.prototype.priority = -2;
+RedirectRule.prototype.action = REDIRECT_ACTION;
+RedirectRule.prototype.resolve = RequestControl.processRedirectRules;
+
+if (typeof exports !== "undefined") {
     exports.RequestControl = RequestControl;
     exports.FilterRule = FilterRule;
     exports.RedirectRule = RedirectRule;
+    const URL = require("url").URL;
 }
