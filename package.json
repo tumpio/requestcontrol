@@ -11,6 +11,7 @@
   "scripts": {
     "test": "NODE_ENV=test nyc ava -v",
     "coverage": "NODE_ENV=test nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "coverage-html": "NODE_ENV=test nyc report --reporter=html",
     "start": "web-ext run -i=$npm_package_config_ignore --bc --url about:debugging#addons",
     "lint": "web-ext lint -i=$npm_package_config_ignore ; eslint src/ test/",
     "bootstrap-compile": "node-sass --output-style expanded --precision 6 --include-path ./node_modules/bootstrap/scss --output ./node_modules/bootstrap/dist/css/ ./lib/bootstrap/bootstrap_custom.scss",
@@ -25,6 +26,7 @@
     "ava": "latest",
     "babel-cli": "latest",
     "babel-plugin-istanbul": "latest",
+    "babel-polyfill": "latest",
     "babel-preset-env": "latest",
     "bootstrap": "next",
     "clean-css-cli": "latest",

@@ -23,6 +23,13 @@ test('Pattern expansion - Multiple', t => {
     t.is(redirectRule.apply(request).href, target.href);
 });
 
+test('Pattern expansion - Parameter not found', t => {
+    const request = new URL('https://www.amazon.com/AmazonBasics-Type-C-USB-Male-Cable/dp/B01GGKYQ02/ref=sr_1_1?s=amazonbasics&srs=10112675011&ie=UTF8&qid=1489067885&sr=8-1&keywords=usb-c');
+    const target = new URL("https://a.b/path/{fail}");
+    const redirectRule = new RedirectRule(0, target.href);
+    t.is(redirectRule.apply(request).href, target.href);
+});
+
 test('Substring replace pattern', t => {
     const request = new URL('https://www.amazon.com/AmazonBasics-Type-C-USB-Male-Cable/dp/B01GGKYQ02/ref=sr_1_1?s=amazonbasics&srs=10112675011&ie=UTF8&qid=1489067885&sr=8-1&keywords=usb-c');
     const target = new URL(request.protocol + "//" + request.host + "/AmazonBasics-Type-C-USB-Male-Cable/my/path/B01GGKYQ02/ref=sr_1_1" + request.search + "#myhash");
@@ -72,6 +79,14 @@ test('String manipulations combined', t => {
     request = new URL('http://foo.bar.co.uk/path');
     target = new URL('https://bar.com/some/new/path');
     redirectRule = new RedirectRule(0, "https://{host::-3|/\\.co$/.com|:4}/some/new/path");
+    t.is(redirectRule.apply(request).href, target.href);
+});
+
+test('String manipulations combined - Bad manipulation', t => {
+    let request, target, redirectRule;
+    request = new URL('http://foo.bar.co.uk/path');
+    target = new URL('https://foo.bar.com/some/new/path');
+    redirectRule = new RedirectRule(0, "https://{host::-3|/\\.co$/.com|fail}/some/new/path");
     t.is(redirectRule.apply(request).href, target.href);
 });
 

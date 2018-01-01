@@ -55,3 +55,46 @@ test('Query parameter trimming', t => {
         RequestControl.createTrimPattern(["/...\_.{5,}/"]), false),
         "?parameter&key=value?parameter&utm_term?key=value");
 });
+
+test('Resolve urls', t => {
+    t.deepEqual(RequestControl.resolveUrls({allUrls: true}), ["<all_urls>"]);
+    t.deepEqual(RequestControl.resolveUrls({
+            scheme: "http",
+            host: "example.com"
+        }),
+        ["http://example.com/"]);
+    t.deepEqual(RequestControl.resolveUrls({
+            scheme: "http",
+            host: "example.com",
+            path: "some/path"
+        }),
+        ["http://example.com/some/path"]);
+    t.deepEqual(RequestControl.resolveUrls({
+            scheme: "https",
+            host: ["first.com", "second.com"],
+            path: "some/path"
+        }).sort(),
+        ["https://first.com/some/path", "https://second.com/some/path"].sort());
+    t.deepEqual(RequestControl.resolveUrls({
+            scheme: "*",
+            host: ["first.com", "second.com"],
+            path: ["first/path", "second/path"]
+        }).sort(),
+        ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
+            "*://second.com/second/path"].sort());
+    t.deepEqual(RequestControl.resolveUrls({
+            scheme: "*",
+            host: ["first.com", "second.com"],
+            path: ["first/path", "second/path"]
+        }).sort(),
+        ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
+            "*://second.com/second/path"].sort());
+    t.deepEqual(RequestControl.resolveUrls({
+            scheme: "https",
+            host: ["first.com", "second.*"],
+            path: "some/path",
+            topLevelDomains: ["com", "org"]
+        }).sort(),
+        ["https://first.com/some/path", "https://second.com/some/path",
+            "https://second.org/some/path"].sort());
+});

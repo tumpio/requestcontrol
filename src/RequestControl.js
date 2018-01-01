@@ -227,14 +227,14 @@ RequestControl.markRule = function (request, rule) {
 
 RequestControl.processRedirectRules = function (callback) {
     let requestURL = new URL(this.url);
-    let skipRedirectionFilter = false;
+    let skipInlineUrlFilter = false;
     let appliedRules = [];
     let action = this.action & (FILTER_ACTION | REDIRECT_ACTION);
 
     for (let rule of this.rules) {
         requestURL = rule.apply(requestURL);
-        if (rule.skipRedirectionFilter) {
-            skipRedirectionFilter = true;
+        if (rule.skipInlineUrlFilter) {
+            skipInlineUrlFilter = true;
         }
         if (requestURL.href !== this.url) {
             appliedRules.push(rule);
@@ -245,7 +245,7 @@ RequestControl.processRedirectRules = function (callback) {
         this.redirectUrl = requestURL.href;
 
         if (this.action & FILTER_ACTION && this.type === "sub_frame"
-            && !skipRedirectionFilter) {
+            && !skipInlineUrlFilter) {
             callback(this, action, true);
             return {cancel: true};
         } else {
@@ -267,7 +267,7 @@ RequestControl.createRule = function (index, rule) {
         case "filter":
             return new FilterRule(index, rule.paramsFilter, rule.trimAllParams, rule.skipRedirectionFilter);
         default:
-            break;
+            throw new Error("Unsupported rule action");
     }
 };
 
@@ -285,7 +285,7 @@ RequestControl.resolveUrls = function (pattern) {
         return ["<all_urls>"];
     }
 
-    if (paths.length <= 0) {
+    if (!pattern.path || paths.length <= 0) {
         paths = [""];
     }
 
@@ -531,5 +531,5 @@ if (typeof exports !== "undefined") {
     exports.RequestControl = RequestControl;
     exports.FilterRule = FilterRule;
     exports.RedirectRule = RedirectRule;
-    const URL = require("url").URL;
+    var URL = require("url").URL;
 }
