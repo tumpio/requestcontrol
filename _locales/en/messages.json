@@ -343,6 +343,9 @@
   "remove_selected": {
     "message": "Remove selected"
   },
+  "test_selected": {
+    "message": "Test selected"
+  },
   "export_rules": {
     "message": "Export rules"
   },
@@ -419,5 +422,26 @@
   },
   "tag": {
     "message": "Tag:"
+  },
+  "test_url": {
+    "message": "Test URL"
+  },
+  "test_selected_rules": {
+    "message": "Test selected rules"
+  },
+  "invalid_test_url": {
+    "message": "Not valid test url"
+  },
+  "no_match": {
+    "message": "No match"
+  },
+  "matched_no_change": {
+    "message": "Matched, but no change"
+  },
+  "whitelisted": {
+    "message": "Whitelisted"
+  },
+  "blocked": {
+    "message": "Blocked"
   }
 }

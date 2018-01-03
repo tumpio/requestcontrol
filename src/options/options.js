@@ -23,6 +23,7 @@ function createRuleInputs(rules, className) {
     for (let i = 0; i < rules.length; i++) {
         let input = myRuleInputFactory.newInput(rules[i]);
         input.model.id = "rule-" + i;
+        input.model.dataset.id = i.toString();
         document.getElementById(rules[i].action).appendChild(input.model);
         if (className) {
             input.model.classList.add(className);
@@ -116,6 +117,49 @@ function exportReplacer(key, value) {
     return value;
 }
 
+function onRuleTest() {
+    let result = document.getElementById("testResult");
+    result.textContent = "";
+    let rules = [];
+    for (let input of getSelectedRuleInputs()) {
+        let rule = input.getRule();
+        rule.id = input.dataset.id;
+        rules.push(rule);
+    }
+    let request;
+    try {
+        request = testRules(this.value, rules);
+    } catch (e) {
+        result.textContent = browser.i18n.getMessage("invalid_test_url");
+        return;
+    }
+    if (!request.resolve) {
+        result.textContent = browser.i18n.getMessage("no_match");
+        return;
+    }
+    let resolve = request.resolve(function (request, action) {
+        switch (action) {
+            case WHITELIST_ACTION:
+                result.textContent = browser.i18n.getMessage("whitelisted");
+                break;
+            case BLOCK_ACTION:
+                result.textContent = browser.i18n.getMessage("blocked");
+                break;
+            case REDIRECT_ACTION:
+            case FILTER_ACTION:
+            case FILTER_ACTION | REDIRECT_ACTION:
+                result.textContent = request.redirectUrl;
+                break;
+            default:
+                break;
+        }
+    });
+
+    if (!resolve && request.action & ~WHITELIST_ACTION) {
+        result.textContent = browser.i18n.getMessage("matched_no_change");
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     Promise.all([myOptionsManager.loadOptions(), myRuleInputFactory.load()]).then(() => {
         if (!myOptionsManager.options.rules) {
@@ -171,6 +215,18 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         toggleDisabled(true, ...document.querySelectorAll(".btn-select-action"));
     });
+
+    document.getElementById("testSelectedRules").addEventListener("click", function () {
+        let modal = document.getElementById("ruleTesterModal");
+        modal.classList.add("show");
+        let testUrl = document.getElementById("test-url");
+        if (testUrl.value) {
+            let tester = onRuleTest.bind(testUrl);
+            tester();
+        }
+    });
+
+    document.getElementById("test-url").addEventListener("input", onRuleTest);
 
     browser.management.getSelf(info => {
         document.getElementById("version").textContent =
