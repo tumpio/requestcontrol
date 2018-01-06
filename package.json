@@ -21,6 +21,9 @@
     "build-manual": "find ./_locales/ -iname \"manual.rst\" -type f -exec sh -c 'pandoc \"$0\" --from=rst --to=html --output \"${0%.rst}.html\"' {} \\;",
     "build": "npm run bootstrap-build && npm run build-manual && web-ext build -i=$npm_package_config_ignore --overwrite-dest --artifacts-dir=.releases --verbose"
   },
+  "dependencies": {
+    "bootstrap": "^4.0.0-beta.3"
+  },
   "devDependencies": {
     "autoprefixer": "latest",
     "ava": "latest",
@@ -28,7 +31,6 @@
     "babel-plugin-istanbul": "latest",
     "babel-polyfill": "latest",
     "babel-preset-env": "latest",
-    "bootstrap": "next",
     "clean-css-cli": "latest",
     "codecov": "latest",
     "eslint": "latest",
