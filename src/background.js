@@ -76,19 +76,41 @@ function removeRuleListeners() {
 function requestControlListener(details) {
     if (markedRequests.has(details.requestId)) {
         let request = removeMarkedRequest(details.requestId);
-        return request.resolve(requestControlCallback);
+        return request.resolve(requestControlCallback, errorCallback);
     }
     return null;
 }
 
 function requestControlCallback(request, action, updateTab) {
-    let tabRecordsCount = addRecord(request);
+    let tabRecordsCount = addRecord({
+        action: request.action,
+        tabId: request.tabId,
+        type: request.type,
+        url: request.url,
+        target: request.redirectUrl,
+        timestamp: request.timeStamp,
+        rules: request.rules.map(rule => rule.id)
+    });
     updateBrowserAction(request.tabId, REQUEST_CONTROL_ICONS[action], tabRecordsCount.toString());
     if (updateTab) {
         browser.tabs.update(request.tabId, {
             url: request.redirectUrl
         });
     }
+}
+
+function errorCallback(request, rule, error) {
+    addRecord({
+        action: rule.action,
+        tabId: request.tabId,
+        type: request.type,
+        url: request.url,
+        timestamp: request.timeStamp,
+        rules: [rule.id],
+        error: error,
+        target: error.target
+    });
+    updateBrowserAction(request.tabId, REQUEST_CONTROL_ICONS[rule.action], String.fromCodePoint(10071));
 }
 
 function markRequest(details) {
@@ -118,20 +140,11 @@ function removeRecords(tabId) {
     records.delete(tabId);
 }
 
-function addRecord(request) {
-    let record = {
-        action: request.action,
-        tabId: request.tabId,
-        type: request.type,
-        url: request.url,
-        target: request.redirectUrl,
-        timestamp: request.timeStamp,
-        rules: request.rules.map(rule => rule.id)
-    };
-    let recordsForTab = records.get(request.tabId);
+function addRecord(record) {
+    let recordsForTab = records.get(record.tabId);
     if (!recordsForTab) {
         recordsForTab = [];
-        records.set(request.tabId, recordsForTab);
+        records.set(record.tabId, recordsForTab);
     }
     recordsForTab.push(record);
     return recordsForTab.length;

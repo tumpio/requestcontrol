@@ -214,6 +214,9 @@
   "edit": {
     "message": "Edit"
   },
+  "edit_rule": {
+    "message": "Edit rule"
+  },
   "disable": {
     "message": "Disable"
   },
@@ -443,5 +446,11 @@
   },
   "blocked": {
     "message": "Blocked"
+  },
+  "error_invalid_url": {
+    "message": "Failed to redirect to new target: Invalid target URL"
+  },
+  "invalid_target_url": {
+    "message": "Invalid target URL: "
   }
 }

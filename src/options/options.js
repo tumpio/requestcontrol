@@ -137,6 +137,7 @@ function onRuleTest() {
         result.textContent = browser.i18n.getMessage("no_match");
         return;
     }
+    let resolveError = null;
     let resolve = request.resolve(function (request, action) {
         switch (action) {
             case WHITELIST_ACTION:
@@ -153,9 +154,15 @@ function onRuleTest() {
             default:
                 break;
         }
+    }, function (request, rule, error) {
+        resolveError = error;
     });
 
-    if (!resolve && request.action & ~WHITELIST_ACTION) {
+    if (resolveError) {
+        if (resolveError instanceof InvalidUrlException) {
+            result.textContent = browser.i18n.getMessage("invalid_target_url") + resolveError.target;
+        }
+    } else if (!resolve && request.action & ~WHITELIST_ACTION) {
         result.textContent = browser.i18n.getMessage("matched_no_change");
     }
 }

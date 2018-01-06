@@ -50,6 +50,10 @@ pre {
     color: #777;
 }
 
+.errorIcon {
+    margin-right: 1em;
+}
+
 .icon {
     margin-right: 0.4em;
     vertical-align: center;

@@ -6,6 +6,7 @@
  * Browser Action for displaying applied rules for current tab.
  */
 
+const myOptionsManager = new OptionsManager(RequestControl.optionsSchema);
 const RECORD_TITLES = {};
 RECORD_TITLES[WHITELIST_ACTION] = browser.i18n.getMessage("title_whitelist");
 RECORD_TITLES[BLOCK_ACTION] = browser.i18n.getMessage("title_block");
@@ -24,7 +25,7 @@ function setRecords(records) {
     for (let i = records.length - 1; i >= 0; i--) {
         let item = newListItem(records[i]);
         recordsList.appendChild(item);
-        item.dataset.record = i;
+        item.dataset.record = i.toString();
         item.querySelector(".entry-header").addEventListener("click", function () {
             let details = document.getElementById("details");
             item.appendChild(details);
@@ -43,14 +44,12 @@ function setRecords(records) {
 
 function getTags(rules) {
     let tags = [];
-    return browser.storage.local.get("rules").then(function (options) {
-        for (let rule of rules) {
-            if (options.rules[rule].tag) {
-                tags.push(options.rules[rule].tag);
-            }
+    for (let rule of rules) {
+        if (myOptionsManager.options.rules[rule].tag) {
+            tags.push(myOptionsManager.options.rules[rule].tag);
         }
-        return tags;
-    });
+    }
+    return tags;
 }
 
 function newListItem(details) {
@@ -59,15 +58,20 @@ function newListItem(details) {
     model.querySelector(".type").textContent = browser.i18n.getMessage(details.type);
     model.querySelector(".timestamp").textContent = timestamp(details.timestamp);
     model.querySelector(".icon > img").src = REQUEST_CONTROL_ICONS[details.action][19];
-    model.querySelector(".text").textContent = RECORD_TITLES[details.action];
-    getTags(details.rules).then(tags => {
-        let tagsNode = model.querySelector(".tags");
-        if (tags.length === 0) {
-            tagsNode.parentNode.removeChild(tagsNode);
-        } else {
-            tagsNode.textContent = tags.join(", ");
-        }
-    });
+
+    if (details.error) {
+        model.querySelector(".errorIcon").classList.remove("hidden");
+        model.querySelector(".text").textContent = browser.i18n.getMessage(details.error.name);
+    } else {
+        model.querySelector(".text").textContent = RECORD_TITLES[details.action];
+    }
+    let tags = getTags(details.rules);
+    let tagsNode = model.querySelector(".tags");
+    if (tags.length === 0) {
+        tagsNode.parentNode.removeChild(tagsNode);
+    } else {
+        tagsNode.textContent = tags.join(", ");
+    }
     return model;
 }
 
@@ -122,7 +126,12 @@ function openOptionsPage() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    browser.runtime.sendMessage(null).then(setRecords);
+    Promise.all([browser.runtime.sendMessage(null),
+        myOptionsManager.loadOptions()]).then(values => {
+        if (myOptionsManager.options.rules) {
+            setRecords(values[0]);
+        }
+    });
 
     document.getElementById("showRules").addEventListener("click", openOptionsPage);
 

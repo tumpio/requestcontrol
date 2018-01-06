@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="browser-action.css">
   <script src="/lib/i18n.js"></script>
   <script src="/src/RequestControl.js"></script>
+  <script src="/lib/OptionsManager.js"></script>
   <script src="browser-action.js"></script>
 </head>
 <body>
@@ -24,6 +25,7 @@
   <div id="entryModel" class="entry">
     <div class="panel-list-item entry-header">
       <small class="timestamp"></small>
+      <img class="errorIcon hidden" src="/icons/ionicons/alert-circled.svg" height="16">
       <div class="icon">
         <img src="/icons/icon-redirect@19.png">
       </div>
@@ -64,7 +66,7 @@
       </div>
     </div>
     <div class="panel-list-item">
-      <a id="editLink" href="" target="_blank" data-i18n="edit"></a>
+      <a id="editLink" href="" target="_blank" data-i18n="edit_rule"></a>
     </div>
   </div>
 </div>

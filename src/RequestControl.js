@@ -34,6 +34,13 @@ REQUEST_CONTROL_ICONS[NO_ACTION] = {
 };
 REQUEST_CONTROL_ICONS[FILTER_ACTION | REDIRECT_ACTION] = REQUEST_CONTROL_ICONS[FILTER_ACTION];
 
+class InvalidUrlException {
+    constructor(target) {
+        this.target = target;
+        this.name = "error_invalid_url";
+    }
+}
+
 class ControlRule {
     constructor(id) {
         this.id = id;
@@ -106,7 +113,7 @@ class RedirectRule extends ControlRule {
             try {
                 requestURL.href = redirectUrl;
             } catch (e) {
-                // TODO: Inform user that redirect rule resulted in invalid URL
+                throw new InvalidUrlException(redirectUrl);
             }
         }
         for (let instruction of this.instructions) {
@@ -229,19 +236,23 @@ RequestControl.markRule = function (request, rule) {
     }
 };
 
-RequestControl.processRedirectRules = function (callback) {
+RequestControl.processRedirectRules = function (callback, errorCallback) {
     let requestURL = new URL(this.url);
     let skipInlineUrlFilter = false;
     let appliedRules = [];
     let action = this.action & (FILTER_ACTION | REDIRECT_ACTION);
 
     for (let rule of this.rules) {
-        requestURL = rule.apply(requestURL);
         if (rule.skipInlineUrlFilter) {
             skipInlineUrlFilter = true;
         }
-        if (requestURL.href !== this.url) {
-            appliedRules.push(rule);
+        try {
+            requestURL = rule.apply(requestURL);
+            if (requestURL.href !== this.url) {
+                appliedRules.push(rule);
+            }
+        } catch (e) {
+            errorCallback(this, rule, e);
         }
     }
 
