@@ -10,16 +10,16 @@
     "description": "Change to point to the localised manual.html."
   },
   "title_filter": {
-    "message": "Request filtered"
+    "message": "Filtered: "
   },
   "title_block": {
-    "message": "Request blocked"
+    "message": "Blocked: "
   },
   "title_redirect": {
-    "message": "Request redirected"
+    "message": "Redirected: "
   },
   "title_whitelist": {
-    "message": "Request whitelisted"
+    "message": "Whitelisted: "
   },
   "rule_title_filter": {
     "message": "Filter rule for $HOST$",

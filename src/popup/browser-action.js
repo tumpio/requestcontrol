@@ -61,16 +61,17 @@ function newListItem(details) {
 
     if (details.error) {
         model.querySelector(".errorIcon").classList.remove("hidden");
-        model.querySelector(".text").textContent = browser.i18n.getMessage(details.error.name);
+        model.querySelector(".action").textContent = browser.i18n.getMessage(details.error.name);
     } else {
-        model.querySelector(".text").textContent = RECORD_TITLES[details.action];
+        model.querySelector(".action").textContent = RECORD_TITLES[details.action];
+        model.querySelector(".url").textContent = details.url;
     }
     let tags = getTags(details.rules);
     let tagsNode = model.querySelector(".tags");
     if (tags.length === 0) {
         tagsNode.parentNode.removeChild(tagsNode);
     } else {
-        tagsNode.textContent = tags.join(", ");
+        tagsNode.textContent = decodeURIComponent(tags.join(", "));
     }
     return model;
 }

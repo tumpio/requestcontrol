@@ -42,6 +42,30 @@ pre {
     cursor: pointer;
 }
 
+.entry {
+    cursor: pointer;
+    border-top: 1px dashed #c6c8ca;
+}
+
+.entry:first-child {
+    border-top: none;
+}
+
+.text {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.url {
+    color: #80888f;
+}
+
+.action {
+    font-weight: bold;
+}
+
 #records {
     max-height: 30em;
     overflow-y: auto;
@@ -159,10 +183,12 @@ pre {
     color: #fff;
     background-color: #343a40;
 }
+
 .badge-info {
     color: #fff;
     background-color: #17a2b8;
 }
+
 .badge {
     display: inline-block;
     padding: .25em .4em;
