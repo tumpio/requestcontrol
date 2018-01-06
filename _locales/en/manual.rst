@@ -228,6 +228,9 @@ redirect to a different port).
 Both methods may be used together. Redirect instructions will be parsed and applied first to the
 request URL before parameter expansion.
 
+Parameter expansion may also be used within a redirect instruction allowing to create redirect
+instructions based on the original request's URL.
+
 Parameter expansion
 ~~~~~~~~~~~~~~~~~~~
 
@@ -310,19 +313,30 @@ Redirect instruction
 
     [parameter=value]
 
-Modify the original request. Available named parameters are listed at
-the end of this section.
+Replace a certain part of the original request. The available named parameters are listed at the
+end of this section.
+
+The value of a redirect instruction can be parametrized using the parameter expansion described
+above.
+
+::
+
+    [parameter={parameter<manipulations>}]
 
 Examples
 ^^^^^^^^
 
-+-----------------------------------+-----------------------------------+
-| [port=8080]                       | Redirects the original request to |
-|                                   | a port 8080.                      |
-+-----------------------------------+-----------------------------------+
-| [port=8080][hostname=localhost]   | Redirects the original request to |
-|                                   | a port 8080 of localhost.         |
-+-----------------------------------+-----------------------------------+
++----------------------------------------------+-----------------------------------------+
+| [port=8080]                                  | Redirects the original request to       |
+|                                              | a port 8080.                            |
++----------------------------------------------+-----------------------------------------+
+| [port=8080][hostname=localhost]              | Redirects the original request to       |
+|                                              | a port 8080 of localhost.               |
++----------------------------------------------+-----------------------------------------+
+| [port=8080][hostname=localhost][hash={path}] | Redirects the original request to       |
+|                                              | a port 8080 of localhost where hash     |
+|                                              | is the original request's path.         |
++----------------------------------------------+-----------------------------------------+
 
 List of named parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~
