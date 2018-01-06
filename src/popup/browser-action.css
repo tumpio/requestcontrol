@@ -7,7 +7,6 @@ pre {
 
 .panel-section-footer {
     overflow: hidden;
-    color: white;
     background: white;
     cursor: pointer;
 }
@@ -17,7 +16,7 @@ pre {
 }
 
 #showRules {
-    background: #0c5460;
+    background: #f5f5f5;
 }
 
 #toggleActive {
