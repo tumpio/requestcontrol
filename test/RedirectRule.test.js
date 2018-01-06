@@ -113,3 +113,11 @@ test('Redirect instructions - combined', t => {
     redirectRule = new RedirectRule(0, "ht[port=1234]tps://{host::-3|/\\.co$/.com|:4}/some/new/path[hash=foobar][search=foo=bar]");
     t.is(redirectRule.apply(request).href, target.href);
 });
+
+test('Redirect instructions - combined 2', t => {
+    let request, target, redirectRule;
+    request = new URL('http://foo.com/path');
+    target = new URL('https://bar.com/path#myhash=com');
+    redirectRule = new RedirectRule(0, "[protocol=https][hash=myhash={host:-3}][host={host/foo/bar}]");
+    t.is(redirectRule.apply(request).href, target.href);
+});

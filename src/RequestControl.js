@@ -117,13 +117,17 @@ class RedirectRule extends ControlRule {
 }
 
 class RedirectInstruction {
-    constructor(name, value) {
-        this.value = value;
+    constructor(name, patterns) {
+        this.patterns = patterns;
         this.name = name;
     }
 
     apply(requestURL) {
-        requestURL[this.name] = this.value;
+        let value = "";
+        for (let pattern of this.patterns) {
+            value += pattern.resolve(requestURL);
+        }
+        requestURL[this.name] = value;
     }
 }
 
@@ -394,8 +398,9 @@ RequestControl.parseRedirectInstructions = function (redirectUrl) {
             }
         } else if (redirectUrl.charAt(i) === "]" && instruction) {
             instruction.end = i;
-            instruction.value = redirectUrl.substring(instruction.valueStart, instruction.end);
-            parsedInstructions.push(new RedirectInstruction(instruction.name, instruction.value));
+            instruction.patterns = RequestControl.parseRedirectParameters(
+                redirectUrl.substring(instruction.valueStart, instruction.end));
+            parsedInstructions.push(new RedirectInstruction(instruction.name, instruction.patterns));
             parsedUrl += redirectUrl.substring(previousEnd + 1, instruction.offset);
             previousEnd = instruction.end;
             instruction = null;
