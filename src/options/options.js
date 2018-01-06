@@ -179,10 +179,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 let ruleInputs = document.querySelectorAll(".rule");
                 for (let rule of rules) {
                     let i = parseInt(rule);
-                    ruleInputs[i].edit();
                     ruleInputs[i].select();
+                    ruleInputs[i].edit();
                 }
-                ruleInputs[rules[0]].scrollIntoView();
             }
         }
     });

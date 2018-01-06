@@ -178,6 +178,7 @@ RuleInput.prototype = {
                 this.model.classList.remove("not-edited");
                 this.updateInputs();
             }
+            this.model.scrollIntoView();
         } else {
             this.$(".title").removeAttribute("contenteditable");
             this.$(".description").removeAttribute("contenteditable");
