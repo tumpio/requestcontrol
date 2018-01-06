@@ -15,20 +15,22 @@ const requestListeners = [];
 const markedRequests = new Map();
 const records = new Map();
 
-browser.storage.local.get("rules").then(init);
-browser.storage.onChanged.addListener(init);
+browser.storage.local.get().then(init);
+browser.storage.onChanged.addListener(initOnChange);
 browser.tabs.onRemoved.addListener(removeRecords);
 browser.webNavigation.onBeforeNavigate.addListener(resetBrowserAction);
 browser.runtime.onMessage.addListener(getRecords);
 
 function init(options) {
-    let rules = options.rules;
-    if (rules.newValue) {
-        rules = rules.newValue;
+    if (!options.disabled) {
+        addRuleListeners(options.rules);
     }
-    removeRuleListeners();
-    addRuleListeners(rules);
     browser.webRequest.handlerBehaviorChanged();
+}
+
+function initOnChange() {
+    removeRuleListeners();
+    browser.storage.local.get().then(init);
 }
 
 /**

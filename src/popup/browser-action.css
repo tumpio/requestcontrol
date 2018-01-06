@@ -7,6 +7,35 @@ pre {
 
 .panel-section-footer {
     overflow: hidden;
+    color: white;
+    background: white;
+    cursor: pointer;
+}
+
+.panel-section-footer-button:hover {
+    opacity: .8;
+}
+
+#showRules {
+    background: #0c5460;
+}
+
+#toggleActive {
+    color: white;
+    max-width: 6em;
+    background: #cc0d13;
+}
+
+#toggleActive.disabled {
+    background: #3c763d;
+}
+
+#toggleActive.disabled .disable {
+    display: none;
+}
+
+#toggleActive:not(.disabled) .enable {
+    display: none;
 }
 
 .entry > .panel-list-item {

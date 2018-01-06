@@ -452,5 +452,11 @@
   },
   "invalid_target_url": {
     "message": "Invalid target URL: "
+  },
+  "enable_rules": {
+    "message": "Enable Request Control"
+  },
+  "disable_rules": {
+    "message": "Disable Request Control"
   }
 }

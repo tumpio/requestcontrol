@@ -344,14 +344,6 @@ RequestControl.createTrimPattern = function (values) {
 };
 
 /**
- * Options schema
- * @type {{rules: [*]}}
- */
-RequestControl.optionsSchema = {
-    rules: []
-};
-
-/**
  * Parser for inline redirection url.
  * @param url
  * @returns {string}

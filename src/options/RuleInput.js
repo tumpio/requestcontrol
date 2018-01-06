@@ -126,11 +126,7 @@ RuleInput.prototype = {
 
     remove: function () {
         this.softRemove();
-        if (this.indexOfRule() !== -1) {
-            myOptionsManager.saveOption(this.optionsPath);
-        } else {
-            myOptionsManager.saveAllOptions();
-        }
+        myOptionsManager.saveOption(this.optionsPath);
     },
 
     softRemove: function () {
@@ -150,9 +146,10 @@ RuleInput.prototype = {
         this.updateRule();
         if (this.indexOfRule() === -1) {
             myOptionsManager.options[this.optionsPath].push(this.rule);
-            return myOptionsManager.saveAllOptions().then(this.updateHeader.bind(this)).then(this.toggleSaved.bind(this));
         }
-        return myOptionsManager.saveOption(this.optionsPath).then(this.updateHeader.bind(this)).then(this.toggleSaved.bind(this));
+        return myOptionsManager.saveOption(this.optionsPath)
+            .then(this.updateHeader.bind(this))
+            .then(this.toggleSaved.bind(this));
     },
 
     toggleSaved: function () {

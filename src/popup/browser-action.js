@@ -6,7 +6,7 @@
  * Browser Action for displaying applied rules for current tab.
  */
 
-const myOptionsManager = new OptionsManager(RequestControl.optionsSchema);
+const myOptionsManager = new OptionsManager();
 const RECORD_TITLES = {};
 RECORD_TITLES[WHITELIST_ACTION] = browser.i18n.getMessage("title_whitelist");
 RECORD_TITLES[BLOCK_ACTION] = browser.i18n.getMessage("title_block");
@@ -125,15 +125,25 @@ function openOptionsPage() {
     window.close();
 }
 
+function toggleActive() {
+    myOptionsManager.saveOption("disabled", !myOptionsManager.options.disabled);
+    document.getElementById("toggleActive").classList.toggle("disabled",
+        myOptionsManager.options.disabled);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     Promise.all([browser.runtime.sendMessage(null),
         myOptionsManager.loadOptions()]).then(values => {
         if (myOptionsManager.options.rules) {
             setRecords(values[0]);
         }
+        if (myOptionsManager.options.disabled) {
+            document.getElementById("toggleActive").classList.add("disabled");
+        }
     });
 
     document.getElementById("showRules").addEventListener("click", openOptionsPage);
+    document.getElementById("toggleActive").addEventListener("click", toggleActive);
 
     let copyButtons = document.getElementsByClassName("copyButton");
     for (let copyButton of copyButtons) {

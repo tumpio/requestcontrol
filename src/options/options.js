@@ -7,7 +7,7 @@
  * Options page for Request Control rule management, settings and manual page.
  */
 
-const myOptionsManager = new OptionsManager(RequestControl.optionsSchema);
+const myOptionsManager = new OptionsManager();
 const myRuleInputFactory = new RuleInputFactory();
 
 function removeRuleInputs() {
