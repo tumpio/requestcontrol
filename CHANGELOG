@@ -1,3 +1,11 @@
+Version 1.9.0 May 9, 2018
+- Add rule tester for testing selected rules against test URL.
+- Add support for rule tagging in panel.
+- Add rule edit links in panel.
+- Add disable/enable button in panel.
+- Change Redirect instructions to supports parameter expansion in value.
+- Update options style and panel layout.
+
 Version 1.8.6 Nov. 26, 2017
 - Fix Redirect to static url.
 - Fix combining parameter expansion with redirect instructions.
