@@ -5,6 +5,7 @@ Version 1.9.0 May 9, 2018
 - Add disable/enable button in panel.
 - Change Redirect instructions to supports parameter expansion in value.
 - Update options style and panel layout.
+- Locale: ES Spanish, thanks to @strel at Github!
 
 Version 1.8.6 Nov. 26, 2017
 - Fix Redirect to static url.
