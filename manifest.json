@@ -40,7 +40,6 @@
         "scripts": [
             "src/RequestControl.js",
             "src/install.js",
-            "src/migrate.js",
             "src/background.js"
         ]
     }
