@@ -22,7 +22,7 @@
     "build": "npm run bootstrap-build && npm run build-manual && web-ext build -i=$npm_package_config_ignore --overwrite-dest --artifacts-dir=.releases --verbose"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0-beta.3"
+    "bootstrap": "^4.1.1"
   },
   "devDependencies": {
     "autoprefixer": "latest",
