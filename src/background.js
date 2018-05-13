@@ -18,7 +18,7 @@ const records = new Map();
 browser.storage.local.get().then(init);
 browser.storage.onChanged.addListener(initOnChange);
 browser.tabs.onRemoved.addListener(removeRecords);
-browser.webNavigation.onBeforeNavigate.addListener(resetBrowserAction);
+browser.webNavigation.onCommitted.addListener(resetBrowserAction);
 browser.runtime.onMessage.addListener(getRecords);
 
 function init(options) {
@@ -170,7 +170,7 @@ function resetBrowserAction(details) {
         if (lastRecord.target === details.url) {
             // Keep record of the new main frame request
             records.set(details.tabId, [lastRecord]);
-            updateBrowserAction(details.tabId, REQUEST_CONTROL_ICONS[lastRecord.action], 1);
+            updateBrowserAction(details.tabId, REQUEST_CONTROL_ICONS[lastRecord.action], "1");
         } else {
             removeRecords(details.tabId);
             updateBrowserAction(details.tabId, REQUEST_CONTROL_ICONS[NO_ACTION], "");
