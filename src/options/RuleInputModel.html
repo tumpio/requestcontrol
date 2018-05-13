@@ -58,15 +58,14 @@
                 <div class="host-group">
                   <input type="text" class="form-control form-control-sm host"
                          placeholder="example.com"
-                         spellcheck="false" required="required"
-                         pattern="^(\*|[0-9a-zA-Z]{1,2}|(\*\.)?[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+)(\.\*)?$"/>
+                         spellcheck="false" required="required"/>
                 </div>
               </div>
               <div class="col-sm-12  col-md-4">
                 <small class="d-block text-muted text-center" data-i18n="path"></small>
                 <input type="text" class="form-control form-control-sm path"
                        data-i18n-placeholder="path"
-                       spellcheck="false" pattern="^[!#-;=?-[\]_-z~]*$"/>
+                       spellcheck="false"/>
               </div>
             </div>
           </div>
@@ -97,7 +96,6 @@
             <div class="tlds-block d-none">
               <input type="text" class="form-control form-control-sm input-tlds tlds d-none"
                      disabled="disabled"
-                     pattern="^([0-9a-zA-Z]{1,2}|[0-9a-zA-Z][0-9a-zA-Z-\.]+(\.[0-9a-zA-Z][a-zA-Z-])*[0-9a-zA-Z]+)$"
                      spellcheck="false" autocomplete="off" data-i18n-placeholder="tlds"
                      required="required"/>
             </div>
@@ -251,7 +249,7 @@
   <label class="col-form-label"></label>
   <label class="manual-block font-weight-light" data-i18n="redirect_to"></label>
   <input type="text" class="form-control form-control-sm redirectUrl" spellcheck="false"
-         data-i18n-placeholder="redirect_url" pattern=".*" required="required"/>
+         data-i18n-placeholder="redirect_url" required="required"/>
   <span class="manual-block small"><span data-i18n="manual_text_redirect"></span><a
       href="#tab-manual#redirect-using-pattern-capturing" data-i18n="see_manual"></a></span>
 </div>
