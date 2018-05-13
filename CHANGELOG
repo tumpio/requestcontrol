@@ -1,3 +1,8 @@
+Version 1.9.1 May 13, 2018
+- Fix toolbar icon updating.
+- Fix adding two-character long generic domains. #56
+- Fix adding comma to trim parameters. #58
+
 Version 1.9.0 May 9, 2018
 - Add rule tester for testing selected rules against test URL.
 - Add support for rule tagging in panel.
