@@ -1,3 +1,7 @@
+Version 1.9.2 May 15, 2018
+- Add disabled state icon.
+- Fix resolving match patterns with multiple paths and TLDs. #66
+
 Version 1.9.1 May 13, 2018
 - Fix toolbar icon updating.
 - Fix adding two-character long generic domains. #56
