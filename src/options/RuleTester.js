@@ -75,7 +75,7 @@ function matchPatternToRegExp(pattern) {
             regex += '(/.*)?';
         } else if (path.charAt(0) !== '/') {
             regex += '/';
-            regex += path.replace(/\./g, '\\.').replace(/\*/g, '.*?');
+            regex += path.replace(/\./g, '\\.').replace(/\?/g, '\\?').replace(/\*/g, '.*?');
             regex += '/?';
         }
     }
