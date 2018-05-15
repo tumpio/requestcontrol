@@ -17,13 +17,24 @@ const records = new Map();
 
 browser.storage.local.get().then(init);
 browser.storage.onChanged.addListener(initOnChange);
-browser.tabs.onRemoved.addListener(removeRecords);
-browser.webNavigation.onCommitted.addListener(resetBrowserAction);
-browser.runtime.onMessage.addListener(getRecords);
 
 function init(options) {
     if (!options.disabled) {
         addRuleListeners(options.rules);
+        updateBrowserAction(null, REQUEST_CONTROL_ICONS[NO_ACTION], "");
+        browser.tabs.onRemoved.addListener(removeRecords);
+        browser.webNavigation.onCommitted.addListener(resetBrowserAction);
+        browser.runtime.onMessage.addListener(getRecords);
+    } else {
+        updateBrowserAction(null, REQUEST_CONTROL_ICONS[DISABLED_STATE], "");
+        for (let [tabId,] of records) {
+            updateBrowserAction(tabId, null, "");
+        }
+        records.clear();
+        markedRequests.clear();
+        browser.tabs.onRemoved.removeListener(removeRecords);
+        browser.webNavigation.onCommitted.removeListener(resetBrowserAction);
+        browser.runtime.onMessage.removeListener(getRecords);
     }
     browser.webRequest.handlerBehaviorChanged();
 }

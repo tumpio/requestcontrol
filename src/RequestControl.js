@@ -10,6 +10,7 @@ const WHITELIST_ACTION = 1 << 1;
 const BLOCK_ACTION = 1 << 2;
 const REDIRECT_ACTION = 1 << 3;
 const FILTER_ACTION = 1 << 4;
+const DISABLED_STATE = 1 << 5;
 const REQUEST_CONTROL_ICONS = {};
 
 REQUEST_CONTROL_ICONS[WHITELIST_ACTION] = {
@@ -31,6 +32,10 @@ REQUEST_CONTROL_ICONS[REDIRECT_ACTION] = {
 REQUEST_CONTROL_ICONS[NO_ACTION] = {
     19: "/icons/icon-blank@19.png",
     38: "/icons/icon-blank@38.png"
+};
+REQUEST_CONTROL_ICONS[DISABLED_STATE] = {
+    19: "/icons/icon-disabled@19.png",
+    38: "/icons/icon-disabled@38.png"
 };
 REQUEST_CONTROL_ICONS[FILTER_ACTION | REDIRECT_ACTION] = REQUEST_CONTROL_ICONS[FILTER_ACTION];
 

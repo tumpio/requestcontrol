@@ -133,22 +133,24 @@ function toggleActive() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    Promise.all([browser.runtime.sendMessage(null),
-        myOptionsManager.loadOptions()]).then(values => {
-        if (myOptionsManager.options.rules) {
-            setRecords(values[0]);
-        }
+    myOptionsManager.loadOptions().then(function () {
         if (myOptionsManager.options.disabled) {
             document.getElementById("toggleActive").classList.add("disabled");
+            return Promise.reject("");
+        } else {
+            return browser.runtime.sendMessage(null);
+        }
+    }).then(records => {
+        if (myOptionsManager.options.rules) {
+            setRecords(records);
+        }
+        let copyButtons = document.getElementsByClassName("copyButton");
+        for (let copyButton of copyButtons) {
+            copyButton.addEventListener("click", copyText);
+            copyButton.addEventListener("mouseleave", copied);
         }
     });
 
     document.getElementById("showRules").addEventListener("click", openOptionsPage);
     document.getElementById("toggleActive").addEventListener("click", toggleActive);
-
-    let copyButtons = document.getElementsByClassName("copyButton");
-    for (let copyButton of copyButtons) {
-        copyButton.addEventListener("click", copyText);
-        copyButton.addEventListener("mouseleave", copied);
-    }
 });
