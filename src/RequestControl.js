@@ -312,13 +312,15 @@ RequestControl.resolveUrls = function (pattern) {
     let hostTLDWildcardPattern = /^(.+)\.\*$/;
 
     for (let host of hosts) {
-        for (let path of paths) {
-            if (hostTLDWildcardPattern.test(host)) {
-                host = host.slice(0, -1);
-                for (let TLD of pattern.topLevelDomains) {
+        if (hostTLDWildcardPattern.test(host)) {
+            host = host.slice(0, -1);
+            for (let TLD of pattern.topLevelDomains) {
+                for (let path of paths) {
                     urls.push(pattern.scheme + "://" + host + TLD + "/" + path);
                 }
-            } else {
+            }
+        } else {
+            for (let path of paths) {
                 urls.push(pattern.scheme + "://" + host + "/" + path);
             }
         }

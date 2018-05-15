@@ -97,4 +97,13 @@ test('Resolve urls', t => {
         }).sort(),
         ["https://first.com/some/path", "https://second.com/some/path",
             "https://second.org/some/path"].sort());
+    t.deepEqual(RequestControl.resolveUrls({
+            scheme: "*",
+            host: ["first.com", "second.*"],
+            path: ["first/path", "second/path"],
+            topLevelDomains: ["com", "org"]
+        }).sort(),
+        ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
+            "*://second.com/second/path", "*://second.org/first/path",
+            "*://second.org/second/path"].sort());
 });
