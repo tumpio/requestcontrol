@@ -90,5 +90,20 @@
         "utm_*"
       ]
     }
+  },
+  {
+    "name": "Block Beacon requests",
+    "uuid": "32db1f93-f99d-4c45-8485-e5c7beec5a69",
+    "pattern": {
+      "allUrls": true
+    },
+    "action": "block",
+    "active": true,
+    "types": [
+      "beacon",
+      "ping"
+    ],
+    "tag": "block-beacon",
+    "description": "Block Beacon and Ping requests. The Beacon API is often used for logging user activity and sending analytics data to the server."
   }
 ]
