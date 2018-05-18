@@ -7,7 +7,7 @@ function testRules(url, rulePatterns) {
         throw e;
     }
     for (let rulePattern of rulePatterns) {
-        let rule = RequestControl.createRule(rulePattern.id, rulePattern);
+        let rule = RequestControl.createRule(rulePattern);
         let matchPatterns = RequestControl.resolveUrls(rulePattern.pattern);
         for (let matchPattern of matchPatterns) {
             if (matchPatternToRegExp(matchPattern).test(url)) {

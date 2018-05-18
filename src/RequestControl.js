@@ -47,16 +47,12 @@ class InvalidUrlException {
 }
 
 class ControlRule {
-    constructor(id) {
-        this.id = id;
+    constructor(uuid) {
+        this.uuid = uuid;
     }
 }
 
 class WhitelistRule extends ControlRule {
-    constructor(id) {
-        super(id);
-    }
-
     static resolve(callback) {
         callback(this, WHITELIST_ACTION);
         return null;
@@ -64,10 +60,6 @@ class WhitelistRule extends ControlRule {
 }
 
 class BlockRule extends ControlRule {
-    constructor(id) {
-        super(id);
-    }
-
     static resolve(callback) {
         callback(this, BLOCK_ACTION);
         return {cancel: true};
@@ -75,8 +67,8 @@ class BlockRule extends ControlRule {
 }
 
 class FilterRule extends ControlRule {
-    constructor(id, paramsFilter, removeQueryString, skipInlineUrlFilter) {
-        super(id);
+    constructor(uuid, paramsFilter, removeQueryString, skipInlineUrlFilter) {
+        super(uuid);
         this.queryParamsPattern = (paramsFilter) ? RequestControl.createTrimPattern(paramsFilter.values) : "";
         this.invertQueryFilter = (paramsFilter) ? paramsFilter.invert : false;
         this.removeQueryString = removeQueryString;
@@ -101,8 +93,8 @@ class FilterRule extends ControlRule {
 }
 
 class RedirectRule extends ControlRule {
-    constructor(id, redirectUrl) {
-        super(id);
+    constructor(uuid, redirectUrl) {
+        super(uuid);
         let [parsedUrl, instructions] = RequestControl.parseRedirectInstructions(redirectUrl);
         let patterns = RequestControl.parseRedirectParameters(parsedUrl);
         this.instructions = instructions;
@@ -154,10 +146,6 @@ class BaseRedirectPattern {
 }
 
 class ParameterExpansion extends BaseRedirectPattern {
-    constructor(value) {
-        super(value);
-    }
-
     resolve(requestURL) {
         return requestURL[this.value];
     }
@@ -276,16 +264,16 @@ RequestControl.processRedirectRules = function (callback, errorCallback) {
     return null;
 };
 
-RequestControl.createRule = function (index, rule) {
-    switch (rule.action) {
+RequestControl.createRule = function (data) {
+    switch (data.action) {
         case "whitelist":
-            return new WhitelistRule(index);
+            return new WhitelistRule(data.uuid);
         case "block":
-            return new BlockRule(index);
+            return new BlockRule(data.uuid);
         case "redirect":
-            return new RedirectRule(index, rule.redirectUrl);
+            return new RedirectRule(data.uuid, data.redirectUrl);
         case "filter":
-            return new FilterRule(index, rule.paramsFilter, rule.trimAllParams, rule.skipRedirectionFilter);
+            return new FilterRule(data.uuid, data.paramsFilter, data.trimAllParams, data.skipRedirectionFilter);
         default:
             throw new Error("Unsupported rule action");
     }

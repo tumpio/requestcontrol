@@ -6,29 +6,22 @@ function handleInstalled(details) {
     if (details.reason === "update") {
 
         if (!details.previousVersion) {
-            details.previousVersion = "1.6.0";
+            details.previousVersion = "1.9.2";
         }
 
         let versions = details.previousVersion.split(".");
 
-        // migrate from < 1.7.0
+        // migrate from < 1.9.3
         if (Number(versions[0]) < 1 ||
-            (Number(versions[0]) === 1 && Number(versions[1]) < 7) ||
-            (Number(versions[0]) === 1 && Number(versions[1]) === 7) && versions[2].startsWith("0beta")) {
+            (Number(versions[0]) === 1 && Number(versions[1]) < 9) ||
+            (Number(versions[0]) === 1 && Number(versions[1]) === 9 && Number(versions[2]) < 3)) {
 
             browser.storage.local.get("rules").then(options => {
                 for (let rule of options.rules) {
-                    if (rule.action === "filter" && rule.paramsFilter && !rule.paramsFilter.values) {
-                        let newValue = {};
-                        newValue.values = rule.paramsFilter;
-
-                        if (newValue.values.length > 0) {
-                            newValue.pattern = RequestControl.createTrimPattern(newValue.values);
-                            rule.paramsFilter = newValue;
-                        } else {
-                            delete rule.paramsFilter;
-                        }
+                    if (!"uuid" in rule) {
+                        rule.uuid = uuid();
                     }
+                    delete rule.id;
                 }
                 browser.storage.local.set({rules: options.rules});
             });

@@ -20,11 +20,10 @@ function removeRuleInputs() {
 }
 
 function createRuleInputs(rules, className) {
-    for (let i = 0; i < rules.length; i++) {
-        let input = myRuleInputFactory.newInput(rules[i]);
-        input.model.id = "rule-" + i;
-        input.model.dataset.id = i.toString();
-        document.getElementById(rules[i].action).appendChild(input.model);
+    for (let rule of rules) {
+        let input = myRuleInputFactory.newInput(rule);
+        input.model.id = "rule-" + rule.uuid;
+        document.getElementById(rule.action).appendChild(input.model);
         if (className) {
             input.model.classList.add(className);
         }
@@ -70,6 +69,25 @@ function displayErrorMessage(error) {
     message.parentNode.classList.toggle("show", true);
 }
 
+function mergeRules(rules, rulesImport) {
+    let newRules = [];
+    for (let rule of rulesImport) {
+        let merged = false;
+        for (let i = 0; i < rules.length; i++) {
+            if (rule.uuid === rules[i].uuid) {
+                rules[i] = rule;
+                merged = true;
+                break;
+            }
+        }
+        if (!merged) {
+            rules.push(rule);
+            newRules.push(rule);
+        }
+    }
+    return newRules;
+}
+
 function importRules(rulesImport) {
     let rules = [];
 
@@ -77,14 +95,15 @@ function importRules(rulesImport) {
         rules = rules.concat(myOptionsManager.options.rules);
     }
 
+    let newRules = [];
     if (Array.isArray(rulesImport)) {
-        rules = rules.concat(rulesImport);
+        newRules = mergeRules(rules, rulesImport);
     } else {
-        rules.push(rulesImport);
+        newRules = mergeRules(rules, [rulesImport]);
     }
 
     try {
-        createRuleInputs(rulesImport, "new");
+        createRuleInputs(newRules, "new");
         myOptionsManager.saveOption("rules", rules);
         window.location.hash = "#tab-rules";
         document.body.scrollIntoView(false);
@@ -123,7 +142,6 @@ function onRuleTest() {
     let rules = [];
     for (let input of getSelectedRuleInputs()) {
         let rule = input.getRule();
-        rule.id = input.dataset.id;
         rules.push(rule);
     }
     let request;
@@ -176,11 +194,10 @@ document.addEventListener("DOMContentLoaded", function () {
             let query = new URLSearchParams(location.search);
             if (query.has("edit")) {
                 let rules = query.getAll("edit");
-                let ruleInputs = document.querySelectorAll(".rule");
                 for (let rule of rules) {
-                    let i = parseInt(rule);
-                    ruleInputs[i].select();
-                    ruleInputs[i].edit();
+                    let ruleInput = document.getElementById("rule-" + rule);
+                    ruleInput.select();
+                    ruleInput.edit();
                 }
             }
         }

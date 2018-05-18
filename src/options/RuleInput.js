@@ -13,6 +13,7 @@ const hostsTLDWildcardPattern = /^(.+\.\*,.+|.+\.\*)$/;
 
 function RequestRule() {
     return {
+        uuid: uuid(),
         pattern: {
             scheme: "*",
             host: "",

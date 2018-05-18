@@ -53,18 +53,15 @@ function addRuleListeners(rules) {
     if (!rules) {
         return;
     }
-    rules.sort(function (a, b) {
-        return a.action - b.action;
-    });
-    for (let i = 0; i < rules.length; i++) {
-        if (!rules[i].active) {
+    for (let data of rules) {
+        if (!data.active) {
             continue;
         }
-        let rule = RequestControl.createRule(i, rules[i]);
-        let urls = RequestControl.resolveUrls(rules[i].pattern);
+        let rule = RequestControl.createRule(data);
+        let urls = RequestControl.resolveUrls(data.pattern);
         let filter = {
             urls: urls,
-            types: rules[i].types
+            types: data.types
         };
         let listener = function (details) {
             let request = markRequest(details);
@@ -102,7 +99,7 @@ function requestControlCallback(request, action, updateTab) {
         url: request.url,
         target: request.redirectUrl,
         timestamp: request.timeStamp,
-        rules: request.rules.map(rule => rule.id)
+        rules: request.rules.map(rule => rule.uuid)
     });
     updateBrowserAction(request.tabId, REQUEST_CONTROL_ICONS[action], tabRecordsCount.toString());
     if (updateTab) {
@@ -119,7 +116,7 @@ function errorCallback(request, rule, error) {
         type: request.type,
         url: request.url,
         timestamp: request.timeStamp,
-        rules: [rule.id],
+        rules: [rule.uuid],
         error: error,
         target: error.target
     });

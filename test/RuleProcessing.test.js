@@ -5,14 +5,14 @@ import {
 
 test.beforeEach(t => {
     t.context.request = {url: "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F"};
-    t.context.blockRule = RequestControl.createRule(0, {action: "block"});
-    t.context.whitelistRule = RequestControl.createRule(1, {action: "whitelist"});
-    t.context.filterRule = RequestControl.createRule(2, {action: "filter"});
-    t.context.redirectRule = RequestControl.createRule(3, {
+    t.context.blockRule = RequestControl.createRule({action: "block"});
+    t.context.whitelistRule = RequestControl.createRule({action: "whitelist"});
+    t.context.filterRule = RequestControl.createRule({action: "filter"});
+    t.context.redirectRule = RequestControl.createRule({
         action: "redirect",
         redirectUrl: "https://redirect.url/"
     });
-    t.context.filterParamsRule = RequestControl.createRule(4, {
+    t.context.filterParamsRule = RequestControl.createRule({
         "action": "filter",
         "skipRedirectionFilter": true,
         "paramsFilter": {
@@ -31,7 +31,7 @@ test.beforeEach(t => {
 
 test('Rule creation fails', t => {
     t.throws(() => {
-        RequestControl.createRule(0, "no-action");
+        RequestControl.createRule("no-action");
     }, Error);
 });
 
@@ -90,7 +90,7 @@ test('Request filtered - block sub_frame redirection', t => {
 
 test('Request filtered - multiple rules', t => {
     t.context.request.url += decodeURIComponent("?utm_source=blaa&a=b");
-    RequestControl.markRule(t.context.request, RequestControl.createRule(5, {
+    RequestControl.markRule(t.context.request, RequestControl.createRule({
         action: "redirect",
         redirectUrl: "{href/http%3A/https%3A}"
     }));

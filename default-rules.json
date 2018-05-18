@@ -1,5 +1,6 @@
 [
   {
+    "uuid": "3baa759b-9afc-41ef-b770-c60e1d9383d2",
     "description": "Filter rule to skip and prevent redirection tracking on multiple hosts.",
     "tag": "filter-multiple",
     "pattern": {
@@ -13,6 +14,7 @@
   },
   {
     "name": "Stop Google search link tracking",
+    "uuid": "60f46cfa-b906-4a2d-ab66-8f26dc35e97f",
     "description": "This filter rule prevents Google from obtaining the URL of clicked search link via URL redirection. The tracking request done in background is classified as a Sub Document type. This rule provides an example of using the top-level domains pattern.",
     "tag": "filter-google",
     "pattern": {
@@ -42,6 +44,7 @@
   },
   {
     "name": "Skip outgoing page confirmation on DeviantArt",
+    "uuid": "bc145190-0b68-4ff4-84d3-321e131cd253",
     "tag": "filter-deviantArt",
     "pattern": {
       "scheme": "*",
@@ -56,6 +59,7 @@
   },
   {
     "name": "Filter rule for Mozilla's outgoing link redirection service",
+    "uuid": "3c4d6fa0-e2fb-4079-b3f0-e453ebe289ae",
     "tag": "filter-mozilla",
     "pattern": {
       "scheme": "*",
@@ -69,6 +73,7 @@
     "active": true
   },
   {
+    "uuid": "5276a290-b21a-4deb-a86e-aa54c3ff1bcc",
     "description": "Example of a global rule to remove any UTM query parameters from all requests. Disabled by default.",
     "tag": "filter-utm",
     "pattern": {

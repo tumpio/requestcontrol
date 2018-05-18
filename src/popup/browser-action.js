@@ -44,9 +44,9 @@ function setRecords(records) {
 
 function getTags(rules) {
     let tags = [];
-    for (let rule of rules) {
-        if (myOptionsManager.options.rules[rule].tag) {
-            tags.push(myOptionsManager.options.rules[rule].tag);
+    for (let rule of myOptionsManager.options.rules) {
+        if (rules.includes(rule.uuid) && rule.tag) {
+            tags.push(rule.tag);
         }
     }
     return tags;
