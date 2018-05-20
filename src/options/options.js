@@ -28,6 +28,7 @@ function createRuleInputs(rules, className) {
             input.model.classList.add(className);
         }
     }
+    toggleRuleHeaders(true);
 }
 
 function getSelectedRuleInputs() {
@@ -185,6 +186,33 @@ function onRuleTest() {
     }
 }
 
+function toggleRuleHeaders() {
+    let headers = document.querySelectorAll(".header-rules");
+    for (let header of headers) {
+        let rulesList = header.nextElementSibling;
+        header.classList.toggle("d-none", rulesList.childElementCount <= 0);
+    }
+}
+
+function updateTotalSelected() {
+    let total = document.querySelectorAll(".select:checked");
+    for (let totalText of document.querySelectorAll(".total-selected-count")) {
+        totalText.textContent = total.length.toString();
+    }
+}
+
+function updateSelectedText(header, selected, total) {
+    let selectedText = header.querySelector(".selected-rules-count");
+    if (selected > 0) {
+        selectedText.classList.remove("d-none");
+        selectedText.textContent = browser.i18n.getMessage(
+            "selected_rules_count", [selected, total]
+        );
+    } else {
+        selectedText.classList.add("d-none");
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     Promise.all([myOptionsManager.loadOptions(), myRuleInputFactory.load()]).then(() => {
         if (!myOptionsManager.options.rules) {
@@ -196,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 let rules = query.getAll("edit");
                 for (let rule of rules) {
                     let ruleInput = document.getElementById("rule-" + rule);
-                    ruleInput.select();
+                    ruleInput.select(true);
                     ruleInput.edit();
                 }
             }
@@ -237,6 +265,17 @@ document.addEventListener("DOMContentLoaded", function () {
             input.remove();
         }
         toggleDisabled(true, ...document.querySelectorAll(".btn-select-action"));
+        toggleRuleHeaders();
+        updateTotalSelected();
+
+        for (let selectAll of document.querySelectorAll(".select-all-rules")) {
+            selectAll.checked = false;
+            selectAll.indeterminate = false;
+        }
+
+        for (let selectedText of document.querySelectorAll(".selected-rules-count")) {
+            selectedText.classList.add("d-none");
+        }
     });
 
     document.getElementById("testSelectedRules").addEventListener("click", function () {
@@ -249,10 +288,48 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    for (let header of document.querySelectorAll(".header-rules")) {
+        header.addEventListener("click", function (event) {
+            let checkbox = this.querySelector(".select-all-rules");
+            let rules = this.nextElementSibling.querySelectorAll(".rule");
+            if (event.target !== checkbox) {
+                checkbox.checked = !checkbox.checked;
+            }
+            for (let rule of rules) {
+                rule.select(checkbox.checked);
+            }
+            let count = checkbox.checked ? rules.length : 0;
+            updateSelectedText(this, count, count);
+            toggleDisabled(!checkbox.checked && !checkbox.indeterminate,
+                ...document.querySelectorAll(".btn-select-action"));
+            updateTotalSelected();
+        });
+    }
+
+    document.addEventListener("rule-select", function (e) {
+        let list = document.getElementById(e.detail.action);
+        let header = list.previousElementSibling;
+        let selectAll = header.querySelector(".select-all-rules");
+        if (!list.querySelector(".select:checked")) {
+            selectAll.checked = false;
+            selectAll.indeterminate = false;
+        } else if (!list.querySelector(".select:not(:checked)")) {
+            selectAll.checked = true;
+            selectAll.indeterminate = false;
+        } else {
+            selectAll.checked = false;
+            selectAll.indeterminate = true;
+        }
+        let count = list.querySelectorAll(".select:checked").length;
+        let total = list.querySelectorAll(".select").length;
+        updateSelectedText(header, count, total);
+        updateTotalSelected();
+    });
+
     document.getElementById("test-url").addEventListener("input", onRuleTest);
 
     browser.management.getSelf(info => {
         document.getElementById("version").textContent =
             browser.i18n.getMessage("version", info.version);
-    })
+    });
 });

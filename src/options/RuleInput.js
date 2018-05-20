@@ -70,7 +70,7 @@ function RuleInput(rule) {
     this.model.getRule = this.getRule.bind(this);
     this.model.remove = this.remove.bind(this);
     this.model.edit = this.toggleEdit.bind(this);
-    this.model.select = this.toggleSelect.bind(this);
+    this.model.select = this.select.bind(this);
 
     this.hostsTagsInput = new TagsInput(this.$(".host"));
     this.pathsTagsInput = new TagsInput(this.$(".path"));
@@ -386,6 +386,10 @@ RuleInput.prototype = {
 
     onSelect: function (e) {
         this.select(e.target.checked);
+        this.model.dispatchEvent(new CustomEvent("rule-select", {
+            bubbles: true,
+            detail: {"action": this.rule.action}
+        }));
     },
 
     select: function (isSelected) {

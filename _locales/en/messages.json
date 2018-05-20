@@ -259,6 +259,31 @@
   "whitelist": {
     "message": "Whitelist"
   },
+  "filter_rules": {
+    "message": "Filter rules"
+  },
+  "block_rules": {
+    "message": "Block rules"
+  },
+  "redirect_rules": {
+    "message": "Redirect rules"
+  },
+  "whitelist_rules": {
+    "message": "Whitelist rules"
+  },
+  "selected_rules_count": {
+    "message": "selected $COUNT$ of $TOTAL$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
   "redirect_to": {
     "message": "Redirect To"
   },
