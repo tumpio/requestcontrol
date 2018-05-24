@@ -100,10 +100,9 @@
     "action": "block",
     "active": true,
     "types": [
-      "beacon",
-      "ping"
+      "beacon"
     ],
     "tag": "block-beacon",
-    "description": "Block Beacon and Ping requests. The Beacon API is often used for logging user activity and sending analytics data to the server."
+    "description": "Block Beacon requests. The Beacon API is often used for logging user activity and sending analytics data to the server."
   }
 ]

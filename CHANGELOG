@@ -1,3 +1,11 @@
+Version 1.9.3 May 24, 2018
+- Add alphabetizing patterns. #57
+- Add Select / select none input #63
+- Add showing number of selected rules #64
+- Add UUID for rules. Rules with same UUID will be overwritten when importing rules.
+- Fix Rule Tester to escape '?' in path. #65
+- Fix redirecting by manipulating 'hostname'. #69
+
 Version 1.9.2 May 15, 2018
 - Add disabled state icon.
 - Fix resolving match patterns with multiple paths and TLDs. #66
