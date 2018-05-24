@@ -424,13 +424,15 @@ RequestControl.parseRedirectParameters = function (redirectUrl) {
 
             // Look up parameter name
             for (let name of URL_PARAMETER_NAMES) {
-                if (redirectUrl.startsWith(name, i + 1)) {
+                if (redirectUrl.startsWith(name, i + 1)
+                    && redirectUrl.charAt(i + name.length + 1).match(/[}/:]/)) {
                     parameter = {
                         offset: i,
                         name: name,
                         ruleStart: i + name.length + 1
                     };
                     i += parameter.name.length;
+                    break;
                 }
             }
         } else if (redirectUrl.charAt(i) === "}" && parameter) {
