@@ -271,6 +271,9 @@
   "whitelist_rules": {
     "message": "Whitelist rules"
   },
+  "new_rules": {
+    "message": "New rules"
+  },
   "selected_rules_count": {
     "message": "selected $COUNT$ of $TOTAL$",
     "placeholders": {

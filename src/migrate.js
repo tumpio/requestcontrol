@@ -11,14 +11,14 @@ function handleInstalled(details) {
 
         let versions = details.previousVersion.split(".");
 
-        // migrate from < 1.9.3
+        // migrate from < 1.9.4
         if (Number(versions[0]) < 1 ||
             (Number(versions[0]) === 1 && Number(versions[1]) < 9) ||
-            (Number(versions[0]) === 1 && Number(versions[1]) === 9 && Number(versions[2]) < 3)) {
+            (Number(versions[0]) === 1 && Number(versions[1]) === 9 && Number(versions[2]) < 4)) {
 
             browser.storage.local.get("rules").then(options => {
                 for (let rule of options.rules) {
-                    if (!"uuid" in rule) {
+                    if (!rule.hasOwnProperty("uuid")) {
                         rule.uuid = uuid();
                     }
                     delete rule.id;

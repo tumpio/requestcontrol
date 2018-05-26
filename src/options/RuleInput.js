@@ -153,6 +153,13 @@ RuleInput.prototype = {
             .then(this.toggleSaved.bind(this));
     },
 
+    toggleParent: function () {
+        let list = document.getElementById(this.rule.action);
+        if (list !== this.model.parentNode) {
+            list.appendChild(this.model);
+        }
+    },
+
     toggleSaved: function () {
         let input = this.model;
         input.classList.add("saved");
@@ -189,6 +196,10 @@ RuleInput.prototype = {
 
     toggleSelect: function () {
         this.select(!this.model.classList.contains("selected"));
+        this.model.parentNode.dispatchEvent(new CustomEvent("rule-select", {
+            bubbles: true,
+            detail: {"action": this.rule.action, parent: this.model.parentNode}
+        }));
     },
 
     toggleTLDs: function () {
@@ -386,9 +397,9 @@ RuleInput.prototype = {
 
     onSelect: function (e) {
         this.select(e.target.checked);
-        this.model.dispatchEvent(new CustomEvent("rule-select", {
+        this.model.parentNode.dispatchEvent(new CustomEvent("rule-select", {
             bubbles: true,
-            detail: {"action": this.rule.action}
+            detail: {"action": this.rule.action, parent: this.model.parentNode}
         }));
     },
 

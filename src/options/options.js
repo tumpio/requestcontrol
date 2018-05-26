@@ -73,6 +73,12 @@ function displayErrorMessage(error) {
 function mergeRules(rules, rulesImport) {
     let newRules = [];
     for (let rule of rulesImport) {
+        if (!rule.hasOwnProperty("uuid")) {
+            rule.uuid = uuid();
+            rules.push(rule);
+            newRules.push(rule);
+            continue;
+        }
         let merged = false;
         for (let i = 0; i < rules.length; i++) {
             if (rule.uuid === rules[i].uuid) {
@@ -238,6 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ruleInput.toggleEdit();
         ruleInput.$(".host").focus();
         ruleInput.model.scrollIntoView();
+        toggleRuleHeaders();
     });
 
     document.getElementById("reset").addEventListener("click", loadDefaultRules);
@@ -307,7 +314,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     document.addEventListener("rule-select", function (e) {
-        let list = document.getElementById(e.detail.action);
+        let list = e.detail.parent;
         let header = list.previousElementSibling;
         let selectAll = header.querySelector(".select-all-rules");
         if (!list.querySelector(".select:checked")) {
