@@ -379,29 +379,36 @@ RequestControl.parseRedirectInstructions = function (redirectUrl) {
     let instruction;
     let parsedUrl = "";
     let previousEnd = -1;
+    let inlineCount = 0;
 
     for (let i = 0; i < redirectUrl.length; i++) {
-        if (redirectUrl.charAt(i) === "[" && !instruction) {
-            for (let name of URL_PARAMETER_NAMES) {
-                if (redirectUrl.startsWith(name, i + 1)) {
-                    if (redirectUrl.charAt(i + name.length + 1) === "=") {
-                        instruction = {
-                            offset: i,
-                            name: name,
-                            valueStart: i + name.length + 2
-                        };
-                        i = instruction.valueStart;
+        if (redirectUrl.charAt(i) === "[") {
+            inlineCount++;
+            if (!instruction) {
+                for (let name of URL_PARAMETER_NAMES) {
+                    if (redirectUrl.startsWith(name, i + 1)) {
+                        if (redirectUrl.charAt(i + name.length + 1) === "=") {
+                            instruction = {
+                                offset: i,
+                                name: name,
+                                valueStart: i + name.length + 2
+                            };
+                            i = instruction.valueStart;
+                        }
                     }
                 }
             }
         } else if (redirectUrl.charAt(i) === "]" && instruction) {
-            instruction.end = i;
-            instruction.patterns = RequestControl.parseRedirectParameters(
-                redirectUrl.substring(instruction.valueStart, instruction.end));
-            parsedInstructions.push(new RedirectInstruction(instruction.name, instruction.patterns));
-            parsedUrl += redirectUrl.substring(previousEnd + 1, instruction.offset);
-            previousEnd = instruction.end;
-            instruction = null;
+            inlineCount--;
+            if (inlineCount === 0) {
+                instruction.end = i;
+                instruction.patterns = RequestControl.parseRedirectParameters(
+                    redirectUrl.substring(instruction.valueStart, instruction.end));
+                parsedInstructions.push(new RedirectInstruction(instruction.name, instruction.patterns));
+                parsedUrl += redirectUrl.substring(previousEnd + 1, instruction.offset);
+                previousEnd = instruction.end;
+                instruction = null;
+            }
         }
     }
     parsedUrl += redirectUrl.substring(previousEnd + 1);

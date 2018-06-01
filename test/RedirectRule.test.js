@@ -129,3 +129,11 @@ test('Redirect instructions - hostname', t => {
     redirectRule = new RedirectRule(0, "[hostname={hostname/\.m\./.}]");
     t.is(redirectRule.apply(request).href, target.href);
 });
+
+test('Redirect instructions - hostname', t => {
+    let request, target, redirectRule;
+    request = new URL('https://en.m.wikipedia.org/wiki/Main_Page');
+    target = new URL('https://en.wikipedia.org/wiki/Main_Page');
+    redirectRule = new RedirectRule(0, "[hostname={hostname/\\.[mi]\\./.}]");
+    t.is(redirectRule.apply(request).href, target.href);
+});
