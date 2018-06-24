@@ -280,6 +280,14 @@ input:not(:checked) + .icon {
     white-space: nowrap;
 }
 
+.manual-content colgroup {
+    display: none;
+}
+
+.manual-content table {
+    width: 100% !important;
+}
+
 .toc {
     padding: 2em;
     top: 0;

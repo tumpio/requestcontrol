@@ -151,6 +151,12 @@ class ParameterExpansion extends BaseRedirectPattern {
     }
 }
 
+class QueryParameterExpansion extends BaseRedirectPattern {
+    resolve(requestURL) {
+        return requestURL.searchParams.get(this.value);
+    }
+}
+
 class ParameterManipulation extends BaseRedirectPattern {
     constructor(parameter, manipulationRules) {
         super(parameter);
@@ -460,8 +466,10 @@ RequestControl.parseRedirectInstructions = function (redirectUrl) {
 RequestControl.parseRedirectParameters = function (redirectUrl) {
     let parsedParameters = [];
     let parameter;
+    let parameterExpansion;
     let inlineCount = 0;
     let previousEnd = -1;
+    let queryParamStart = "search.";
 
     for (let i = 0; i < redirectUrl.length; i++) {
         if (redirectUrl.charAt(i) === "{") {
@@ -471,25 +479,35 @@ RequestControl.parseRedirectParameters = function (redirectUrl) {
                 continue;
             }
 
+            if (redirectUrl.startsWith(queryParamStart, i + 1)) {
+                let name = redirectUrl.substring(i + queryParamStart.length + 1).match(/^\w+/)[0];
+                parameter = {
+                    offset: i,
+                    ruleStart: queryParamStart.length + name.length + 1
+                };
+                i += queryParamStart.length + name.length;
+                parameterExpansion = new QueryParameterExpansion(name);
+                continue;
+            }
+
             // Look up parameter name
             for (let name of URL_PARAMETER_NAMES) {
                 if (redirectUrl.startsWith(name, i + 1)
                     && redirectUrl.charAt(i + name.length + 1).match(/[}/:|]/)) {
                     parameter = {
                         offset: i,
-                        name: name,
                         ruleStart: i + name.length + 1
                     };
-                    i += parameter.name.length;
+                    i += name.length;
+                    parameterExpansion = new ParameterExpansion(name);
                     break;
                 }
             }
-        } else if (redirectUrl.charAt(i) === "}" && parameter) {
+        } else if (redirectUrl.charAt(i) === "}" && parameter && parameterExpansion) {
             inlineCount--;
 
             if (inlineCount === 0) {
                 parameter.end = i;
-                let parameterExpansion = new ParameterExpansion(parameter.name);
 
                 if (previousEnd + 1 !== parameter.offset) {
                     parsedParameters.push(new BaseRedirectPattern(

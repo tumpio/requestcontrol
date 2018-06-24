@@ -145,3 +145,17 @@ test('Invalid URL', t => {
     redirectRule = new RedirectRule(0, "xyz-[host={host/foo/bar}]");
     t.throws(() => redirectRule.apply(request), InvalidUrlException);
 });
+
+test('Capture Search Paramater - found', t => {
+    const request = new URL('http://go.redirectingat.com/?xs=1&id=xxxxxxx&sref=http%3A%2F%2Fwww.vulture.com%2F2018%2F05%2Fthe-end-of-nature-at-storm-king-art-center-in-new-york.html&xcust=xxxxxxxx&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FNathaniel_Parker_Willis');
+    const target = new URL("https://en.wikipedia.org/wiki/Nathaniel_Parker_Willis");
+    const redirectRule = new RedirectRule(0, "{search.url|decodeURIComponent}");
+    t.is(redirectRule.apply(request).href, target.href);
+});
+
+test('Capture Search Paramater - not found', t => {
+    const request = new URL('http://go.redirectingat.com/?xs=1&id=xxxxxxx&sref=http%3A%2F%2Fwww.vulture.com%2F2018%2F05%2Fthe-end-of-nature-at-storm-king-art-center-in-new-york.html&xcust=xxxxxxxx&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FNathaniel_Parker_Willis');
+    const target = new URL("https://en.wikipedia.org/wiki/Nathaniel_Parker_Willis");
+    const redirectRule = new RedirectRule(0, "{search.foo|decodeURIComponent}");
+    t.throws(() => redirectRule.apply(request));
+});
