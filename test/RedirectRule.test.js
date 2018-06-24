@@ -1,6 +1,6 @@
 import test from 'ava';
 import {URL} from 'url';
-import {RedirectRule} from '../src/RequestControl';
+import {RedirectRule, InvalidUrlException} from '../src/RequestControl';
 
 test('Static redirection url', t => {
     const request = new URL('https://www.amazon.com/AmazonBasics-Type-C-USB-Male-Cable/dp/B01GGKYQ02/ref=sr_1_1?s=amazonbasics&srs=10112675011&ie=UTF8&qid=1489067885&sr=8-1&keywords=usb-c');
@@ -136,4 +136,12 @@ test('Redirect instructions - hostname', t => {
     target = new URL('https://en.wikipedia.org/wiki/Main_Page');
     redirectRule = new RedirectRule(0, "[hostname={hostname/\\.[mi]\\./.}]");
     t.is(redirectRule.apply(request).href, target.href);
+});
+
+test('Invalid URL', t => {
+    let request, target, redirectRule;
+    request = new URL('http://foo.com/path');
+    target = new URL('https://bar.com/path');
+    redirectRule = new RedirectRule(0, "xyz-[host={host/foo/bar}]");
+    t.throws(() => redirectRule.apply(request), InvalidUrlException);
 });

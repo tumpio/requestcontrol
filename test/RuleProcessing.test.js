@@ -1,6 +1,6 @@
 import test from 'ava';
 import {
-    RequestControl
+    RequestControl, InvalidUrlException
 } from '../src/RequestControl';
 
 test.beforeEach(t => {
@@ -98,4 +98,14 @@ test('Request filtered - multiple rules', t => {
     RequestControl.markRule(t.context.request, t.context.filterParamsRule);
     let resolve = t.context.request.resolve(t.context.callback);
     t.is(resolve.redirectUrl, "https://bar.com/");
+});
+
+test('Error callback', t => {
+    RequestControl.markRule(t.context.request, RequestControl.createRule({
+        action: "redirect",
+        redirectUrl: "_"
+    }));
+    let resolve = t.context.request.resolve(null, (request, rule, error) => {
+        t.truthy(error instanceof InvalidUrlException);
+    });
 });

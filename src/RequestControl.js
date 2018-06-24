@@ -606,6 +606,7 @@ if (typeof exports !== "undefined") {
     exports.RequestControl = RequestControl;
     exports.FilterRule = FilterRule;
     exports.RedirectRule = RedirectRule;
+    exports.InvalidUrlException = InvalidUrlException;
     var URL = require("url").URL;
     var atob = function (a) {
         let buffer = Buffer.from(a, "base64");
