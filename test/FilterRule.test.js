@@ -56,3 +56,9 @@ test('Remove all query parameters', t => {
     const target = new URL('https://www.youtube.com/watch#hash');
     t.is(new FilterRule(0, null, true, true).apply(request).href, target.href);
 });
+
+test('Filter inline url redirection - trim parameters before inline url parsing', t => {
+    const request = new URL('http://go.redirectingat.com/?xs=1&id=xxxxxxx&sref=http%3A%2F%2Fwww.vulture.com%2F2018%2F05%2Fthe-end-of-nature-at-storm-king-art-center-in-new-york.html&xcust=xxxxxxxx&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FNathaniel_Parker_Willis');
+    const target = new URL("https://en.wikipedia.org/wiki/Nathaniel_Parker_Willis");
+    t.is(new FilterRule(0, {values: ["sref"]}, false, false).apply(request).href, target.href);
+});

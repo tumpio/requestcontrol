@@ -76,6 +76,11 @@ class FilterRule extends ControlRule {
     }
 
     apply(requestURL) {
+        // Trim unwanted query parameters before parsing inline url
+        if (!this.removeQueryString && this.queryParamsPattern.length > 0 && requestURL.search.length > 0) {
+            requestURL.search = RequestControl.trimQueryParameters(requestURL.search, this.queryParamsPattern,
+                this.invertQueryFilter);
+        }
         if (!this.skipInlineUrlFilter) {
             let redirectionUrl = RequestControl.parseInlineUrl(requestURL.href);
             if (redirectionUrl) {
