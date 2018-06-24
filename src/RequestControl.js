@@ -216,6 +216,48 @@ class ExtractStringManipulation {
     }
 }
 
+class DecodeURIManipulation {
+
+    static apply(str) {
+        return decodeURI(str);
+    }
+}
+
+class EncodeURIManipulation {
+
+    static apply(str) {
+        return encodeURI(str);
+    }
+}
+
+class DecodeURIComponentManipulation {
+
+    static apply(str) {
+        return decodeURIComponent(str);
+    }
+}
+
+class EncodeURIComponentManipulation {
+
+    static apply(str) {
+        return encodeURIComponent(str);
+    }
+}
+
+class DecodeBase64Manipulation {
+
+    static apply(str) {
+        return atob(str);
+    }
+}
+
+class EncodeBase64Manipulation {
+
+    static apply(str) {
+        return btoa(str);
+    }
+}
+
 RequestControl.markRule = function (request, rule) {
     if (typeof request.rulePriority === "undefined"
         || rule.priority > request.rulePriority) {
@@ -432,7 +474,7 @@ RequestControl.parseRedirectParameters = function (redirectUrl) {
             // Look up parameter name
             for (let name of URL_PARAMETER_NAMES) {
                 if (redirectUrl.startsWith(name, i + 1)
-                    && redirectUrl.charAt(i + name.length + 1).match(/[}/:]/)) {
+                    && redirectUrl.charAt(i + name.length + 1).match(/[}/:|]/)) {
                     parameter = {
                         offset: i,
                         name: name,
@@ -473,21 +515,41 @@ RequestControl.parseRedirectParameters = function (redirectUrl) {
 
 RequestControl.parseStringManipulations = function (rules) {
     let manipulations = [];
-    let replacePattern = /^\/(.+?(?!\\).)\/([^|]*)(\|(.*))?/;
-    let extractPattern = /^(:-?\d*)(:-?\d*)?(\|(.*))?/;
+    let replacePattern = /^\|?\/(.+?(?!\\).)\/([^|]*)(.*)/;
+    let extractPattern = /^\|?(:-?\d*)(:-?\d*)?(.*)/;
+    let keywordPattern = /^\|(\w+)(.*)/i;
+    let keywordManipulations = {
+        "decodeURI": DecodeURIManipulation,
+        "encodeURI": EncodeURIManipulation,
+        "decodeURIComponent": DecodeURIComponentManipulation,
+        "encodeURIComponent": EncodeURIComponentManipulation,
+        "decodeBase64": DecodeBase64Manipulation,
+        "encodeBase64": EncodeBase64Manipulation,
+    };
     while (typeof rules === "string" && rules.length > 0) {
         let match = replacePattern.exec(rules);
         if (match !== null) {
-            let [, pattern, replacement, , end] = match;
+            let [, pattern, replacement, end] = match;
             manipulations.push(new ReplaceStringManipulation(pattern, replacement));
             rules = end;
             continue;
         }
         match = extractPattern.exec(rules);
         if (match !== null) {
-            let [, offset, length, , end] = match;
+            let [, offset, length, end] = match;
             manipulations.push(new ExtractStringManipulation(offset, length));
             rules = end;
+            continue;
+        }
+        match = keywordPattern.exec(rules);
+        if (match !== null) {
+            let [, keyword, end] = match;
+            if (keywordManipulations.hasOwnProperty(keyword)) {
+                manipulations.push(keywordManipulations[keyword]);
+                rules = end;
+            } else {
+                break;
+            }
         } else {
             break;
         }
@@ -544,4 +606,12 @@ if (typeof exports !== "undefined") {
     exports.FilterRule = FilterRule;
     exports.RedirectRule = RedirectRule;
     var URL = require("url").URL;
+    var atob = function (a) {
+        let buffer = Buffer.from(a, "base64");
+        return buffer.toString("binary");
+    };
+    var btoa = function btoa(b) {
+        let buffer = Buffer.from(b, "binary");
+        return buffer.toString("base64");
+    };
 }

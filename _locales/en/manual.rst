@@ -280,12 +280,35 @@ Extract a part of the expanded parameter. Offset determines the
 starting position. It begins from 0 and can be a negative value counting
 from the end of the string.
 
+Decoding and encoding extracted patterns
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+{parameter|encodingRule}
+
+Decode or encode captured pattern.
+
++--------------------+------------------------------------------------------------------------------------------------+
+| encodeURI          | Encodes a pattern as URI. It does not encode the following characters: ":", "/", ";", and "?". |
++--------------------+------------------------------------------------------------------------------------------------+
+| decodeURI          | Decodes an encoded URI.                                                                        |
++--------------------+------------------------------------------------------------------------------------------------+
+| encodeURIComponent | Encodes a pattern as a component of URI. Encodes all special characters reserved for URI.      |
++--------------------+------------------------------------------------------------------------------------------------+
+| decodeURIComponent | Decodes an encoded URI component.                                                              |
++--------------------+------------------------------------------------------------------------------------------------+
+| encodeBase64       | Encode a pattern as Base64 string.                                                             |
++--------------------+------------------------------------------------------------------------------------------------+
+| decodeBase64       | Decodes an encoded Base64 string.                                                              |
++--------------------+------------------------------------------------------------------------------------------------+
+
 Combining manipulation rules
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
-    {parameter(manipulation1)|(manipulation2)|...|(manipulationN)}
+    {parameter(manipulation1)|(manipulation2)...|(manipulationN)}
 
 All the string manipulation rules can be chained using a "|" pipe
 character. The output is the result of the manipulations chain.
@@ -293,18 +316,15 @@ character. The output is the result of the manipulations chain.
 Examples
 ^^^^^^^^
 
-+-------------------------------+---------------------------------------+
-| \https://{hostname}/new/path  | Uses the hostname of the original     |
-|                               | request.                              |
-+-------------------------------+---------------------------------------+
-| \https://{hostname/([a-z]{2}) | Captures a part of the hostname of    |
-| .*/$1}/new/path               | the original request.                 |
-+-------------------------------+---------------------------------------+
-| \https://{hostname::-3|/.co/. | Uses the hostname of the original     |
-| com}/new/path                 | request but manipulate its length by  |
-|                               | three cutting it from the end and     |
-|                               | replace ".co" with ".com".            |
-+-------------------------------+---------------------------------------+
++-------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+| \https://{hostname}/new/path                                | Uses the hostname of the original request.                                                                                          |
++-------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+| \https://{hostname/([a-z]{2}) .*/$1}/new/path               | Captures a part of the hostname of the original request.                                                                            |
++-------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+| \https://{hostname::-3|/.co/.com}/new/path                  | Uses the hostname of the original request but manipulate its length by three cutting it from the end and replace ".co" with ".com". |
++-------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+| {href/.\*url=(.\*)/$1|decodeURIComponent}                   | Capture "url" search parameter and decode it.                                                                                       |
++-------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
 
 Redirect instruction
 ~~~~~~~~~~~~~~~~~~~~
