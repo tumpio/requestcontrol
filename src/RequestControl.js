@@ -517,14 +517,14 @@ RequestControl.parseStringManipulations = function (rules) {
     let manipulations = [];
     let replacePattern = /^\|?\/(.+?(?!\\).)\/([^|]*)(.*)/;
     let extractPattern = /^\|?(:-?\d*)(:-?\d*)?(.*)/;
-    let keywordPattern = /^\|(\w+)(.*)/i;
+    let keywordPattern = /^\|(\w+)(.*)/;
     let keywordManipulations = {
-        "decodeURI": DecodeURIManipulation,
-        "encodeURI": EncodeURIManipulation,
-        "decodeURIComponent": DecodeURIComponentManipulation,
-        "encodeURIComponent": EncodeURIComponentManipulation,
-        "decodeBase64": DecodeBase64Manipulation,
-        "encodeBase64": EncodeBase64Manipulation,
+        "decodeuri": DecodeURIManipulation,
+        "encodeuri": EncodeURIManipulation,
+        "decodeuricomponent": DecodeURIComponentManipulation,
+        "encodeuricomponent": EncodeURIComponentManipulation,
+        "decodebase64": DecodeBase64Manipulation,
+        "encodebase64": EncodeBase64Manipulation,
     };
     while (typeof rules === "string" && rules.length > 0) {
         let match = replacePattern.exec(rules);
@@ -544,6 +544,7 @@ RequestControl.parseStringManipulations = function (rules) {
         match = keywordPattern.exec(rules);
         if (match !== null) {
             let [, keyword, end] = match;
+            keyword = keyword.toLowerCase();
             if (keywordManipulations.hasOwnProperty(keyword)) {
                 manipulations.push(keywordManipulations[keyword]);
                 rules = end;
