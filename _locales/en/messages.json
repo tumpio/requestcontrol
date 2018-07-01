@@ -224,19 +224,31 @@
     "message": "Pattern"
   },
   "scheme": {
-    "message": "scheme"
+    "message": "Scheme"
   },
   "host": {
-    "message": "host"
+    "message": "Host"
   },
   "tlds": {
     "message": "TLDs"
   },
   "path": {
-    "message": "path"
+    "message": "Path"
   },
   "top_level_domains": {
     "message": "Top-level domains"
+  },
+  "must_contain": {
+    "message": "Must contain"
+  },
+  "must_not_contain": {
+    "message": "Must not contain"
+  },
+  "includes": {
+    "message": "Includes"
+  },
+  "excludes": {
+    "message": "Excludes"
   },
   "types": {
     "message": "Types"

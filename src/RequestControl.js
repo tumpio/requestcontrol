@@ -47,8 +47,13 @@ class InvalidUrlException {
 }
 
 class ControlRule {
-    constructor(uuid) {
+    constructor(uuid, matcher) {
         this.uuid = uuid;
+        this.matcher = matcher;
+    }
+
+    match(url) {
+        return this.matcher.test(url);
     }
 }
 
@@ -67,9 +72,9 @@ class BlockRule extends ControlRule {
 }
 
 class FilterRule extends ControlRule {
-    constructor(uuid, paramsFilter, removeQueryString, skipInlineUrlFilter) {
-        super(uuid);
-        this.queryParamsPattern = (paramsFilter) ? RequestControl.createTrimPattern(paramsFilter.values) : "";
+    constructor(uuid, paramsFilter, removeQueryString, skipInlineUrlFilter, matcher) {
+        super(uuid, matcher);
+        this.queryParamsPattern = (paramsFilter) ? RequestControl.createRegexpPattern(paramsFilter.values) : "";
         this.invertQueryFilter = (paramsFilter) ? paramsFilter.invert : false;
         this.removeQueryString = removeQueryString;
         this.skipInlineUrlFilter = skipInlineUrlFilter;
@@ -77,7 +82,7 @@ class FilterRule extends ControlRule {
 
     apply(requestURL) {
         // Trim unwanted query parameters before parsing inline url
-        if (!this.removeQueryString && this.queryParamsPattern.length > 0 && requestURL.search.length > 0) {
+        if (!this.removeQueryString && this.queryParamsPattern && requestURL.search.length > 0) {
             requestURL.search = RequestControl.trimQueryParameters(requestURL.search, this.queryParamsPattern,
                 this.invertQueryFilter);
         }
@@ -89,7 +94,7 @@ class FilterRule extends ControlRule {
         }
         if (this.removeQueryString) {
             requestURL.search = "";
-        } else if (this.queryParamsPattern.length > 0 && requestURL.search.length > 0) {
+        } else if (this.queryParamsPattern && requestURL.search.length > 0) {
             requestURL.search = RequestControl.trimQueryParameters(requestURL.search, this.queryParamsPattern,
                 this.invertQueryFilter);
         }
@@ -98,8 +103,8 @@ class FilterRule extends ControlRule {
 }
 
 class RedirectRule extends ControlRule {
-    constructor(uuid, redirectUrl) {
-        super(uuid);
+    constructor(uuid, redirectUrl, matcher) {
+        super(uuid, matcher);
         let [parsedUrl, instructions] = RequestControl.parseRedirectInstructions(redirectUrl);
         let patterns = RequestControl.parseRedirectParameters(parsedUrl);
         this.instructions = instructions;
@@ -269,7 +274,51 @@ class EncodeBase64Manipulation {
     }
 }
 
+class BaseMatchExtender {
+    static test() {
+        return true;
+    }
+}
+
+class RuleMatcher {
+    constructor(extensions) {
+        this.extensions = extensions;
+    }
+
+    test(url) {
+        for (let extension of this.extensions) {
+            if (!extension.test(url)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+class IncludeMatcher {
+    constructor(values) {
+        this.pattern = RequestControl.createRegexpPattern(values, true, true);
+    }
+
+    test(url) {
+        return this.pattern.test(url);
+    }
+}
+
+class ExcludeMatcher extends IncludeMatcher {
+    constructor(values) {
+        super(values);
+    }
+
+    test(url) {
+        return !super.test(url);
+    }
+}
+
 RequestControl.markRule = function (request, rule) {
+    if (!rule.match(request.url)) {
+        return false;
+    }
     if (typeof request.rulePriority === "undefined"
         || rule.priority > request.rulePriority) {
         request.rulePriority = rule.priority;
@@ -280,6 +329,7 @@ RequestControl.markRule = function (request, rule) {
         request.rules.push(rule);
         request.action |= rule.action;
     }
+    return true;
 };
 
 RequestControl.processRedirectRules = function (callback, errorCallback) {
@@ -318,26 +368,42 @@ RequestControl.processRedirectRules = function (callback, errorCallback) {
 };
 
 RequestControl.createRule = function (data) {
+    let matchers = [];
+    if (data.pattern) {
+        if (data.pattern.includes) {
+            for (let value of data.pattern.includes) {
+                matchers.push(new IncludeMatcher([value]));
+            }
+        }
+
+        if (data.pattern.excludes) {
+            matchers.push(new ExcludeMatcher(data.pattern.excludes));
+        }
+    }
+    let ruleMatcher = matchers.length > 0 ?
+        new RuleMatcher(matchers) : BaseMatchExtender;
+
     switch (data.action) {
         case "whitelist":
-            return new WhitelistRule(data.uuid);
+            return new WhitelistRule(data.uuid, ruleMatcher);
         case "block":
-            return new BlockRule(data.uuid);
+            return new BlockRule(data.uuid, ruleMatcher);
         case "redirect":
-            return new RedirectRule(data.uuid, data.redirectUrl);
+            return new RedirectRule(data.uuid, data.redirectUrl, ruleMatcher);
         case "filter":
-            return new FilterRule(data.uuid, data.paramsFilter, data.trimAllParams, data.skipRedirectionFilter);
+            return new FilterRule(data.uuid, data.paramsFilter, data.trimAllParams,
+                data.skipRedirectionFilter, ruleMatcher);
         default:
             throw new Error("Unsupported rule action");
     }
 };
 
 /**
- * Construct array of urls from given rule pattern
+ * Construct array of match patterns
  * @param pattern pattern of request control rule
- * @returns {*} array of urls
+ * @returns {*} array of match patterns
  */
-RequestControl.resolveUrls = function (pattern) {
+RequestControl.createMatchPatterns = function (pattern) {
     let urls = [];
     let hosts = Array.isArray(pattern.host) ? pattern.host : [pattern.host];
     let paths = Array.isArray(pattern.path) ? pattern.path : [pattern.path];
@@ -371,24 +437,29 @@ RequestControl.resolveUrls = function (pattern) {
 };
 
 /**
- * Construct regexp pattern of filter params
- * @param values
- * @returns {string}
+ * Construct regexp from list of globs (pattern with wildcards) and regexp pattern strings
+ * @param values list of globs or regexp pattern strings
+ * @param insensitive if true, set case insensitive flag
+ * @returns {RegExp}
  */
-RequestControl.createTrimPattern = function (values) {
-    let regexpChars = /[.+?^${}()|[\]\\]/g; // excluding * wildcard
+RequestControl.createRegexpPattern = function (values, insensitive = true, containing = false) {
+    let regexpChars = /[.+^${}()|[\]\\]/g; // excluding "*" and "?" wildcard chars
     let regexpParam = /^\/(.*)\/$/;
+    let flags = insensitive ? "i" : "";
 
     let pattern = "";
     for (let param of values) {
         let testRegexp = param.match(regexpParam);
+        pattern += "|";
+        pattern += containing ? "" : "^";
         if (testRegexp) {
-            pattern += "|" + testRegexp[1];
+            pattern += testRegexp[1];
         } else {
-            pattern += "|" + param.replace(regexpChars, "\\$&").replace(/\*/g, ".*");
+            pattern += param.replace(regexpChars, "\\$&").replace(/\*/g, ".*").replace(/\?/g, ".");
         }
+        pattern += containing ? "" : "$";
     }
-    return pattern.substring(1);
+    return new RegExp(pattern.substring(1), flags);
 };
 
 /**
@@ -584,20 +655,19 @@ RequestControl.parseStringManipulations = function (rules) {
 RequestControl.trimQueryParameters = function (queryString, trimPattern, invert) {
     let trimmedQuery = "";
     let queries = queryString.substring(1).split("?");
-    let pattern = new RegExp("^(" + trimPattern + ")$");
 
     for (let query of queries) {
         let searchParams = query.split("&");
         let i = searchParams.length;
         if (invert) {
             while (i--) {
-                if (!pattern.test(searchParams[i].split("=")[0])) {
+                if (!trimPattern.test(searchParams[i].split("=")[0])) {
                     searchParams.splice(i, 1);
                 }
             }
         } else {
             while (i--) {
-                if (pattern.test(searchParams[i].split("=")[0])) {
+                if (trimPattern.test(searchParams[i].split("=")[0])) {
                     searchParams.splice(i, 1);
                 }
             }

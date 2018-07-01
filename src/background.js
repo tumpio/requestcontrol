@@ -40,7 +40,12 @@ function init(options) {
 }
 
 function initOnChange() {
-    removeRuleListeners();
+    let listener;
+    while (requestListeners.length) {
+        listener = requestListeners.pop();
+        browser.webRequest.onBeforeRequest.removeListener(listener);
+    }
+    browser.webRequest.onBeforeRequest.removeListener(requestControlListener);
     browser.storage.local.get().then(init);
 }
 
@@ -58,14 +63,16 @@ function addRuleListeners(rules) {
             continue;
         }
         let rule = RequestControl.createRule(data);
-        let urls = RequestControl.resolveUrls(data.pattern);
+        let urls = RequestControl.createMatchPatterns(data.pattern);
         let filter = {
             urls: urls,
             types: data.types
         };
         let listener = function (details) {
-            let request = markRequest(details);
-            RequestControl.markRule(request, rule);
+            let request = markedRequests.get(details.requestId) || details;
+            if (RequestControl.markRule(request, rule)) {
+                markedRequests.set(request.requestId, request);
+            }
         };
         browser.webRequest.onBeforeRequest.addListener(listener, filter);
         requestListeners.push(listener);
@@ -74,18 +81,10 @@ function addRuleListeners(rules) {
         {urls: ["<all_urls>"]}, ["blocking"]);
 }
 
-function removeRuleListeners() {
-    let listener;
-    while (requestListeners.length) {
-        listener = requestListeners.pop();
-        browser.webRequest.onBeforeRequest.removeListener(listener);
-    }
-    browser.webRequest.onBeforeRequest.removeListener(requestControlListener);
-}
-
 function requestControlListener(details) {
     if (markedRequests.has(details.requestId)) {
-        let request = removeMarkedRequest(details.requestId);
+        let request = markedRequests.get(details.requestId);
+        markedRequests.delete(request.requestId);
         return request.resolve(requestControlCallback, errorCallback);
     }
     return null;
@@ -121,20 +120,6 @@ function errorCallback(request, rule, error) {
         target: error.target
     });
     updateBrowserAction(request.tabId, REQUEST_CONTROL_ICONS[rule.action], String.fromCodePoint(10071));
-}
-
-function markRequest(details) {
-    if (!markedRequests.has(details.requestId)) {
-        markedRequests.set(details.requestId, details);
-        return details;
-    }
-    return markedRequests.get(details.requestId);
-}
-
-function removeMarkedRequest(requestId) {
-    let request = markedRequests.get(requestId);
-    markedRequests.delete(requestId);
-    return request;
 }
 
 function getRecords() {

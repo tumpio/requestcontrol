@@ -30,66 +30,66 @@ test('Inline url parsing', t => {
 
 test('Query parameter trimming', t => {
     t.is(RequestControl.trimQueryParameters("?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        RequestControl.createTrimPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
+        RequestControl.createRegexpPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
             "utm_reader", "utm_place"])),
         "?parameter&key=value?parameter?key=value");
     t.is(RequestControl.trimQueryParameters("?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        RequestControl.createTrimPattern(["utm_medium", "utm_term", "utm_content", "utm_campaign",
+        RequestControl.createRegexpPattern(["utm_medium", "utm_term", "utm_content", "utm_campaign",
             "utm_reader", "utm_place"])),
         "?parameter&utm_source&key=value?parameter?key=value");
     t.is(RequestControl.trimQueryParameters("??utm_source&parameter&utm_source&key=value???utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        RequestControl.createTrimPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
+        RequestControl.createRegexpPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
             "utm_reader", "utm_place"])),
         "??parameter&key=value???parameter?key=value");
     t.is(RequestControl.trimQueryParameters("??utm_source&parameter&utm_source&key=value???utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        RequestControl.createTrimPattern(["utm_*"])),
+        RequestControl.createRegexpPattern(["u?m_*"])),
         "??parameter&key=value???parameter?key=value");
     t.is(RequestControl.trimQueryParameters("?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        RequestControl.createTrimPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
+        RequestControl.createRegexpPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
             "utm_reader", "utm_place"]), true),
         "?utm_source?utm_medium=abc&utm_term?utm_medium=abc");
     t.is(RequestControl.trimQueryParameters("?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        RequestControl.createTrimPattern(["/[parmetr]+/"]), true),
+        RequestControl.createRegexpPattern(["/[parmetr]+/"]), true),
         "?parameter?parameter");
     t.is(RequestControl.trimQueryParameters("?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        RequestControl.createTrimPattern(["/...\_.{5,}/"]), false),
+        RequestControl.createRegexpPattern(["/...\_.{5,}/"]), false),
         "?parameter&key=value?parameter&utm_term?key=value");
 });
 
 test('Resolve urls', t => {
-    t.deepEqual(RequestControl.resolveUrls({allUrls: true}), ["<all_urls>"]);
-    t.deepEqual(RequestControl.resolveUrls({
+    t.deepEqual(RequestControl.createMatchPatterns({allUrls: true}), ["<all_urls>"]);
+    t.deepEqual(RequestControl.createMatchPatterns({
             scheme: "http",
             host: "example.com"
         }),
         ["http://example.com/"]);
-    t.deepEqual(RequestControl.resolveUrls({
+    t.deepEqual(RequestControl.createMatchPatterns({
             scheme: "http",
             host: "example.com",
             path: "some/path"
         }),
         ["http://example.com/some/path"]);
-    t.deepEqual(RequestControl.resolveUrls({
+    t.deepEqual(RequestControl.createMatchPatterns({
             scheme: "https",
             host: ["first.com", "second.com"],
             path: "some/path"
         }).sort(),
         ["https://first.com/some/path", "https://second.com/some/path"].sort());
-    t.deepEqual(RequestControl.resolveUrls({
+    t.deepEqual(RequestControl.createMatchPatterns({
             scheme: "*",
             host: ["first.com", "second.com"],
             path: ["first/path", "second/path"]
         }).sort(),
         ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
             "*://second.com/second/path"].sort());
-    t.deepEqual(RequestControl.resolveUrls({
+    t.deepEqual(RequestControl.createMatchPatterns({
             scheme: "*",
             host: ["first.com", "second.com"],
             path: ["first/path", "second/path"]
         }).sort(),
         ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
             "*://second.com/second/path"].sort());
-    t.deepEqual(RequestControl.resolveUrls({
+    t.deepEqual(RequestControl.createMatchPatterns({
             scheme: "https",
             host: ["first.com", "second.*"],
             path: "some/path",
@@ -97,7 +97,7 @@ test('Resolve urls', t => {
         }).sort(),
         ["https://first.com/some/path", "https://second.com/some/path",
             "https://second.org/some/path"].sort());
-    t.deepEqual(RequestControl.resolveUrls({
+    t.deepEqual(RequestControl.createMatchPatterns({
             scheme: "*",
             host: ["first.com", "second.*"],
             path: ["first/path", "second/path"],

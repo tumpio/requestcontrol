@@ -75,6 +75,8 @@ function RuleInput(rule) {
     this.hostsTagsInput = new TagsInput(this.$(".host"));
     this.pathsTagsInput = new TagsInput(this.$(".path"));
     this.tldsTagsInput = new TagsInput(this.$(".input-tlds"));
+    this.includesTagsInput = new TagsInput(this.$(".input-includes"));
+    this.excludesTagsInput = new TagsInput(this.$(".input-excludes"));
 
     this.$(".rule-header").addEventListener("dblclick", this.onHeaderClick.bind(this));
     this.$(".rule-header").addEventListener("click", this.onHeaderClick.bind(this));
@@ -425,7 +427,7 @@ RuleInput.prototype = {
         this.$(".description").title = description;
         this.$(".tag").textContent = tag;
         this.$(".tag-badge").textContent = tag;
-        this.$(".match-patterns").textContent = RequestControl.resolveUrls(this.rule.pattern).length;
+        this.$(".match-patterns").textContent = RequestControl.createMatchPatterns(this.rule.pattern).length;
         toggleHidden(tag.length === 0, this.$(".tag-badge").parentNode);
         toggleHidden(tag.length > 0, this.$(".add-tag"));
         this.setActiveState();
@@ -443,6 +445,14 @@ RuleInput.prototype = {
         if (this.rule.pattern.topLevelDomains) {
             this.tldsTagsInput.setValue(this.rule.pattern.topLevelDomains);
             this.onSetTLDs();
+        }
+
+        if (this.rule.pattern.includes) {
+            this.includesTagsInput.setValue(this.rule.pattern.includes);
+        }
+
+        if (this.rule.pattern.excludes) {
+            this.excludesTagsInput.setValue(this.rule.pattern.excludes);
         }
 
         if (!this.rule.types || this.rule.types.length === 0) {
@@ -470,6 +480,18 @@ RuleInput.prototype = {
             this.rule.pattern.path = this.pathsTagsInput.getValue();
             if (hostsTLDWildcardPattern.test(this.$(".host").value)) {
                 this.rule.pattern.topLevelDomains = this.tldsTagsInput.getValue();
+            }
+            let includes = this.includesTagsInput.getValue();
+            let excludes = this.excludesTagsInput.getValue();
+            if (includes.length > 0) {
+                this.rule.pattern.includes = includes;
+            } else {
+                delete this.rule.pattern.includes;
+            }
+            if (excludes.length > 0) {
+                this.rule.pattern.excludes = excludes;
+            } else {
+                delete this.rule.pattern.excludes;
             }
             delete this.rule.pattern.allUrls;
         }

@@ -12,13 +12,13 @@ intercepted taking the action of the rule.
 Pattern
 ~~~~~~~
 
-Pattern consists of a `Scheme`_, `Host`_ and `Path`_. Rule can
-include one to many patterns.
+Pattern filters matched requests by `Scheme`_, `Host`_, `Path`_ and optional
+`Includes and Excludes`_ patterns.
 
 Scheme
 ^^^^^^
 
-Supported schemes in patterns are ``http`` and ``https``.
+Supported schemes are ``http`` and ``https``.
 
 +----------------+------------------------------------+
 | ``http``       | Match a http scheme.               |
@@ -31,7 +31,7 @@ Supported schemes in patterns are ``http`` and ``https``.
 Host
 ^^^^
 
-Host may match the request URL's host in the following ways:
+Host may match a request URL's host in the following ways:
 
 +-----------------------+-----------------------+-----------------------+
 | ``www.example.com``   | Match a complete      |                       |
@@ -44,7 +44,7 @@ Host may match the request URL's host in the following ways:
 |                       |                       | **good**.example.com  |
 +-----------------------+-----------------------+-----------------------+
 | ``www.example.*``     | Match the given host  | Write the top-level   |
-|                       | and all of the listed | domains to the        |
+|                       | and manually listed   | domains to the        |
 |                       | top-level domains.    | top-level domain name |
 |                       | (can be combined with | list (e.g. *com*,     |
 |                       | the subdomain         | *org*).               |
@@ -56,9 +56,9 @@ Host may match the request URL's host in the following ways:
 Path
 ^^^^
 
-Path in pattern may subsequently contain any combination of "\*"
-wildcard and any of the characters that are allowed in URL path. The "\*"
-wildcard matches any portion of path and it may appear more than once.
+Path may subsequently contain any combination of "\*" wildcard and any
+of the characters that are allowed in URL path. The "\*" wildcard
+matches any portion of path and it may appear more than once.
 
 Below is examples for using path in patterns.
 
@@ -73,6 +73,29 @@ Below is examples for using path in patterns.
 +-----------------------------------+-----------------------------------+
 |                                   | Match an empty path.              |
 +-----------------------------------+-----------------------------------+
+
+Includes and Excludes
+^^^^^^^^^^^^^^^^^^^^^
+
+A list of patterns that request URL must or must not contain. Include and exclude
+pattern can be defined as a string with support for wildcards "?" and "\*" (where
+"?" matches any single character and "\*" matches zero or more characters),
+or as a regular expression pattern ``/regexp/``.
+
+Include and exclude pattern matching is case insensitive as opposed to `Host`_ and `Path`_
+which are case sensitive.
+
+Below is examples of using includes and excludes patterns:
+
++----------------------+-----------------------------------------------------------+
+| ``login``            | Match urls containing "login".                            |
++----------------------+-----------------------------------------------------------+
+| ``log?n``            | Matches for example urls containing "login" and "logon".  |
++----------------------+-----------------------------------------------------------+
+| ``a*b``              | Match urls where "a" is followed by "b"                   |
++----------------------+-----------------------------------------------------------+
+| ``/[?&]a=\d+(&|$)/`` | Match urls containing parameter "a" with digits as value. |
++----------------------+-----------------------------------------------------------+
 
 Types
 ~~~~~
@@ -154,7 +177,7 @@ Action
     configuration:
 
     - With URL redirection filtering the request is taken directly to the contained redirect URL.
-    - With URL parameters trimming the configured URL parameters will be removed from requests.
+    - With URL parameters trimming the configured URL parameters will be removed from request.
 
 |image5| Block
     Any request that matches a block rule will be cancelled before it is made.
@@ -192,7 +215,7 @@ Trimming URL parameters
 Filter rule supports URL query parameter trimming. URL query parameters
 are commonly used in redirection tracking as a method to analyze the
 origin of traffic. Trimmed URL parameters are defined either as literal
-strings with support for "*" wildcard or using regular expression
+strings with support for "*" and "?" wildcards or using regular expression
 patterns.
 
 Below is examples of parameter trimming patterns.
@@ -225,11 +248,10 @@ access a set of named parameters of the original URL. Redirect instructions can 
 the original request by changing the parts of the original URL (e.g. by instructing requests to
 redirect to a different port).
 
-Both methods may be used together. Redirect instructions will be parsed and applied first to the
-request URL before parameter expansion.
+Both methods may be used same time. Redirect instructions will be parsed and applied first to the
+request URL before parameter expansions.
 
-Parameter expansion may also be used within a redirect instruction allowing to create redirect
-instructions based on the original request's URL.
+Parameter expansion may also be used within a redirect instruction.
 
 Parameter expansion
 ~~~~~~~~~~~~~~~~~~~
