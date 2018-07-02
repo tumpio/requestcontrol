@@ -93,6 +93,11 @@ pre {
     color: #777;
 }
 
+#details pre {
+    word-break: break-all;
+    width: 100%;
+}
+
 .hidden {
     display: none;
 }
@@ -100,6 +105,9 @@ pre {
 .timestamp {
     margin-right: 1.5em;
     color: #777;
+    vertical-align: center;
+    display: inline-flex;
+    line-height: 0;
 }
 
 .errorIcon {

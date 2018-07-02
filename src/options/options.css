@@ -110,6 +110,7 @@ h4 {
 
 .title[contenteditable]:hover,
 .description[contenteditable]:hover,
+.rule-header .tag[contenteditable]:hover,
 .title[contenteditable]:focus,
 .description[contenteditable]:focus,
 .tag[contenteditable]:focus {
@@ -193,6 +194,7 @@ h4 {
     background-color: #cc0d13;
 }
 
+.rule.editing .rule-header,
 .rule-header.disabled,
 .rule-header:hover {
     background-color: #F8F8F8;

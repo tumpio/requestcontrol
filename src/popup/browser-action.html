@@ -28,8 +28,14 @@
 <div class="models">
   <div id="entryModel" class="entry">
     <div class="panel-list-item entry-header">
-      <small class="timestamp"></small>
-      <img class="errorIcon hidden" src="/icons/ionicons/alert-circled.svg" height="16">
+      <div>
+        <small>
+          <pre class="timestamp"></pre>
+        </small>
+      </div>
+      <div>
+        <img class="errorIcon hidden" src="/icons/ionicons/alert-circled.svg" height="16">
+      </div>
       <div class="icon">
         <img src="/icons/icon-redirect@19.png">
       </div>
@@ -45,9 +51,7 @@
     <div class="requestUrl">
       <div class="panel-list-item disabled" data-i18n="request_url"></div>
       <div class="panel-list-item">
-        <div class="text">
-          <pre id="url"></pre>
-        </div>
+        <pre id="url"></pre>
         <div class="text-shortcut">
           <button class="copyButton tooltip" data-copy-target="url"
                   data-i18n-title="copy_to_clipboard">
@@ -60,9 +64,7 @@
     <div id="targetBlock" class="hidden">
       <div class="panel-list-item disabled" data-i18n="new_target"></div>
       <div class="panel-list-item">
-        <div class="text">
-          <pre id="target"></pre>
-        </div>
+        <pre id="target"></pre>
         <div class="text-shortcut">
           <button class="copyButton tooltip" data-copy-target="target"
                   data-i18n-title="copy_to_clipboard">
