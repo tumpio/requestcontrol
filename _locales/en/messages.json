@@ -498,5 +498,11 @@
   },
   "disable_rules": {
     "message": "Disable Request Control"
+  },
+  "log_whitelisted_requests": {
+    "message": "Log whitelisted requests"
+  },
+  "log": {
+    "message": "Log"
   }
 }

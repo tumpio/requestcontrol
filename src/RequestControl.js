@@ -58,9 +58,15 @@ class ControlRule {
 }
 
 class WhitelistRule extends ControlRule {
+    static resolve() {
+        return null;
+    }
+}
+
+class LoggedWhitelistRule extends WhitelistRule {
     static resolve(callback) {
         callback(this, WHITELIST_ACTION);
-        return null;
+        return super.resolve();
     }
 }
 
@@ -385,7 +391,11 @@ RequestControl.createRule = function (data) {
 
     switch (data.action) {
         case "whitelist":
-            return new WhitelistRule(data.uuid, ruleMatcher);
+            if (data.log) {
+                return new LoggedWhitelistRule(data.uuid, ruleMatcher);
+            } else {
+                return new WhitelistRule(data.uuid, ruleMatcher);
+            }
         case "block":
             return new BlockRule(data.uuid, ruleMatcher);
         case "redirect":
@@ -682,6 +692,8 @@ RequestControl.trimQueryParameters = function (queryString, trimPattern, invert)
 WhitelistRule.prototype.priority = 0;
 WhitelistRule.prototype.action = WHITELIST_ACTION;
 WhitelistRule.prototype.resolve = WhitelistRule.resolve;
+
+LoggedWhitelistRule.prototype.resolve = LoggedWhitelistRule.resolve;
 
 BlockRule.prototype.priority = -1;
 BlockRule.prototype.action = BLOCK_ACTION;

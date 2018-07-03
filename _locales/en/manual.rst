@@ -173,21 +173,16 @@ Action
 ~~~~~~
 
 |image4| Filter
-    Any request that matches a filter rule will be filtered according the filter rule
-    configuration:
-
-    - With URL redirection filtering the request is taken directly to the contained redirect URL.
-    - With URL parameters trimming the configured URL parameters will be removed from request.
+    Filter URL redirection and/or remove URL query parameters.
 
 |image5| Block
-    Any request that matches a block rule will be cancelled before it is made.
+    Cancel requests before they are made.
 
 |image6| Redirect
-    Any request that matches a redirect rule will be redirected to the configured redirect URL.
+    Redirect requests to manually configured redirect URL.
 
 |image7| Whitelist
-    Any requests that match a whitelist rule will proceed normally without taking any action of
-    any other matched rules.
+    Whitelist and optionally log requests.
 
 Rule priorities
 ---------------
@@ -248,7 +243,7 @@ access a set of named parameters of the original URL. Redirect instructions can 
 the original request by changing the parts of the original URL (e.g. by instructing requests to
 redirect to a different port).
 
-Both methods may be used same time. Redirect instructions will be parsed and applied first to the
+Both methods may be combined. Redirect instructions will be parsed and applied first to the
 request URL before parameter expansions.
 
 Parameter expansion may also be used within a redirect instruction.
