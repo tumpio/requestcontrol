@@ -339,4 +339,64 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("version").textContent =
             browser.i18n.getMessage("version", info.version);
     });
+
+    document.getElementById("changelog").addEventListener("click", function () {
+        fetch(new Request("/CHANGELOG", {
+            method: "GET",
+            headers: {
+                "Content-Type": "text/plain"
+            },
+            mode: "same-origin",
+            cache: "force-cache"
+        })).then(response => {
+            return response.text();
+        }).then(content => {
+            let modal = document.getElementById("changelogModal");
+            let body = modal.querySelector(".modal-body");
+            let ul = document.createElement("ul");
+            for (let line of content.split("\n")) {
+                if (line.startsWith("-")) {
+                    let li = document.createElement("li");
+                    let text = line.split(/(#\d+|@\w+)/);
+                    li.textContent = text[0].replace(/^- /, "");
+                    for (let i = 1; i < text.length; i++) {
+                        if (text[i].startsWith("#")) {
+                            let link = document.createElement("a");
+                            link.textContent = text[i];
+                            link.href = "https://github.com/tumpio/requestcontrol/issues/" + text[i].substring(1);
+                            link.target = "_blank";
+                            li.appendChild(link);
+                        } else if (text[i].startsWith("@")) {
+                            let link = document.createElement("a");
+                            link.textContent = text[i];
+                            link.href = "https://github.com/" + text[i].substring(1);
+                            link.target = "_blank";
+                            li.appendChild(link);
+                        } else {
+                            li.appendChild(document.createTextNode(text[i]));
+                        }
+                    }
+                    if (line.match(/fix/i)) {
+                        li.classList.add("fix");
+                    } else if (line.match(/add/i)) {
+                        li.classList.add("add");
+                    } else if (line.match(/change/i)) {
+                        li.classList.add("change");
+                    } else if (line.match(/update/i)) {
+                        li.classList.add("update");
+                    } else if (line.match(/locale/i)) {
+                        li.classList.add("locale");
+                    }
+                    ul.appendChild(li);
+                } else {
+                    let h = document.createElement("h6");
+                    h.textContent = line;
+                    body.appendChild(h);
+                    ul = document.createElement("ul");
+                    body.appendChild(ul);
+                }
+            }
+        });
+        this.removeEventListener("click", arguments.callee);
+    });
 });

@@ -177,27 +177,27 @@
         <div id="manual" class="manual-content"></div>
       </div>
       <div id="aboutTab" class="tab-pane">
-        <p>
-          <span id="version"></span>
-          (<a target="_blank" data-i18n="changelog" href="/CHANGELOG"></a>)
-        </p>
-        <p><a target="_blank" href="https://github.com/tumpio/requestcontrol/wiki/FAQ">
-          <strong data-i18n="faq"></strong>
+        <h4 id="version" class="mt-0"></h4>
+        <a id="changelog" href="#changelog" data-toggle="modal" data-target="#changelogModal">
+          <strong data-i18n="changelog"></strong>
         </a>
-          <br/>
-          <a target="_blank" href="https://github.com/tumpio/requestcontrol/graphs/contributors">
-            <strong data-i18n="contributors"></strong>
+        <br/>
+        <a target="_blank" href="https://github.com/tumpio/requestcontrol/graphs/contributors">
+          <strong data-i18n="contributors"></strong>
+        </a>
+        <br/>
+        <a target="_blank" href="https://github.com/tumpio/requestcontrol">
+          <strong data-i18n="source_code"></strong>
+        </a>
+        <br/>
+        <a target="_blank" href="https://addons.mozilla.org/addon/requestcontrol">
+          <strong data-i18n="home_page"></strong>
+        </a>
+        <h4>
+          <a target="_blank" href="https://github.com/tumpio/requestcontrol/issues/new">
+            <strong>Report bug/Request feature</strong>
           </a>
-          <br/>
-          <a target="_blank" href="https://github.com/tumpio/requestcontrol">
-            <strong data-i18n="source_code"></strong>
-          </a>
-          <br/>
-          <a target="_blank" href="https://addons.mozilla.org/addon/requestcontrol">
-            <strong data-i18n="home_page"></strong>
-          </a>
-          <br/>
-        </p>
+        </h4>
         <h4 data-i18n="license"></h4>
         <pre class="license-clause"><code><span data-i18n="license_clause"></span> <a
             target="_blank" href="/LICENSE">LICENSE</a>.</code></pre>
@@ -232,5 +232,20 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="changelogModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" data-i18n="changelog"></h6>
+          <button type="button" class="close">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
