@@ -504,5 +504,8 @@
   },
   "log": {
     "message": "Log"
+  },
+  "report_bug_request_feature": {
+    "message": "Report bug/Request feature"
   }
 }

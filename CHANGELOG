@@ -1,3 +1,12 @@
+Version 1.10.0 July 7, 2018
+- Add keywords to decode and encode captured patterns for redirect rule #6
+- Add includes and excludes pattern support #16 #24 #35
+- Add option to control whitelist logging #59
+- Add query parameter expansion support for redirect rule #72
+- Change to trim unwanted query parameters before inline url parsing #72
+- Update active and disabled icons #70
+- Fix parsing of redirect instructions with inline brackets #73
+
 Version 1.9.4 May 26, 2018
 - Fix rule import after 1.9.3 changes.
 - Fix showing number of selected rules for new rules.
