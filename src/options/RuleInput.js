@@ -477,19 +477,19 @@ RuleInput.prototype = {
             if (hostsTLDWildcardPattern.test(this.$(".host").value)) {
                 this.rule.pattern.topLevelDomains = this.tldsTagsInput.getValue();
             }
-            let includes = this.includesTagsInput.getValue();
-            let excludes = this.excludesTagsInput.getValue();
-            if (includes.length > 0) {
-                this.rule.pattern.includes = includes;
-            } else {
-                delete this.rule.pattern.includes;
-            }
-            if (excludes.length > 0) {
-                this.rule.pattern.excludes = excludes;
-            } else {
-                delete this.rule.pattern.excludes;
-            }
             delete this.rule.pattern.allUrls;
+        }
+        let includes = this.includesTagsInput.getValue();
+        let excludes = this.excludesTagsInput.getValue();
+        if (includes.length > 0) {
+            this.rule.pattern.includes = includes;
+        } else {
+            delete this.rule.pattern.includes;
+        }
+        if (excludes.length > 0) {
+            this.rule.pattern.excludes = excludes;
+        } else {
+            delete this.rule.pattern.excludes;
         }
 
         this.rule.types = Array.from(this.$$(".type:checked"), type => type.value);
