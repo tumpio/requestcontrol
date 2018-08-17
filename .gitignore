@@ -6,3 +6,5 @@ node_modules
 coverage/
 coverage.lcov
 *.min.css
+
+lib/tldjs/tld.js

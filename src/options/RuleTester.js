@@ -1,4 +1,6 @@
-function testRules(url, rulePatterns) {
+import {createMatchPatterns, createRule, markRequest} from "/src/RequestControl/api.js"
+
+export function testRules(url, rulePatterns) {
     let testURL, request;
     try {
         testURL = new URL(url);
@@ -7,11 +9,11 @@ function testRules(url, rulePatterns) {
         throw e;
     }
     for (let rulePattern of rulePatterns) {
-        let rule = RequestControl.createRule(rulePattern);
-        let matchPatterns = RequestControl.createMatchPatterns(rulePattern.pattern);
+        let rule = createRule(rulePattern);
+        let matchPatterns = createMatchPatterns(rulePattern.pattern);
         for (let matchPattern of matchPatterns) {
             if (matchPatternToRegExp(matchPattern).test(url)) {
-                RequestControl.markRule(request, rule);
+                markRequest(request, rule);
                 break;
             }
         }

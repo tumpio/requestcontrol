@@ -1,7 +1,6 @@
 import test from 'ava';
-import {
-    RequestControl, InvalidUrlException
-} from '../src/RequestControl';
+import * as RequestControl from '../src/RequestControl/api';
+import {InvalidUrlException} from "../src/RequestControl/base";
 
 test.beforeEach(t => {
     t.context.request = {url: "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F"};
@@ -43,43 +42,43 @@ test('Rule creation fails', t => {
 });
 
 test('Request blocked', t => {
-    RequestControl.markRule(t.context.request, t.context.filterRule);
-    RequestControl.markRule(t.context.request, t.context.blockRule);
-    RequestControl.markRule(t.context.request, t.context.redirectRule);
+    RequestControl.markRequest(t.context.request, t.context.filterRule);
+    RequestControl.markRequest(t.context.request, t.context.blockRule);
+    RequestControl.markRequest(t.context.request, t.context.redirectRule);
     let resolve = t.context.request.resolve(t.context.callback);
     t.true(resolve.cancel);
     t.true(t.context.callback_called(1));
 });
 
 test('Request whitelisted', t => {
-    RequestControl.markRule(t.context.request, t.context.filterRule);
-    RequestControl.markRule(t.context.request, t.context.whitelistRule);
-    RequestControl.markRule(t.context.request, t.context.blockRule);
-    RequestControl.markRule(t.context.request, t.context.redirectRule);
+    RequestControl.markRequest(t.context.request, t.context.filterRule);
+    RequestControl.markRequest(t.context.request, t.context.whitelistRule);
+    RequestControl.markRequest(t.context.request, t.context.blockRule);
+    RequestControl.markRequest(t.context.request, t.context.redirectRule);
     let resolve = t.context.request.resolve(t.context.callback);
     t.falsy(resolve);
     t.true(t.context.callback_called(0));
 });
 
 test('Request whitelisted and logged', t => {
-    RequestControl.markRule(t.context.request, t.context.filterRule);
-    RequestControl.markRule(t.context.request, t.context.logRule);
-    RequestControl.markRule(t.context.request, t.context.blockRule);
-    RequestControl.markRule(t.context.request, t.context.redirectRule);
+    RequestControl.markRequest(t.context.request, t.context.filterRule);
+    RequestControl.markRequest(t.context.request, t.context.logRule);
+    RequestControl.markRequest(t.context.request, t.context.blockRule);
+    RequestControl.markRequest(t.context.request, t.context.redirectRule);
     let resolve = t.context.request.resolve(t.context.callback);
     t.falsy(resolve);
     t.true(t.context.callback_called(1));
 });
 
 test('Request redirected', t => {
-    RequestControl.markRule(t.context.request, t.context.redirectRule);
+    RequestControl.markRequest(t.context.request, t.context.redirectRule);
     let resolve = t.context.request.resolve(t.context.callback);
     t.is(resolve.redirectUrl, "https://redirect.url/");
     t.true(t.context.callback_called(1));
 });
 
 test('Request filtered', t => {
-    RequestControl.markRule(t.context.request, t.context.filterRule);
+    RequestControl.markRequest(t.context.request, t.context.filterRule);
     let resolve = t.context.request.resolve(t.context.callback);
     t.is(resolve.redirectUrl, "http://bar.com/");
     t.true(t.context.callback_called(1));
@@ -87,7 +86,7 @@ test('Request filtered', t => {
 
 test('Request filtered - rules not applied', t => {
     let request = {url: "http://bar.com/"};
-    RequestControl.markRule(request, t.context.filterRule);
+    RequestControl.markRequest(request, t.context.filterRule);
     let resolve = request.resolve(t.context.callback);
     t.falsy(resolve);
     t.true(t.context.callback_called(0));
@@ -95,7 +94,7 @@ test('Request filtered - rules not applied', t => {
 
 test('Request filtered - skip redirection filter', t => {
     t.context.request.url += "&utm_source=blaa";
-    RequestControl.markRule(t.context.request, t.context.filterParamsRule);
+    RequestControl.markRequest(t.context.request, t.context.filterParamsRule);
     let resolve = t.context.request.resolve(t.context.callback);
     t.is(resolve.redirectUrl, "http://foo.com/click?url=http%3A%2F%2Fbar.com%2F");
     t.true(t.context.callback_called(1));
@@ -103,7 +102,7 @@ test('Request filtered - skip redirection filter', t => {
 
 test('Request filtered - block sub_frame redirection', t => {
     t.context.request.type = "sub_frame";
-    RequestControl.markRule(t.context.request, t.context.filterRule);
+    RequestControl.markRequest(t.context.request, t.context.filterRule);
     let resolve = t.context.request.resolve(function (request, action, updateTab) {
         t.true(updateTab);
         t.is(request.redirectUrl, "http://bar.com/");
@@ -115,23 +114,23 @@ test('Request filtered - block sub_frame redirection', t => {
 
 test('Request filtered - multiple rules', t => {
     t.context.request.url += decodeURIComponent("?utm_source=blaa&a=b");
-    RequestControl.markRule(t.context.request, RequestControl.createRule({
+    RequestControl.markRequest(t.context.request, RequestControl.createRule({
         action: "redirect",
         redirectUrl: "{href/http%3A/https%3A}"
     }));
-    RequestControl.markRule(t.context.request, t.context.filterRule);
-    RequestControl.markRule(t.context.request, t.context.filterParamsRule);
+    RequestControl.markRequest(t.context.request, t.context.filterRule);
+    RequestControl.markRequest(t.context.request, t.context.filterParamsRule);
     let resolve = t.context.request.resolve(t.context.callback);
     t.is(resolve.redirectUrl, "https://bar.com/");
     t.true(t.context.callback_called(1));
 });
 
 test('Error callback', t => {
-    RequestControl.markRule(t.context.request, RequestControl.createRule({
+    RequestControl.markRequest(t.context.request, RequestControl.createRule({
         action: "redirect",
         redirectUrl: "_"
     }));
-    let resolve = t.context.request.resolve(null, (request, rule, error) => {
+    t.context.request.resolve(null, (request, rule, error) => {
         t.truthy(error instanceof InvalidUrlException);
         t.context.call_times++;
     });

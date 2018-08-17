@@ -3,6 +3,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
+import {createMatchPatterns} from "/src/RequestControl/api.js";
+import {uuid} from "/lib/uuid.js";
+import {
+    getSubPage,
+    onToggleButtonChange,
+    setButtonChecked,
+    setButtonDisabled,
+    toggleDisabled,
+    toggleHidden
+} from "/lib/bootstrapHelpers.js";
+import {translateDocument} from "/lib/i18n.js";
+import {TagsInput} from "/lib/tags-input/src/tags-input.js";
+
 /**
  * Request Control Rule Input for rule creation.
  * Prototyped inheritance is used for rule types separation.
@@ -25,7 +38,7 @@ function RequestRule() {
     };
 }
 
-function RuleInputFactory() {
+export function RuleInputFactory() {
     if (RuleInputFactory.prototype.singleton) {
         return RuleInputFactory.prototype.singleton;
     }
@@ -59,6 +72,10 @@ RuleInputFactory.prototype = {
         let model = this.models.querySelector("#" + id).cloneNode(true);
         model.removeAttribute("id");
         return model;
+    },
+
+    setOptionsManager: function(manager) {
+        this.optionsManager = manager;
     }
 };
 
@@ -129,14 +146,14 @@ RuleInput.prototype = {
 
     remove: function () {
         this.softRemove();
-        myOptionsManager.saveOption(this.optionsPath);
+        this.factory.optionsManager.saveOption(this.optionsPath);
     },
 
     softRemove: function () {
         this.model.parentNode.removeChild(this.model);
         let i = this.indexOfRule();
         if (i !== -1) {
-            myOptionsManager.options[this.optionsPath].splice(i, 1);
+            this.factory.optionsManager.options[this.optionsPath].splice(i, 1);
         }
     },
 
@@ -148,9 +165,9 @@ RuleInput.prototype = {
         this.model.classList.remove("error");
         this.updateRule();
         if (this.indexOfRule() === -1) {
-            myOptionsManager.options[this.optionsPath].push(this.rule);
+            this.factory.optionsManager.options[this.optionsPath].push(this.rule);
         }
-        return myOptionsManager.saveOption(this.optionsPath)
+        return this.factory.optionsManager.saveOption(this.optionsPath)
             .then(this.updateHeader.bind(this))
             .then(this.toggleSaved.bind(this));
     },
@@ -174,7 +191,7 @@ RuleInput.prototype = {
         this.rule.active = !this.rule.active;
         this.setActiveState();
         if (this.indexOfRule() !== -1) {
-            myOptionsManager.saveOption(this.optionsPath);
+            this.factory.optionsManager.saveOption(this.optionsPath);
         }
     },
 
@@ -229,7 +246,7 @@ RuleInput.prototype = {
     },
 
     indexOfRule: function () {
-        return myOptionsManager.options[this.optionsPath].indexOf(this.rule);
+        return this.factory.optionsManager.options[this.optionsPath].indexOf(this.rule);
     },
 
     getTitle: function () {
@@ -283,7 +300,7 @@ RuleInput.prototype = {
         this.save();
     },
 
-    onChange: function (e) {
+    onChange: function () {
         this.updateRule();
         let newInput = this.factory.newInput(this.rule);
         this.model.parentNode.insertBefore(newInput.model, this.model);
@@ -423,7 +440,7 @@ RuleInput.prototype = {
         this.$(".description").title = description;
         this.$(".tag").textContent = tag;
         this.$(".tag-badge").textContent = tag;
-        this.$(".match-patterns").textContent = RequestControl.createMatchPatterns(this.rule.pattern).length;
+        this.$(".match-patterns").textContent = createMatchPatterns(this.rule.pattern).length;
         toggleHidden(tag.length === 0, this.$(".tag-badge").parentNode);
         toggleHidden(tag.length > 0, this.$(".add-tag"));
         this.setActiveState();
@@ -543,7 +560,8 @@ function FilterRuleInput(rule) {
 
     this.$(".trim-all-params").addEventListener("change", this.toggleTrimAll.bind(this));
     this.$(".invert-trim").addEventListener("change", onToggleButtonChange);
-    this.$(".redirectionFilter-toggle").addEventListener("change", onToggleButtonChange);
+    this.$(".filter-toggle").addEventListener("change", this.onToggleFilter.bind(this));
+    this.$(".filter-skip-within-same-domain-toggle").addEventListener("change", onToggleButtonChange);
 }
 
 FilterRuleInput.prototype = Object.create(RuleInput.prototype);
@@ -572,9 +590,20 @@ FilterRuleInput.prototype.toggleTrimAll = function (e) {
     toggleHidden(e.target.checked, this.$(".col-trim-parameters"));
 };
 
+FilterRuleInput.prototype.onToggleFilter = function (e) {
+    let checked = e.target.checked;
+    setButtonChecked(e.target, checked);
+    setButtonDisabled(this.$(".filter-skip-within-same-domain-toggle"), !checked);
+    if (!checked) {
+        setButtonChecked(this.$(".filter-skip-within-same-domain-toggle"), false);
+    }
+};
+
 FilterRuleInput.prototype.updateInputs = function () {
     RuleInput.prototype.updateInputs.call(this);
-    setButtonChecked(this.$(".redirectionFilter-toggle"), !this.rule.skipRedirectionFilter);
+    setButtonChecked(this.$(".filter-toggle"), !this.rule.skipRedirectionFilter);
+    setButtonChecked(this.$(".filter-skip-within-same-domain-toggle"), this.rule.skipOnSameDomain);
+    setButtonDisabled(this.$(".filter-skip-within-same-domain-toggle"), this.rule.skipRedirectionFilter);
     if (this.rule.paramsFilter && Array.isArray(this.rule.paramsFilter.values)) {
         this.paramsTagsInput.setValue(this.rule.paramsFilter.values);
 
@@ -603,10 +632,16 @@ FilterRuleInput.prototype.updateRule = function () {
         delete this.rule.paramsFilter;
     }
 
-    if (this.$(".redirectionFilter-toggle").checked) {
+    if (this.$(".filter-toggle").checked) {
         delete this.rule.skipRedirectionFilter;
     } else {
         this.rule.skipRedirectionFilter = true;
+    }
+
+    if (this.$(".filter-skip-within-same-domain-toggle").checked) {
+        this.rule.skipOnSameDomain = true;
+    } else {
+        delete this.rule.skipOnSameDomain;
     }
 
     if (this.$(".trim-all-params").checked) {

@@ -2,6 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+import {
+    BLOCK_ACTION,
+    FILTER_ACTION,
+    NO_ACTION,
+    REDIRECT_ACTION,
+    REQUEST_CONTROL_ICONS,
+    WHITELIST_ACTION
+} from "/src/RequestControl/base.js";
+import {OptionsManager} from "/lib/OptionsManager.js";
+
 /**
  * Browser Action for displaying applied rules for current tab.
  */

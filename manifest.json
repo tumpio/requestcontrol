@@ -36,12 +36,6 @@
         "default_popup": "src/popup/browser-action.html"
     },
     "background": {
-        "scripts": [
-            "src/RequestControl.js",
-            "lib/uuid.js",
-            "src/migrate.js",
-            "src/install.js",
-            "src/background.js"
-        ]
+        "page": "src/background.html"
     }
 }

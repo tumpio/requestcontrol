@@ -507,5 +507,8 @@
   },
   "report_bug_request_feature": {
     "message": "Report bug/Request feature"
+  },
+  "skip_within_same_domain": {
+    "message": "Skip within same domain"
   }
 }

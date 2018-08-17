@@ -1,6 +1,7 @@
 import test from 'ava';
 import {URL} from 'url';
-import {RedirectRule, InvalidUrlException} from '../src/RequestControl';
+import {RedirectRule} from '../src/RequestControl/redirect';
+import {InvalidUrlException} from '../src/RequestControl/base';
 
 test('Static redirection url', t => {
     const request = new URL('https://www.amazon.com/AmazonBasics-Type-C-USB-Male-Cable/dp/B01GGKYQ02/ref=sr_1_1?s=amazonbasics&srs=10112675011&ie=UTF8&qid=1489067885&sr=8-1&keywords=usb-c');
@@ -139,9 +140,8 @@ test('Redirect instructions - hostname', t => {
 });
 
 test('Invalid URL', t => {
-    let request, target, redirectRule;
+    let request, redirectRule;
     request = new URL('http://foo.com/path');
-    target = new URL('https://bar.com/path');
     redirectRule = new RedirectRule(0, "xyz-[host={host/foo/bar}]");
     t.throws(() => redirectRule.apply(request), InvalidUrlException);
 });
@@ -155,7 +155,6 @@ test('Capture Search Paramater - found', t => {
 
 test('Capture Search Paramater - not found', t => {
     const request = new URL('http://go.redirectingat.com/?xs=1&id=xxxxxxx&sref=http%3A%2F%2Fwww.vulture.com%2F2018%2F05%2Fthe-end-of-nature-at-storm-king-art-center-in-new-york.html&xcust=xxxxxxxx&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FNathaniel_Parker_Willis');
-    const target = new URL("https://en.wikipedia.org/wiki/Nathaniel_Parker_Willis");
     const redirectRule = new RedirectRule(0, "{search.foo|decodeURIComponent}");
     t.throws(() => redirectRule.apply(request));
 });

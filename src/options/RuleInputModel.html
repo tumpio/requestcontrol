@@ -280,11 +280,15 @@
     <label class="col-form-label"></label>
     <label class="col-form-label font-weight-light" data-i18n="filter_url_redirection"></label>
     <div class="row no-gutter">
-      <div class="col-xs-3 col-md-2">
-        <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
-          <label class="btn btn-sm btn-light btn-block">
-            <input class="redirectionFilter-toggle" type="checkbox" checked="checked"/>
+      <div class="col-xs-3 col-md-6">
+        <div class="btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-sm btn-light">
+            <input class="filter-toggle" type="checkbox" checked="checked"/>
             <span data-i18n="filter"></span>
+          </label>
+          <label class="btn btn-sm btn-light">
+            <input class="filter-skip-within-same-domain-toggle" type="checkbox"/>
+            <span data-i18n="skip_within_same_domain"></span>
           </label>
         </div>
       </div>

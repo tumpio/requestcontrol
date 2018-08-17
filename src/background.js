@@ -2,6 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+import {createMatchPatterns, createRule, markRequest} from "./RequestControl/api.js";
+import {DISABLED_STATE, NO_ACTION, REQUEST_CONTROL_ICONS} from "./RequestControl/base.js";
+
 /**
  * Background script for processing Request Control rules, adding request listeners and keeping
  * record of controlled requests.
@@ -62,15 +65,15 @@ function addRuleListeners(rules) {
         if (!data.active) {
             continue;
         }
-        let rule = RequestControl.createRule(data);
-        let urls = RequestControl.createMatchPatterns(data.pattern);
+        let rule = createRule(data);
+        let urls = createMatchPatterns(data.pattern);
         let filter = {
             urls: urls,
             types: data.types
         };
         let listener = function (details) {
             let request = markedRequests.get(details.requestId) || details;
-            if (RequestControl.markRule(request, rule)) {
+            if (markRequest(request, rule)) {
                 markedRequests.set(request.requestId, request);
             }
         };
@@ -82,6 +85,7 @@ function addRuleListeners(rules) {
 }
 
 function requestControlListener(details) {
+    console.log((typeof details.originUrl) + " -> " + details.url);
     if (markedRequests.has(details.requestId)) {
         let request = markedRequests.get(details.requestId);
         markedRequests.delete(request.requestId);

@@ -1,6 +1,6 @@
 import test from 'ava';
 import {URL} from 'url';
-import {RedirectRule} from '../src/RequestControl';
+import {RedirectRule} from '../src/RequestControl/redirect';
 
 test('Decode URI Component', t => {
     const request = new URL('http://go.redirectingat.com/?xs=1&id=xxxxxxx&sref=http%3A%2F%2Fwww.vulture.com%2F2018%2F05%2Fthe-end-of-nature-at-storm-king-art-center-in-new-york.html&xcust=xxxxxxxx&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FNathaniel_Parker_Willis');
