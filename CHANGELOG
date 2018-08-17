@@ -1,3 +1,6 @@
+Version 1.11.0 August 4, 2018
+- Add support for skipping redirection url filtering within same domain. #29
+
 Version 1.10.1 August 4, 2018
 - Fix excludes/includes with Any URL. #77
 
