@@ -5,7 +5,7 @@
     "tag": "filter-multiple",
     "pattern": {
       "scheme": "*",
-      "host": ["clk.tradedoubler.com", "out.reddit.com", "steamcommunity.com"],
+      "host": ["*.tradedoubler.com", "out.reddit.com", "steamcommunity.com"],
       "path": "*url=*"
     },
     "types": ["main_frame"],

@@ -3,21 +3,18 @@
 Request Control - Firefox extension
 -----------------------------------
 
-An extension to control HTTP requests. Provides a front-end for Firefox
+An extension to control HTTP requests. Provides front-end for Firefox
 `webRequest.onBeforeRequest`_ API for HTTP request management.
 
 Requests can be controlled with the following rules:
 
 -  |if| **Filter Request Rule**
 
-   Filter requests by skipping URL redirection and trimming URL query
-   parameters.
+   Filter requests by skipping URL inline redirection and trimming URL query parameters.
 
 -  |ir| **Redirect Request Rule**
 
-   Redirect requests to a manually set redirect URL. Redirect rule
-   supports redirection based on the original request. Read more about
-   the `Pattern Capturing`_.
+   Rewrite requests with support for `Pattern Capturing`_ to redirect based on the original request.
 
 -  |ib| **Block Request Rule**
 
@@ -25,8 +22,7 @@ Requests can be controlled with the following rules:
 
 -  |iw| **Whitelist Request Rule**
 
-   Whitelist requests to proceed normally without taking actions of any
-   other matched rules.
+   Whitelist requests without taking actions of other matched rules.
 
 | `Manual`_
 | `FAQ`_
@@ -45,7 +41,7 @@ Support
 Development
 ~~~~~~~~~~~
 
-Clone repository and setup dev environment with `npm`_
+Clone repository and setup development environment with `npm`_
 
 ::
 
@@ -57,13 +53,13 @@ Run in Firefox-nightly
 
 ::
 
-    npm run start
+    npm start -- --firefox=nightly
 
 Run unit tests and lint
 
 ::
 
-    npm run test ; npm run lint
+    npm test ; npm run lint
 
 Build extension
 
@@ -79,6 +75,7 @@ Request control uses the following external libraries,
 -  `Bootstrap`_ is licensed under the MIT license.
 -  `tags-input`_ and it's fork by `@pirxpilot`_ are licensed under the MIT license.
 -  `ionicons`_ is licensed under the MIT license.
+-  `tld.js`_ is licensed under the MIT license.
 
 License
 ~~~~~~~
@@ -100,6 +97,7 @@ License
 .. _tags-input: https://github.com/developit/tags-input
 .. _@pirxpilot: https://github.com/pirxpilot/tags-input
 .. _ionicons: http://ionicons.com/
+.. _tld.js: https://github.com/oncletom/tld.js
 
 .. |BuildStatus| image:: https://travis-ci.org/tumpio/requestcontrol.svg?branch=master
    :target: https://travis-ci.org/tumpio/requestcontrol
@@ -109,4 +107,3 @@ License
 .. |ir| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-redirect@19.png
 .. |ib| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-block@19.png
 .. |iw| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-whitelist@19.png
-
