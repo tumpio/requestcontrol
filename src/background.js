@@ -85,7 +85,6 @@ function addRuleListeners(rules) {
 }
 
 function requestControlListener(details) {
-    console.log((typeof details.originUrl) + " -> " + details.url);
     if (markedRequests.has(details.requestId)) {
         let request = markedRequests.get(details.requestId);
         markedRequests.delete(request.requestId);

@@ -181,19 +181,19 @@ function onRuleTest() {
     let resolveError = null;
     let resolve = request.resolve(function (request, action) {
         switch (action) {
-            case WHITELIST_ACTION:
-                result.textContent = browser.i18n.getMessage("whitelisted");
-                break;
-            case BLOCK_ACTION:
-                result.textContent = browser.i18n.getMessage("blocked");
-                break;
-            case REDIRECT_ACTION:
-            case FILTER_ACTION:
-            case FILTER_ACTION | REDIRECT_ACTION:
-                result.textContent = request.redirectUrl;
-                break;
-            default:
-                break;
+        case WHITELIST_ACTION:
+            result.textContent = browser.i18n.getMessage("whitelisted");
+            break;
+        case BLOCK_ACTION:
+            result.textContent = browser.i18n.getMessage("blocked");
+            break;
+        case REDIRECT_ACTION:
+        case FILTER_ACTION:
+        case FILTER_ACTION | REDIRECT_ACTION:
+            result.textContent = request.redirectUrl;
+            break;
+        default:
+            break;
         }
     }, function (request, rule, error) {
         resolveError = error;

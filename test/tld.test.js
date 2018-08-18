@@ -2,7 +2,7 @@ import test from "ava";
 import {extractHostname, libTld} from "../src/RequestControl/tld";
 
 
-test('Extract hostname', t => {
+test("Extract hostname", t => {
     t.is(extractHostname("//example.com"), "example.com");
     t.is(extractHostname("http://example.com"), "example.com");
     t.is(extractHostname("http://example.com/"), "example.com");
@@ -32,7 +32,7 @@ test('Extract hostname', t => {
     t.is(extractHostname("http://192.168.0.1/"), "192.168.0.1");
 });
 
-test('Get domain name', t => {
+test("Get domain name", t => {
     t.is(libTld.getDomain("http://example.com"), "example.com");
     t.is(libTld.getDomain("http://nakagyo.kyoto.jp.example.nakagyo.kyoto.jp"),
         "example.nakagyo.kyoto.jp");

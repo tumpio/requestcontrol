@@ -1,4 +1,4 @@
-import "../../lib/tldjs/tld.js"
+import "../../lib/tldjs/tld.js";
 
 // For unit tests under node
 const tldjs = (typeof window !== "undefined") ? window.tldjs : require("tldjs");

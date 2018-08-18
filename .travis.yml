@@ -12,5 +12,6 @@ script:
   - npm run lint
   - npm run test
   - npm run build
+  - VERSION=$(node -p "require('./manifest.json').version") npm run lint-release
 after_success:
   - npm run coverage

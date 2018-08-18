@@ -55,16 +55,16 @@ RuleInputFactory.prototype = {
 
     newInput: function (rule = new RequestRule()) {
         switch (rule.action) {
-            case "filter":
-                return new FilterRuleInput(rule);
-            case "block":
-                return new BlockRuleInput(rule);
-            case "redirect":
-                return new RedirectRuleInput(rule);
-            case "whitelist":
-                return new WhitelistRuleInput(rule);
-            default:
-                return new RuleInput(rule);
+        case "filter":
+            return new FilterRuleInput(rule);
+        case "block":
+            return new BlockRuleInput(rule);
+        case "redirect":
+            return new RedirectRuleInput(rule);
+        case "whitelist":
+            return new WhitelistRuleInput(rule);
+        default:
+            return new RuleInput(rule);
         }
     },
 
@@ -324,12 +324,12 @@ RuleInput.prototype = {
         if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT"
             && !e.target.hasAttribute("contenteditable")) {
             switch (e.type) {
-                case "dblclick":
-                    this.toggleEdit();
-                    break;
-                case "click":
-                    this.headerClickTimeout = setTimeout(this.toggleSelect.bind(this), 250);
-                    break;
+            case "dblclick":
+                this.toggleEdit();
+                break;
+            case "click":
+                this.headerClickTimeout = setTimeout(this.toggleSelect.bind(this), 250);
+                break;
             }
         }
     },

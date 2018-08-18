@@ -13,7 +13,8 @@
     "coverage": "NODE_ENV=test nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "coverage-html": "NODE_ENV=test nyc report --reporter=html",
     "start": "web-ext run -i=$npm_package_config_ignore --bc --url about:debugging#addons",
-    "lint": "web-ext lint -i=$npm_package_config_ignore ; eslint src/ test/",
+    "lint": "eslint src/ test/ lib/ --ignore-pattern lib/tldjs/*.js",
+    "lint-release": "addons-linter .releases/request_control-$VERSION.zip",
     "bootstrap-compile": "node-sass --output-style expanded --precision 6 --include-path ./node_modules/bootstrap/scss --output ./node_modules/bootstrap/dist/css/ ./lib/bootstrap/bootstrap_custom.scss",
     "bootstrap-prefix": "BROWSERSLIST=\"Firefox ESR\" postcss --use autoprefixer --no-map --replace \"./node_modules/bootstrap/dist/css/bootstrap.css\"",
     "bootstrap-minify": "cleancss --output ./lib/bootstrap/bootstrap.min.css ./node_modules/bootstrap/dist/css/bootstrap.css",
@@ -28,6 +29,7 @@
     "tldjs": "^2.3.1"
   },
   "devDependencies": {
+    "addons-linter": "latest",
     "autoprefixer": "latest",
     "ava": "latest",
     "babel-cli": "latest",
@@ -39,6 +41,10 @@
     "codecov": "latest",
     "eslint": "latest",
     "eslint-plugin-ava": "latest",
+    "eslint-plugin-import": "latest",
+    "eslint-plugin-node": "latest",
+    "eslint-plugin-promise": "latest",
+    "eslint-plugin-standard": "latest",
     "node-sass": "latest",
     "nyc": "latest",
     "postcss-cli": "latest",
@@ -67,16 +73,36 @@
     "instrument": false
   },
   "eslintConfig": {
+    "extends": "eslint:recommended",
     "env": {
-      "es6": true
+      "es6": true,
+      "browser": true,
+      "node": true,
+      "webextensions": true
     },
-    "parser": "babel-eslint",
     "parserOptions": {
-      "ecmaVersion": 2017,
       "sourceType": "module"
     },
     "plugins": [
-      "ava"
-    ]
+      "ava",
+      "import",
+      "node",
+      "promise",
+      "standard"
+    ],
+    "rules": {
+      "indent": [
+        "error",
+        4
+      ],
+      "quotes": [
+        "error",
+        "double"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ]
+    }
   }
 }

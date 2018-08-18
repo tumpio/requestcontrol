@@ -1,4 +1,4 @@
-import {createMatchPatterns, createRule, markRequest} from "/src/RequestControl/api.js"
+import {createMatchPatterns, createRule, markRequest} from "/src/RequestControl/api.js";
 
 export function testRules(url, rulePatterns) {
     let testURL, request;
@@ -31,13 +31,13 @@ export function testRules(url, rulePatterns) {
  * @throws {TypeError}        If the pattern is not a valid MatchPattern
  */
 function matchPatternToRegExp(pattern) {
-    if (pattern === '' || pattern === '<all_urls>') {
+    if (pattern === "" || pattern === "<all_urls>") {
         return (/^(?:http|https):\/\//);
     }
 
-    const schemeSegment = '(\\*|http|https)';
-    const hostSegment = '(\\*|(?:\\*\\.)?(?:[^/*]+))?';
-    const pathSegment = '(.*)';
+    const schemeSegment = "(\\*|http|https)";
+    const hostSegment = "(\\*|(?:\\*\\.)?(?:[^/*]+))?";
+    const pathSegment = "(.*)";
     const matchPatternRegExp = new RegExp(
         `^${schemeSegment}://${hostSegment}/${pathSegment}$`
     );
@@ -52,36 +52,36 @@ function matchPatternToRegExp(pattern) {
         throw new TypeError(`"${pattern}" does not have a valid host`);
     }
 
-    let regex = '^';
+    let regex = "^";
 
-    if (scheme === '*') {
-        regex += '(http|https)';
+    if (scheme === "*") {
+        regex += "(http|https)";
     } else {
         regex += scheme;
     }
 
-    regex += '://';
+    regex += "://";
 
-    if (host && host === '*') {
-        regex += '[^/]+?';
+    if (host && host === "*") {
+        regex += "[^/]+?";
     } else if (host) {
         if (host.match(/^\*\./)) {
-            regex += '[^/]*?';
+            regex += "[^/]*?";
             host = host.substring(2);
         }
-        regex += host.replace(/\./g, '\\.');
+        regex += host.replace(/\./g, "\\.");
     }
 
     if (path) {
-        if (path === '*') {
-            regex += '(/.*)?';
-        } else if (path.charAt(0) !== '/') {
-            regex += '/';
-            regex += path.replace(/\./g, '\\.').replace(/\?/g, '\\?').replace(/\*/g, '.*?');
-            regex += '/?';
+        if (path === "*") {
+            regex += "(/.*)?";
+        } else if (path.charAt(0) !== "/") {
+            regex += "/";
+            regex += path.replace(/\./g, "\\.").replace(/\?/g, "\\?").replace(/\*/g, ".*?");
+            regex += "/?";
         }
     }
 
-    regex += '$';
+    regex += "$";
     return new RegExp(regex);
 }
