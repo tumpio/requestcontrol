@@ -1,0 +1,627 @@
+{
+    "extensionName": {
+        "message": "Request Control",
+        "hash": "4c5521ea975096028cc498f8652f2e59"
+    },
+    "extensionDescription": {
+        "message": "定义控制 HTTP 请求的规则。",
+        "hash": "624ab50e334696095d89b93466bc178b"
+    },
+    "extensionManual": {
+        "message": "/_locales/en/manual.html",
+        "description": "Change to point to the localised manual.html.",
+        "hash": "85ef96587adf0caa5664055815ea5c34"
+    },
+    "title_filter": {
+        "message": "已过滤：",
+        "hash": "55a37ca4e636da68a6a9ec991c90a8fa"
+    },
+    "title_block": {
+        "message": "已拦截：",
+        "hash": "c356cffa42b7a65cf75193d2eaaf7518"
+    },
+    "title_redirect": {
+        "message": "已转向：",
+        "hash": "985d4c285920d8c8f2f11b741757ad1f"
+    },
+    "title_whitelist": {
+        "message": "白名单：",
+        "hash": "6937108e8a27a6eb8b62eaf1c1891807"
+    },
+    "rule_title_filter": {
+        "message": "针对 $HOST$ 的过滤规则",
+        "placeholders": {
+            "host": { "content": "$1", "example": "example.com" }
+        },
+        "hash": "0fb666809bc2261e204bc32a6dbfcbde"
+    },
+    "rule_title_redirect": {
+        "message": "针对 $HOST$ 的重定向规则",
+        "placeholders": {
+            "host": { "content": "$1", "example": "example.com" }
+        },
+        "hash": "4c2c9847fa132b3b79d151b9ec4d1dff"
+    },
+    "rule_title_block": {
+        "message": "针对 $HOST$ 的拦截规则",
+        "placeholders": {
+            "host": { "content": "$1", "example": "example.com" }
+        },
+        "hash": "bbca321da18837446512564ddc675bd6"
+    },
+    "rule_title_whitelist": {
+        "message": "针对 $HOST$ 的白名单规则",
+        "placeholders": {
+            "host": { "content": "$1", "example": "example.com" }
+        },
+        "hash": "58eb6ead9436447be7955880a12995d7"
+    },
+    "rule_title_new": {
+        "message": "新建规则",
+        "hash": "d3cf17865ccafc40046960f83213499e"
+    },
+    "rule_description_new": {
+        "message": "创建新的请求控制规则，定义它的匹配模式、类型和动作。",
+        "hash": "ddb65f27e7ded35bcc056296e99c5b3f"
+    },
+    "rule_title_hosts": {
+        "message": "$HOSTS$ 及其他 $NUM$ 个",
+        "placeholders": {
+            "hosts": { "content": "$1", "example": "host1.com, host2.com, host3.com" },
+            "num": { "content": "$2", "example": "10" }
+        },
+        "hash": "52a8903b73e536e803ffc463683d4de8"
+    },
+    "rule_description_filter_url": {
+        "message": "过滤 URL 重定向"
+    },
+    "rule_description_filter_parameters": {
+        "message": "削减 URL 参数",
+        "hash": "5b99ed4986c195f42c03b9ca155e32ef"
+    },
+    "rule_description_block": {
+        "message": "在请求发出前拦截。",
+        "hash": "4a4b17aae998853e0270b145b2b71998"
+    },
+    "rule_description_redirect": {
+        "message": "将请求重定向到 $URL$",
+        "placeholders": {
+            "url": { "content": "$1", "example": "http://example.com" }
+        },
+        "hash": "c7c868bc2584cbb230e1aad8cfca6b30"
+    },
+    "rule_description_whitelist": {
+        "message": "忽视其他规则且不做请求处理。"
+    },
+    "any_url": {
+        "message": "任何 URL",
+        "hash": "c8089e50fca0eddba46f1bc7238d73ee"
+    },
+    "and": {
+        "message": "$1 和 $2",
+        "hash": "e16c0dbaab8bcbc3ae6e6739411779f5"
+    },
+    "activate_false": {
+        "message": "禁用",
+        "hash": "3cd205f2e4eebe52d3320ae5c75aa53c"
+    },
+    "activate_true": {
+        "message": "启用",
+        "hash": "2212934c2b3d751385bf1c26d91172f3"
+    },
+    "show_more_false": {
+        "message": "◂ 更少",
+        "hash": "576415930f68da8fbd12cf9f45a564eb"
+    },
+    "show_more_true": {
+        "message": "更多 ▸",
+        "hash": "0279bf0f359000ef12a1c92e42290d71"
+    },
+    "main_frame": {
+        "message": "文档",
+        "hash": "4f118c1060ae07ec9148f7d0429dd330"
+    },
+    "sub_frame": {
+        "message": "子文档",
+        "hash": "98ded5b32e2b722be209ea0e73142f8d"
+    },
+    "stylesheet": {
+        "message": "样式表",
+        "hash": "15362cf02a3ccd5a8cc4e14dfe8ebff5"
+    },
+    "script": {
+        "message": "脚本",
+        "hash": "800852212eead329c861d1d6fcc9495f"
+    },
+    "image": {
+        "message": "图像",
+        "hash": "efad64b2372ef7c14993416745018112"
+    },
+    "object": {
+        "message": "对象",
+        "hash": "e238c4487eaebefd7946e13fd73e10e0"
+    },
+    "object_subrequest": {
+        "message": "插件",
+        "hash": "93158850fe52f0fb40e38a7482196e58"
+    },
+    "xmlhttprequest": {
+        "message": "XMLHttpRequest",
+        "hash": "72e53ea15498d6caea3c9bf304783914"
+    },
+    "xbl": {
+        "message": "XBL",
+        "hash": "5b54207cdcd87839f9526dcf35e3ce69"
+    },
+    "xslt": {
+        "message": "XSLT",
+        "hash": "f75a36287dc9adaf111dbff21158c4fa"
+    },
+    "ping": {
+        "message": "Ping",
+        "hash": "97f869058bca9f464996a15995ad7540"
+    },
+    "beacon": {
+        "message": "信标（Beacon）",
+        "hash": "43b6fd3a6da86da30f04bda6288e7884"
+    },
+    "xml_dtd": {
+        "message": "XML DTD",
+        "hash": "4c8488ca33430f6f93d9b946ddf99413"
+    },
+    "font": {
+        "message": "字体",
+        "hash": "0c291a96426471281a2ef2b235e083e2"
+    },
+    "media": {
+        "message": "媒体",
+        "hash": "18c81c4425123cf4fde9f24e964be1fb"
+    },
+    "websocket": {
+        "message": "WebSocket",
+        "hash": "7685f2c18c5080d76e28fb1f3b03e6d1"
+    },
+    "csp_report": {
+        "message": "CSP 报告",
+        "hash": "c5fb6e9b86ca9e87413e5233ec0b6bf3"
+    },
+    "imageset": {
+        "message": "图像集",
+        "hash": "981e4f0e16b5f8debb8f007e557c3428"
+    },
+    "web_manifest": {
+        "message": "Web Manifest",
+        "hash": "139df7f7f5afd9e465e76c67aefd4ced"
+    },
+    "other": {
+        "message": "其他",
+        "hash": "3b20298b866c3056646a16800550bfb0"
+    },
+    "options_title": {
+        "message": "管理 Request Control 规则",
+        "hash": "db3651cd3205f1731739d8f6b9e7ed11"
+    },
+    "options_description": {
+        "message": "定义管控 HTTP 请求的规则。",
+        "hash": "fe620cb891842060ece17c6ee6f14742"
+    },
+    "settings_title": {
+        "message": "Request Control 设置",
+        "hash": "d50b5849c2500c850d4f77c4c15a04c4"
+    },
+    "manual_title": {
+        "message": "Request Control 手册",
+        "hash": "f1e0fa84ec834f311474f695ccba98cb"
+    },
+    "manual": {
+        "message": "手册",
+        "hash": "62e17f5325fbf943689234528c978836"
+    },
+    "about_title": {
+        "message": "关于 Request Control",
+        "hash": "80bb25e247e0a98a03933c577f910ab6"
+    },
+    "about": {
+        "message": "关于",
+        "hash": "da73d37076fcb711ec18ea36c7efb1d5"
+    },
+    "see_manual": {
+        "message": "参见手册。",
+        "hash": "8b8dd3ef81bcb3c908cca0c2e92fe75e"
+    },
+    "create_new_rule": {
+        "message": "创建新规则",
+        "hash": "dacd328b27e73d373cebd13c7b0f7e1c"
+    },
+    "restore_default_rules": {
+        "message": "恢复默认规则",
+        "hash": "fa90375fa00b7a4f85d1113b24be7745"
+    },
+    "new_rule": {
+        "message": "新建规则",
+        "hash": "ae6aafa16c5645e6f1c1e19aa39fd081"
+    },
+    "patterns": {
+        "message": "匹配模式",
+        "hash": "c42cd45c6d2c36c5b22d14be519009dd"
+    },
+    "edit": {
+        "message": "编辑",
+        "hash": "07fa34db2b1ae6134e7ea08b4c43b447"
+    },
+    "edit_rule": {
+        "message": "编辑规则",
+        "hash": "655f98327252009bfd36cf8270a6eb26"
+    },
+    "disable": {
+        "message": "禁用",
+        "hash": "3cd205f2e4eebe52d3320ae5c75aa53c"
+    },
+    "pattern": {
+        "message": "模式",
+        "hash": "9f3e785455cce1d1838f13f5e233ebed"
+    },
+    "scheme": {
+        "message": "方案",
+        "hash": "d04323800771daa5fd01d3c8c8d5850b"
+    },
+    "host": {
+        "message": "主机",
+        "hash": "f7eef1219fc8f8121c018636b0fc91c7"
+    },
+    "tlds": {
+        "message": "TLD",
+        "hash": "567b796a84aa2ec87cb5e6327787bbd3"
+    },
+    "path": {
+        "message": "路径",
+        "hash": "3da7e6622b4fe8ed86fe70b83deaedbc"
+    },
+    "top_level_domains": {
+        "message": "顶级域名",
+        "hash": "72e8778550ad0243ad0445fc2d0281f8"
+    },
+    "must_contain": {
+        "message": "必须包含",
+        "hash": "f69bbe06b2a529df0fb5c9b40da5ae1f"
+    },
+    "must_not_contain": {
+        "message": "必须不含",
+        "hash": "c335359d0711902b0405a70714f97ab3"
+    },
+    "includes": {
+        "message": "包括",
+        "hash": "694b3c96d3c3ddedc4c8d878910c7bbe"
+    },
+    "excludes": {
+        "message": "排除",
+        "hash": "a6520847970dd24a8a865ddca15cdaed"
+    },
+    "types": {
+        "message": "类型",
+        "hash": "420c63ee2472f86e97f5ee173a72944c"
+    },
+    "any_type": {
+        "message": "任何类型",
+        "hash": "e44cac33206c638d0aa59e682e05fbba"
+    },
+    "action": {
+        "message": "动作",
+        "hash": "ef3d972f2c6455ca6d8cc6f0d6724041"
+    },
+    "filter": {
+        "message": "过滤",
+        "hash": "0fc4758553925ca8337a74a3ada462f7"
+    },
+    "block": {
+        "message": "拦截",
+        "hash": "2b5eab2160bb60a8417c56c38d20ec4f"
+    },
+    "redirect": {
+        "message": "重定向",
+        "hash": "675414f0fd559433b68f553101ee1663"
+    },
+    "whitelist": {
+        "message": "白名单",
+        "hash": "641ab2ef858b8146b3639cb5e28c601b"
+    },
+    "filter_rules": {
+        "message": "过滤规则",
+        "hash": "a07438cfd05ca01a2025f22607a35cb9"
+    },
+    "block_rules": {
+        "message": "拦截规则",
+        "hash": "2f898657262d61416a2f64ab1cab84ab"
+    },
+    "redirect_rules": {
+        "message": "重定向规则",
+        "hash": "4812eb783c4359d667a48751673d2eee"
+    },
+    "whitelist_rules": {
+        "message": "白名单规则",
+        "hash": "0fddc52f5726a730153444d8e819407f"
+    },
+    "new_rules": {
+        "message": "新建规则",
+        "hash": "beeaf2b73048c15098217a3192ba14aa"
+    },
+    "selected_rules_count": {
+        "message": "已选择 $COUNT$ / $TOTAL$ 条",
+        "placeholders": {
+            "count": { "content": "$1", "example": "3" },
+            "total": { "content": "$2", "example": "10" }
+        },
+        "hash": "0f157b43d01e9119311aac0b5c3d1db2"
+    },
+    "redirect_to": {
+        "message": "重定向到",
+        "hash": "2e08c5672cb0241c7031a89a4b0c961e"
+    },
+    "manual_text_redirect": {
+        "message": "使用匹配模式匹配欲重定向的原始请求。",
+        "hash": "06ce6feca3a7a42ca75ae9145974a12d"
+    },
+    "filter_url_redirection": {
+        "message": "过滤 URL 重定向",
+        "hash": "bbd88d9cf9a9df2fc65482f6c180c85d"
+    },
+    "trim_url_parameters": {
+        "message": "削减 URL 参数",
+        "hash": "b59af9e2445db23f0b40ec34d6204a1a"
+    },
+    "trim_all": {
+        "message": "全部削减",
+        "hash": "143af2b411c1585feb8604744705fd60"
+    },
+    "invert_trim": {
+        "message": "反向削减",
+        "hash": "568603d5432763622d39260d15a5efe8"
+    },
+    "saved": {
+        "message": "已保存",
+        "hash": "19f2fc9b4198d487f938efd2d738a1ed"
+    },
+    "save_rule": {
+        "message": "保存规则",
+        "hash": "892d4db08be558db5a68fa42b943dc1d"
+    },
+    "remove": {
+        "message": "移除",
+        "hash": "3908a268c854fe64242e38845dbb7c81"
+    },
+    "title_tlds": {
+        "message": "包括顶级域名",
+        "hash": "960030acadf3951402c5b1f16527b076"
+    },
+    "redirect_url": {
+        "message": "重定向 URL",
+        "hash": "40d6b53f58a277398005fda57b3acbc8"
+    },
+    "placeholder_trim_parameters": {
+        "message": "添加参数名到过滤规则",
+        "hash": "51678e000c4ba9257d46de0d6353c431"
+    },
+    "show_rules": {
+        "message": "显示规则",
+        "hash": "b0bb0f78e2897ee70133a2a6ecb9402e"
+    },
+    "request_type": {
+        "message": "请求类型：$TYPE$",
+        "placeholders": {
+            "type": { "content": "$1", "example": "Document" }
+        },
+        "hash": "e488aca6c78f1772aa3379e75d4770e7"
+    },
+    "timestamp": {
+        "message": "时间戳：$TIME$",
+        "placeholders": {
+            "time": { "content": "$1", "example": "18:32:21" }
+        },
+        "hash": "d27e783ba6bf4ebbc06d0110c99f3aaf"
+    },
+    "request_url": {
+        "message": "请求网址：",
+        "hash": "780fc4eb66adfe05c7fb79b898d47bec"
+    },
+    "copy_to_clipboard": {
+        "message": "复制到剪贴板",
+        "hash": "17b6a865f4e197dcff670c9ac12517a1"
+    },
+    "copied": {
+        "message": "已复制！",
+        "hash": "abb06804276810a6943b11c07fe6ab74"
+    },
+    "new_target": {
+        "message": "新对象：",
+        "hash": "f20f35917a37645302ef8b68cb11e37f"
+    },
+    "rules": {
+        "message": "规则",
+        "hash": "8508c7bcea2082f08abcfea3d4cc0ffb"
+    },
+    "settings": {
+        "message": "设置",
+        "hash": "9c49db0871c842c3afc2c09b8a957eba"
+    },
+    "back_to_top": {
+        "message": "返回顶层",
+        "hash": "a9a62bf1052f231b2752daca79672c8d"
+    },
+    "export-file-name": {
+        "message": "request-control-rules.json",
+        "hash": "37ef1ac2c2258b087dff90335bbc9512"
+    },
+    "export_selected": {
+        "message": "导出选中",
+        "hash": "6bbde0f8c4c124ee2dbdfa0d04fa888b"
+    },
+    "remove_selected": {
+        "message": "移除选中",
+        "hash": "487886ec3018b8a628ee77758ff12426"
+    },
+    "test_selected": {
+        "message": "测试选中",
+        "hash": "400d1eacd1ec893e569d06dbdd91cf49"
+    },
+    "export_rules": {
+        "message": "导出规则",
+        "hash": "69e645a68cd3b4dbecbebaa684a98c42"
+    },
+    "export_description": {
+        "message": "导出规则到本地文件。",
+        "hash": "7f751695a052eb6c0d20f0f700776288"
+    },
+    "export": {
+        "message": "导出",
+        "hash": "3570cd6397fac307418101b069471e77"
+    },
+    "import_rules": {
+        "message": "导入规则",
+        "hash": "b8283c1c91d7ba51905c8ac6916afe5c"
+    },
+    "import_description": {
+        "message": "从本地文件导入规则。",
+        "hash": "688c01363a5a0de646e5e7b5393f41f9"
+    },
+    "restore_defaults": {
+        "message": "恢复默认",
+        "hash": "ac0d3384ca3e7242470b5c2ec3375cfc"
+    },
+    "restore_description": {
+        "message": "恢复默认的规则。",
+        "hash": "14a22951c87450cc34a08c1021984624"
+    },
+    "restore": {
+        "message": "恢复",
+        "hash": "707b6981da281cf82be0349cdb34737b"
+    },
+    "contents": {
+        "message": "内容",
+        "hash": "976b9ce5e200f9ec2ff93465f5f41fff"
+    },
+    "about_description": {
+        "message": "一个管控 HTTP 请求的 Firefox WebExtension。",
+        "hash": "29a4708bce00d4ff1f98a25d65e23320"
+    },
+    "faq": {
+        "message": "常见问题",
+        "hash": "deec514e70c89c91ec1bbb9141b356ed"
+    },
+    "contributors": {
+        "message": "贡献者",
+        "hash": "e250658acc4163082438b9fb30efded6"
+    },
+    "source_code": {
+        "message": "源代码",
+        "hash": "75707a9921dc4cf48e832976979fa323"
+    },
+    "changelog": {
+        "message": "变更日志",
+        "hash": "d1f539e046abe83e76dcf2163f9a143c"
+    },
+    "license": {
+        "message": "许可协议",
+        "hash": "9b42bd2f6fdb26369fa5b8697888edfc"
+    },
+    "license_clause": {
+        "message": "Request Control 依照 Mozilla Public License v2.0 授权。MPL 许可协议的副本见",
+        "hash": "4e44514305fd748f2f4f4401ef073fdf"
+    },
+    "donate": {
+        "message": "捐款",
+        "hash": "cd0c51d7e4aac8d55c36ab520235830f"
+    },
+    "browse_file": {
+        "message": "浏览...",
+        "hash": "070e2a9fa21ab2abab971be668738e1e"
+    },
+    "version": {
+        "message": "版本 $VERSION$",
+        "placeholders": {
+            "version": { "content": "$1" }
+        },
+        "hash": "1beaf991cf69cb25cdab0d6ad88f87ee"
+    },
+    "home_page": {
+        "message": "主页",
+        "hash": "aebfb5d93b98f8e14edf6c674d1e19b3"
+    },
+    "name": {
+        "message": "名称：",
+        "hash": "bcc9f177b0a20c395aac47bd88204419"
+    },
+    "description": {
+        "message": "描述：",
+        "hash": "c43fdfc69b45ec90667b0af80c3ed609"
+    },
+    "add_tag": {
+        "message": "添加标签",
+        "hash": "7d3e0c8f3e92ec16b37a5200e84a7a1a"
+    },
+    "tag": {
+        "message": "标签：",
+        "hash": "736c454b40a07d5af5850d4d215c7f43"
+    },
+    "test_url": {
+        "message": "测试 URL",
+        "hash": "9e0d24e2c244e47c5e7c09747b08362e"
+    },
+    "test_selected_rules": {
+        "message": "测试选中规则",
+        "hash": "825996edb19079bb01585bc118cac5c2"
+    },
+    "invalid_test_url": {
+        "message": "不是有效的测试 URL",
+        "hash": "1760bb50b61e732b85ae01205f9e68fe"
+    },
+    "no_match": {
+        "message": "未匹配",
+        "hash": "f32fb29186ac02af73fe2e0d40feb1e4"
+    },
+    "matched_no_change": {
+        "message": "匹配，但未做变更",
+        "hash": "dcdd3ab2c8fec41fa5375ed4f6088ec6"
+    },
+    "whitelisted": {
+        "message": "被白名单",
+        "hash": "022ac93fcfc497e7043135f3d418ffe3"
+    },
+    "blocked": {
+        "message": "已拦截",
+        "hash": "aee65dae595f72841c1307238d2a4cea"
+    },
+    "error_invalid_url": {
+        "message": "重定向到新目标失败：无效的目标 URL",
+        "hash": "15d0ae1fc4c165b0323dfdfc4114cbf3"
+    },
+    "invalid_target_url": {
+        "message": "无效的目标 URL：",
+        "hash": "8de3370065eafbe3c5cd9aed857293cd"
+    },
+    "enable_rules": {
+        "message": "启用 Request Control",
+        "hash": "8eba808842c70572f1de2e9c57c68c77"
+    },
+    "disable_rules": {
+        "message": "禁用 Request Control",
+        "hash": "f740d97b0524dcdc36159a37e93f32c4"
+    },
+    "log_whitelisted_requests": {
+        "message": "记录白名单请求的日志",
+        "hash": "162bcf15f5d4548af947f7738167c278"
+    },
+    "log": {
+        "message": "日志记录",
+        "hash": "3f562ec844600db801ca7ebbdfa71e53"
+    },
+    "report_bug_request_feature": {
+        "message": "报告问题/请求功能",
+        "hash": "814199e78bed49a92aa04a189a3cb42c"
+    },
+    "skip_within_same_domain": {
+        "message": "跳过同一域名",
+        "hash": "92e8106459e7470dc9f84754e2baebd5"
+    },
+
+    "__WET_LOCALE__": { "message": "zh-CN" }
+}
