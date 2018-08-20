@@ -21,7 +21,7 @@
     "bootstrap-build": "npm run bootstrap-compile && npm run bootstrap-prefix && npm run bootstrap-minify",
     "tldjs-build": "cd node_modules/tldjs && npm install && npm run build && cp -v tld.js ../../lib/tldjs/",
     "prebuild": "npm run tldjs-build && npm run bootstrap-build && npm run build-manual",
-    "build-manual": "find ./_locales/ -iname \"manual.rst\" -type f -exec sh -c 'pandoc \"$0\" --from=rst --to=html --output \"${0%.rst}.html\"' {} \\;",
+    "build-manual": "find ./_locales/ -iname \"manual.rst\" -type f -exec sh -c 'pandoc --standalone \"$0\" --from=rst --to=html --output \"${0%.rst}.html\"' {} \\;",
     "build": "web-ext build -i=$npm_package_config_ignore --overwrite-dest --artifacts-dir=.releases --verbose"
   },
   "dependencies": {
