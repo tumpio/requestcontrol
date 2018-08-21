@@ -10,7 +10,8 @@
     },
     "applications": {
         "gecko": {
-            "id": "{1b1e6108-2d88-4f0f-a338-01f9dbcccd6f}"
+            "id": "{1b1e6108-2d88-4f0f-a338-01f9dbcccd6f}",
+            "strict_min_version": "60.0a1"
         }
     },
     "permissions": [
