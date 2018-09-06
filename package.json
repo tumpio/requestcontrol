@@ -45,6 +45,7 @@
     "eslint-plugin-node": "latest",
     "eslint-plugin-promise": "latest",
     "eslint-plugin-standard": "latest",
+    "firefox-extension-deploy": "latest",
     "node-sass": "latest",
     "nyc": "latest",
     "postcss-cli": "latest",
