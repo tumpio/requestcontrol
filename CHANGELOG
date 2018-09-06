@@ -1,3 +1,7 @@
+Version 1.11.1 September 6, 2018
+- Add strict min version requirement for Firefox 60.
+- Remove debug console logging #80.
+
 Version 1.11.0 August 17, 2018
 - Add support for skipping redirection url filtering within same domain. #29
 
