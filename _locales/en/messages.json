@@ -21,6 +21,15 @@
   "title_whitelist": {
     "message": "Whitelisted: "
   },
+  "main_title_with_state": {
+    "message": "Request Control ($STATE$)",
+    "placeholders": {
+      "state": {
+        "content": "$1",
+        "example": "Disabled"
+      }
+    }
+  },
   "rule_title_filter": {
     "message": "Filter rule for $HOST$",
     "placeholders": {

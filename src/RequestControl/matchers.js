@@ -1,5 +1,5 @@
 import {BaseMatchExtender} from "./base.js";
-import {libTld} from "./tld.js";
+import {libTld} from "./url.js";
 import {createRegexpPattern} from "./api.js";
 
 export class RequestMatcher {

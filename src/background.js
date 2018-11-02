@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import {createMatchPatterns, createRule, markRequest} from "./RequestControl/api.js";
-import {DISABLED_STATE, NO_ACTION, REQUEST_CONTROL_ICONS} from "./RequestControl/base.js";
+import {getNotifier} from "./notifier.js";
 
 /**
  * Background script for processing Request Control rules, adding request listeners and keeping
@@ -17,27 +17,31 @@ import {DISABLED_STATE, NO_ACTION, REQUEST_CONTROL_ICONS} from "./RequestControl
 const requestListeners = [];
 const markedRequests = new Map();
 const records = new Map();
+let notifier;
 
-browser.storage.local.get().then(init);
-browser.storage.onChanged.addListener(initOnChange);
+Promise.all([
+    browser.runtime.getBrowserInfo(),
+    browser.storage.local.get()
+]).then(([browserInfo, options]) => {
+    notifier = getNotifier(browserInfo);
+    init(options);
+    browser.storage.onChanged.addListener(initOnChange);
+});
 
 function init(options) {
-    if (!options.disabled) {
-        addRuleListeners(options.rules);
-        updateBrowserAction(null, REQUEST_CONTROL_ICONS[NO_ACTION], "");
-        browser.tabs.onRemoved.addListener(removeRecords);
-        browser.webNavigation.onCommitted.addListener(resetBrowserAction);
-        browser.runtime.onMessage.addListener(getRecords);
-    } else {
-        updateBrowserAction(null, REQUEST_CONTROL_ICONS[DISABLED_STATE], "");
-        for (let [tabId,] of records) {
-            updateBrowserAction(tabId, null, "");
-        }
+    if (options.disabled) {
+        notifier.disabledState(records);
         records.clear();
         markedRequests.clear();
         browser.tabs.onRemoved.removeListener(removeRecords);
-        browser.webNavigation.onCommitted.removeListener(resetBrowserAction);
+        browser.webNavigation.onCommitted.removeListener(resetRecords);
         browser.runtime.onMessage.removeListener(getRecords);
+    } else {
+        addRuleListeners(options.rules);
+        notifier.enabledState();
+        browser.tabs.onRemoved.addListener(removeRecords);
+        browser.webNavigation.onCommitted.addListener(resetRecords);
+        browser.runtime.onMessage.addListener(getRecords);
     }
     browser.webRequest.handlerBehaviorChanged();
 }
@@ -103,7 +107,7 @@ function requestControlCallback(request, action, updateTab) {
         timestamp: request.timeStamp,
         rules: request.rules.map(rule => rule.uuid)
     });
-    updateBrowserAction(request.tabId, REQUEST_CONTROL_ICONS[action], tabRecordsCount.toString());
+    notifier.notify(request.tabId, action, tabRecordsCount);
     if (updateTab) {
         browser.tabs.update(request.tabId, {
             url: request.redirectUrl
@@ -122,7 +126,7 @@ function errorCallback(request, rule, error) {
         error: error,
         target: error.target
     });
-    updateBrowserAction(request.tabId, REQUEST_CONTROL_ICONS[rule.action], String.fromCodePoint(10071));
+    notifier.error(request.tabId, rule.action, error);
 }
 
 function getRecords() {
@@ -148,28 +152,17 @@ function addRecord(record) {
     return recordsForTab.length;
 }
 
-function updateBrowserAction(tabId, badgeIcon, badgeText) {
-    browser.browserAction.setIcon({
-        tabId: tabId,
-        path: badgeIcon
-    });
-    browser.browserAction.setBadgeText({
-        tabId: tabId,
-        text: badgeText
-    });
-}
-
-function resetBrowserAction(details) {
+function resetRecords(details) {
     if (details.frameId === 0 && records.has(details.tabId)) {
         let tabRecords = records.get(details.tabId);
         let lastRecord = tabRecords[tabRecords.length - 1];
         if (lastRecord.target === details.url) {
             // Keep record of the new main frame request
             records.set(details.tabId, [lastRecord]);
-            updateBrowserAction(details.tabId, REQUEST_CONTROL_ICONS[lastRecord.action], "1");
+            notifier.notify(details.tabId, lastRecord.action, 1);
         } else {
             removeRecords(details.tabId);
-            updateBrowserAction(details.tabId, REQUEST_CONTROL_ICONS[NO_ACTION], "");
+            notifier.clear(details.tabId);
         }
     }
 }

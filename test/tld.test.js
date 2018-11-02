@@ -1,5 +1,5 @@
 import test from "ava";
-import {extractHostname, libTld} from "../src/RequestControl/tld";
+import {extractHostname, libTld} from "../src/RequestControl/url";
 
 
 test("Extract hostname", t => {

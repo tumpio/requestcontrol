@@ -7,10 +7,10 @@ import {
     FILTER_ACTION,
     NO_ACTION,
     REDIRECT_ACTION,
-    REQUEST_CONTROL_ICONS,
     WHITELIST_ACTION
 } from "/src/RequestControl/base.js";
 import {OptionsManager} from "/lib/OptionsManager.js";
+import {REQUEST_CONTROL_ICONS} from "/src/notifier.js";
 
 /**
  * Browser Action for displaying applied rules for current tab.
