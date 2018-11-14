@@ -9,9 +9,9 @@
     "ignore": "test/ coverage/ **/*.rst *.rst **/manual.rst *.lcov package*.json **/*.scss"
   },
   "scripts": {
-    "test": "NODE_ENV=test nyc ava -v",
-    "coverage": "NODE_ENV=test nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "coverage-html": "NODE_ENV=test nyc report --reporter=html",
+    "test": "nyc ava -v",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "coverage-html": "nyc report --reporter=html",
     "start": "web-ext run -i=$npm_package_config_ignore --bc --url about:debugging#addons",
     "lint": "eslint src/ test/ lib/ --ignore-pattern lib/tldjs/*.js",
     "lint-release": "addons-linter .releases/request_control-$VERSION.zip",
@@ -32,11 +32,6 @@
     "addons-linter": "latest",
     "autoprefixer": "latest",
     "ava": "latest",
-    "babel-cli": "latest",
-    "babel-eslint": "latest",
-    "babel-plugin-istanbul": "latest",
-    "babel-polyfill": "latest",
-    "babel-preset-env": "latest",
     "clean-css-cli": "latest",
     "codecov": "latest",
     "eslint": "latest",
@@ -45,30 +40,24 @@
     "eslint-plugin-node": "latest",
     "eslint-plugin-promise": "latest",
     "eslint-plugin-standard": "latest",
+    "esm": "latest",
     "firefox-extension-deploy": "latest",
     "node-sass": "latest",
     "nyc": "latest",
     "postcss-cli": "latest",
     "web-ext": "latest"
   },
-  "babel": {
-    "presets": [
-      "env"
-    ],
-    "env": {
-      "test": {
-        "plugins": [
-          "istanbul"
-        ]
-      }
-    }
+  "ava": {
+    "require": [
+      "esm"
+    ]
   },
   "nyc": {
-    "require": [
-      "babel-register"
-    ],
     "include": [
-      "./src/RequestControl/*.js"
+      "src/RequestControl/*.js"
+    ],
+    "require": [
+      "esm"
     ],
     "sourceMap": false,
     "instrument": false

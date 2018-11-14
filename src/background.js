@@ -92,7 +92,7 @@ function requestControlListener(details) {
     if (markedRequests.has(details.requestId)) {
         let request = markedRequests.get(details.requestId);
         markedRequests.delete(request.requestId);
-        return request.resolve(requestControlCallback, errorCallback);
+        return request.resolve(requestControlCallback);
     }
     return null;
 }
@@ -113,20 +113,6 @@ function requestControlCallback(request, action, updateTab) {
             url: request.redirectUrl
         });
     }
-}
-
-function errorCallback(request, rule, error) {
-    addRecord({
-        action: rule.action,
-        tabId: request.tabId,
-        type: request.type,
-        url: request.url,
-        timestamp: request.timeStamp,
-        rules: [rule.uuid],
-        error: error,
-        target: error.target
-    });
-    notifier.error(request.tabId, rule.action, error);
 }
 
 function getRecords() {
