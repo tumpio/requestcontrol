@@ -1,241 +1,198 @@
-<!-- This Source Code Form is subject to the terms of the Mozilla Public
-   - License, v. 2.0. If a copy of the MPL was not distributed with this
-   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public - License, v. 2.0. If a copy of the MPL was not distributed with this - file, You can obtain one at http://mozilla.org/MPL/2.0/. --><!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="/lib/bootstrap/bootstrap.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/lib/lit/lit.css">
   <link rel="stylesheet" href="/lib/tags-input/src/tags-input.css">
   <link rel="stylesheet" href="options.css">
+  <link rel="stylesheet" href="badges.css">
   <script type="module" src="/lib/i18n.js"></script>
   <script type="module" src="options.js"></script>
   <title data-i18n="options_title"></title></head>
 <body>
-<h1 id="pageTitle" class="page-header" data-i18n="options_title"></h1>
-<div class="card">
-  <div class="card-header">
-    <ul id="tabs" class="nav nav-tabs card-header-tabs">
-      <li class="nav-item"><a href="#tab-rules" data-tab="rules"
-                              class="tab-selector nav-link active" data-tab-title="options_title">
+<div class="c">
+  <h1 id="pageTitle" class="page-header" data-i18n="options_title"></h1>
+  <div id="tabs" class="row">
+    <div class="col">
+      <a href="#tab-rules" data-tab="rules" class="tab-selector active" data-tab-title="options_title">
         <img src="/icons/ionicons/android-list.svg" width="24"/>
         <span data-i18n="rules"></span>
-      </a></li>
-      <li class="nav-item"><a href="#tab-settings" data-tab="settings" class="tab-selector nav-link"
-                              data-tab-title="settings_title">
+      </a>
+    </div>
+    <div class="col">
+      <a href="#tab-settings" data-tab="settings" class="tab-selector" data-tab-title="settings_title">
         <img src="/icons/ionicons/android-options.svg" width="24"/>
         <span data-i18n="settings"></span>
-      </a></li>
-      <li class="nav-item"><a href="#tab-manual" data-tab="manual" class="tab-selector nav-link"
-                              data-tab-title="manual_title">
+      </a>
+    </div>
+    <div class="col">
+      <a href="#tab-manual" data-tab="manual" class="tab-selector" data-tab-title="manual_title">
         <img src="/icons/ionicons/help.svg" width="24"/>
         <span data-i18n="manual"></span>
-      </a></li>
-      <li class="nav-item"><a href="#tab-about" data-tab="about" class="tab-selector nav-link"
-                              data-tab-title="about_title">
+      </a>
+    </div>
+    <div class="col">
+      <a href="#tab-about" data-tab="about" class="tab-selector" data-tab-title="about_title">
         <img src="/icons/ionicons/android-bookmark.svg" width="24"/>
         <span data-i18n="about"></span>
-      </a></li>
-    </ul>
-  </div>
-  <div class="card-body">
-    <div class="tab-content">
-      <div id="rulesTab" class="tab-pane active">
-        <p id="pageDescription" class="lead" data-i18n="options_description"></p>
-        <div class="mb-3">
-          <div class="list-group d-none header-rules">
-            <div class="flex-column align-items-start">
-              <div
-                  class="rule-header d-flex flex-wrap w-100 justify-content-start align-items-center">
-                <div class="p-2">
-                  <input type="checkbox" class="select-all-rules" autocomplete="off">
-                </div>
-                <div class="p-2">
-                  <span data-i18n="filter_rules"></span>
-                  <small class="selected-rules-count d-none"></small>
-                </div>
-              </div>
-            </div>
-          </div>
-          <ul id="filter" class="list-group list-group-flush rule-list"></ul>
-          <div class="list-group d-none header-rules">
-            <div class="flex-column align-items-start">
-              <div
-                  class="rule-header d-flex flex-wrap w-100 justify-content-start align-items-center">
-                <div class="p-2">
-                  <input type="checkbox" class="select-all-rules" autocomplete="off">
-                </div>
-                <div class="p-2">
-                  <span data-i18n="redirect_rules"></span>
-                  <small class="selected-rules-count d-none"></small>
-                </div>
-              </div>
-            </div>
-          </div>
-          <ul id="redirect" class="list-group list-group-flush rule-list"></ul>
-          <div class="list-group d-none header-rules">
-            <div class="flex-column align-items-start">
-              <div
-                  class="rule-header d-flex flex-wrap w-100 justify-content-start align-items-center">
-                <div class="p-2">
-                  <input type="checkbox" class="select-all-rules" autocomplete="off">
-                </div>
-                <div class="p-2">
-                  <span data-i18n="block_rules"></span>
-                  <small class="selected-rules-count d-none"></small>
-                </div>
-              </div>
-            </div>
-          </div>
-          <ul id="block" class="list-group list-group-flush rule-list"></ul>
-          <div class="list-group d-none header-rules">
-            <div class="flex-column align-items-start">
-              <div
-                  class="rule-header d-flex flex-wrap w-100 justify-content-start align-items-center">
-                <div class="p-2">
-                  <input type="checkbox" class="select-all-rules" autocomplete="off">
-                </div>
-                <div class="p-2">
-                  <span data-i18n="whitelist_rules"></span>
-                  <small class="selected-rules-count d-none"></small>
-                </div>
-              </div>
-            </div>
-          </div>
-          <ul id="whitelist" class="list-group list-group-flush rule-list"></ul>
-          <div class="list-group d-none header-rules">
-            <div class="flex-column align-items-start">
-              <div
-                  class="rule-header d-flex flex-wrap w-100 justify-content-start align-items-center">
-                <div class="p-2">
-                  <input type="checkbox" class="select-all-rules" autocomplete="off">
-                </div>
-                <div class="p-2">
-                  <span data-i18n="new_rules"></span>
-                  <small class="selected-rules-count d-none"></small>
-                </div>
-              </div>
-            </div>
-          </div>
-          <ul id="newRules" class="list-group list-group-flush rule-list"></ul>
-        </div>
-        <div class="d-flex toolbar mt-2 flex-wrap">
-          <button id="addNewRule" class="btn btn-sm btn-light mr-auto m-1">
-            <img src="/icons/ionicons/android-add.svg" width="16"/>
-            <span data-i18n="create_new_rule"></span>
-          </button>
-          <button id="testSelectedRules" class="btn btn-sm btn-light m-1 btn-select-action"
-                  disabled="disabled" autocomplete="off" data-toggle="modal"
-                  data-target="#ruleTesterModal">
-            <img src="/icons/ionicons/shuffle.svg" width="16"/>
-            <span data-i18n="test_selected"></span>
-            <span class="badge badge-secondary total-selected-count">0</span>
-          </button>
-          <button id="exportSelectedRules" class="btn btn-sm btn-light m-1 btn-select-action"
-                  disabled="disabled" autocomplete="off">
-            <img src="/icons/ionicons/code-download.svg" width="16"/>
-            <span data-i18n="export_selected"></span>
-            <span class="badge badge-secondary total-selected-count">0</span>
-          </button>
-          <button id="removeSelectedRules" class="btn btn-sm btn-danger m-1 btn-select-action"
-                  disabled="disabled" autocomplete="off">
-            <img src="/icons/ionicons/android-delete.svg" width="16"/>
-            <span data-i18n="remove_selected"></span>
-            <span class="badge badge-light total-selected-count">0</span>
-          </button>
-        </div>
-      </div>
-      <div id="settingsTab" class="tab-pane"><h3 data-i18n="export_rules"></h3>
-        <p data-i18n="export_description"></p>
-        <button id="exportRules" class="btn btn-secondary" data-i18n="export"></button>
-        <hr/>
-        <h3 data-i18n="import_rules"></h3>
-        <p data-i18n="import_description"></p>
-        <label class="btn btn-secondary" for="importRules">
-          <input id="importRules" class="d-none" type="file" accept="application/json,.json"
-                 autocomplete="off">
-          <span data-i18n="browse_file"></span>
-        </label>
-        <hr/>
-        <h3 data-i18n="restore_defaults"></h3>
-        <p data-i18n="restore_description"></p>
-        <button id="reset" class="btn btn-secondary" data-i18n="restore"></button>
-      </div>
-      <div id="manualTab" class="tab-pane">
-        <div id="contents" class="toc float-right">
-          <label data-i18n="contents"></label>
-        </div>
-        <div id="manual" class="manual-content"></div>
-      </div>
-      <div id="aboutTab" class="tab-pane">
-        <h4 id="version" class="mt-0"></h4>
-        <a id="changelog" href="#changelog" data-toggle="modal" data-target="#changelogModal">
-          <strong data-i18n="changelog"></strong>
-        </a>
-        <br/>
-        <a target="_blank" href="https://github.com/tumpio/requestcontrol/graphs/contributors">
-          <strong data-i18n="contributors"></strong>
-        </a>
-        <br/>
-        <a target="_blank" href="https://github.com/tumpio/requestcontrol">
-          <strong data-i18n="source_code"></strong>
-        </a>
-        <br/>
-        <a target="_blank" href="https://addons.mozilla.org/addon/requestcontrol">
-          <strong data-i18n="home_page"></strong>
-        </a>
-        <h4>
-          <a target="_blank" href="https://github.com/tumpio/requestcontrol/issues/new">
-            <strong data-i18n="report_bug_request_feature"></strong>
-          </a>
-        </h4>
-        <h4 data-i18n="license"></h4>
-        <pre class="license-clause"><code><span data-i18n="license_clause"></span> <a
-            target="_blank" href="/LICENSE">LICENSE</a>.</code></pre>
-      </div>
+      </a>
     </div>
-    <div class="alert alert-danger alert-dismissible shadow">
-      <span id="errorMessage"></span>
-      <button type="button" class="close" data-dismiss="alert">
-        <span>&times;</span>
+  </div>
+  <div id="rulesTab" class="tab-pane active">
+    <div>
+      <div class="header-rules d-none">
+        <input type="checkbox" class="select-all-rules" autocomplete="off">
+        <img src="/icons/icon-filter@19.png" alt="" height="19">
+        <span data-i18n="filter_rules"></span>
+        <small class="selected-rules-count d-none"></small>
+        <a class="collapse-button" data-collapse-target="#filter">
+          <span></span>
+        </a>
+      </div>
+      <ul id="filter" class="rule-list"></ul>
+    </div>
+    <div>
+      <div class="header-rules d-none">
+        <input type="checkbox" class="select-all-rules" autocomplete="off">
+        <img src="/icons/icon-redirect@19.png" alt="" height="19">
+        <span data-i18n="redirect_rules"></span>
+        <small class="selected-rules-count d-none"></small>
+        <a class="collapse-button" data-collapse-target="#redirect">
+          <span></span>
+        </a>
+      </div>
+      <ul id="redirect" class="rule-list"></ul>
+    </div>
+    <div>
+      <div class="header-rules d-none">
+        <input type="checkbox" class="select-all-rules" autocomplete="off">
+        <img src="/icons/icon-block@19.png" alt="" height="19">
+        <span data-i18n="block_rules"></span>
+        <small class="selected-rules-count d-none"></small>
+        <a class="collapse-button" data-collapse-target="#block">
+          <span></span>
+        </a>
+      </div>
+      <ul id="block" class="rule-list"></ul>
+    </div>
+    <div>
+      <div class="header-rules d-none">
+        <input type="checkbox" class="select-all-rules" autocomplete="off">
+        <img src="/icons/icon-whitelist@19.png" alt="" height="19">
+        <span data-i18n="whitelist_rules"></span>
+        <small class="selected-rules-count d-none"></small>
+        <a class="collapse-button" data-collapse-target="#whitelist">
+          <span></span>
+        </a>
+      </div>
+      <ul id="whitelist" class="rule-list"></ul>
+    </div>
+    <div>
+      <div class="header-rules d-none">
+        <input type="checkbox" class="select-all-rules" autocomplete="off">
+        <span data-i18n="new_rules"></span>
+        <small class="selected-rules-count d-none"></small>
+        <a class="collapse-button" data-collapse-target="#newRules">
+          <span></span>
+        </a>
+      </div>
+      <ul id="newRules" class="rule-list"></ul>
+    </div>
+    <div class="toolbar">
+      <button id="addNewRule" class="btn">
+        <img src="/icons/ionicons/android-add.svg" width="16"/>
+        <span data-i18n="create_new_rule"></span>
+      </button>
+      <div class="mobile-toolbar">
+        <button id="testSelectedRules" class="btn btn-select-action" disabled="disabled"
+                autocomplete="off" data-toggle="modal" data-target="#ruleTesterModal">
+          <img src="/icons/ionicons/shuffle.svg" width="16"/>
+          <span data-i18n="test_selected"></span>
+          <span class="badge badge-dark total-selected-count">0</span>
+        </button>
+        <button id="exportSelectedRules" class="btn btn-select-action" disabled="disabled"
+                autocomplete="off">
+          <img src="/icons/ionicons/code-download.svg" width="16"/>
+          <span data-i18n="export_selected"></span>
+          <span class="badge badge-dark total-selected-count">0</span>
+        </button>
+        <button id="removeSelectedRules" class="btn btn-danger btn-select-action" disabled="disabled"
+                autocomplete="off">
+          <img src="/icons/ionicons/android-delete.svg" width="16"/>
+          <span data-i18n="remove_selected"></span>
+          <span class="badge badge-light total-selected-count">0</span>
+        </button>
+      </div>
+      <button id="selectedRules" class="btn">
+        <span class="total-selected-count">0</span>
+        <span data-i18n="selected_rules"></span>
       </button>
     </div>
-    <div class="modal fade" id="ruleTesterModal">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h6 class="modal-title" data-i18n="test_selected_rules"></h6>
-            <button type="button" class="close">
-              <span>&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <input type="text" class="form-control" id="test-url"
-                     data-i18n-placeholder="test_url">
-            </div>
-            <div class="mt-3 pl-1 text-light bg-dark">
-              <span>&gt;</span>
-              <span id="testResult"></span>
-            </div>
-          </div>
-        </div>
-      </div>
+  </div>
+  <div id="settingsTab" class="tab-pane">
+    <h3 data-i18n="export_rules"></h3>
+    <p data-i18n="export_description"></p>
+    <button id="exportRules" class="btn btn-dark" data-i18n="export"></button>
+    <hr/>
+    <h3 data-i18n="import_rules"></h3>
+    <p data-i18n="import_description"></p>
+    <label class="btn btn-dark" for="importRules">
+      <input id="importRules" class="d-none" type="file" accept="application/json,.json" autocomplete="off">
+      <span data-i18n="browse_file"></span>
+    </label>
+    <hr/>
+    <h3 data-i18n="restore_defaults"></h3>
+    <p data-i18n="restore_description"></p>
+    <button id="reset" class="btn btn-dark" data-i18n="restore"></button>
+  </div>
+  <div id="manualTab" class="tab-pane">
+    <div id="contents" class="toc">
+      <label data-i18n="contents"></label>
+    </div>
+    <div id="manual" class="manual-content"></div>
+  </div>
+  <div id="aboutTab" class="tab-pane">
+    <h4 id="version"></h4>
+    <a href="https://addons.mozilla.org/addon/requestcontrol"><strong data-i18n="home_page"></strong>
+    </a>
+    <br/>
+    <a id="changelog" href="#changelog" data-toggle="modal" data-target="#changelogModal"><strong
+        data-i18n="changelog"></strong></a>
+    <br/>
+    <a href="https://github.com/tumpio/requestcontrol/graphs/contributors"><strong
+        data-i18n="contributors"></strong></a>
+    <br/>
+    <a href="https://github.com/tumpio/requestcontrol"><strong data-i18n="source_code"></strong></a>
+    <h4>
+      <a href="https://github.com/tumpio/requestcontrol/issues/new"><strong
+          data-i18n="report_bug_request_feature"></strong></a>
+    </h4>
+    <h4 data-i18n="license"></h4>
+    <pre class="license-clause"><code><span data-i18n="license_clause"></span> <a
+        href="/LICENSE">LICENSE</a>.</code></pre>
+  </div>
+</div>
+<div class="alert alert-danger alert-dismissible shadow">
+  <span id="errorMessage"></span>
+  <span class="close">&times;</span>
+</div>
+<div class="modal fade" id="ruleTesterModal">
+  <div class="modal-content c">
+    <span class="close">&times;</span>
+    <h5 class="modal-title" data-i18n="test_selected_rules"></h5>
+    <input type="text" class="card w-100" id="test-url" data-i18n-placeholder="test_url">
+    <div class="test-result">
+      <span>&gt;</span>
+      <span id="testResult"></span>
     </div>
   </div>
-  <div class="modal fade" id="changelogModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h6 class="modal-title" data-i18n="changelog"></h6>
-          <button type="button" class="close">
-            <span>&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-        </div>
-      </div>
-    </div>
+</div>
+<div class="modal fade" id="changelogModal">
+  <div class="modal-content c">
+    <span class="close">&times;</span>
+    <h5 class="modal-title" data-i18n="changelog"></h5>
+    <div class="modal-body"></div>
   </div>
 </div>
 </body>

@@ -1,22 +1,70 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+body {
+    margin: 0;
+    font-family: "Open Sans", sans-serif;
+    font-size: .8em;
+    border: 1px solid #b8b8b8;
+}
+
+.header {
+    display: flex;
+    align-self: end;
+    border-bottom: 1px solid #b8b8b8;
+}
+
+.header > .btn {
+    padding: .8em;
+    display: inline-flex;
+}
+
+.header > .btn:first-child {
+    flex-grow: 1;
+}
+
+.entry-header {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    overflow-x: hidden;
+    padding: .2em 0;
+}
+
+.entry-header:hover {
+    cursor: pointer;
+    background: #f7f7f7;
+}
+
+.entry-header > * {
+    display: inline-block;
+    flex: none;
+    margin-right: .3em;
+}
+
+
+.entry-header > .url {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 pre {
     white-space: pre-wrap;
-    -moz-user-select: text;
-    font-size: 0.8em;
-    margin-top: 4px;
-}
-
-.panel-section-footer {
-    overflow: hidden;
-    background: white;
-    cursor: pointer;
-}
-
-.panel-section-footer-button:hover {
-    opacity: .8;
+    word-break: break-all;
 }
 
 #showRules {
     background: #f5f5f5;
+    border-right: 1px solid #cccccc;
+}
+
+#showRules:hover {
+    background: #e1e1e1;
+    cursor: pointer;
 }
 
 #toggleActive {
@@ -25,36 +73,21 @@ pre {
     background: #cc0d13;
 }
 
+#toggleActive:hover {
+    opacity: 0.6;
+    cursor: pointer;
+}
+
 #toggleActive.disabled {
     background: #3c763d;
 }
 
-#toggleActive.disabled .disable {
-    display: none;
-}
-
-#toggleActive:not(.disabled) .enable {
-    display: none;
-}
-
-.entry > .panel-list-item {
-    cursor: pointer;
-}
-
 .entry {
-    cursor: pointer;
     border-top: 1px dashed #c6c8ca;
 }
 
 .entry:first-child {
     border-top: none;
-}
-
-.text {
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .url {
@@ -66,74 +99,27 @@ pre {
 }
 
 #records {
-    max-height: 30em;
     overflow-y: auto;
-    min-width: 30em;
+    padding: 0 .3em;
 }
 
-#details {
-    margin-top: -5px;
-    max-width: 60%;
-    width: 800px;
-    min-width: 100%;
-}
-
-#details .panel-list-item {
-    height: auto;
-    border: 2px;
-    cursor: text;
-}
-
-#details .panel-list-item:hover {
-    background-color: inherit;
-}
-
-#details .panel-list-item.disabled {
-    font-size: 0.8em;
-    color: #777;
-}
-
-#details pre {
-    word-break: break-all;
-    width: 100%;
-}
-
+.models,
 .hidden {
     display: none;
 }
 
+#details label,
 .timestamp {
-    margin-right: 1.5em;
     color: #777;
-    vertical-align: center;
-    display: inline-flex;
-    line-height: 0;
-}
-
-.errorIcon {
-    margin-right: 1em;
-}
-
-.icon {
-    margin-right: 0.4em;
-    vertical-align: center;
-    display: inline-flex;
-}
-
-.text-shortcut {
-    text-align: right;
-}
-
-.models {
-    display: none;
 }
 
 .copyButton {
     height: 22px;
     width: 22px;
     cursor: pointer;
-    margin-left: 1em;
+    margin: 1em;
     border: none;
+    float: right;
 }
 
 .copyButton img {
@@ -180,30 +166,4 @@ pre {
     margin-top: -5px;
     border: 5px solid;
     border-color: transparent transparent transparent #333;
-}
-
-.tags {
-    margin-right: 1em;
-}
-
-.badge-dark {
-    color: #fff;
-    background-color: #343a40;
-}
-
-.badge-info {
-    color: #fff;
-    background-color: #17a2b8;
-}
-
-.badge {
-    display: inline-block;
-    padding: .25em .4em;
-    font-size: 75%;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: .25rem;
 }

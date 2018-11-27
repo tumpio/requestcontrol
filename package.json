@@ -15,24 +15,19 @@
     "start": "web-ext run -i=$npm_package_config_ignore --bc --url about:debugging#addons",
     "lint": "eslint src/ test/ lib/ --ignore-pattern lib/tldjs/*.js",
     "lint-release": "addons-linter .releases/request_control-$VERSION.zip",
-    "bootstrap-compile": "node-sass --output-style expanded --precision 6 --include-path ./node_modules/bootstrap/scss --output ./node_modules/bootstrap/dist/css/ ./lib/bootstrap/bootstrap_custom.scss",
-    "bootstrap-prefix": "BROWSERSLIST=\"Firefox ESR\" postcss --use autoprefixer --no-map --replace \"./node_modules/bootstrap/dist/css/bootstrap.css\"",
-    "bootstrap-minify": "cleancss --output ./lib/bootstrap/bootstrap.min.css ./node_modules/bootstrap/dist/css/bootstrap.css",
-    "bootstrap-build": "npm run bootstrap-compile && npm run bootstrap-prefix && npm run bootstrap-minify",
     "tldjs-build": "cd node_modules/tldjs && npm install && npm run build && cp -v tld.js ../../lib/tldjs/",
-    "prebuild": "npm run tldjs-build && npm run bootstrap-build && npm run build-manual",
+    "lit-build": "cp -v node_modules/@ajusa/lit/src/lit.css lib/lit/",
+    "prebuild": "npm run tldjs-build && npm run lit-build && npm run build-manual",
     "build-manual": "find ./_locales/ -iname \"manual.rst\" -type f -exec sh -c 'pandoc \"$0\" --from=rst --to=html --output \"${0%.rst}.html\"' {} \\;",
     "build": "web-ext build -i=$npm_package_config_ignore --overwrite-dest --artifacts-dir=.releases --verbose"
   },
   "dependencies": {
-    "bootstrap": "^4.1.3",
+    "@ajusa/lit": "^1.1.0",
     "tldjs": "^2.3.1"
   },
   "devDependencies": {
     "addons-linter": "latest",
-    "autoprefixer": "latest",
     "ava": "latest",
-    "clean-css-cli": "latest",
     "codecov": "latest",
     "eslint": "latest",
     "eslint-plugin-ava": "latest",
@@ -42,9 +37,7 @@
     "eslint-plugin-standard": "latest",
     "esm": "latest",
     "firefox-extension-deploy": "latest",
-    "node-sass": "latest",
     "nyc": "latest",
-    "postcss-cli": "latest",
     "web-ext": "latest"
   },
   "ava": {

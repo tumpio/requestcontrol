@@ -2,13 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import {
-    BLOCK_ACTION,
-    FILTER_ACTION,
-    NO_ACTION,
-    REDIRECT_ACTION,
-    WHITELIST_ACTION
-} from "/src/RequestControl/base.js";
+import {BLOCK_ACTION, FILTER_ACTION, NO_ACTION, REDIRECT_ACTION, WHITELIST_ACTION} from "/src/RequestControl/base.js";
 import {OptionsManager} from "/lib/OptionsManager.js";
 import {REQUEST_CONTROL_ICONS} from "/src/notifier.js";
 
@@ -43,13 +37,7 @@ function setRecords(records) {
         });
     }
 
-    if (recordsList.firstChild) {
-        let details = document.getElementById("details");
-        recordsList.firstChild.appendChild(details);
-        showDetails(records[records.length - 1]);
-    }
     document.getElementById("records").classList.remove("hidden");
-    document.getElementById("details").classList.remove("hidden");
 }
 
 function getTags(rules) {
@@ -67,10 +55,10 @@ function newListItem(details) {
     model.removeAttribute("id");
     model.querySelector(".type").textContent = browser.i18n.getMessage(details.type);
     model.querySelector(".timestamp").textContent = timestamp(details.timestamp);
-    model.querySelector(".icon > img").src = REQUEST_CONTROL_ICONS[details.action][19];
+    model.querySelector(".icon").src = REQUEST_CONTROL_ICONS[details.action][19];
 
     if (details.error) {
-        model.querySelector(".errorIcon").classList.remove("hidden");
+        model.querySelector(".icon").src = "/icons/ionicons/alert-circled.svg";
         model.querySelector(".action").textContent = browser.i18n.getMessage(details.error.name);
     } else {
         model.querySelector(".action").textContent = RECORD_TITLES[details.action];
@@ -105,6 +93,7 @@ function padDigit(digit, padSize) {
 }
 
 function showDetails(details) {
+    document.getElementById("details").classList.remove("hidden");
     document.getElementById("url").textContent = details.url;
     if (details.target) {
         document.getElementById("target").textContent = details.target;
@@ -138,19 +127,28 @@ function openOptionsPage() {
 
 function toggleActive() {
     myOptionsManager.saveOption("disabled", !myOptionsManager.options.disabled);
-    document.getElementById("toggleActive").classList.toggle("disabled",
-        myOptionsManager.options.disabled);
+    setEnabled(!myOptionsManager.options.disabled);
+}
+
+function setEnabled(enabled) {
+    let button = document.getElementById("toggleActive");
+    let textId = enabled ? "activate_false" : "activate_true";
+    let titleId = enabled ? "disable_rules" : "enabled_rules";
+    button.classList.toggle("disabled", !enabled);
+    button.textContent = browser.i18n.getMessage(textId);
+    button.title = browser.i18n.getMessage(titleId);
 }
 
 document.addEventListener("DOMContentLoaded", function () {
     myOptionsManager.loadOptions().then(function () {
         if (myOptionsManager.options.disabled) {
-            document.getElementById("toggleActive").classList.add("disabled");
+            setEnabled(false);
             return Promise.reject("");
         } else {
             return browser.runtime.sendMessage(null);
         }
     }).then(records => {
+        setEnabled(true);
         if (myOptionsManager.options.rules) {
             setRecords(records);
         }

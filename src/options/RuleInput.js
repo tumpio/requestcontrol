@@ -12,7 +12,7 @@ import {
     setButtonDisabled,
     toggleDisabled,
     toggleHidden
-} from "/lib/bootstrapHelpers.js";
+} from "/lib/UiHelpers.js";
 import {translateDocument} from "/lib/i18n.js";
 import {TagsInput} from "/lib/tags-input/src/tags-input.js";
 
@@ -196,7 +196,7 @@ RuleInput.prototype = {
     },
 
     toggleEdit: function () {
-        toggleHidden(this.$(".panel-collapse"));
+        toggleHidden(this.$(".rule-input"));
         if (this.model.classList.toggle("editing")) {
             this.$(".title").setAttribute("contenteditable", true);
             this.$(".description").setAttribute("contenteditable", true);
@@ -205,7 +205,6 @@ RuleInput.prototype = {
                 this.model.classList.remove("not-edited");
                 this.updateInputs();
             }
-            this.model.scrollIntoView();
         } else {
             this.$(".title").removeAttribute("contenteditable");
             this.$(".description").removeAttribute("contenteditable");
@@ -379,7 +378,7 @@ RuleInput.prototype = {
 
     setAnyUrl: function (bool) {
         setButtonChecked(this.$(".any-url"), bool);
-        toggleHidden(bool, this.$(".host").parentNode, this.$(".path").parentNode, this.$(".pattern"));
+        toggleHidden(bool, this.$(".form-group-pattern"));
         this.validateTLDPattern();
         if (bool) {
             this.hostsTagsInput.disable();
@@ -433,7 +432,6 @@ RuleInput.prototype = {
         let tag = this.rule.tag || "";
         tag = decodeURIComponent(tag);
         this.model.setAttribute("data-type", this.rule.action);
-        this.$(".icon").src = "/icons/icon-" + this.rule.action + "@19.png";
         this.$(".title").textContent = title;
         this.$(".title").title = title;
         this.$(".description").textContent = description;
