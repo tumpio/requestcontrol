@@ -75,11 +75,11 @@
     ],
     "rules": {
       "indent": [
-        "error",
+        "warn",
         4
       ],
       "quotes": [
-        "error",
+        "warn",
         "double"
       ],
       "semi": [
