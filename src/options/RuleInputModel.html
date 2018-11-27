@@ -1,342 +1,274 @@
 <ul id="models">
-  <li id="ruleInputModel"
-      class="list-group-item rule not-edited flex-column align-items-start"
-      spellcheck="false">
-    <div class="rule-header d-flex flex-wrap w-100 justify-content-between">
-      <div class="p-2 rule-select">
+  <li id="ruleInputModel" class="rule not-edited " spellcheck="false">
+    <div class="rule-header row">
+      <div class="rule-select 1 col">
         <input type="checkbox" class="select" autocomplete="off">
       </div>
-      <div class="p-2 mr-auto w-50">
-        <div class="title-wrap w-100">
-          <img class="icon" src="" alt="" height="19">
-          <small class="badge badge-light edit-label" data-i18n="name"></small>
-          <h6 class="title" data-i18n="new_rule"></h6>
+      <div class="8 col">
+        <div class="title-wrap">
+          <small class="badge edit-label" data-i18n="name"></small>
+          <label class="title" data-i18n="new_rule"></label>
         </div>
-        <div class="description-wrap w-100">
-          <small class="badge badge-light edit-label" data-i18n="description"></small>
+        <div class="description-wrap">
+          <small class="badge edit-label" data-i18n="description"></small>
           <small class="description"></small>
         </div>
-        <div class="tag-wrap w-100">
-          <small class="badge badge-light edit-label" data-i18n="tag"></small>
-          <button type="button" class="badge btn btn-sm btn-secondary add-tag"
-                  data-i18n="add_tag"></button>
+        <div class="tag-wrap">
+          <small class="badge edit-label" data-i18n="tag"></small>
+          <button type="button" class="badge add-tag" data-i18n="add_tag"></button>
           <small class="tag"></small>
         </div>
-      </div>
-      <div class="p-2">
         <div class="information">
-          <div class="badge badge-light">
+          <label class="badge badge-info">
             <span class="match-patterns"></span>
             <span data-i18n="patterns"></span>
-          </div>
-          <div class="badge badge-dark">
+          </label>
+          <label class="badge badge-dark">
             <span class="tag-badge"></span>
-          </div>
+          </label>
         </div>
-        <button type="button" class="btn btn-sm btn-light btn-edit" data-i18n="edit"></button>
-        <button type="button" class="btn btn-sm btn-light btn-activate"
-                data-i18n="disable"></button>
+      </div>
+      <div class="3 col rule-header-buttons">
+        <button type="button" class="btn btn-edit" data-i18n="edit"></button>
+        <button type="button" class="btn btn-activate" data-i18n="disable"></button>
       </div>
     </div>
-    <form class="rule-input panel-collapse d-none p-2">
-      <div class="form-group">
-        <label class="col-form-label" data-i18n="pattern"></label>
-        <div class="row no-gutter">
-          <div class="col-xs-9 col-md-10 pattern">
-            <div class="row no-gutter">
-              <div class="col-sm-12 col-md-2">
-                <small class="d-block text-muted" data-i18n="scheme"></small>
-                <div class="scheme-group">
-                  <select class="form-control form-control-sm scheme">
-                    <option value="http">http</option>
-                    <option value="https">https</option>
-                    <option value="*" selected>http/https</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-6">
-                <small class="d-block text-muted" data-i18n="host"></small>
-                <div class="host-group">
-                  <input type="text" class="form-control form-control-sm host"
-                         placeholder="example.com"
-                         spellcheck="false" required="required"/>
-                </div>
-              </div>
-              <div class="col-sm-12  col-md-4">
-                <small class="d-block text-muted" data-i18n="path"></small>
-                <input type="text" class="form-control form-control-sm path"
-                       data-i18n-placeholder="path"
-                       spellcheck="false"/>
-              </div>
-            </div>
-          </div>
-          <div class="col-xs-3 col-md-2">
-            <div class="row no-gutter">
-              <div class="col-sm-12">
-                <small class="d-block text-muted">&#8203;</small>
-                <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
-                  <label class="btn btn-sm btn-block btn-light">
-                    <input class="any-url" type="checkbox" autocomplete="off">
-                    <span data-i18n="any_url"></span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
+    <form class="rule-input c d-none">
+      <div class="row">
+        <div>
+          <label data-i18n="pattern"></label>
         </div>
-      </div>
-      <div class="form-group form-group-tlds d-none">
-        <label class="col-form-label"></label>
-        <label class="manual-block btn-tlds manual-block-collapse">
-          <img class="arrow" src="/icons/ionicons/android-arrow-dropdown.svg" height="16">
-          <span data-i18n="top_level_domains"></span>
-          <span class="badge badge-dark">0</span>
-        </label>
-        <div class="row no-gutter">
-          <div class="col-xs-12">
+        <div class="form-group-pattern">
+          <div>
+            <small data-i18n="scheme"></small>
+            <div>
+              <select class="scheme card">
+                <option value="http">http</option>
+                <option value="https">https</option>
+                <option value="*" selected>http/https</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <small data-i18n="host"></small>
+            <input type="text" class="host" data-i18n-placeholder="host_placeholder" spellcheck="false"
+                   required="required"/>
+          </div>
+          <div class="form-group-tlds d-none">
+            <label class="btn-tlds">
+              <img src="/icons/ionicons/android-arrow-dropdown.svg" height="16">
+              <span data-i18n="top_level_domains"></span>
+              <span class="badge badge-dark">0</span>
+            </label>
             <div class="tlds-block d-none">
-              <input type="text" class="form-control form-control-sm input-tlds tlds d-none"
-                     disabled="disabled"
-                     spellcheck="false" autocomplete="off" data-i18n-placeholder="tlds"
-                     required="required"/>
+              <input type="text" class="input-tlds tlds d-none" disabled="disabled" spellcheck="false"
+                     autocomplete="off" data-i18n-placeholder="tlds_placeholder" required="required"/>
             </div>
+          </div>
+          <div>
+            <small data-i18n="path"></small>
+            <input type="text" class="path" data-i18n-placeholder="path_placeholder" spellcheck="false"/>
           </div>
         </div>
-      </div>
-      <div class="form-group form-group-match">
-        <label class="col-form-label"></label>
-        <div class="row no-gutter">
-          <div class="col-md-6">
-            <div class="include-block">
-              <small class="d-block text-muted" data-i18n="must_contain"></small>
-              <input type="text" class="form-control form-control-sm input-includes"
-                     spellcheck="false" autocomplete="off"
-                     data-i18n-placeholder="includes"/>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="exclude-block">
-              <small class="d-block text-muted" data-i18n="must_not_contain"></small>
-              <input type="text" class="form-control form-control-sm input-excludes"
-                     spellcheck="false" autocomplete="off"
-                     data-i18n-placeholder="excludes"/>
-            </div>
-          </div>
+        <div>
+          <label class="btn">
+            <input class="any-url" type="checkbox" autocomplete="off">
+            <span data-i18n="any_url"></span>
+          </label>
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-form-label" data-i18n="types"></label>
-        <div class="row no-gutter">
-          <div class="col-xs-9 col-md-10 btn-group-types">
-            <div class="btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
-              <label class="btn btn-sm btn-light active">
-                <input type="checkbox" autocomplete="off" class="type" value="main_frame"
-                       checked="checked">
-                <span data-i18n="main_frame"></span>
-              </label>
-              <label class="btn btn-sm btn-light">
-                <input type="checkbox" autocomplete="off" class="type" value="sub_frame">
-                <span data-i18n="sub_frame"></span>
-              </label>
-              <label class="btn btn-sm btn-light">
-                <input type="checkbox" autocomplete="off" class="type" value="stylesheet">
-                <span data-i18n="stylesheet"></span>
-              </label>
-              <label class="btn btn-sm btn-light">
-                <input type="checkbox" autocomplete="off" class="type" value="script">
-                <span data-i18n="script"></span>
-              </label>
-              <label class="btn btn-sm btn-light">
-                <input type="checkbox" autocomplete="off" class="type" value="image">
-                <span data-i18n="image"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type" value="object">
-                <span data-i18n="object"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type"
-                       value="object_subrequest">
-                <span data-i18n="object_subrequest"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type"
-                       value="xmlhttprequest">
-                <span data-i18n="xmlhttprequest"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type" value="xbl">
-                <span data-i18n="xbl"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type" value="xslt">
-                <span data-i18n="xslt"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type" value="ping">
-                <span data-i18n="ping"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type" value="beacon">
-                <span data-i18n="beacon"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type" value="xml_dtd">
-                <span data-i18n="xml_dtd"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type" value="font">
-                <span data-i18n="font"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type" value="media">
-                <span data-i18n="media"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type"
-                       value="websocket">
-                <span data-i18n="websocket"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type"
-                       value="csp_report">
-                <span data-i18n="csp_report"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type"
-                       value="imageset">
-                <span data-i18n="imageset"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type"
-                       value="web_manifest">
-                <span data-i18n="web_manifest"></span>
-              </label>
-              <label class="btn btn-sm btn-light d-none">
-                <input type="checkbox" autocomplete="off" class="type extra-type" value="other">
-                <span data-i18n="other"></span>
-              </label>
-              <label class="btn btn-sm btn-light">
-                <input class="more-types" type="checkbox" autocomplete="off">
-                <span class="text" data-i18n="show_more_true"></span>
-              </label>
-            </div>
-          </div>
-          <div class="col-xs-3 col-md-2">
-            <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
-              <label class="btn btn-sm btn-block btn-light">
-                <input class="any-type" type="checkbox" autocomplete="off">
-                <span data-i18n="any_type"></span>
-              </label>
-            </div>
-          </div>
+      <div class="row">
+        <label class="col-form-label">Extra URL Matchers</label>
+        <div class="include-block">
+          <small data-i18n="includes"></small>
+          <input type="text" class="input-includes" spellcheck="false" autocomplete="off"
+                 data-i18n-placeholder="includes_placeholder"/>
+        </div>
+        <div class="exclude-block">
+          <small data-i18n="excludes"></small>
+          <input type="text" class="input-excludes" spellcheck="false" autocomplete="off"
+                 data-i18n-placeholder="excludes_placeholder"/>
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-form-label" data-i18n="action"></label>
-        <div class="row no-gutter">
-          <div class="col-xs-3 col-md-2">
-            <div class="btn-group btn-group-toggle action-group" data-toggle="buttons">
-              <label class="btn btn-sm btn-light">
-                <input class="action" value="filter" type="radio" name="action" autocomplete="off"
-                       required>
-                <img class="icon" src="/icons/icon-filter@19.png" height="19">
-                <span data-i18n="filter"></span>
-              </label>
-              <label class="btn btn-sm btn-light">
-                <input class="action" value="redirect" type="radio" name="action"
-                       autocomplete="off">
-                <img class="icon" src="/icons/icon-redirect@19.png" height="19">
-                <span data-i18n="redirect"></span>
-              </label>
-              <label class="btn btn-sm btn-light">
-                <input class="action" value="block" type="radio" name="action" autocomplete="off">
-                <img class="icon" src="/icons/icon-block@19.png" height="19">
-                <span data-i18n="block"></span>
-              </label>
-              <label class="btn btn-sm btn-light">
-                <input class="action" value="whitelist" type="radio" name="action"
-                       autocomplete="off">
-                <img class="icon" src="/icons/icon-whitelist@19.png" height="19">
-                <span data-i18n="whitelist"></span>
-              </label>
-            </div>
+      <div class="row">
+        <label data-i18n="types"></label>
+        <div class="btn-group-types">
+          <div>
+            <label class="btn active">
+              <input type="checkbox" autocomplete="off" class="type" value="main_frame" checked="checked">
+              <span data-i18n="main_frame"></span>
+            </label>
+            <label class="btn">
+              <input type="checkbox" autocomplete="off" class="type" value="sub_frame">
+              <span data-i18n="sub_frame"></span>
+            </label>
+            <label class="btn">
+              <input type="checkbox" autocomplete="off" class="type" value="stylesheet">
+              <span data-i18n="stylesheet"></span>
+            </label>
+            <label class="btn">
+              <input type="checkbox" autocomplete="off" class="type" value="script">
+              <span data-i18n="script"></span>
+            </label>
+            <label class="btn">
+              <input type="checkbox" autocomplete="off" class="type" value="image">
+              <span data-i18n="image"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="object">
+              <span data-i18n="object"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="object_subrequest">
+              <span data-i18n="object_subrequest"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="xmlhttprequest">
+              <span data-i18n="xmlhttprequest"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="xbl">
+              <span data-i18n="xbl"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="xslt">
+              <span data-i18n="xslt"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="ping">
+              <span data-i18n="ping"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="beacon">
+              <span data-i18n="beacon"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="xml_dtd">
+              <span data-i18n="xml_dtd"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="font">
+              <span data-i18n="font"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="media">
+              <span data-i18n="media"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="websocket">
+              <span data-i18n="websocket"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="csp_report">
+              <span data-i18n="csp_report"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="imageset">
+              <span data-i18n="imageset"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="web_manifest">
+              <span data-i18n="web_manifest"></span>
+            </label>
+            <label class="btn d-none">
+              <input type="checkbox" autocomplete="off" class="type extra-type" value="other">
+              <span data-i18n="other"></span>
+            </label>
+            <label class="btn">
+              <input class="more-types v-hidden" type="checkbox" autocomplete="off">
+              <span class="text" data-i18n="show_more_true"></span>
+            </label>
           </div>
+        </div>
+        <div>
+          <label class="btn">
+            <input class="any-type" type="checkbox" autocomplete="off">
+            <span data-i18n="any_type"></span>
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <label data-i18n="action"></label>
+        <div>
+          <label class="btn">
+            <input class="action" value="filter" type="radio" name="action" autocomplete="off" required>
+            <img class="icon" src="/icons/icon-filter@19.png" height="19">
+            <span data-i18n="filter"></span>
+          </label>
+          <label class="btn">
+            <input class="action" value="redirect" type="radio" name="action" autocomplete="off">
+            <img class="icon" src="/icons/icon-redirect@19.png" height="19">
+            <span data-i18n="redirect"></span>
+          </label>
+          <label class="btn">
+            <input class="action" value="block" type="radio" name="action" autocomplete="off">
+            <img class="icon" src="/icons/icon-block@19.png" height="19">
+            <span data-i18n="block"></span>
+          </label>
+          <label class="btn">
+            <input class="action" value="whitelist" type="radio" name="action" autocomplete="off">
+            <img class="icon" src="/icons/icon-whitelist@19.png" height="19">
+            <span data-i18n="whitelist"></span>
+          </label>
         </div>
       </div>
     </form>
   </li>
 </ul>
-<div id="action-redirect" class="form-group redirectUrlForm">
-  <label class="col-form-label"></label>
-  <label class="manual-block font-weight-light" data-i18n="redirect_to"></label>
-  <input type="text" class="form-control form-control-sm redirectUrl" spellcheck="false"
-         data-i18n-placeholder="redirect_url" required="required"/>
-  <span class="manual-block small"><span data-i18n="manual_text_redirect"></span><a
-      href="#tab-manual#redirect-using-pattern-capturing" data-i18n="see_manual"></a></span>
+<div id="action-redirect" class="row">
+  <div>
+    <label data-i18n="redirect_to"></label>
+  </div>
+  <div>
+    <input type="text" class="redirectUrl card w-100" spellcheck="false" data-i18n-placeholder="redirect_url" required="required"/>
+  </div>
+  <div>
+    <small>
+      <span data-i18n="manual_text_redirect"></span>
+      <a href="#tab-manual#redirect-using-pattern-capturing" data-i18n="see_manual"></a>
+    </small>
+  </div>
 </div>
-<div id="action-filter">
-  <div class="form-group filterRedirectionForm">
-    <label class="col-form-label"></label>
-    <label class="col-form-label font-weight-light" data-i18n="filter_url_redirection"></label>
-    <div class="row no-gutter">
-      <div class="col-xs-3 col-md-6">
-        <div class="btn-group-toggle" data-toggle="buttons">
-          <label class="btn btn-sm btn-light">
-            <input class="filter-toggle" type="checkbox" checked="checked"/>
-            <span data-i18n="filter"></span>
-          </label>
-          <label class="btn btn-sm btn-light">
-            <input class="filter-skip-within-same-domain-toggle" type="checkbox"/>
-            <span data-i18n="skip_within_same_domain"></span>
-          </label>
-        </div>
+<div id="action-filter" class="row">
+  <label data-i18n="filter_url_redirection"></label>
+  <div>
+    <label class="btn">
+      <input class="filter-toggle" type="checkbox" checked="checked"/>
+      <span data-i18n="filter"></span>
+    </label>
+    <label class="btn">
+      <input class="filter-skip-within-same-domain-toggle" type="checkbox"/>
+      <span data-i18n="skip_within_same_domain"></span>
+    </label>
+  </div>
+  <div>
+    <label data-i18n="trim_url_parameters"></label>
+    <div class="row col-trim-parameters">
+      <div class="col 3">
+        <input type="text" class="input-params params" data-editable-tags="true" data-separator=" "
+               autocomplete="off" spellcheck="false" data-i18n-placeholder="placeholder_trim_parameters"/>
+      </div>
+      <div class="col 3">
+        <label class="btn">
+          <input class="invert-trim" type="checkbox" autocomplete="off">
+          <span data-i18n="invert_trim"></span>
+        </label>
       </div>
     </div>
-  </div>
-  <div class="form-group filterQueryStringForm">
-    <label class="col-form-label"></label>
-    <label class="col-form-label font-weight-light" data-i18n="trim_url_parameters"></label>
-    <div class="row no-gutter">
-      <div class="col-xs-9 col-md-10 col-trim-parameters">
-        <div class="d-flex flex-row align-items-start">
-          <input type="text" class="form-control form-control-sm input-params params mr-auto w-100"
-                 data-editable-tags="true"
-                 data-separator=" "
-                 autocomplete="off" spellcheck="false"
-                 data-i18n-placeholder="placeholder_trim_parameters"/>
-          <div class="btn-group btn-group-toggle ml-2" data-toggle="buttons">
-            <label class="btn btn-sm btn-light">
-              <input class="invert-trim" type="checkbox" autocomplete="off">
-              <span data-i18n="invert_trim"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-3 col-md-2">
-        <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
-          <label class="btn btn-sm btn-block btn-light">
-            <input class="trim-all-params" type="checkbox" autocomplete="off">
-            <span data-i18n="trim_all"></span>
-          </label>
-        </div>
-      </div>
+    <div>
+      <label class="btn">
+        <input class="trim-all-params" type="checkbox" autocomplete="off">
+        <span data-i18n="trim_all"></span>
+      </label>
     </div>
   </div>
 </div>
-<div id="action-whitelist">
-  <div class="form-group whitelistForm">
-    <label class="col-form-label"></label>
-    <label class="col-form-label font-weight-light" data-i18n="log_whitelisted_requests"></label>
-    <div class="row no-gutter">
-      <div class="col-xs-3 col-md-2">
-        <div class="btn-group btn-group-toggle btn-block">
-          <label class="btn btn-sm btn-light btn-block">
-            <input class="log-whitelist-toggle" type="checkbox"/>
-            <span data-i18n="log"></span>
-          </label>
-        </div>
-      </div>
-    </div>
+<div id="action-whitelist" class="row">
+  <label data-i18n="log_whitelisted_requests"></label>
+  <div>
+    <label class="btn">
+      <input class="log-whitelist-toggle" type="checkbox"/>
+      <span data-i18n="log"></span>
+    </label>
   </div>
 </div>

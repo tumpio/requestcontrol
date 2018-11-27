@@ -1,7 +1,12 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 import {ControlRule, FILTER_ACTION} from "./base.js";
 import {createRegexpPattern} from "./api.js";
 import {processRedirectRules} from "./redirect.js";
 import {DomainMatcher} from "./matchers.js";
+import {parseInlineUrl, trimQueryParameters, UrlParser} from "./url.js";
 
 export class FilterRule extends ControlRule {
     constructor(uuid, paramsFilter, removeQueryString, skipInlineUrlFilter, skipOnSameDomain, matcher) {
@@ -13,94 +18,30 @@ export class FilterRule extends ControlRule {
         this.skipOnSameDomain = skipOnSameDomain;
     }
 
-    apply(requestURL) {
+    apply(url) {
+        let filteredUrl = url;
         // Trim unwanted query parameters before parsing inline url
-        if (!this.removeQueryString && this.queryParamsPattern && requestURL.search.length > 0) {
-            requestURL.search = trimQueryParameters(requestURL.search, this.queryParamsPattern,
-                this.invertQueryFilter);
+        if (!this.removeQueryString) {
+            filteredUrl = trimQueryParameters(url, this.queryParamsPattern, this.invertQueryFilter);
         }
         if (!this.skipInlineUrlFilter) {
-            let redirectionUrl = parseInlineUrl(requestURL.href);
-            if (redirectionUrl) {
-                if (this.skipOnSameDomain && DomainMatcher.testUrls(requestURL.href, redirectionUrl)) {
-                    return requestURL;
+            let inlineUrl = parseInlineUrl(filteredUrl);
+            if (inlineUrl != null) {
+                if (this.skipOnSameDomain && DomainMatcher.testUrls(url, inlineUrl)) {
+                    return filteredUrl;
                 }
-                requestURL.href = redirectionUrl;
+                filteredUrl = inlineUrl;
             }
         }
         if (this.removeQueryString) {
-            requestURL.search = "";
-        } else if (this.queryParamsPattern && requestURL.search.length > 0) {
-            requestURL.search = trimQueryParameters(requestURL.search, this.queryParamsPattern,
-                this.invertQueryFilter);
+            let parser = new UrlParser(filteredUrl);
+            parser.search = "";
+            return parser.href;
         }
-        return requestURL;
+        return trimQueryParameters(filteredUrl, this.queryParamsPattern, this.invertQueryFilter);
     }
 }
 
 FilterRule.prototype.priority = -2;
 FilterRule.prototype.action = FILTER_ACTION;
 FilterRule.prototype.resolve = processRedirectRules;
-
-/**
- * Parser for inline redirection url.
- * @param url
- * @returns {string}
- */
-export function parseInlineUrl(url) {
-    let i = url.indexOf("http", 1);
-
-    if (i < 0) {
-        return null;
-    }
-
-    let inlineUrl = url.slice(i);
-
-    // extract redirection url from a query parameter
-    if (url.charAt(i - 1) === "=") {
-        inlineUrl = inlineUrl.replace(/[&;].*/, "");
-    }
-
-    let j = 4;
-    if (inlineUrl.charAt(j) === "s") {
-        j++;
-    }
-    if (inlineUrl.startsWith("%3", j)) {
-        inlineUrl = inlineUrl.replace(/\?.*/, "");
-    }
-
-    inlineUrl = decodeURIComponent(inlineUrl);
-
-    if (!inlineUrl.startsWith("://", j)) {
-        return null;
-    }
-
-    return inlineUrl;
-}
-
-export function trimQueryParameters(queryString, trimPattern, invert) {
-    let trimmedQuery = "";
-    let queries = queryString.substring(1).split("?");
-
-    for (let query of queries) {
-        let searchParams = query.split("&");
-        let i = searchParams.length;
-        if (invert) {
-            while (i--) {
-                if (!trimPattern.test(searchParams[i].split("=")[0])) {
-                    searchParams.splice(i, 1);
-                }
-            }
-        } else {
-            while (i--) {
-                if (trimPattern.test(searchParams[i].split("=")[0])) {
-                    searchParams.splice(i, 1);
-                }
-            }
-        }
-        if (searchParams.length > 0) {
-            trimmedQuery += "?" + searchParams.join("&");
-        }
-    }
-    return trimmedQuery;
-}

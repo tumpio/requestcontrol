@@ -1,7 +1,11 @@
-import {ControlRule, FILTER_ACTION, InvalidUrlException, REDIRECT_ACTION} from "./base.js";
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+import {ControlRule, FILTER_ACTION, REDIRECT_ACTION} from "./base.js";
+import {QueryParser, URL_PARAMETERS, UrlParser} from "./url.js";
 
 // For unit tests under node
-const URL = (typeof window !== "undefined") ? window.URL : require("url").URL;
 const atob = (typeof window !== "undefined") ? window.atob : function (a) {
     let buffer = Buffer.from(a, "base64");
     return buffer.toString("binary");
@@ -10,9 +14,6 @@ const btoa = (typeof window !== "undefined") ? window.btoa : function btoa(b) {
     let buffer = Buffer.from(b, "binary");
     return buffer.toString("base64");
 };
-
-const URL_PARAMETER_NAMES = ["hash", "host", "hostname", "href", "origin", "password", "pathname",
-    "port", "protocol", "search", "username"];
 
 export class RedirectRule extends ControlRule {
     constructor(uuid, redirectUrl, matcher) {
@@ -23,27 +24,24 @@ export class RedirectRule extends ControlRule {
         this.patterns = patterns;
     }
 
-    apply(requestURL) {
+    apply(url) {
+        let parser = new UrlParser(url);
         if (this.patterns.length > 0) {
             let redirectUrl = "";
             for (let pattern of this.patterns) {
-                redirectUrl += pattern.resolve(requestURL);
+                redirectUrl += pattern.resolve(parser);
             }
-            try {
-                requestURL.href = redirectUrl;
-            } catch (e) {
-                throw new InvalidUrlException(redirectUrl);
-            }
+            parser.href = redirectUrl;
         }
         for (let instruction of this.instructions) {
-            instruction.apply(requestURL);
+            instruction.apply(parser);
         }
-        return requestURL;
+        return parser.href;
     }
 }
 
-export function processRedirectRules(callback, errorCallback) {
-    let requestURL = new URL(this.url);
+export function processRedirectRules(callback) {
+    let redirectUrl = this.url;
     let skipInlineUrlFilter = false;
     let appliedRules = [];
     let action = this.action & (FILTER_ACTION | REDIRECT_ACTION);
@@ -52,21 +50,17 @@ export function processRedirectRules(callback, errorCallback) {
         if (rule.skipInlineUrlFilter) {
             skipInlineUrlFilter = true;
         }
-        try {
-            requestURL = rule.apply(requestURL);
-            if (requestURL.href !== this.url) {
-                appliedRules.push(rule);
-            }
-        } catch (e) {
-            errorCallback(this, rule, e);
+        let url = rule.apply(redirectUrl);
+        if (url !== redirectUrl) {
+            appliedRules.push(rule);
+            redirectUrl = url;
         }
     }
 
     if (appliedRules.length > 0) {
-        this.redirectUrl = requestURL.href;
+        this.redirectUrl = redirectUrl;
 
-        if (this.action & FILTER_ACTION && this.type === "sub_frame"
-            && !skipInlineUrlFilter) {
+        if (this.action & FILTER_ACTION && this.type === "sub_frame" && !skipInlineUrlFilter) {
             callback(this, action, true);
             return {cancel: true};
         } else {
@@ -88,12 +82,28 @@ class RedirectInstruction {
         this.name = name;
     }
 
-    apply(requestURL) {
+    apply(urlParser) {
         let value = "";
         for (let pattern of this.patterns) {
-            value += pattern.resolve(requestURL);
+            value += pattern.resolve(urlParser);
         }
-        requestURL[this.name] = value;
+        urlParser[this.name] = value;
+    }
+}
+
+class QueryInstruction extends RedirectInstruction {
+    constructor(name, patterns) {
+        super(name, patterns);
+    }
+
+    apply(urlParser) {
+        let value = "";
+        for (let pattern of this.patterns) {
+            value += pattern.resolve(urlParser);
+        }
+        let queryParser = new QueryParser(urlParser.href);
+        queryParser.set(this.name , value);
+        urlParser.href = queryParser.href;
     }
 }
 
@@ -108,14 +118,14 @@ class BaseRedirectPattern {
 }
 
 class ParameterExpansion extends BaseRedirectPattern {
-    resolve(requestURL) {
-        return requestURL[this.value];
+    resolve(urlParser) {
+        return urlParser[this.value];
     }
 }
 
 class QueryParameterExpansion extends BaseRedirectPattern {
-    resolve(requestURL) {
-        return requestURL.searchParams.get(this.value);
+    resolve(urlParser) {
+        return new QueryParser(urlParser.href).get(this.value);
     }
 }
 
@@ -125,8 +135,8 @@ class ParameterManipulation extends BaseRedirectPattern {
         this.manipulations = parseStringManipulations(manipulationRules);
     }
 
-    resolve(requestURL) {
-        let value = this.value.resolve(requestURL);
+    resolve(urlParser) {
+        let value = this.value.resolve(urlParser);
         for (let manipulation of this.manipulations) {
             value = manipulation.apply(value);
         }
@@ -230,15 +240,31 @@ class EncodeBase64Manipulation {
 function parseRedirectInstructions(redirectUrl) {
     let parsedInstructions = [];
     let instruction;
+    let queryInstruction = false;
     let parsedUrl = "";
     let previousEnd = -1;
     let inlineCount = 0;
+    let queryParamStart = "search.";
 
     for (let i = 0; i < redirectUrl.length; i++) {
         if (redirectUrl.charAt(i) === "[") {
             inlineCount++;
             if (!instruction) {
-                for (let name of URL_PARAMETER_NAMES) {
+
+                if (redirectUrl.startsWith(queryParamStart, i + 1)) {
+                    let name = redirectUrl.substring(i + queryParamStart.length + 1).match(/^\w+/)[0];
+                    instruction = {
+                        offset: i,
+                        name: name,
+                        valueStart: queryParamStart.length + name.length + 2
+                    };
+                    i += queryParamStart.length + name.length;
+                    queryInstruction = true;
+                    continue;
+                }
+
+
+                for (let name of URL_PARAMETERS) {
                     if (redirectUrl.startsWith(name, i + 1)) {
                         if (redirectUrl.charAt(i + name.length + 1) === "=") {
                             instruction = {
@@ -257,10 +283,15 @@ function parseRedirectInstructions(redirectUrl) {
                 instruction.end = i;
                 instruction.patterns = parseRedirectParameters(
                     redirectUrl.substring(instruction.valueStart, instruction.end));
-                parsedInstructions.push(new RedirectInstruction(instruction.name, instruction.patterns));
+                if (queryInstruction) {
+                    parsedInstructions.push(new QueryInstruction(instruction.name, instruction.patterns));
+                } else {
+                    parsedInstructions.push(new RedirectInstruction(instruction.name, instruction.patterns));
+                }
                 parsedUrl += redirectUrl.substring(previousEnd + 1, instruction.offset);
                 previousEnd = instruction.end;
                 instruction = null;
+                queryInstruction = false;
             }
         }
     }
@@ -296,7 +327,7 @@ function parseRedirectParameters(redirectUrl) {
             }
 
             // Look up parameter name
-            for (let name of URL_PARAMETER_NAMES) {
+            for (let name of URL_PARAMETERS) {
                 if (redirectUrl.startsWith(name, i + 1)
                     && redirectUrl.charAt(i + name.length + 1).match(/[}/:|]/)) {
                     parameter = {

@@ -5,17 +5,11 @@
 
 import {RuleInputFactory} from "/src/options/RuleInput.js";
 import {testRules} from "/src/options/RuleTester.js";
-import {
-    BLOCK_ACTION,
-    FILTER_ACTION,
-    InvalidUrlException,
-    REDIRECT_ACTION,
-    WHITELIST_ACTION
-} from "/src/RequestControl/base.js";
+import {BLOCK_ACTION, FILTER_ACTION, REDIRECT_ACTION, WHITELIST_ACTION} from "/src/RequestControl/base.js";
 import {uuid} from "/lib/uuid.js";
 import {Toc} from "/lib/toc.js";
 import {OptionsManager} from "/lib/OptionsManager.js";
-import {getSubPage, toggleDisabled} from "/lib/bootstrapHelpers.js";
+import {getSubPage, toggleDisabled} from "/lib/UiHelpers.js";
 import {exportObject, importFile} from "/lib/ImportExport.js";
 
 /**
@@ -178,30 +172,29 @@ function onRuleTest() {
         result.textContent = browser.i18n.getMessage("no_match");
         return;
     }
-    let resolveError = null;
     let resolve = request.resolve(function (request, action) {
         switch (action) {
-        case WHITELIST_ACTION:
-            result.textContent = browser.i18n.getMessage("whitelisted");
-            break;
-        case BLOCK_ACTION:
-            result.textContent = browser.i18n.getMessage("blocked");
-            break;
-        case REDIRECT_ACTION:
-        case FILTER_ACTION:
-        case FILTER_ACTION | REDIRECT_ACTION:
-            result.textContent = request.redirectUrl;
-            break;
-        default:
-            break;
+            case WHITELIST_ACTION:
+                result.textContent = browser.i18n.getMessage("whitelisted");
+                break;
+            case BLOCK_ACTION:
+                result.textContent = browser.i18n.getMessage("blocked");
+                break;
+            case REDIRECT_ACTION:
+            case FILTER_ACTION:
+            case FILTER_ACTION | REDIRECT_ACTION:
+                result.textContent = request.redirectUrl;
+                break;
+            default:
+                break;
         }
-    }, function (request, rule, error) {
-        resolveError = error;
     });
 
-    if (resolveError) {
-        if (resolveError instanceof InvalidUrlException) {
-            result.textContent = browser.i18n.getMessage("invalid_target_url") + resolveError.target;
+    if (request.redirectUrl) {
+        try {
+            new URL(request.redirectUrl);
+        } catch (e) {
+            result.textContent = browser.i18n.getMessage("invalid_target_url") + request.redirectUrl;
         }
     } else if (!resolve && request.action & ~WHITELIST_ACTION) {
         result.textContent = browser.i18n.getMessage("matched_no_change");
@@ -235,6 +228,66 @@ function updateSelectedText(header, selected, total) {
     }
 }
 
+function fetchChangelog() {
+    fetch(new Request("/CHANGELOG", {
+        method: "GET",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        mode: "same-origin",
+        cache: "force-cache"
+    })).then(response => {
+        return response.text();
+    }).then(content => {
+        let modal = document.getElementById("changelogModal");
+        let body = modal.querySelector(".modal-body");
+        let ul = document.createElement("ul");
+        for (let line of content.split("\n")) {
+            if (line.startsWith("-")) {
+                let li = document.createElement("li");
+                let text = line.split(/(#\d+|@\w+)/);
+                li.textContent = text[0].replace(/^- /, "");
+                for (let i = 1; i < text.length; i++) {
+                    if (text[i].startsWith("#")) {
+                        let link = document.createElement("a");
+                        link.textContent = text[i];
+                        link.href = "https://github.com/tumpio/requestcontrol/issues/" + text[i].substring(1);
+                        link.target = "_blank";
+                        li.appendChild(link);
+                    } else if (text[i].startsWith("@")) {
+                        let link = document.createElement("a");
+                        link.textContent = text[i];
+                        link.href = "https://github.com/" + text[i].substring(1);
+                        link.target = "_blank";
+                        li.appendChild(link);
+                    } else {
+                        li.appendChild(document.createTextNode(text[i]));
+                    }
+                }
+                if (line.match(/fix/i)) {
+                    li.classList.add("fix");
+                } else if (line.match(/add/i)) {
+                    li.classList.add("add");
+                } else if (line.match(/change/i)) {
+                    li.classList.add("change");
+                } else if (line.match(/update/i)) {
+                    li.classList.add("update");
+                } else if (line.match(/locale/i)) {
+                    li.classList.add("locale");
+                }
+                ul.appendChild(li);
+            } else {
+                let h = document.createElement("h6");
+                h.textContent = line;
+                body.appendChild(h);
+                ul = document.createElement("ul");
+                body.appendChild(ul);
+            }
+        }
+    });
+    this.removeEventListener("click", fetchChangelog);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     Promise.all([myOptionsManager.loadOptions(), myRuleInputFactory.load()]).then(() => {
         if (!myOptionsManager.options.rules) {
@@ -248,6 +301,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     let ruleInput = document.getElementById("rule-" + rule);
                     ruleInput.select(true);
                     ruleInput.edit();
+                    ruleInput.scrollIntoView();
                 }
             }
         }
@@ -317,6 +371,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let rules = this.nextElementSibling.querySelectorAll(".rule");
             if (event.target !== checkbox) {
                 checkbox.checked = !checkbox.checked;
+                checkbox.indeterminate = false;
             }
             for (let rule of rules) {
                 rule.select(checkbox.checked);
@@ -356,63 +411,11 @@ document.addEventListener("DOMContentLoaded", function () {
             browser.i18n.getMessage("version", info.version);
     });
 
-    document.getElementById("changelog").addEventListener("click", function () {
-        fetch(new Request("/CHANGELOG", {
-            method: "GET",
-            headers: {
-                "Content-Type": "text/plain"
-            },
-            mode: "same-origin",
-            cache: "force-cache"
-        })).then(response => {
-            return response.text();
-        }).then(content => {
-            let modal = document.getElementById("changelogModal");
-            let body = modal.querySelector(".modal-body");
-            let ul = document.createElement("ul");
-            for (let line of content.split("\n")) {
-                if (line.startsWith("-")) {
-                    let li = document.createElement("li");
-                    let text = line.split(/(#\d+|@\w+)/);
-                    li.textContent = text[0].replace(/^- /, "");
-                    for (let i = 1; i < text.length; i++) {
-                        if (text[i].startsWith("#")) {
-                            let link = document.createElement("a");
-                            link.textContent = text[i];
-                            link.href = "https://github.com/tumpio/requestcontrol/issues/" + text[i].substring(1);
-                            link.target = "_blank";
-                            li.appendChild(link);
-                        } else if (text[i].startsWith("@")) {
-                            let link = document.createElement("a");
-                            link.textContent = text[i];
-                            link.href = "https://github.com/" + text[i].substring(1);
-                            link.target = "_blank";
-                            li.appendChild(link);
-                        } else {
-                            li.appendChild(document.createTextNode(text[i]));
-                        }
-                    }
-                    if (line.match(/fix/i)) {
-                        li.classList.add("fix");
-                    } else if (line.match(/add/i)) {
-                        li.classList.add("add");
-                    } else if (line.match(/change/i)) {
-                        li.classList.add("change");
-                    } else if (line.match(/update/i)) {
-                        li.classList.add("update");
-                    } else if (line.match(/locale/i)) {
-                        li.classList.add("locale");
-                    }
-                    ul.appendChild(li);
-                } else {
-                    let h = document.createElement("h6");
-                    h.textContent = line;
-                    body.appendChild(h);
-                    ul = document.createElement("ul");
-                    body.appendChild(ul);
-                }
-            }
-        });
-        this.removeEventListener("click", arguments.callee);
+    document.getElementById("changelog").addEventListener("click", fetchChangelog);
+    document.getElementById("selectedRules").addEventListener("click", function () {
+        document.querySelector(".mobile-toolbar").classList.toggle("show");
+    });
+    document.querySelector(".mobile-toolbar").addEventListener("click", function () {
+        this.classList.remove("show");
     });
 });

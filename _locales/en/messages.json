@@ -21,6 +21,15 @@
   "title_whitelist": {
     "message": "Whitelisted: "
   },
+  "main_title_with_state": {
+    "message": "Request Control ($STATE$)",
+    "placeholders": {
+      "state": {
+        "content": "$1",
+        "example": "Disabled"
+      }
+    }
+  },
   "rule_title_filter": {
     "message": "Filter rule for $HOST$",
     "placeholders": {
@@ -80,7 +89,7 @@
     "message": "Filter URL redirection"
   },
   "rule_description_filter_parameters": {
-    "message": "Trim URL parameters"
+    "message": "Trim URL query parameters"
   },
   "rule_description_block": {
     "message": "Block requests before they are made."
@@ -200,7 +209,7 @@
     "message": "See manual."
   },
   "create_new_rule": {
-    "message": "Create new rule"
+    "message": "Create rule"
   },
   "restore_default_rules": {
     "message": "Restore Default Rules"
@@ -229,26 +238,32 @@
   "host": {
     "message": "Host"
   },
-  "tlds": {
-    "message": "TLDs"
-  },
   "path": {
     "message": "Path"
   },
   "top_level_domains": {
     "message": "Top-level domains"
   },
-  "must_contain": {
-    "message": "Must contain"
-  },
-  "must_not_contain": {
-    "message": "Must not contain"
-  },
   "includes": {
     "message": "Includes"
   },
   "excludes": {
     "message": "Excludes"
+  },
+  "host_placeholder": {
+    "message": "List of host patterns.."
+  },
+  "path_placeholder": {
+    "message": "List of path patterns.."
+  },
+  "tlds_placeholder": {
+    "message": "List of TLDs.."
+  },
+  "includes_placeholder": {
+    "message": "List of include patterns.."
+  },
+  "excludes_placeholder": {
+    "message": "List of exclude patterns.."
   },
   "types": {
     "message": "Types"
@@ -300,7 +315,7 @@
     }
   },
   "redirect_to": {
-    "message": "Redirect To"
+    "message": "Redirect Requests To URL"
   },
   "manual_text_redirect": {
     "message": "Use pattern capturing to redirect based on the original request."
@@ -309,19 +324,13 @@
     "message": "Filter URL Redirection"
   },
   "trim_url_parameters": {
-    "message": "Trim URL Parameters"
+    "message": "Trim URL Query Parameters"
   },
   "trim_all": {
     "message": "Trim all"
   },
   "invert_trim": {
     "message": "Invert trim"
-  },
-  "saved": {
-    "message": "saved"
-  },
-  "save_rule": {
-    "message": "Save rule"
   },
   "remove": {
     "message": "Remove"
@@ -333,10 +342,7 @@
     "message": "Redirect URL"
   },
   "placeholder_trim_parameters": {
-    "message": "Add parameter names to filter"
-  },
-  "show_rules": {
-    "message": "Show Rules"
+    "message": "List of query parameter patterns.."
   },
   "request_type": {
     "message": "Request type: $TYPE$",
@@ -357,7 +363,7 @@
     }
   },
   "request_url": {
-    "message": "Request url:"
+    "message": "Request target:"
   },
   "copy_to_clipboard": {
     "message": "Copy to clipboard"
@@ -384,10 +390,13 @@
     "message": "Export selected"
   },
   "remove_selected": {
-    "message": "Remove selected"
+    "message": "Delete selected"
   },
   "test_selected": {
     "message": "Test selected"
+  },
+  "selected_rules": {
+    "message": "Selected rules"
   },
   "export_rules": {
     "message": "Export rules"
@@ -436,9 +445,6 @@
   },
   "license_clause": {
     "message": "Request Control is licensed under the Mozilla Public License v2.0. A copy of the MPL is available in"
-  },
-  "donate": {
-    "message": "Donate"
   },
   "browse_file": {
     "message": "Browse..."

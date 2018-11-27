@@ -5,76 +5,53 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/src/options/badges.css">
   <link rel="stylesheet" href="browser-action.css">
   <script type="module" src="/lib/i18n.js"></script>
   <script type="module" src="browser-action.js"></script>
 </head>
 <body>
-<div class="panel">
-  <div class="panel-arrowUp"></div>
-  <div id="records" class="panel-section panel-section-list hidden"></div>
-  <div class="panel-section panel-section-footer">
-    <div id="showRules" class="panel-section-footer-button">
-      <span data-i18n="options_title"></span>
-    </div>
-    <div id="toggleActive" class="panel-section-footer-button">
-      <span class="enable" data-i18n="activate_true" data-i18n-title="enable_rules"></span>
-      <span class="disable" data-i18n="activate_false" data-i18n-title="disable_rules"></span>
-    </div>
-  </div>
+<div class="header">
+  <label id="showRules" class="btn" data-i18n="options_title"></label>
+  <label id="toggleActive" class="btn"></label>
 </div>
+<div id="records" class="hidden"></div>
 <div class="models">
   <div id="entryModel" class="entry">
-    <div class="panel-list-item entry-header">
+    <div class="entry-header">
+      <small class="timestamp"></small>
+      <img class="icon" src="/icons/icon-redirect@19.png">
+      <span class="action"></span>
+      <span class="url"></span>
       <div>
-        <small>
-          <pre class="timestamp"></pre>
-        </small>
+        <label class="tags badge badge-dark"></label>
+        <label class="type badge badge-info"></label>
       </div>
-      <div>
-        <img class="errorIcon hidden" src="/icons/ionicons/alert-circled.svg" height="16">
-      </div>
-      <div class="icon">
-        <img src="/icons/icon-redirect@19.png">
-      </div>
-      <div class="text">
-        <span class="action"></span>
-        <span class="url"></span>
-      </div>
-      <div class="tags badge badge-dark"></div>
-      <div class="type badge badge-info"></div>
     </div>
   </div>
-  <div id="details" class="panel-section panel-section-list hidden">
-    <div class="requestUrl">
-      <div class="panel-list-item disabled" data-i18n="request_url"></div>
-      <div class="panel-list-item">
-        <pre id="url"></pre>
-        <div class="text-shortcut">
-          <button class="copyButton tooltip" data-copy-target="url"
-                  data-i18n-title="copy_to_clipboard">
-            <img src="/icons/firefox/copy.svg" width="20"/>
-            <span class="tooltiptext" data-i18n="copied"></span>
-          </button>
-        </div>
-      </div>
+  <div id="details" class="hidden">
+    <div class="text-shortcut">
+      <button class="copyButton tooltip" data-copy-target="url"
+              data-i18n-title="copy_to_clipboard">
+        <img src="/icons/firefox/copy.svg" width="20"/>
+        <span class="tooltiptext" data-i18n="copied"></span>
+      </button>
     </div>
+    <label data-i18n="request_url"></label>
+    <pre id="url"></pre>
     <div id="targetBlock" class="hidden">
-      <div class="panel-list-item disabled" data-i18n="new_target"></div>
-      <div class="panel-list-item">
-        <pre id="target"></pre>
-        <div class="text-shortcut">
-          <button class="copyButton tooltip" data-copy-target="target"
-                  data-i18n-title="copy_to_clipboard">
-            <img src="/icons/firefox/copy.svg" width="20"/>
-            <span class="tooltiptext" data-i18n="copied"></span>
-          </button>
-        </div>
+      <div class="text-shortcut">
+        <button class="copyButton tooltip" data-copy-target="target"
+                data-i18n-title="copy_to_clipboard">
+          <img src="/icons/firefox/copy.svg" width="20"/>
+          <span class="tooltiptext" data-i18n="copied"></span>
+        </button>
       </div>
+      <label data-i18n="new_target"></label>
+      <pre id="target"></pre>
     </div>
-    <div class="panel-list-item">
-      <a id="editLink" href="" target="_blank" data-i18n="edit_rule"></a>
-    </div>
+    <a id="editLink" href="" data-i18n="edit_rule"></a>
   </div>
 </div>
 </body>
