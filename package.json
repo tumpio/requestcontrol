@@ -26,8 +26,11 @@
     "tldjs": "^2.3.1"
   },
   "devDependencies": {
+    "@babel/core": "latest",
+    "@babel/register": "latest",
     "addons-linter": "latest",
     "ava": "latest",
+    "babel-plugin-istanbul": "latest",
     "codecov": "latest",
     "eslint": "latest",
     "eslint-plugin-ava": "latest",
@@ -40,6 +43,15 @@
     "nyc": "latest",
     "web-ext": "latest"
   },
+  "babel": {
+    "env": {
+      "test": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
   "ava": {
     "require": [
       "esm"
@@ -50,7 +62,8 @@
       "src/RequestControl/*.js"
     ],
     "require": [
-      "esm"
+      "esm",
+      "@babel/register"
     ],
     "sourceMap": false,
     "instrument": false
