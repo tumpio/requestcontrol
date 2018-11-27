@@ -302,7 +302,7 @@ Replace a certain part of the original request. The available named parameters a
 
 The value of a redirect instruction can be parametrized using the parameter expansion described above.
 
-<pre>[parameter={parameter&lt;manipulations&gt;}]</pre>
+<pre>[parameter={parameter<manipulations>}]</pre>
 ==== 示例 ====
 
 {|

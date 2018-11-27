@@ -301,7 +301,7 @@ Remplaza una cierta parte de la petición original. Los parámetros nominados di
 
 El valor de una instrucción de redireccionamiento se puede parametrizar usando la expansión de parámetro descrita anteriormente.
 
-<pre>[parámetro={parámetro&lt;manipulaciones&gt;}]</pre>
+<pre>[parámetro={parámetro<manipulaciones>}]</pre>
 ==== Ejemplos ====
 
 {|

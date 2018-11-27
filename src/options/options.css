@@ -320,7 +320,7 @@ input:not(:checked) + .icon {
 }
 
 .manual-content td:first-child {
-    white-space: nowrap;
+    white-space: nowrap!important;
 }
 
 .manual-content colgroup {
