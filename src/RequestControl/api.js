@@ -47,6 +47,12 @@ export function createRule(data) {
     }
 }
 
+function prefixPath(path) {
+    if (path.startsWith(("/")))
+        return path;
+    return "/" + path;
+}
+
 /**
  * Construct array of match patterns
  * @param pattern pattern of request control rule
@@ -72,12 +78,12 @@ export function createMatchPatterns(pattern) {
             host = host.slice(0, -1);
             for (let TLD of pattern.topLevelDomains) {
                 for (let path of paths) {
-                    urls.push(pattern.scheme + "://" + host + TLD + "/" + path);
+                    urls.push(pattern.scheme + "://" + host + TLD + prefixPath(path));
                 }
             }
         } else {
             for (let path of paths) {
-                urls.push(pattern.scheme + "://" + host + "/" + path);
+                urls.push(pattern.scheme + "://" + host + prefixPath(path));
             }
         }
     }

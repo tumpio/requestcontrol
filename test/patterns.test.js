@@ -52,4 +52,13 @@ test("Create match patterns", t => {
     ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
         "*://second.com/second/path", "*://second.org/first/path",
         "*://second.org/second/path"].sort());
+    t.deepEqual(createMatchPatterns({
+            scheme: "*",
+            host: ["first.com", "second.*"],
+            path: ["/first/path", "second/path"],
+            topLevelDomains: ["com", "org"]
+        }).sort(),
+        ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
+            "*://second.com/second/path", "*://second.org/first/path",
+            "*://second.org/second/path"].sort());
 });
