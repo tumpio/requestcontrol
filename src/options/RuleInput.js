@@ -45,26 +45,69 @@ export function RuleInputFactory() {
     RuleInputFactory.prototype.singleton = this;
 }
 
+function typeModel(index, value) {
+    let label = document.createElement("label");
+    let input = document.createElement("input");
+    let span = document.createElement("span");
+    label.setAttribute("class", "btn");
+    input.setAttribute("data-index", index);
+    input.setAttribute("type", "checkbox");
+    input.setAttribute("autocomplete", "off");
+    input.setAttribute("class", "type");
+    input.setAttribute("value", value);
+    span.setAttribute("data-i18n", value);
+    label.appendChild(input);
+    label.appendChild(span);
+    if (index === 0) {
+        label.classList.add("active");
+        input.checked = true;
+    } else if (index > 4) {
+        label.classList.add("d-none");
+        input.classList.add("extra-type");
+    }
+    return label;
+}
+
 RuleInputFactory.prototype = {
     load: function () {
-        return getSubPage("RuleInputModel.html").then(page => {
-            this.models = page;
-            translateDocument(this.models);
+        let request = new Request("./types.json", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            mode: "same-origin"
         });
+
+        let pagePromise = getSubPage("RuleInputModel.html");
+        let typesPromise = fetch(request).then(response => response.json());
+
+        return Promise.all([pagePromise, typesPromise])
+            .then(([page, types]) => {
+                this.models = page;
+                let typesGroup = this.models.querySelector(".btn-group-types");
+                let sorted = [];
+                for (let [type, index] of Object.entries(types)) {
+                    sorted[index] = type;
+                }
+                for (let [index, type] of sorted.entries()) {
+                    typesGroup.insertBefore(typeModel(index, type), typesGroup.lastElementChild);
+                }
+                translateDocument(this.models);
+            });
     },
 
     newInput: function (rule = new RequestRule()) {
         switch (rule.action) {
-        case "filter":
-            return new FilterRuleInput(rule);
-        case "block":
-            return new BlockRuleInput(rule);
-        case "redirect":
-            return new RedirectRuleInput(rule);
-        case "whitelist":
-            return new WhitelistRuleInput(rule);
-        default:
-            return new RuleInput(rule);
+            case "filter":
+                return new FilterRuleInput(rule);
+            case "block":
+                return new BlockRuleInput(rule);
+            case "redirect":
+                return new RedirectRuleInput(rule);
+            case "whitelist":
+                return new WhitelistRuleInput(rule);
+            default:
+                return new RuleInput(rule);
         }
     },
 
@@ -74,7 +117,7 @@ RuleInputFactory.prototype = {
         return model;
     },
 
-    setOptionsManager: function(manager) {
+    setOptionsManager: function (manager) {
         this.optionsManager = manager;
     }
 };
@@ -112,6 +155,7 @@ function RuleInput(rule) {
     this.$(".any-url").addEventListener("change", this.onSelectAnyUrl.bind(this));
 
     this.$(".btn-group-types").addEventListener("change", onToggleButtonChange, false);
+    this.$(".btn-group-types").addEventListener("change", this.sortTypes.bind(this), false);
     this.$(".more-types").addEventListener("change", this.onShowMoreTypes.bind(this), false);
     this.$(".any-type").addEventListener("change", this.onSelectAnyType.bind(this));
 
@@ -323,12 +367,12 @@ RuleInput.prototype = {
         if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT"
             && !e.target.hasAttribute("contenteditable")) {
             switch (e.type) {
-            case "dblclick":
-                this.toggleEdit();
-                break;
-            case "click":
-                this.headerClickTimeout = setTimeout(this.toggleSelect.bind(this), 250);
-                break;
+                case "dblclick":
+                    this.toggleEdit();
+                    break;
+                case "click":
+                    this.headerClickTimeout = setTimeout(this.toggleSelect.bind(this), 250);
+                    break;
             }
         }
     },
@@ -360,6 +404,32 @@ RuleInput.prototype = {
         let type = this.$(".type[value=" + value + "]");
         setButtonChecked(type, bool);
         toggleHidden(false, type.parentNode);
+    },
+
+    sortTypes: function () {
+        let list = this.$(".btn-group-types");
+        let sorting = true;
+        let i, types, swap;
+        while (sorting) {
+            sorting = false;
+            types = list.getElementsByClassName("type");
+            for (i = 0; i < (types.length - 1); i++) {
+                swap = false;
+                if (types[i].checked)
+                    continue;
+                if (types[i + 1].checked) {
+                    swap = true;
+                    break;
+                } else if (Number(types[i].dataset.index) > Number(types[i + 1].dataset.index)) {
+                    swap = true;
+                    break;
+                }
+            }
+            if (swap) {
+                list.insertBefore(types[i + 1].parentNode, types[i].parentNode);
+                sorting = true;
+            }
+        }
     },
 
     onShowMoreTypes: function (e) {
@@ -473,6 +543,7 @@ RuleInput.prototype = {
             for (let type of this.rule.types) {
                 this.setType(type, true);
             }
+            this.sortTypes();
         }
 
         this.setAnyUrl(this.rule.pattern.hasOwnProperty("allUrls"));

@@ -181,6 +181,9 @@
   "web_manifest": {
     "message": "Web Manifest"
   },
+  "speculative": {
+    "message": "Speculative"
+  },
   "other": {
     "message": "Other"
   },

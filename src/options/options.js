@@ -130,7 +130,7 @@ function importRules(rulesImport) {
 }
 
 function loadDefaultRules() {
-    let request = new Request("/default-rules.json", {
+    let request = new Request("./default-rules.json", {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
