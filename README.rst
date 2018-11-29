@@ -72,7 +72,7 @@ External Libraries
 
 Request control uses the following external libraries,
 
--  `Bootstrap`_ is licensed under the MIT license.
+-  `lit`_ is licensed under the MIT license.
 -  `tags-input`_ and it's fork by `@pirxpilot`_ are licensed under the MIT license.
 -  `ionicons`_ is licensed under the MIT license.
 -  `tld.js`_ is licensed under the MIT license.
@@ -93,7 +93,7 @@ License
 .. _Source code: https://github.com/tumpio/requestcontrol
 .. _License: https://github.com/tumpio/requestcontrol/blob/master/LICENSE
 .. _npm: https://www.npmjs.com/
-.. _Bootstrap: http://getbootstrap.com/
+.. _lit: https://ajusa.github.io/lit/
 .. _tags-input: https://github.com/developit/tags-input
 .. _@pirxpilot: https://github.com/pirxpilot/tags-input
 .. _ionicons: http://ionicons.com/
