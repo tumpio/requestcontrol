@@ -6,6 +6,12 @@
     --font: "Open Sans", sans-serif;
     --primary-color: #315685;
     --light: #eee;
+    font-size: .95rem;
+}
+
+.c {
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 hr {
@@ -162,6 +168,11 @@ form .row {
     margin-right: .5em;
 }
 
+.header-rules > * + * {
+    margin-top: .2em;
+    margin-bottom: .2em;
+}
+
 .header-rules > .select-all-rules {
     width: 5%;
     margin: 0 1.2em;
@@ -191,6 +202,7 @@ form .row {
 
 .rule {
     position: relative;
+    margin: 0;
 }
 
 .rule.disabled > .rule-header {
@@ -200,10 +212,11 @@ form .row {
 .rule-header {
     table-layout: fixed;
     border-top: 1px solid #e1e1e1;
+    line-height: 1.3;
 }
 
 .rule:not(.editing) .rule-header * + * {
-    margin: .3em 0;
+    margin: 0;
 }
 
 .editing .rule-header {
@@ -214,6 +227,10 @@ form .row {
 
 .rule:not(.editing) .rule-header .edit-label {
     display: none;
+}
+
+.rule:not(.editing) .rule-header {
+    margin-bottom: .3em;
 }
 
 .editing .rule-header > div:first-child > div {
@@ -360,8 +377,12 @@ input:not(:checked) + .icon {
     align-items: center;
     justify-content: space-between;
     padding: .2em 0;
+    margin: 0;
 }
 
+.toolbar * + * {
+    margin: 0;
+}
 .toolbar > button {
     margin: 0 .5em 0 0;
     padding: .6em .5em;
@@ -457,11 +478,6 @@ input:not(:checked) + .icon {
     .rule-select,
     .tab-selector:not(.active) > span {
         display: none;
-    }
-
-    .c {
-        padding-top: 0;
-        padding-bottom: 0;
     }
 
     body {
