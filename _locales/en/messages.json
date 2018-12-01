@@ -519,5 +519,8 @@
   },
   "skip_within_same_domain": {
     "message": "Skip within same domain"
+  },
+  "extra_url_matchers": {
+    "message": "Extra URL matchers"
   }
 }

@@ -154,6 +154,8 @@ function RuleInput(rule) {
     this.$(".host").addEventListener("change", this.validateTLDPattern.bind(this));
     this.$(".any-url").addEventListener("change", this.onSelectAnyUrl.bind(this));
 
+    this.$(".collapse-url-matchers").addEventListener("click", this.toggleMatchers.bind(this));
+
     this.$(".btn-group-types").addEventListener("change", onToggleButtonChange, false);
     this.$(".btn-group-types").addEventListener("change", this.sortTypes.bind(this), false);
     this.$(".more-types").addEventListener("change", this.onShowMoreTypes.bind(this), false);
@@ -262,6 +264,10 @@ RuleInput.prototype = {
             bubbles: true,
             detail: {"action": this.rule.action, parent: this.model.parentNode}
         }));
+    },
+
+    toggleMatchers: function () {
+        toggleHidden(this.$(".group-url-matchers"));
     },
 
     toggleTLDs: function () {

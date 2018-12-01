@@ -6,7 +6,6 @@
     --font: "Open Sans", sans-serif;
     --primary-color: #315685;
     --light: #eee;
-    font-size: .95rem;
 }
 
 .c {
@@ -181,19 +180,28 @@ form .row {
 .header-rules > .collapse-button {
     margin-left: auto;
     margin-right: 1em;
-    display: block;
-    padding: 0.5em;
 }
 
-.collapse-button > span {
-    display: block;
+.header-rules > .collapse-button:before {
+    vertical-align: middle;
+}
+
+.collapse-button:hover {
+    cursor: pointer;
+}
+
+.collapse-button:before {
+    content: "";
+    display: inline-block;
     border-left: .4em solid transparent;
     border-right: .4em solid transparent;
     border-top: .4em solid #343a40;
     border-bottom: none;
+    vertical-align: super;
+    margin-right: .3em;
 }
 
-.collapse-button.collapsed > span {
+.collapse-button.collapsed:before {
     border-left: .4em solid transparent;
     border-right: .4em solid transparent;
     border-top: none;
@@ -212,7 +220,7 @@ form .row {
 .rule-header {
     table-layout: fixed;
     border-top: 1px solid #e1e1e1;
-    line-height: 1.3;
+    line-height: 1.5;
 }
 
 .rule:not(.editing) .rule-header * + * {
