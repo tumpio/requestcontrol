@@ -7,5 +7,5 @@ coverage/
 coverage.lcov
 *.min.css
 
-lib/tldjs/tld.js
+lib/tldts/*.js
 lib/lit/lit.css

@@ -13,17 +13,17 @@
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "coverage-html": "nyc report --reporter=html",
     "start": "web-ext run -i=$npm_package_config_ignore --bc --url about:debugging#addons",
-    "lint": "eslint src/ test/ lib/ --ignore-pattern lib/tldjs/*.js",
+    "lint": "eslint src/ test/ lib/ --ignore-pattern lib/tldts/*.js",
     "lint-release": "addons-linter .releases/request_control-$VERSION.zip",
-    "tldjs-build": "cd node_modules/tldjs && npm install && npm run build && cp -v tld.js ../../lib/tldjs/",
+    "tldts-build": "cp -v node_modules/tldts/dist/tldts.es.js lib/tldts/",
     "lit-build": "cp -v node_modules/@ajusa/lit/src/lit.css lib/lit/",
-    "prebuild": "npm run tldjs-build && npm run lit-build && npm run build-manual",
+    "prebuild": "npm run tldts-build && npm run lit-build && npm run build-manual",
     "build-manual": "find ./_locales/ -iname \"manual.wiki\" -type f -exec sh -c 'pandoc \"$0\" --from=mediawiki --to=html --output \"${0%.wiki}.html\"' {} \\;",
     "build": "web-ext build -i=$npm_package_config_ignore --overwrite-dest --artifacts-dir=.releases --verbose"
   },
   "dependencies": {
     "@ajusa/lit": "^1.1.0",
-    "tldjs": "^2.3.1"
+    "tldts": "^3.0.2"
   },
   "devDependencies": {
     "@babel/core": "latest",

@@ -2,14 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import "../../lib/tldjs/tld.js";
 
-// For unit tests under node
-const tldjs = (typeof window !== "undefined") ? window.tldjs : require("tldjs");
+import {getDomain} from "/lib/tldts/tldts.es.js";
 
-export const libTld = tldjs.fromUserSettings({
-    extractHostname: extractHostname
-});
+export const libTld = {
+    getDomain: function (url) {
+        return getDomain(url, {
+            extractHostname: extractHostname
+        });
+    }
+};
 
 export class UrlParser {
 

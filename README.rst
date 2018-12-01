@@ -75,7 +75,7 @@ Request control uses the following external libraries,
 -  `lit`_ is licensed under the MIT license.
 -  `tags-input`_ and it's fork by `@pirxpilot`_ are licensed under the MIT license.
 -  `ionicons`_ is licensed under the MIT license.
--  `tld.js`_ is licensed under the MIT license.
+-  `tldts`_ is licensed under the MIT license.
 
 License
 ~~~~~~~
@@ -97,7 +97,7 @@ License
 .. _tags-input: https://github.com/developit/tags-input
 .. _@pirxpilot: https://github.com/pirxpilot/tags-input
 .. _ionicons: http://ionicons.com/
-.. _tld.js: https://github.com/oncletom/tld.js
+.. _tldts: https://github.com/remusao/tldts
 
 .. |BuildStatus| image:: https://travis-ci.org/tumpio/requestcontrol.svg?branch=master
    :target: https://travis-ci.org/tumpio/requestcontrol
