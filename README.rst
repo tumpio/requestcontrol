@@ -88,7 +88,7 @@ License
 
 .. _webRequest.onBeforeRequest: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/onBeforeRequest
 .. _Pattern Capturing: https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.rst#redirect-using-pattern-capturing
-.. _Manual: https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.rst
+.. _Manual: https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.wiki
 .. _FAQ: https://github.com/tumpio/requestcontrol/wiki/FAQ
 .. _Source code: https://github.com/tumpio/requestcontrol
 .. _License: https://github.com/tumpio/requestcontrol/blob/master/LICENSE
