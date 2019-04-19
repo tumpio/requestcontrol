@@ -268,10 +268,12 @@ RuleInput.prototype = {
 
     toggleMatchers: function () {
         toggleHidden(this.$(".group-url-matchers"));
+        this.$(".collapse-url-matchers").classList.toggle("collapsed");
     },
 
     toggleTLDs: function () {
         toggleHidden(this.$(".tlds-block"));
+        this.$(".btn-tlds").classList.toggle("collapsed");
     },
 
     setActiveState: function () {

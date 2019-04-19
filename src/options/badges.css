@@ -10,7 +10,7 @@
 
 .badge-info {
     color: #fff;
-    background-color: #17a2b8;
+    background-color: #a4a4a4;
 }
 
 .badge:not(:empty):not(.d-none) {
@@ -23,4 +23,5 @@
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: .25rem;
+    max-width: 100%;
 }

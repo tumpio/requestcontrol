@@ -30,7 +30,7 @@ test("protocol - set", t => {
     t.is(parser.href, url2);
 });
 
-test("protocol - set", t => {
+test("protocol - set with colon", t => {
     let url = "https://domain.com";
     let url2 = "data://domain.com";
     let parser = new UrlParser(url);
@@ -51,7 +51,7 @@ test("username - set", t => {
     t.is(parser.href, "https://user@domain.com");
 });
 
-test("username - set", t => {
+test("username - set with password", t => {
     let parser = new UrlParser("https://user:pass@domain.com");
     parser.username = "other";
     t.is(parser.href, "https://other:pass@domain.com");
@@ -71,13 +71,13 @@ test("password - set", t => {
     t.is(parser.href, "https://domain.com");
 });
 
-test("password - set", t => {
+test("password - set same with user", t => {
     let parser = new UrlParser("https://user@domain.com");
     parser.password = "pass";
     t.is(parser.href, "https://user:pass@domain.com");
 });
 
-test("password - set", t => {
+test("password - set new with user", t => {
     let parser = new UrlParser("https://user:pass@domain.com");
     parser.password = "other";
     t.is(parser.href, "https://user:other@domain.com");
@@ -186,7 +186,7 @@ test("hostname - set", t => {
     t.is(parser.href, "https://other.com");
 });
 
-test("hostname - set", t => {
+test("hostname - set full", t => {
     let parser = new UrlParser("https://user:pass@domain.com:8080/path?query#hash");
     parser.hostname = "other.com";
     t.is(parser.href, "https://user:pass@other.com:8080/path?query#hash");
@@ -198,7 +198,7 @@ test("host - set", t => {
     t.is(parser.href, "https://other.com");
 });
 
-test("host - set", t => {
+test("host - set with port", t => {
     let parser = new UrlParser("https://user:pass@domain.com:8080/path?query#hash");
     parser.host = "other.com:1234";
     t.is(parser.href, "https://user:pass@other.com:1234/path?query#hash");
@@ -218,7 +218,7 @@ test("port - set", t => {
     t.is(parser.href, "https://domain.com:1234");
 });
 
-test("port - set", t => {
+test("port - set with colon", t => {
     let parser = new UrlParser("https://domain.com:8080/path");
     parser.port = ":1234";
     t.is(parser.href, "https://domain.com:1234/path");
@@ -231,19 +231,19 @@ test("path - get", t => {
     t.is(new UrlParser("https://user:@domain.com/path/path.href?foo=bar#haash").pathname, "/path/path.href");
 });
 
-test("path - set", t => {
+test("path - set same", t => {
     let parser = new UrlParser("https://domain.com");
     parser.pathname = "path";
     t.is(parser.href, "https://domain.com/path");
 });
 
-test("path - set", t => {
+test("path - set new", t => {
     let parser = new UrlParser("https://domain.com/foo");
     parser.pathname = "bar";
     t.is(parser.href, "https://domain.com/bar");
 });
 
-test("path - set", t => {
+test("path - set with slash", t => {
     let parser = new UrlParser("https://domain.com:8080/foo/bar.href?query#hash");
     parser.pathname = "/index.href";
     t.is(parser.href, "https://domain.com:8080/index.href?query#hash");
@@ -263,13 +263,13 @@ test("search - set", t => {
     t.is(parser.href, "https://domain.com/foo?bar");
 });
 
-test("search - set", t => {
+test("search - set with question mark", t => {
     let parser = new UrlParser("https://domain.com/foo?query#hash");
     parser.search = "?bar";
     t.is(parser.href, "https://domain.com/foo?bar#hash");
 });
 
-test("search - set", t => {
+test("search - set empty", t => {
     let parser = new UrlParser("https://domain.com/foo?query=bar&foo#hash");
     parser.search = "";
     t.is(parser.href, "https://domain.com/foo#hash");
@@ -290,13 +290,13 @@ test("hash - set", t => {
     t.is(parser.href, "https://domain.com/foo#bar");
 });
 
-test("hash - set", t => {
+test("hash - set with hash", t => {
     let parser = new UrlParser("https://domain.com/foo?query#hash");
     parser.hash = "#bar";
     t.is(parser.href, "https://domain.com/foo?query#bar");
 });
 
-test("hash - set", t => {
+test("hash - set empty", t => {
     let parser = new UrlParser("https://domain.com/foo?query#hash");
     parser.hash = "";
     t.is(parser.href, "https://domain.com/foo?query");
@@ -313,55 +313,55 @@ test("query parser - get", t => {
     t.is(new QueryParser("https://domain.com/foo?foo=bar&foo=foo?x=y#hash").get("foo"), "bar");
 });
 
-test("query parser - set", t => {
+test("query parser - set when no query", t => {
     let parser = new QueryParser("https://domain.com/foo#hash");
     parser.set("foo", "foo");
     t.is(parser.href, "https://domain.com/foo?foo=foo#hash");
 });
 
-test("query parser - set", t => {
+test("query parser - set when empty query", t => {
     let parser = new QueryParser("https://domain.com/foo?#hash");
     parser.set("foo", "foo");
     t.is(parser.href, "https://domain.com/foo?foo=foo#hash");
 });
 
-test("query parser - set", t => {
+test("query parser - set when no value", t => {
     let parser = new QueryParser("https://domain.com/foo?foo#hash");
     parser.set("foo", "foo");
     t.is(parser.href, "https://domain.com/foo?foo=foo#hash");
 });
 
-test("query parser - set", t => {
+test("query parser - set when empty value", t => {
     let parser = new QueryParser("https://domain.com/foo?foo=#hash");
     parser.set("foo", "foo");
     t.is(parser.href, "https://domain.com/foo?foo=foo#hash");
 });
 
-test("query parser - set", t => {
+test("query parser - set when value", t => {
     let parser = new QueryParser("https://domain.com/foo?foo=bar#hash");
     parser.set("foo", "foo");
     t.is(parser.href, "https://domain.com/foo?foo=foo#hash");
 });
 
-test("query parser - set", t => {
+test("query parser - set when has query parameter same begin", t => {
     let parser = new QueryParser("https://domain.com/foo?fooo=bar#hash");
     parser.set("foo", "foo");
     t.is(parser.href, "https://domain.com/foo?fooo=bar&foo=foo#hash");
 });
 
-test("query parser - set", t => {
+test("query parser - set when has query parameter same end", t => {
     let parser = new QueryParser("https://domain.com/foo?afoo=bar#hash");
     parser.set("foo", "foo");
     t.is(parser.href, "https://domain.com/foo?afoo=bar&foo=foo#hash");
 });
 
-test("query parser - set", t => {
+test("query parser - set when has multiple query parameters", t => {
     let parser = new QueryParser("https://domain.com/foo?afoo=1&afoo=2#hash");
     parser.set("foo", "foo");
     t.is(parser.href, "https://domain.com/foo?afoo=1&afoo=2&foo=foo#hash");
 });
 
-test("query parser - set", t => {
+test("query parser - set when has multiple query parameters with value equals key", t => {
     let parser = new QueryParser("https://domain.com/foo?afoo=1&afoo=afoo#hash");
     parser.set("foo", "foo");
     t.is(parser.href, "https://domain.com/foo?afoo=1&afoo=afoo&foo=foo#hash");

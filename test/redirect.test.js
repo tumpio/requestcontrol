@@ -129,7 +129,7 @@ test("Redirect instructions - hostname", t => {
     t.is(redirectRule.apply(request), target);
 });
 
-test("Redirect instructions - hostname", t => {
+test("Redirect instructions - hostname replace pattern", t => {
     let request, target, redirectRule;
     request = "https://en.m.wikipedia.org/wiki/Main_Page";
     target = "https://en.wikipedia.org/wiki/Main_Page";
@@ -151,7 +151,7 @@ test("Set Search Parameter", t => {
     t.is(redirectRule.apply(request), target);
 });
 
-test("Set Search Parameter", t => {
+test("Set Search Parameter - encode", t => {
     const request = "http://example.com/?query=none";
     const target = "http://example.com/?query=http%3A%2F%2Fexample.com";
     const redirectRule = new RedirectRule(0, "[search.query={origin|encodeURIComponent}]");

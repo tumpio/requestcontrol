@@ -20,13 +20,13 @@ test("Skip inline url filtering on same domain", t => {
     t.is(new FilterRule(0, null, false, false, true).apply(request), request);
 });
 
-test("Filter inline url redirection", t => {
+test("Filter inline url redirection - trim query params after", t => {
     const request = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2Fkodin-elektroniikka%2Fintel-core-i7-8700k-3-7-ghz-12mb-socket-1151-p41787528%3Futm_source%3Dmuropaketti%26utm_medium%3Dcpc%26utm_campaign%3Dmuropaketti";
     const target = "http://bar.com/kodin-elektroniikka/intel-core-i7-8700k-3-7-ghz-12mb-socket-1151-p41787528";
     t.is(new FilterRule(0, {values: ["utm_*"]}, false, false, true).apply(request), target);
 });
 
-test("Filter inline url redirection", t => {
+test("Filter inline url redirection - trim query params before", t => {
     const request = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Ffoo.com%2Fkodin-elektroniikka%2Fintel-core-i7-8700k-3-7-ghz-12mb-socket-1151-p41787528%3Futm_source%3Dmuropaketti%26utm_medium%3Dcpc%26utm_campaign%3Dmuropaketti";
     const target = "http://foo.com/click?p=240631&a=2314955&g=21407340";
     t.is(new FilterRule(0, {values: ["url"]}, false, false, true).apply(request), target);

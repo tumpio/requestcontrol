@@ -107,6 +107,10 @@ form .row {
     border-spacing: 0;
 }
 
+.form-header {
+    font-weight: bold;
+}
+
 .d-none {
     display: none;
 }
@@ -188,6 +192,8 @@ form .row {
 
 .collapse-button:hover {
     cursor: pointer;
+    color: #343a40;
+    -moz-user-select: none;
 }
 
 .collapse-button:before {
@@ -208,6 +214,17 @@ form .row {
     border-bottom: .4em solid #343a40;
 }
 
+.collapse-button.plus:before {
+    content: "+";
+    border: none;
+    vertical-align: baseline;
+    font-weight: bold;
+}
+
+.collapse-button.plus.collapsed:before {
+    content: "-";
+}
+
 .rule {
     position: relative;
     margin: 0;
@@ -221,6 +238,17 @@ form .row {
     table-layout: fixed;
     border-top: 1px solid #e1e1e1;
     line-height: 1.5;
+}
+
+.rule-header > .information {
+    text-align: right;
+    vertical-align: middle;
+}
+
+.rule-header > .information > .badge {
+    white-space: nowrap;
+    overflow: -moz-hidden-unscrollable;
+    text-overflow: ellipsis;
 }
 
 .rule:not(.editing) .rule-header * + * {
@@ -238,7 +266,7 @@ form .row {
 }
 
 .rule:not(.editing) .rule-header {
-    margin-bottom: .3em;
+    padding: .3em 0;
 }
 
 .editing .rule-header > div:first-child > div {
@@ -252,6 +280,14 @@ form .row {
 .description {
     -moz-user-select: none;
     cursor: pointer;
+}
+
+.rule .title {
+    font-size: .9em;
+}
+
+.rule:not(.editing) .title {
+    font-weight: 600;
 }
 
 .rule:not(.editing) .title,
@@ -291,6 +327,10 @@ form .row {
 .rule-header .description[contenteditable]:focus,
 .rule-header .tag[contenteditable]:focus {
     color: #666;
+}
+
+.more-types {
+    margin: 0!important;
 }
 
 .alert {

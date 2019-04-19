@@ -4,7 +4,7 @@
       <div class="rule-select 1 col">
         <input type="checkbox" class="select" autocomplete="off">
       </div>
-      <div class="8 col">
+      <div class="7 col">
         <div class="title-wrap">
           <small class="badge edit-label" data-i18n="name"></small>
           <label class="title" data-i18n="new_rule"></label>
@@ -18,26 +18,24 @@
           <button type="button" class="badge add-tag" data-i18n="add_tag"></button>
           <small class="tag"></small>
         </div>
-        <div class="information">
-          <label class="badge badge-info">
-            <span class="match-patterns"></span>
-            <span data-i18n="patterns"></span>
-          </label>
-          <label class="badge badge-dark">
-            <span class="tag-badge"></span>
-          </label>
-        </div>
       </div>
-      <div class="3 col rule-header-buttons">
+      <div class="information 2 col">
+        <label class="badge badge-dark">
+          <span class="tag-badge"></span>
+        </label>
+        <label class="badge badge-info">
+          <span class="match-patterns"></span>
+          <span data-i18n="patterns"></span>
+        </label>
+      </div>
+      <div class="rule-header-buttons 2 col">
         <button type="button" class="btn btn-edit" data-i18n="edit"></button>
         <button type="button" class="btn btn-activate" data-i18n="disable"></button>
       </div>
     </div>
     <form class="rule-input c d-none">
       <div class="row">
-        <div>
-          <label data-i18n="pattern"></label>
-        </div>
+        <label class="form-header" data-i18n="pattern"></label>
         <div class="form-group-pattern">
           <div>
             <small data-i18n="scheme"></small>
@@ -55,7 +53,7 @@
                    required="required"/>
           </div>
           <div class="form-group-tlds d-none">
-            <label class="btn-tlds collapse-button">
+            <label class="btn-tlds collapse-button plus">
               <span data-i18n="top_level_domains"></span>
               <span class="badge badge-dark">0</span>
             </label>
@@ -77,22 +75,43 @@
         </div>
       </div>
       <div class="row">
-        <label class="collapse-url-matchers collapse-button" data-i18n="extra_url_matchers"></label>
+        <label class="collapse-url-matchers collapse-button plus" data-i18n="extra_url_matchers"></label>
         <div class="group-url-matchers d-none">
-          <div class="include-block">
-            <small data-i18n="includes"></small>
-            <input type="text" class="input-includes" spellcheck="false" autocomplete="off"
-                   data-i18n-placeholder="includes_placeholder"/>
-          </div>
-          <div class="exclude-block">
-            <small data-i18n="excludes"></small>
-            <input type="text" class="input-excludes" spellcheck="false" autocomplete="off"
-                   data-i18n-placeholder="excludes_placeholder"/>
+          <small data-i18n="includes"></small>
+          <input type="text" class="input-includes" spellcheck="false" autocomplete="off"
+                 data-i18n-placeholder="includes_placeholder"/>
+          <small data-i18n="excludes"></small>
+          <input type="text" class="input-excludes" spellcheck="false" autocomplete="off"
+                 data-i18n-placeholder="excludes_placeholder"/>
+          <small>Match by origin</small>
+          <div>
+            <label class="btn">
+              <input class="origin-matcher" type="radio" name="origin-matcher" autocomplete="off" checked>
+              <span>Any</span>
+            </label>
+            <label class="btn">
+              <input class="origin-matcher" value="same-origin" type="radio" name="origin-matcher" autocomplete="off">
+              <span>Same origin</span>
+            </label>
+            <label class="btn">
+              <input class="origin-matcher" value="third-party-origin" type="radio" name="origin-matcher"
+                     autocomplete="off">
+              <span>Third party origin</span>
+            </label>
+            <label class="btn">
+              <input class="origin-matcher" value="same-domain" type="radio" name="origin-matcher" autocomplete="off">
+              <span>Same domain</span>
+            </label>
+            <label class="btn">
+              <input class="origin-matcher" value="third-party-domain" type="radio" name="origin-matcher"
+                     autocomplete="off">
+              <span>Third party domain</span>
+            </label>
           </div>
         </div>
       </div>
       <div class="row">
-        <label data-i18n="types"></label>
+        <label class="form-header" data-i18n="types"></label>
         <div class="btn-group-types">
           <label class="btn">
             <input class="more-types v-hidden" type="checkbox" autocomplete="off">
@@ -107,7 +126,7 @@
         </div>
       </div>
       <div class="row">
-        <label data-i18n="action"></label>
+        <label class="form-header" data-i18n="action"></label>
         <div>
           <label class="btn">
             <input class="action" value="filter" type="radio" name="action" autocomplete="off" required>
@@ -139,8 +158,7 @@
     <label data-i18n="redirect_to"></label>
   </div>
   <div>
-    <input type="text" class="redirectUrl card w-100" spellcheck="false" data-i18n-placeholder="redirect_url"
-           required="required"/>
+    <input type="text" class="redirectUrl card w-100" spellcheck="false" data-i18n-placeholder="redirect_url"/>
   </div>
   <div>
     <small>

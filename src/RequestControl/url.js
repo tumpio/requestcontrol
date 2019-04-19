@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-import {getDomain} from "/lib/tldts/tldts.es.js";
+import {getDomain} from "../../lib/tldts/tldts.es.js";
 
 export const libTld = {
     getDomain: function (url) {
