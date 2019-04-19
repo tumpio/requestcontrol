@@ -1,0 +1,79 @@
+.tags-input {
+    display: flex !important;
+    flex-wrap: wrap;
+    padding: 0 2px !important;
+    height: auto !important;
+    min-height: 30px;
+    cursor: text;
+    position: relative;
+}
+
+.tags-input .tags {
+    max-width: 100%;
+    display: inline-block;
+    word-break: break-all;
+    max-height: 20em;
+    overflow-y: auto;
+    margin: .1em 0;
+}
+
+.tags-input .tag {
+    background: #f8f9fa;
+    padding: 2px 2px 2px;
+    margin: 0 2px;
+    border: 1px solid #ced4da;
+    cursor: pointer;
+    white-space: nowrap;
+    line-height: 2.1;
+    color: #111;
+}
+
+.tags-input .tag[contenteditable] {
+    cursor: auto;
+    text-decoration-style: dashed;
+}
+
+.tags-input .selected {
+    background-color: #777;
+    border-color: #777;
+    color: #FFF;
+}
+
+.tags-input .editing {
+    background: #FFF;
+    color: black;
+}
+
+.tags-input .dupe {
+    background-color: #FCC;
+    border-color: #700;
+}
+
+.tags-input input {
+    flex: 1;
+    width: 100%;
+    display: inline-block !important;
+    padding: 3px;
+    margin: 0 !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    font: inherit !important;
+    font-size: 100% !important;
+    outline: none !important;
+    min-width: 4em;
+}
+
+.tags-input > input:first-child {
+    position: absolute;
+    height: 0;
+    width: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0;
+}
+
+.tags-input.error input {
+    color: #a94442;
+    text-decoration: underline;
+}

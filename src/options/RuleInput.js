@@ -4,7 +4,7 @@
 
 
 import {createMatchPatterns} from "/src/RequestControl/api.js";
-import {uuid} from "/lib/uuid.js";
+import {uuid} from "/src/options/lib/uuid.js";
 import {
     getSubPage,
     onToggleButtonChange,
@@ -12,9 +12,9 @@ import {
     setButtonDisabled,
     toggleDisabled,
     toggleHidden
-} from "/lib/UiHelpers.js";
-import {translateDocument} from "/lib/i18n.js";
-import {TagsInput} from "/lib/tags-input/src/tags-input.js";
+} from "/src/options/lib/UiHelpers.js";
+import {translateDocument} from "/src/options/lib/i18n.js";
+import {TagsInput} from "/src/options/lib/tags-input/src/tags-input.js";
 
 /**
  * Request Control Rule Input for rule creation.

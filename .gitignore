@@ -8,4 +8,4 @@ coverage.lcov
 *.min.css
 
 lib/tldts/*.js
-lib/lit/lit.css
+src/options/lib/lit/lit.css

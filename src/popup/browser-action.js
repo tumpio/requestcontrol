@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import {BLOCK_ACTION, FILTER_ACTION, NO_ACTION, REDIRECT_ACTION, WHITELIST_ACTION} from "/src/RequestControl/base.js";
-import {OptionsManager} from "/lib/OptionsManager.js";
+import {OptionsManager} from "/src/options/lib/OptionsManager.js";
 import {REQUEST_CONTROL_ICONS} from "/src/notifier.js";
 
 /**

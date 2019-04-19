@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import {uuid} from "/lib/uuid.js";
+import {uuid} from "/src/options/lib/uuid.js";
 
 function handleInstalled(details) {
     if (details.reason === "update") {

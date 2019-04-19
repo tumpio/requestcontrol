@@ -6,11 +6,11 @@
 import {RuleInputFactory} from "/src/options/RuleInput.js";
 import {testRules} from "/src/options/RuleTester.js";
 import {BLOCK_ACTION, FILTER_ACTION, REDIRECT_ACTION, WHITELIST_ACTION} from "/src/RequestControl/base.js";
-import {uuid} from "/lib/uuid.js";
-import {Toc} from "/lib/toc.js";
-import {OptionsManager} from "/lib/OptionsManager.js";
-import {getSubPage, toggleDisabled} from "/lib/UiHelpers.js";
-import {exportObject, importFile} from "/lib/ImportExport.js";
+import {uuid} from "/src/options/lib/uuid.js";
+import {Toc} from "/src/options/lib/toc.js";
+import {OptionsManager} from "/src/options/lib/OptionsManager.js";
+import {getSubPage, toggleDisabled} from "/src/options/lib/UiHelpers.js";
+import {exportObject, importFile} from "/src/options/lib/ImportExport.js";
 
 /**
  * Options page for Request Control rule management, settings and manual page.
