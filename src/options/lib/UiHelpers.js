@@ -73,6 +73,7 @@ export function changeTab(tab) {
     document.getElementById("pageTitle").textContent = document.title;
 
     if (tabInfo[1]) {
+        history.replaceState(tabInfo[1], tabInfo[1], "#" + tabInfo[1]);
         window.location.hash = tabInfo[1];
     }
 }

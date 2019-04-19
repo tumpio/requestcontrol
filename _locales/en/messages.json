@@ -86,10 +86,10 @@
     }
   },
   "rule_description_filter_url": {
-    "message": "Filter URL redirection"
+    "message": "Filter redirection requests"
   },
   "rule_description_filter_parameters": {
-    "message": "Trim URL query parameters"
+    "message": "Trim query parameters"
   },
   "rule_description_block": {
     "message": "Block requests before they are made."
@@ -324,16 +324,16 @@
     "message": "Use pattern capturing to redirect based on the original request."
   },
   "filter_url_redirection": {
-    "message": "Filter URL Redirection"
+    "message": "Filter URL Redirection Requests"
   },
   "trim_url_parameters": {
-    "message": "Trim URL Query Parameters"
+    "message": "Trim Query Parameters"
   },
   "trim_all": {
-    "message": "Trim all"
+    "message": "Remove all query parameters"
   },
   "invert_trim": {
-    "message": "Invert trim"
+    "message": "Invert parameter trimming"
   },
   "remove": {
     "message": "Remove"
@@ -511,16 +511,25 @@
   "log_whitelisted_requests": {
     "message": "Log whitelisted requests"
   },
-  "log": {
-    "message": "Log"
-  },
   "report_bug_request_feature": {
     "message": "Report bug/Request feature"
   },
   "skip_within_same_domain": {
-    "message": "Skip within same domain"
+    "message": "Exclude between same domain"
   },
   "extra_url_matchers": {
     "message": "Extra URL matchers"
+  },
+  "action_description_filter": {
+    "message": "Filter URL redirection and trim URL query parameters"
+  },
+  "action_description_redirect": {
+    "message": "Redirect requests to a new URL"
+  },
+  "action_description_block": {
+    "message": "Requests blocked before being made"
+  },
+  "action_description_whitelist": {
+    "message": "Requests whitelisted from other rules"
   }
 }

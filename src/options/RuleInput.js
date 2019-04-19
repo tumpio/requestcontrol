@@ -169,6 +169,7 @@ function RuleInput(rule) {
     for (let action of this.$$(".action")) {
         action.addEventListener("click", this.onChange.bind(this));
     }
+    this.$(".rule-input").appendChild(this.factory.getModel("action-" + this.rule.action));
 }
 
 RuleInput.prototype = {
@@ -606,7 +607,6 @@ BlockRuleInput.prototype.description = "rule_description_block";
 
 function WhitelistRuleInput(rule) {
     RuleInput.call(this, rule);
-    this.$(".rule-input").appendChild(this.factory.getModel("action-whitelist"));
     this.$(".log-whitelist-toggle").addEventListener("change", onToggleButtonChange);
 }
 
@@ -632,7 +632,6 @@ WhitelistRuleInput.prototype.updateRule = function () {
 function FilterRuleInput(rule) {
     RuleInput.call(this, rule);
 
-    this.$(".rule-input").appendChild(this.factory.getModel("action-filter"));
     this.paramsTagsInput = new TagsInput(this.$(".input-params"));
 
     this.$(".trim-all-params").addEventListener("change", this.toggleTrimAll.bind(this));
@@ -730,7 +729,6 @@ FilterRuleInput.prototype.updateRule = function () {
 
 function RedirectRuleInput(rule) {
     RuleInput.call(this, rule);
-    this.$(".rule-input").appendChild(this.factory.getModel("action-redirect"));
 }
 
 RedirectRuleInput.prototype = Object.create(RuleInput.prototype);

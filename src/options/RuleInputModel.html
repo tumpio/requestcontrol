@@ -150,12 +150,13 @@
           </label>
         </div>
       </div>
+      <hr/>
     </form>
   </li>
 </ul>
 <div id="action-redirect" class="row">
   <div>
-    <label data-i18n="redirect_to"></label>
+    <small data-i18n="action_description_redirect"></small>
   </div>
   <div>
     <input type="text" class="redirectUrl card w-100" spellcheck="false" data-i18n-placeholder="redirect_url"/>
@@ -163,16 +164,18 @@
   <div>
     <small>
       <span data-i18n="manual_text_redirect"></span>
-      <a href="#tab-manual#redirect-using-pattern-capturing" data-i18n="see_manual"></a>
+      <a href="#tab-manual#redirect_using_pattern_capturing" data-i18n="see_manual"></a>
     </small>
   </div>
 </div>
 <div id="action-filter" class="row">
-  <label data-i18n="filter_url_redirection"></label>
+  <div>
+    <small data-i18n="action_description_filter"></small>
+  </div>
   <div>
     <label class="btn">
       <input class="filter-toggle" type="checkbox" checked="checked"/>
-      <span data-i18n="filter"></span>
+      <span data-i18n="filter_url_redirection"></span>
     </label>
     <label class="btn">
       <input class="filter-skip-within-same-domain-toggle" type="checkbox"/>
@@ -180,7 +183,7 @@
     </label>
   </div>
   <div>
-    <label data-i18n="trim_url_parameters"></label>
+    <small data-i18n="trim_url_parameters"></small>
     <div class="row col-trim-parameters">
       <div class="col 3">
         <input type="text" class="input-params params" data-editable-tags="true" data-separator=" "
@@ -202,11 +205,18 @@
   </div>
 </div>
 <div id="action-whitelist" class="row">
-  <label data-i18n="log_whitelisted_requests"></label>
+  <div>
+    <small data-i18n="action_description_whitelist"></small>
+  </div>
   <div>
     <label class="btn">
       <input class="log-whitelist-toggle" type="checkbox"/>
-      <span data-i18n="log"></span>
+      <span data-i18n="log_whitelisted_requests"></span>
     </label>
+  </div>
+</div>
+<div id="action-block" class="row">
+  <div>
+    <small data-i18n="action_description_block"></small>
   </div>
 </div>
