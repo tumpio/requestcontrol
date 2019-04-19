@@ -3,13 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-import {getDomain} from "../../lib/tldts/tldts.es.js";
+import {getDomain} from "../../lib/tldts/tldts-experimental.esm.js";
 
 export const libTld = {
     getDomain: function (url) {
-        return getDomain(url, {
-            extractHostname: extractHostname
-        });
+        return getDomain(url);
     }
 };
 
