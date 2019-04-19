@@ -29,129 +29,135 @@
         </label>
       </div>
       <div class="rule-header-buttons 2 col">
-        <button type="button" class="btn btn-edit" data-i18n="edit"></button>
-        <button type="button" class="btn btn-activate" data-i18n="disable"></button>
+        <button class="btn btn-edit toggle-edit" data-i18n="edit"></button>
+        <button class="btn primary btn-done toggle-edit" data-i18n="done"></button>
+        <button class="btn btn-activate" data-i18n="disable"></button>
       </div>
     </div>
-    <form class="rule-input c d-none">
-      <div class="row">
-        <label class="form-header" data-i18n="pattern"></label>
-        <div class="form-group-pattern">
-          <div>
-            <small data-i18n="scheme"></small>
+    <div class="rule-input-area d-none">
+      <form class="rule-input c">
+        <div class="row">
+          <label class="form-header" data-i18n="pattern"></label>
+          <div class="form-group-pattern">
             <div>
-              <select class="scheme card">
-                <option value="http">http</option>
-                <option value="https">https</option>
-                <option value="*" selected>http/https</option>
-              </select>
+              <small data-i18n="scheme"></small>
+              <div>
+                <select class="scheme card">
+                  <option value="http">http</option>
+                  <option value="https">https</option>
+                  <option value="*" selected>http/https</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <small data-i18n="host"></small>
+              <input type="text" class="host" data-i18n-placeholder="host_placeholder" spellcheck="false"
+                     required="required"/>
+            </div>
+            <div class="form-group-tlds d-none">
+              <label class="btn-tlds collapse-button plus">
+                <span data-i18n="top_level_domains"></span>
+                <span class="badge badge-dark">0</span>
+              </label>
+              <div class="tlds-block d-none">
+                <input type="text" class="input-tlds tlds d-none" disabled="disabled" spellcheck="false"
+                       autocomplete="off" data-i18n-placeholder="tlds_placeholder" required="required"/>
+              </div>
+            </div>
+            <div>
+              <small data-i18n="path"></small>
+              <input type="text" class="path" data-i18n-placeholder="path_placeholder" spellcheck="false"/>
             </div>
           </div>
           <div>
-            <small data-i18n="host"></small>
-            <input type="text" class="host" data-i18n-placeholder="host_placeholder" spellcheck="false"
-                   required="required"/>
-          </div>
-          <div class="form-group-tlds d-none">
-            <label class="btn-tlds collapse-button plus">
-              <span data-i18n="top_level_domains"></span>
-              <span class="badge badge-dark">0</span>
+            <label class="btn">
+              <input class="any-url" type="checkbox" autocomplete="off">
+              <span data-i18n="any_url"></span>
             </label>
-            <div class="tlds-block d-none">
-              <input type="text" class="input-tlds tlds d-none" disabled="disabled" spellcheck="false"
-                     autocomplete="off" data-i18n-placeholder="tlds_placeholder" required="required"/>
+          </div>
+        </div>
+        <div class="row">
+          <label class="collapse-url-matchers collapse-button plus" data-i18n="extra_url_matchers"></label>
+          <div class="group-url-matchers d-none">
+            <small data-i18n="includes"></small>
+            <input type="text" class="input-includes" spellcheck="false" autocomplete="off"
+                   data-i18n-placeholder="includes_placeholder"/>
+            <small data-i18n="excludes"></small>
+            <input type="text" class="input-excludes" spellcheck="false" autocomplete="off"
+                   data-i18n-placeholder="excludes_placeholder"/>
+            <small>Match by origin</small>
+            <div>
+              <label class="btn">
+                <input class="origin-matcher" type="radio" name="origin-matcher" autocomplete="off" checked>
+                <span>Any</span>
+              </label>
+              <label class="btn">
+                <input class="origin-matcher" value="same-origin" type="radio" name="origin-matcher" autocomplete="off">
+                <span>Same origin</span>
+              </label>
+              <label class="btn">
+                <input class="origin-matcher" value="third-party-origin" type="radio" name="origin-matcher"
+                       autocomplete="off">
+                <span>Third party origin</span>
+              </label>
+              <label class="btn">
+                <input class="origin-matcher" value="same-domain" type="radio" name="origin-matcher" autocomplete="off">
+                <span>Same domain</span>
+              </label>
+              <label class="btn">
+                <input class="origin-matcher" value="third-party-domain" type="radio" name="origin-matcher"
+                       autocomplete="off">
+                <span>Third party domain</span>
+              </label>
             </div>
           </div>
-          <div>
-            <small data-i18n="path"></small>
-            <input type="text" class="path" data-i18n-placeholder="path_placeholder" spellcheck="false"/>
+        </div>
+        <div class="row">
+          <label class="form-header" data-i18n="types"></label>
+          <div class="btn-group-types">
+            <label class="btn">
+              <input class="more-types v-hidden" type="checkbox" autocomplete="off">
+              <span class="text" data-i18n="show_more_true"></span>
+            </label>
           </div>
-        </div>
-        <div>
-          <label class="btn">
-            <input class="any-url" type="checkbox" autocomplete="off">
-            <span data-i18n="any_url"></span>
-          </label>
-        </div>
-      </div>
-      <div class="row">
-        <label class="collapse-url-matchers collapse-button plus" data-i18n="extra_url_matchers"></label>
-        <div class="group-url-matchers d-none">
-          <small data-i18n="includes"></small>
-          <input type="text" class="input-includes" spellcheck="false" autocomplete="off"
-                 data-i18n-placeholder="includes_placeholder"/>
-          <small data-i18n="excludes"></small>
-          <input type="text" class="input-excludes" spellcheck="false" autocomplete="off"
-                 data-i18n-placeholder="excludes_placeholder"/>
-          <small>Match by origin</small>
           <div>
             <label class="btn">
-              <input class="origin-matcher" type="radio" name="origin-matcher" autocomplete="off" checked>
-              <span>Any</span>
-            </label>
-            <label class="btn">
-              <input class="origin-matcher" value="same-origin" type="radio" name="origin-matcher" autocomplete="off">
-              <span>Same origin</span>
-            </label>
-            <label class="btn">
-              <input class="origin-matcher" value="third-party-origin" type="radio" name="origin-matcher"
-                     autocomplete="off">
-              <span>Third party origin</span>
-            </label>
-            <label class="btn">
-              <input class="origin-matcher" value="same-domain" type="radio" name="origin-matcher" autocomplete="off">
-              <span>Same domain</span>
-            </label>
-            <label class="btn">
-              <input class="origin-matcher" value="third-party-domain" type="radio" name="origin-matcher"
-                     autocomplete="off">
-              <span>Third party domain</span>
+              <input class="any-type" type="checkbox" autocomplete="off">
+              <span data-i18n="any_type"></span>
             </label>
           </div>
         </div>
-      </div>
+        <div class="row">
+          <label class="form-header" data-i18n="action"></label>
+          <div>
+            <label class="btn">
+              <input class="action" value="filter" type="radio" name="action" autocomplete="off" required>
+              <img class="icon" src="/icons/icon-filter@19.png" height="19">
+              <span data-i18n="filter"></span>
+            </label>
+            <label class="btn">
+              <input class="action" value="redirect" type="radio" name="action" autocomplete="off">
+              <img class="icon" src="/icons/icon-redirect@19.png" height="19">
+              <span data-i18n="redirect"></span>
+            </label>
+            <label class="btn">
+              <input class="action" value="block" type="radio" name="action" autocomplete="off">
+              <img class="icon" src="/icons/icon-block@19.png" height="19">
+              <span data-i18n="block"></span>
+            </label>
+            <label class="btn">
+              <input class="action" value="whitelist" type="radio" name="action" autocomplete="off">
+              <img class="icon" src="/icons/icon-whitelist@19.png" height="19">
+              <span data-i18n="whitelist"></span>
+            </label>
+          </div>
+        </div>
+        <hr/>
+      </form>
       <div class="row">
-        <label class="form-header" data-i18n="types"></label>
-        <div class="btn-group-types">
-          <label class="btn">
-            <input class="more-types v-hidden" type="checkbox" autocomplete="off">
-            <span class="text" data-i18n="show_more_true"></span>
-          </label>
-        </div>
-        <div>
-          <label class="btn">
-            <input class="any-type" type="checkbox" autocomplete="off">
-            <span data-i18n="any_type"></span>
-          </label>
-        </div>
+        <button class="btn primary btn-done toggle-edit" data-i18n="done"></button>
       </div>
-      <div class="row">
-        <label class="form-header" data-i18n="action"></label>
-        <div>
-          <label class="btn">
-            <input class="action" value="filter" type="radio" name="action" autocomplete="off" required>
-            <img class="icon" src="/icons/icon-filter@19.png" height="19">
-            <span data-i18n="filter"></span>
-          </label>
-          <label class="btn">
-            <input class="action" value="redirect" type="radio" name="action" autocomplete="off">
-            <img class="icon" src="/icons/icon-redirect@19.png" height="19">
-            <span data-i18n="redirect"></span>
-          </label>
-          <label class="btn">
-            <input class="action" value="block" type="radio" name="action" autocomplete="off">
-            <img class="icon" src="/icons/icon-block@19.png" height="19">
-            <span data-i18n="block"></span>
-          </label>
-          <label class="btn">
-            <input class="action" value="whitelist" type="radio" name="action" autocomplete="off">
-            <img class="icon" src="/icons/icon-whitelist@19.png" height="19">
-            <span data-i18n="whitelist"></span>
-          </label>
-        </div>
-      </div>
-      <hr/>
-    </form>
+    </div>
   </li>
 </ul>
 <div id="action-redirect" class="row">

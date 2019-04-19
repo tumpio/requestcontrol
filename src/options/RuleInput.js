@@ -148,7 +148,6 @@ function RuleInput(rule) {
     this.$(".tag").addEventListener("blur", this.onSetTag.bind(this));
     this.$(".add-tag").addEventListener("click", this.onAddTag.bind(this));
     this.$(".select").addEventListener("change", this.onSelect.bind(this));
-    this.$(".btn-edit").addEventListener("click", this.toggleEdit.bind(this));
     this.$(".btn-activate").addEventListener("click", this.toggleActive.bind(this));
 
     this.$(".host").addEventListener("change", this.validateTLDPattern.bind(this));
@@ -169,7 +168,12 @@ function RuleInput(rule) {
     for (let action of this.$$(".action")) {
         action.addEventListener("click", this.onChange.bind(this));
     }
-    this.$(".rule-input").appendChild(this.factory.getModel("action-" + this.rule.action));
+    for (let edit of this.$$(".toggle-edit")) {
+        edit.addEventListener("click", this.toggleEdit.bind(this));
+    }
+    if (this.rule.action) {
+        this.$(".rule-input").appendChild(this.factory.getModel("action-" + this.rule.action));
+    }
 }
 
 RuleInput.prototype = {
@@ -243,7 +247,7 @@ RuleInput.prototype = {
     },
 
     toggleEdit: function () {
-        toggleHidden(this.$(".rule-input"));
+        toggleHidden(this.$(".rule-input-area"));
         if (this.model.classList.toggle("editing")) {
             this.$(".title").setAttribute("contenteditable", true);
             this.$(".description").setAttribute("contenteditable", true);

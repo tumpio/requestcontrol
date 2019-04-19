@@ -64,6 +64,7 @@ code {
 .btn.primary {
     background: #3d7e9a;
     border-color: #3d7e9a;
+    font-weight: bold;
 }
 
 .btn * + * {
@@ -165,6 +166,7 @@ form .row {
     font-weight: bold;
     display: flex;
     align-items: center;
+    border-bottom: 1px solid #cfcfcf;
 }
 
 .header-rules > * {
@@ -240,6 +242,10 @@ form .row {
     line-height: 1.5;
 }
 
+.rule:first-child > .rule-header {
+    border-top: none;
+}
+
 .rule-header > .information {
     text-align: right;
     vertical-align: middle;
@@ -272,6 +278,14 @@ form .row {
 .editing .rule-header > div:first-child > div {
     max-height: 10em;
     overflow-y: auto;
+}
+
+.rule:not(.editing) .btn-done {
+    display: none;
+}
+
+.rule.editing .btn-edit {
+    display: none;
 }
 
 .header-rules,
@@ -327,6 +341,10 @@ form .row {
 .rule-header .description[contenteditable]:focus,
 .rule-header .tag[contenteditable]:focus {
     color: #666;
+}
+
+.col-trim-parameters > .col {
+    vertical-align: middle;
 }
 
 .more-types {

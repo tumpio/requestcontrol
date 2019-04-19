@@ -226,6 +226,9 @@
   "edit": {
     "message": "Edit"
   },
+  "done": {
+    "message": "Done"
+  },
   "edit_rule": {
     "message": "Edit rule"
   },
@@ -324,7 +327,7 @@
     "message": "Use pattern capturing to redirect based on the original request."
   },
   "filter_url_redirection": {
-    "message": "Filter URL Redirection Requests"
+    "message": "Filter URL Redirection"
   },
   "trim_url_parameters": {
     "message": "Trim Query Parameters"
@@ -527,9 +530,9 @@
     "message": "Redirect requests to a new URL"
   },
   "action_description_block": {
-    "message": "Requests blocked before being made"
+    "message": "Requests will be blocked before being made"
   },
   "action_description_whitelist": {
-    "message": "Requests whitelisted from other rules"
+    "message": "Requests will be whitelisted from other rules"
   }
 }
