@@ -5,9 +5,17 @@
 
 import {getDomain} from "../../lib/tldts/tldts-experimental.esm.js";
 
+const tldtsOptions = {
+    extractHostname: false
+};
+
 export const libTld = {
     getDomain: function (url) {
-        return getDomain(url);
+        let hostname = extractHostname(url);
+        if (isIp(hostname)) {
+            return null;
+        }
+        return getDomain(hostname, tldtsOptions);
     }
 };
 
@@ -120,8 +128,7 @@ export class UrlParser {
         let [start, end] = getPathStartEnd(this.url);
         if (start === end) {
             return "/";
-        }
-        else {
+        } else {
             return this.url.slice(start, end);
         }
     }
@@ -472,4 +479,34 @@ export function parseInlineUrl(url) {
     }
 
     return inlineUrl;
+}
+
+function isProbablyIpv4(hostname) {
+    let numberOfDots = 0;
+    if (hostname.length < 7
+        || !isDigitCode(hostname.charCodeAt(0))
+        || !isDigitCode(hostname.charCodeAt(hostname.length - 1))) {
+        return false;
+    }
+    for (let i = 1; i < hostname.length - 1; i += 1) {
+        let code = hostname.charCodeAt(i);
+        if (code === 46) {
+            numberOfDots += 1;
+        } else if (!isDigitCode(code)) {
+            return false;
+        }
+    }
+    return numberOfDots === 3;
+}
+
+function isDigitCode(c) {
+    return c >= 48 && c <= 57;
+}
+
+function isProbablyIpv6(hostname) {
+    return hostname.startsWith("[");
+}
+
+function isIp(hostname) {
+    return isProbablyIpv6(hostname) || isProbablyIpv4(hostname);
 }
