@@ -534,5 +534,23 @@
   },
   "action_description_whitelist": {
     "message": "Requests will be whitelisted from other rules"
+  },
+  "match_by_origin": {
+    "message": "Match by origin"
+  },
+  "any": {
+    "message": "Any"
+  },
+  "same_domain": {
+    "message": "Same domain"
+  },
+  "same_origin": {
+    "message": "Same origin"
+  },
+  "third_party_origin": {
+    "message": "Third party origin"
+  },
+  "third_party_domain": {
+    "message": "Third party domain"
   }
 }

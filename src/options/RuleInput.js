@@ -549,6 +549,10 @@ RuleInput.prototype = {
             this.excludesTagsInput.setValue(this.rule.pattern.excludes);
         }
 
+        if (this.rule.pattern.origin) {
+            setButtonChecked(this.$(".origin-matcher[value=" + this.rule.pattern.origin + "]"), true);
+        }
+
         if (!this.rule.types || this.rule.types.length === 0) {
             this.setAnyType(true);
         } else {
@@ -580,6 +584,7 @@ RuleInput.prototype = {
         }
         let includes = this.includesTagsInput.getValue();
         let excludes = this.excludesTagsInput.getValue();
+        let origin = this.$(".origin-matcher:checked");
         if (includes.length > 0) {
             this.rule.pattern.includes = includes;
         } else {
@@ -589,6 +594,11 @@ RuleInput.prototype = {
             this.rule.pattern.excludes = excludes;
         } else {
             delete this.rule.pattern.excludes;
+        }
+        if (origin && origin.value !== "any") {
+            this.rule.pattern.origin = origin.value;
+        } else {
+            delete this.rule.pattern.origin;
         }
 
         this.rule.types = Array.from(this.$$(".type:checked"), type => type.value);

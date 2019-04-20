@@ -29,21 +29,21 @@ export function createRule(data) {
     let requestMatcher = createRequestMatcher(data);
 
     switch (data.action) {
-    case "whitelist":
-        if (data.log) {
-            return new LoggedWhitelistRule(data.uuid, requestMatcher);
-        } else {
-            return new WhitelistRule(data.uuid, requestMatcher);
-        }
-    case "block":
-        return new BlockRule(data.uuid, requestMatcher);
-    case "redirect":
-        return new RedirectRule(data.uuid, data.redirectUrl, requestMatcher);
-    case "filter":
-        return new FilterRule(data.uuid, data.paramsFilter, data.trimAllParams,
-            data.skipRedirectionFilter, data.skipOnSameDomain, requestMatcher);
-    default:
-        throw new Error("Unsupported rule action");
+        case "whitelist":
+            if (data.log) {
+                return new LoggedWhitelistRule(data.uuid, requestMatcher);
+            } else {
+                return new WhitelistRule(data.uuid, requestMatcher);
+            }
+        case "block":
+            return new BlockRule(data.uuid, requestMatcher);
+        case "redirect":
+            return new RedirectRule(data.uuid, data.redirectUrl, requestMatcher);
+        case "filter":
+            return new FilterRule(data.uuid, data.paramsFilter, data.trimAllParams,
+                data.skipRedirectionFilter, data.skipOnSameDomain, requestMatcher);
+        default:
+            throw new Error("Unsupported rule action");
     }
 }
 

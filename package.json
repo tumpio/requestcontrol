@@ -13,7 +13,7 @@
     "test": "nyc ava -v",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "coverage-html": "nyc report --reporter=html",
-    "lint": "eslint src/ test/ lib/ --ignore-pattern lib/tldts/*.js",
+    "lint": "eslint src/ test/ --ignore-pattern lib/tldts/*.js",
     "lint-build": "npm run lint && addons-linter .releases/request_control-$(node -p \"require('./manifest.json').version\").zip",
     "build-tldts": "cp -v node_modules/tldts/dist/tldts-experimental.esm.js lib/tldts/",
     "build-lit": "cp -v node_modules/@ajusa/lit/src/lit.css src/options/lib/lit/",
@@ -89,7 +89,10 @@
     "rules": {
       "indent": [
         "warn",
-        4
+        4,
+        {
+          "SwitchCase": 1
+        }
       ],
       "quotes": [
         "warn",

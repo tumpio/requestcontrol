@@ -13,7 +13,7 @@ export const libTld = {
     getDomain: function (url) {
         let hostname = extractHostname(url);
         if (isIp(hostname)) {
-            return null;
+            return hostname;
         }
         return getDomain(hostname, tldtsOptions);
     }
