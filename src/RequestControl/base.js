@@ -19,13 +19,6 @@ export class BaseMatchExtender {
     }
 }
 
-export class InvalidUrlException {
-    constructor(target) {
-        this.target = target;
-        this.name = "error_invalid_url";
-    }
-}
-
 export const NO_ACTION = 0;
 export const WHITELIST_ACTION = 1 << 1;
 export const BLOCK_ACTION = 1 << 2;
