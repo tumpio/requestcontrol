@@ -36,6 +36,7 @@ function setRecords(records) {
             showDetails(records[i]);
         });
     }
+    recordsList.querySelector(".entry:first-child .entry-header").click();
 
     document.getElementById("records").classList.remove("hidden");
 }
@@ -101,8 +102,13 @@ function showDetails(details) {
     } else {
         document.getElementById("targetBlock").classList.add("hidden");
     }
-    document.getElementById("editLink").href = browser.runtime.getURL("src/options/options.html")
-        + "?edit=" + details.rules.join("&edit=");
+    document.getElementById("editLink").addEventListener("click", function () {
+        browser.tabs.create({
+            url: browser.runtime.getURL("src/options/options.html")
+                + "?edit=" + details.rules.join("&edit=")
+        });
+        window.close();
+    });
 }
 
 function copyText(e) {

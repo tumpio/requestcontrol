@@ -2,17 +2,32 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+html, body {
+    height: 100%;
+}
+
 body {
     margin: 0;
     font-family: "Open Sans", sans-serif;
     font-size: .8em;
-    border: 1px solid #b8b8b8;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
 }
 
 .header {
     display: flex;
-    align-self: end;
-    border-bottom: 1px solid #b8b8b8;
+    border-top: 1px solid #cdcdcd;
+    flex-shrink: 0;
+}
+
+#records {
+    padding: 0 .3em;
+    flex-grow: 1;
+    overflow-y: auto;
 }
 
 .header > .btn {
@@ -96,11 +111,6 @@ pre {
 
 .action {
     font-weight: bold;
-}
-
-#records {
-    overflow-y: auto;
-    padding: 0 .3em;
 }
 
 .models,
