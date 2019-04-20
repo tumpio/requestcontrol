@@ -85,6 +85,13 @@ export function setTabFromHash() {
     }
 }
 
+function closeOpenModal() {
+    let modal = document.querySelector(".modal.show");
+    if (modal) {
+        modal.classList.remove("show");
+    }
+}
+
 window.addEventListener("hashchange", setTabFromHash);
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -100,11 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     for (let close of document.querySelectorAll(".modal .close")) {
-        close.addEventListener("click", function () {
-            document.querySelector(".modal.show").classList.remove("show");
-            document.body.removeChild(document.querySelector(".modal-backdrop"));
-            document.body.classList.remove("modal-open");
-        });
+        close.addEventListener("click", closeOpenModal);
     }
     for (let button of document.querySelectorAll(".collapse-button")) {
         button.addEventListener("click", function (e) {
@@ -114,5 +117,9 @@ document.addEventListener("DOMContentLoaded", function () {
             e.stopPropagation();
         });
     }
-
+    window.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeOpenModal();
+        }
+    }, true);
 });
