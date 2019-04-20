@@ -761,5 +761,5 @@ RedirectRuleInput.prototype.updateRule = function () {
 };
 
 RedirectRuleInput.prototype.getDescription = function () {
-    return browser.i18n.getMessage(this.description, this.rule.redirectUrl);
+    return browser.i18n.getMessage(this.description, encodeURIComponent(this.rule.redirectUrl));
 };
