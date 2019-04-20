@@ -196,8 +196,12 @@ function onRuleTest() {
         } catch (e) {
             result.textContent = browser.i18n.getMessage("invalid_target_url") + request.redirectUrl;
         }
-    } else if (!resolve && request.action & ~WHITELIST_ACTION) {
-        result.textContent = browser.i18n.getMessage("matched_no_change");
+    } else if (!resolve) {
+        if (request.action & ~WHITELIST_ACTION) {
+            result.textContent = browser.i18n.getMessage("matched_no_change");
+        } else {
+            result.textContent = browser.i18n.getMessage("whitelisted");
+        }
     }
 }
 
