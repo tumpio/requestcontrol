@@ -2,13 +2,13 @@
 
 == Request Control Rule ==
 
-Request Control Rule consists of a [[#pattern|Pattern]], [[#types|Types]] and [[#action|Action]].
+Request Control Rule consists of [[#pattern|Pattern]], [[#types|Types]] and [[#action|Action]].
 
 Requests that match a pattern and types of an active rule will be intercepted taking the action of the rule.
 
 === Pattern ===
 
-Pattern filters matched requests by [[#scheme|Scheme]], [[#host|Host]], [[#path|Path]] and optional [[#includes-and-excludes|Includes and Excludes]] patterns.
+Pattern filters matched requests by [[#scheme|Scheme]], [[#host|Host]] and [[#path|Path]].
 
 ==== Scheme ====
 
@@ -27,7 +27,7 @@ Supported schemes are <code>http</code> and <code>https</code>.
 
 ==== Host ====
 
-Host may match a request URL's host in the following ways:
+Host pattern may match the host of the request URL in following ways:
 
 {|
 | <code>www.example.com</code>
@@ -49,9 +49,9 @@ Host may match a request URL's host in the following ways:
 
 ==== Path ====
 
-Path may subsequently contain any combination of &quot;*&quot; wildcard and any of the characters that are allowed in URL path. The &quot;*&quot; wildcard matches any portion of path and it may appear more than once.
+Path pattern may subsequently contain any combination of &quot;*&quot; wildcard and any of the characters that are allowed in URL path. The &quot;*&quot; wildcard matches any portion of path and it may appear more than once.
 
-Below is examples for using path in patterns.
+Below is examples of using path patterns.
 
 {|
 | <code>*</code>
@@ -67,31 +67,9 @@ Below is examples for using path in patterns.
 | Match an empty path.
 |}
 
-==== Includes and Excludes ====
-
-A list of patterns that request URL must or must not contain. Include and exclude pattern can be defined as a string with support for wildcards &quot;?&quot; and &quot;*&quot; (where &quot;?&quot; matches any single character and &quot;*&quot; matches zero or more characters), or as a regular expression pattern <code>/regexp/</code>.
-
-Include and exclude pattern matching is case insensitive as opposed to [[#host|Host]] and [[#path|Path]] which are case sensitive.
-
-Below is examples of using includes and excludes patterns:
-
-{|
-| <code>login</code>
-| Match urls containing &quot;login&quot;.
-|-
-| <code>log?n</code>
-| Matches for example urls containing &quot;login&quot; and &quot;logon&quot;.
-|-
-| <code>a*b</code>
-| Match urls where &quot;a&quot; is followed by &quot;b&quot;
-|-
-| <code>/[?&amp;]a=\d+(&amp;|$)/</code>
-| Match urls containing parameter &quot;a&quot; with digits as value.
-|}
-
 === Types ===
 
-A type indicates the requested resource. Rule can apply from one to many types, or any type. All the possible types are listed below.
+A type indicates the requested resource. Rule can apply to single or multiple types. All supported types are listed below.
 
 {|
 ! Type
@@ -169,6 +147,53 @@ A type indicates the requested resource. Rule can apply from one to many types, 
 ; [[File:/icons/icon-whitelist@19.png|image7]] Whitelist
 : Whitelist and optionally log requests.
 
+== Extra URL Matchers ==
+
+Following matchers extends the matching capabilities of [https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/RequestFilter WebRequest API].
+
+=== Includes and Excludes ===
+
+A list of patterns that request URL must or must not contain. Include and exclude pattern can be defined as a string with support for wildcards &quot;?&quot; and &quot;*&quot; (where &quot;?&quot; matches any single character and &quot;*&quot; matches zero or more characters), or as a regular expression pattern <code>/regexp/</code>.
+
+Include and exclude pattern matching is case insensitive as opposed to [[#host|Host]] and [[#path|Path]] which are case sensitive.
+
+Below is examples of using include and exclude patterns:
+
+{|
+| <code>login</code>
+| Match urls containing &quot;login&quot;.
+|-
+| <code>log?n</code>
+| Matches for example urls containing &quot;login&quot; and &quot;logon&quot;.
+|-
+| <code>a*b</code>
+| Match urls where &quot;a&quot; is followed by &quot;b&quot;
+|-
+| <code>/[?&amp;]a=\d+(&amp;|$)/</code>
+| Match urls containing parameter &quot;a&quot; with digits as value.
+|}
+
+=== Match by origin ===
+
+Filter matched requests by origin of request.
+
+{|
+| Any
+| Match requests with any origin
+|-
+| Same domain
+| Match requests on same domain
+|-
+| Same origin
+| Match requests on same origin. Adheres to the [https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy| Same-origin policy].
+|-
+| Third party domain
+| Match requests to third party domain
+|-
+| Third party origin
+| Match requests to third party origin
+|}
+
 == Rule priorities ==
 
 # Whitelist rule
@@ -176,17 +201,13 @@ A type indicates the requested resource. Rule can apply from one to many types, 
 # Redirect rule
 # Filter rule
 
-Whitelist rules have the highest priority and they revoke all other rules. Next come block rules and they revoke redirect and filter rules. Finally redirect rules will be applied before filter rules. If more than one redirect or filter rule matches a single request they will all be applied one by one.
-
-== Matching all URLs ==
-
-The request pattern can be set to a global pattern that matches all URLs under the supported schemes (&quot;http&quot; or &quot;https&quot;) by checking the Any URL button.
+Whitelist rules have the highest priority and they revoke all other rules. Block rules are applied second and they revoke redirect and filter rules. Finally redirect rules will be applied before filter rules. If more than one redirect or filter rule matches same request, each of them will be applied one after another.
 
 == Trimming URL parameters ==
 
-Filter rule supports URL query parameter trimming. URL query parameters are commonly used in redirection tracking as a method to analyze the origin of traffic. Trimmed URL parameters are defined either as literal strings with support for &quot;*&quot; and &quot;?&quot; wildcards or using regular expression patterns.
+Filter rule supports URL query parameter trimming. Trimmed URL parameters are defined either as literal strings with support for &quot;*&quot; and &quot;?&quot; wildcards or using regular expression.
 
-Below is examples of parameter trimming patterns.
+Below is examples of using parameter trimming patterns.
 
 {|
 | <code>utm_source</code>
@@ -205,7 +226,7 @@ Keeps only parameters that are defined in trimmed parameters list. All other par
 
 === Trim All Option ===
 
-Remove all URL query parameters from filtered request.
+Removes all URL query parameters from matched request.
 
 == Redirect using pattern capturing ==
 
@@ -249,7 +270,7 @@ Replace a matched substring in the extracted parameter. The pattern is written i
 <pre>{parameter:offset:length}</pre>
 Extract a part of the expanded parameter. Offset determines the starting position. It begins from 0 and can be a negative value counting from the end of the string.
 
-==== Decoding and encoding extracted patterns ====
+==== Decoding and encoding ====
 
 <pre>{parameter|encodingRule}</pre>
 Decode or encode captured pattern.

@@ -418,6 +418,7 @@ input:not(:checked) + .icon {
 .toc {
     top: 0;
     float: right;
+    max-width: 18em;
 }
 
 .toc ul {
@@ -428,7 +429,7 @@ input:not(:checked) + .icon {
     line-height: 1.5;
     margin-bottom: 0.5em;
     list-style: none;
-    padding-left: 2em;
+    padding-left: 1em;
 }
 
 .toc .collapse {
