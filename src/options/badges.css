@@ -10,18 +10,18 @@
 
 .badge-info {
     color: #fff;
-    background-color: #a4a4a4;
+    background-color: #3b67a0;
 }
 
 .badge:not(:empty):not(.d-none) {
     display: inline-block;
     padding: .25em .5em;
-    font-size: 75%;
+    font-size: .7rem;
     font-weight: 700;
     line-height: 1;
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
-    border-radius: .25rem;
+    border-radius: .15rem;
     max-width: 100%;
 }

@@ -38,7 +38,7 @@ function createRuleInputs(rules, className) {
             input.model.classList.add(className);
         }
     }
-    toggleRuleHeaders(true);
+    toggleRuleBlocks(true);
 }
 
 function getSelectedRuleInputs() {
@@ -62,7 +62,7 @@ function addLocalisedManual(manual) {
         let backTop = document.createElement("li");
         let backTopLink = document.createElement("a");
         backTopLink.textContent = browser.i18n.getMessage("back_to_top");
-        backTopLink.href = "#pageTitle";
+        backTopLink.href = "#tabs";
         backTop.appendChild(backTopLink);
         toc.appendChild(backTop);
         contents.appendChild(toc);
@@ -205,11 +205,11 @@ function onRuleTest() {
     }
 }
 
-function toggleRuleHeaders() {
-    let headers = document.querySelectorAll(".header-rules");
-    for (let header of headers) {
-        let rulesList = header.nextElementSibling;
-        header.classList.toggle("d-none", rulesList.childElementCount <= 0);
+function toggleRuleBlocks() {
+    let blocks = document.querySelectorAll(".rules-block");
+    for (let block of blocks) {
+        let rulesList = block.querySelector(".rule-list");
+        block.classList.toggle("d-none", rulesList.childElementCount <= 0);
     }
 }
 
@@ -318,7 +318,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ruleInput.toggleEdit();
         ruleInput.$(".host").focus();
         ruleInput.model.scrollIntoView();
-        toggleRuleHeaders();
+        toggleRuleBlocks();
     });
 
     document.getElementById("reset").addEventListener("click", loadDefaultRules);
@@ -346,7 +346,7 @@ document.addEventListener("DOMContentLoaded", function () {
             input.remove();
         }
         toggleDisabled(true, ...document.querySelectorAll(".btn-select-action"));
-        toggleRuleHeaders();
+        toggleRuleBlocks();
         updateTotalSelected();
 
         for (let selectAll of document.querySelectorAll(".select-all-rules")) {

@@ -12,7 +12,6 @@
   <title data-i18n="options_title"></title></head>
 <body>
 <div class="c">
-  <h1 id="pageTitle" class="page-header" data-i18n="options_title"></h1>
   <div id="tabs" class="row">
     <div class="col">
       <a href="#tab-rules" data-tab="rules" class="tab-selector active" data-tab-title="options_title">
@@ -40,8 +39,8 @@
     </div>
   </div>
   <div id="rulesTab" class="tab-pane active">
-    <div>
-      <div class="header-rules d-none">
+    <div class="rules-block d-none">
+      <div class="header-rules">
         <input type="checkbox" class="select-all-rules" autocomplete="off">
         <img src="/icons/icon-filter@19.png" alt="" height="19">
         <span data-i18n="filter_rules"></span>
@@ -50,8 +49,8 @@
       </div>
       <ul id="filter" class="rule-list"></ul>
     </div>
-    <div>
-      <div class="header-rules d-none">
+    <div class="rules-block d-none">
+      <div class="header-rules">
         <input type="checkbox" class="select-all-rules" autocomplete="off">
         <img src="/icons/icon-redirect@19.png" alt="" height="19">
         <span data-i18n="redirect_rules"></span>
@@ -60,8 +59,8 @@
       </div>
       <ul id="redirect" class="rule-list"></ul>
     </div>
-    <div>
-      <div class="header-rules d-none">
+    <div class="rules-block d-none">
+      <div class="header-rules">
         <input type="checkbox" class="select-all-rules" autocomplete="off">
         <img src="/icons/icon-block@19.png" alt="" height="19">
         <span data-i18n="block_rules"></span>
@@ -70,8 +69,8 @@
       </div>
       <ul id="block" class="rule-list"></ul>
     </div>
-    <div>
-      <div class="header-rules d-none">
+    <div class="rules-block d-none">
+      <div class="header-rules">
         <input type="checkbox" class="select-all-rules" autocomplete="off">
         <img src="/icons/icon-whitelist@19.png" alt="" height="19">
         <span data-i18n="whitelist_rules"></span>
@@ -80,8 +79,8 @@
       </div>
       <ul id="whitelist" class="rule-list"></ul>
     </div>
-    <div>
-      <div class="header-rules d-none">
+    <div class="rules-block d-none">
+      <div class="header-rules">
         <input type="checkbox" class="select-all-rules" autocomplete="off">
         <span data-i18n="new_rules"></span>
         <small class="selected-rules-count d-none"></small>
@@ -144,6 +143,7 @@
   </div>
   <div id="aboutTab" class="tab-pane">
     <h4 id="version"></h4>
+    <hr/>
     <a href="https://addons.mozilla.org/addon/requestcontrol"><strong data-i18n="home_page"></strong>
     </a>
     <br/>
@@ -154,10 +154,12 @@
         data-i18n="contributors"></strong></a>
     <br/>
     <a href="https://github.com/tumpio/requestcontrol"><strong data-i18n="source_code"></strong></a>
+    <hr/>
     <h4>
       <a href="https://github.com/tumpio/requestcontrol/issues/new"><strong
           data-i18n="report_bug_request_feature"></strong></a>
     </h4>
+    <hr/>
     <h4 data-i18n="license"></h4>
     <pre class="license-clause"><code><span data-i18n="license_clause"></span> <a
         href="/LICENSE">LICENSE</a>.</code></pre>

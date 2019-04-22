@@ -515,7 +515,7 @@
     "message": "Log whitelisted requests"
   },
   "report_bug_request_feature": {
-    "message": "Report bug/Request feature"
+    "message": "Report a bug / Request a feature"
   },
   "skip_within_same_domain": {
     "message": "Exclude between same domain"

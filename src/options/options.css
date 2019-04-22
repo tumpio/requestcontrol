@@ -67,6 +67,11 @@ code {
     font-weight: bold;
 }
 
+.rule.disabled .btn-activate {
+    background: green;
+    border-color: green;
+}
+
 .btn * + * {
     margin: 0;
 }
@@ -120,10 +125,6 @@ form .row {
     visibility: hidden;
 }
 
-#pageTitle {
-    margin: 0;
-}
-
 #tabs {
     display: flex;
     align-items: center;
@@ -141,6 +142,7 @@ form .row {
 
 .tab-selector.active {
     color: #343a40;
+    border-bottom: 2px solid #343a40;
 }
 
 .tab-selector > img {
@@ -149,6 +151,12 @@ form .row {
 
 .tab-selector > span {
     margin: .5em auto;
+}
+
+.rules-block {
+    border: 1px solid #b1b1b1;
+    border-radius: .15rem;
+    margin-bottom: 1.3em;
 }
 
 .rule-list {
@@ -163,6 +171,7 @@ form .row {
 }
 
 .header-rules:not(.d-none) {
+    font-size: 0.9em;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -238,8 +247,12 @@ form .row {
 
 .rule-header {
     table-layout: fixed;
-    border-top: 1px solid #e1e1e1;
+    border-top: 1px solid #cfcfcf;
     line-height: 1.5;
+}
+
+.rule:not(.editing) > .rule-header:hover {
+    background: #f7f7f7;
 }
 
 .rule:first-child > .rule-header {
@@ -540,7 +553,6 @@ input:not(:checked) + .icon {
 }
 
 @media (max-width: 35em) {
-    #pageTitle,
     .select-all-rules,
     .rule-select,
     .tab-selector:not(.active) > span {

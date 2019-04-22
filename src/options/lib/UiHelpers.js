@@ -70,7 +70,6 @@ export function changeTab(tab) {
     document.getElementById(tabSelector.dataset.tab + "Tab").classList.add("active");
 
     document.title = browser.i18n.getMessage(tabSelector.dataset.tabTitle);
-    document.getElementById("pageTitle").textContent = document.title;
 
     if (tabInfo[1]) {
         history.replaceState(tabInfo[1], tabInfo[1], "#" + tabInfo[1]);
