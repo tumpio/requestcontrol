@@ -13,7 +13,7 @@
     "active": true
   },
   {
-    "name": "Stop Google search link tracking",
+    "title": "Stop Google search link tracking",
     "uuid": "60f46cfa-b906-4a2d-ab66-8f26dc35e97f",
     "description": "This filter rule prevents Google from obtaining the URL of clicked search link via URL redirection. The tracking request done in background is classified as a Sub Document type. This rule provides an example of using the top-level domains pattern.",
     "tag": "filter-google",
@@ -43,7 +43,7 @@
     "active": true
   },
   {
-    "name": "Skip outgoing page confirmation on DeviantArt",
+    "title": "Skip outgoing page confirmation on DeviantArt",
     "uuid": "bc145190-0b68-4ff4-84d3-321e131cd253",
     "tag": "filter-deviantArt",
     "pattern": {
@@ -58,7 +58,7 @@
     "active": true
   },
   {
-    "name": "Filter rule for Mozilla's outgoing link redirection service",
+    "title": "Filter rule for Mozilla's outgoing link redirection service",
     "uuid": "3c4d6fa0-e2fb-4079-b3f0-e453ebe289ae",
     "tag": "filter-mozilla",
     "pattern": {
@@ -73,17 +73,24 @@
     "active": true
   },
   {
+    "title": "Remove UTM query parameters",
     "uuid": "5276a290-b21a-4deb-a86e-aa54c3ff1bcc",
-    "description": "Example of a global rule to remove any UTM query parameters from all requests. Disabled by default.",
+    "description": "Remove UTM query parameters from requests. UTM query parameters are commonly used as a method to analyze the origin of traffic.",
     "tag": "filter-utm",
     "pattern": {
-      "allUrls": true
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*utm_*"
+      ]
     },
     "types": [
       "main_frame"
     ],
     "action": "filter",
-    "active": false,
+    "active": true,
     "skipRedirectionFilter": true,
     "paramsFilter": {
       "values": [
@@ -92,7 +99,7 @@
     }
   },
   {
-    "name": "Block Beacon requests",
+    "title": "Block Beacon and Ping requests",
     "uuid": "32db1f93-f99d-4c45-8485-e5c7beec5a69",
     "pattern": {
       "allUrls": true
@@ -100,9 +107,10 @@
     "action": "block",
     "active": true,
     "types": [
-      "beacon"
+      "beacon",
+      "ping"
     ],
     "tag": "block-beacon",
-    "description": "Block Beacon requests. The Beacon API is often used for logging user activity and sending analytics data to the server."
+    "description": "Block Beacon and Ping requests. The Beacon API is often used for logging user activity and sending analytics data to the server."
   }
 ]
