@@ -218,6 +218,8 @@ function updateTotalSelected() {
     for (let totalText of document.querySelectorAll(".total-selected-count")) {
         totalText.textContent = total.length.toString();
     }
+    toggleDisabled(document.querySelectorAll(".rule.selected").length === 0,
+        ...document.querySelectorAll(".btn-select-action"));
 }
 
 function updateSelectedText(header, selected, total) {
@@ -345,9 +347,6 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let input of getSelectedRuleInputs()) {
             input.remove();
         }
-        toggleDisabled(true, ...document.querySelectorAll(".btn-select-action"));
-        toggleRuleBlocks();
-        updateTotalSelected();
 
         for (let selectAll of document.querySelectorAll(".select-all-rules")) {
             selectAll.checked = false;
@@ -357,6 +356,8 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let selectedText of document.querySelectorAll(".selected-rules-count")) {
             selectedText.classList.add("d-none");
         }
+        toggleRuleBlocks();
+        updateTotalSelected();
     });
 
     document.getElementById("testSelectedRules").addEventListener("click", function () {
@@ -382,8 +383,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             let count = checkbox.checked ? rules.length : 0;
             updateSelectedText(this, count, count);
-            toggleDisabled(!checkbox.checked && !checkbox.indeterminate,
-                ...document.querySelectorAll(".btn-select-action"));
             updateTotalSelected();
         });
     }

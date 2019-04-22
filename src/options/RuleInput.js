@@ -10,7 +10,6 @@ import {
     onToggleButtonChange,
     setButtonChecked,
     setButtonDisabled,
-    toggleDisabled,
     toggleHidden
 } from "/src/options/lib/UiHelpers.js";
 import {translateDocument} from "/src/options/lib/i18n.js";
@@ -503,8 +502,6 @@ RuleInput.prototype = {
     select: function (isSelected) {
         this.$(".select").checked = isSelected;
         this.model.classList.toggle("selected", isSelected);
-        toggleDisabled(document.querySelectorAll(".rule.selected").length === 0,
-            ...document.querySelectorAll(".btn-select-action"));
     },
 
     updateHeader: function () {
