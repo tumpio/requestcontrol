@@ -169,7 +169,7 @@ Below is examples of using include and exclude patterns:
 | <code>a*b</code>
 | Match urls where &quot;a&quot; is followed by &quot;b&quot;
 |-
-| <code>/[?&amp;]a=\d+(&amp;|$)/</code>
+| <code>/[?&]a=\d+(&|$)/</code>
 | Match urls containing parameter &quot;a&quot; with digits as value.
 |}
 
@@ -185,7 +185,7 @@ Filter matched requests by origin of request.
 | Match requests on same domain
 |-
 | Same origin
-| Match requests on same origin. Adheres to the [https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy| Same-origin policy].
+| Match requests on same origin. Adheres to the [https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy Same-origin policy].
 |-
 | Third party domain
 | Match requests to third party domain
@@ -258,7 +258,7 @@ Replace a matched substring in the extracted parameter. The pattern is written i
 | <code>$'</code>
 | Inserts the portion of the string that follows the matched substring.
 |-
-| <code>$&amp;</code>
+| <code>$&</code>
 | Inserts the matched substring.
 |-
 | <code>$$</code>

@@ -333,10 +333,10 @@
     "message": "Trim Query Parameters"
   },
   "trim_all": {
-    "message": "Remove all query parameters"
+    "message": "Remove all"
   },
   "invert_trim": {
-    "message": "Invert parameter trimming"
+    "message": "Invert trim"
   },
   "remove": {
     "message": "Remove"
@@ -515,7 +515,7 @@
     "message": "Log whitelisted requests"
   },
   "report_bug_request_feature": {
-    "message": "Report a bug / Request a feature"
+    "message": "Report a bug / Request a feature / Ask a question"
   },
   "skip_within_same_domain": {
     "message": "Exclude between same domain"

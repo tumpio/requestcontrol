@@ -137,8 +137,11 @@ function RuleInput(rule) {
     this.includesTagsInput = new TagsInput(this.$(".input-includes"));
     this.excludesTagsInput = new TagsInput(this.$(".input-excludes"));
 
-    this.$(".rule-header").addEventListener("dblclick", this.onHeaderClick.bind(this));
-    this.$(".rule-header").addEventListener("click", this.onHeaderClick.bind(this));
+    browser.runtime.getBrowserInfo().then(info => {
+        if (info.name === "Fennec") {
+            this.$(".rule-header").addEventListener("click", this.onHeaderClick.bind(this));
+        }
+    });
     this.$(".title").addEventListener("keydown", this.onEnterKey.bind(this));
     this.$(".title").addEventListener("blur", this.onSetTitle.bind(this));
     this.$(".description").addEventListener("keydown", this.onEnterKey.bind(this));
@@ -180,7 +183,6 @@ RuleInput.prototype = {
     description: "rule_description_new",
     optionsPath: "rules",
     factory: new RuleInputFactory(),
-    headerClickTimeout: 0,
 
     $: function (selector) {
         return this.model.querySelector(selector);
@@ -375,17 +377,9 @@ RuleInput.prototype = {
     },
 
     onHeaderClick: function (e) {
-        clearTimeout(this.headerClickTimeout);
         if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT"
             && !e.target.hasAttribute("contenteditable")) {
-            switch (e.type) {
-                case "dblclick":
-                    this.toggleEdit();
-                    break;
-                case "click":
-                    this.headerClickTimeout = setTimeout(this.toggleSelect.bind(this), 250);
-                    break;
-            }
+            this.toggleSelect();
         }
     },
 
@@ -460,7 +454,7 @@ RuleInput.prototype = {
 
     setAnyUrl: function (bool) {
         setButtonChecked(this.$(".any-url"), bool);
-        toggleHidden(bool, this.$(".form-group-pattern"));
+        toggleHidden(bool, this.$(".url-wrap"));
         this.validateTLDPattern();
         if (bool) {
             this.hostsTagsInput.disable();
@@ -566,10 +560,6 @@ RuleInput.prototype = {
     updateRule: function () {
         if (this.$(".any-url").checked) {
             this.rule.pattern.allUrls = true;
-            delete this.rule.pattern.scheme;
-            delete this.rule.pattern.host;
-            delete this.rule.pattern.path;
-            delete this.rule.pattern.topLevelDomains;
         } else {
             this.rule.pattern.scheme = this.$(".scheme").value;
             this.rule.pattern.host = this.hostsTagsInput.getValue();

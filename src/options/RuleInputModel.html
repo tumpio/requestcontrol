@@ -1,10 +1,10 @@
 <ul id="models">
   <li id="ruleInputModel" class="rule not-edited " spellcheck="false">
-    <div class="rule-header row">
-      <div class="rule-select 1 col">
+    <div class="rule-header">
+      <div class="rule-select">
         <input type="checkbox" class="select" autocomplete="off">
       </div>
-      <div class="7 col">
+      <div class="rule-header-title">
         <div class="title-wrap">
           <small class="badge edit-label" data-i18n="name"></small>
           <label class="title" data-i18n="new_rule"></label>
@@ -19,65 +19,72 @@
           <small class="tag"></small>
         </div>
       </div>
-      <div class="information 2 col">
-        <label class="badge badge-dark">
-          <span class="tag-badge"></span>
-        </label>
-        <label class="badge badge-info">
-          <span class="match-patterns"></span>
-          <span data-i18n="patterns"></span>
-        </label>
-      </div>
-      <div class="rule-header-buttons 2 col">
-        <button class="btn btn-dark btn-edit toggle-edit" data-i18n="edit"></button>
-        <button class="btn primary btn-done toggle-edit" data-i18n="done"></button>
-        <button class="btn btn-dark btn-activate" data-i18n="disable"></button>
+      <div class="header-info-wrap">
+        <div class="information">
+          <label class="badge badge-dark">
+            <span class="tag-badge"></span>
+          </label>
+          <label class="badge badge-info">
+            <span class="match-patterns"></span>
+            <span data-i18n="patterns"></span>
+          </label>
+        </div>
+        <div class="rule-header-buttons">
+          <button class="btn btn-dark btn-edit toggle-edit" data-i18n="edit"></button>
+          <button class="btn primary btn-done toggle-edit" data-i18n="done"></button>
+          <button class="btn btn-dark btn-activate" data-i18n="disable"></button>
+        </div>
       </div>
     </div>
     <div class="rule-input-area d-none">
       <form class="rule-input c">
+        <small class="form-header row" data-i18n="pattern"></small>
         <div class="row">
-          <label class="form-header" data-i18n="pattern"></label>
-          <div class="form-group-pattern">
-            <div>
-              <small data-i18n="scheme"></small>
-              <div>
-                <select class="scheme card">
-                  <option value="http">http</option>
-                  <option value="https">https</option>
-                  <option value="*" selected>http/https</option>
-                </select>
+          <div class="form-wrap">
+            <div class="url-wrap">
+              <div class="form-group-pattern">
+                <div>
+                  <small data-i18n="scheme"></small>
+                  <div>
+                    <select class="scheme card">
+                      <option value="http">http</option>
+                      <option value="https">https</option>
+                      <option value="*" selected>http/https</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <small data-i18n="host"></small>
+                  <input type="text" class="host" data-i18n-placeholder="host_placeholder" spellcheck="false"
+                         required="required"/>
+                </div>
+                <div>
+                  <small data-i18n="path"></small>
+                  <input type="text" class="path" data-i18n-placeholder="path_placeholder" spellcheck="false"/>
+                </div>
+              </div>
+              <div class="form-group-tlds d-none">
+                <small class="btn-tlds collapse-button plus">
+                  <span data-i18n="top_level_domains"></span>
+                  <span class="badge badge-dark">0</span>
+                </small>
+                <div class="tlds-block d-none">
+                  <input type="text" class="input-tlds tlds d-none" disabled="disabled" spellcheck="false"
+                         autocomplete="off" data-i18n-placeholder="tlds_placeholder" required="required"/>
+                </div>
               </div>
             </div>
-            <div>
-              <small data-i18n="host"></small>
-              <input type="text" class="host" data-i18n-placeholder="host_placeholder" spellcheck="false"
-                     required="required"/>
-            </div>
-            <div class="form-group-tlds d-none">
-              <label class="btn-tlds collapse-button plus">
-                <span data-i18n="top_level_domains"></span>
-                <span class="badge badge-dark">0</span>
+            <div class="any-wrap any-url-wrap">
+              <label class="btn">
+                <input class="any-url" type="checkbox" autocomplete="off">
+                <span data-i18n="any_url"></span>
               </label>
-              <div class="tlds-block d-none">
-                <input type="text" class="input-tlds tlds d-none" disabled="disabled" spellcheck="false"
-                       autocomplete="off" data-i18n-placeholder="tlds_placeholder" required="required"/>
-              </div>
             </div>
-            <div>
-              <small data-i18n="path"></small>
-              <input type="text" class="path" data-i18n-placeholder="path_placeholder" spellcheck="false"/>
-            </div>
-          </div>
-          <div>
-            <label class="btn">
-              <input class="any-url" type="checkbox" autocomplete="off">
-              <span data-i18n="any_url"></span>
-            </label>
           </div>
         </div>
+        <small class="form-header row collapse-url-matchers collapse-button plus"
+               data-i18n="extra_url_matchers"></small>
         <div class="row">
-          <label class="collapse-url-matchers collapse-button plus" data-i18n="extra_url_matchers"></label>
           <div class="group-url-matchers d-none">
             <small data-i18n="includes"></small>
             <input type="text" class="input-includes" spellcheck="false" autocomplete="off"
@@ -112,23 +119,25 @@
             </div>
           </div>
         </div>
+        <small class="form-header row" data-i18n="types"></small>
         <div class="row">
-          <label class="form-header" data-i18n="types"></label>
-          <div class="btn-group-types">
-            <label class="btn">
-              <input class="more-types v-hidden" type="checkbox" autocomplete="off">
-              <span class="text" data-i18n="show_more_true"></span>
-            </label>
-          </div>
-          <div>
-            <label class="btn">
-              <input class="any-type" type="checkbox" autocomplete="off">
-              <span data-i18n="any_type"></span>
-            </label>
+          <div class="form-wrap">
+            <div class="btn-group-types">
+              <label class="btn">
+                <input class="more-types v-hidden" type="checkbox" autocomplete="off">
+                <span class="text" data-i18n="show_more_true"></span>
+              </label>
+            </div>
+            <div class="any-wrap">
+              <label class="btn">
+                <input class="any-type" type="checkbox" autocomplete="off">
+                <span data-i18n="any_type"></span>
+              </label>
+            </div>
           </div>
         </div>
+        <small class="form-header" data-i18n="action"></small>
         <div class="row">
-          <label class="form-header" data-i18n="action"></label>
           <div>
             <label class="btn">
               <input class="action" value="filter" type="radio" name="action" autocomplete="off" required>
@@ -170,7 +179,7 @@
   <div>
     <small>
       <span data-i18n="manual_text_redirect"></span>
-      <a href="#tab-manual#redirect_using_pattern_capturing" data-i18n="see_manual"></a>
+      <a href="#tab-manual#redirect-using-pattern-capturing" data-i18n="see_manual"></a>
     </small>
   </div>
 </div>
@@ -189,24 +198,24 @@
     </label>
   </div>
   <div>
-    <small data-i18n="trim_url_parameters"></small>
-    <div class="row col-trim-parameters">
-      <div class="col 3">
+    <div>
+      <small data-i18n="trim_url_parameters"></small>
+    </div>
+    <div class="form-wrap">
+      <div class="col-trim-parameters">
         <input type="text" class="input-params params" data-editable-tags="true" data-separator=" "
                autocomplete="off" spellcheck="false" data-i18n-placeholder="placeholder_trim_parameters"/>
-      </div>
-      <div class="col 3">
         <label class="btn">
           <input class="invert-trim" type="checkbox" autocomplete="off">
           <span data-i18n="invert_trim"></span>
         </label>
       </div>
-    </div>
-    <div>
-      <label class="btn">
-        <input class="trim-all-params" type="checkbox" autocomplete="off">
-        <span data-i18n="trim_all"></span>
-      </label>
+      <div class="any-wrap">
+        <label class="btn">
+          <input class="trim-all-params" type="checkbox" autocomplete="off">
+          <span data-i18n="trim_all"></span>
+        </label>
+      </div>
     </div>
   </div>
 </div>

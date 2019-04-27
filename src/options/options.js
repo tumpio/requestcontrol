@@ -317,10 +317,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("addNewRule").addEventListener("click", function () {
         let ruleInput = myRuleInputFactory.newInput();
         document.getElementById("newRules").appendChild(ruleInput.model);
+        toggleRuleBlocks();
         ruleInput.toggleEdit();
         ruleInput.$(".host").focus();
         ruleInput.model.scrollIntoView();
-        toggleRuleBlocks();
     });
 
     document.getElementById("reset").addEventListener("click", loadDefaultRules);
@@ -371,18 +371,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     for (let header of document.querySelectorAll(".header-rules")) {
-        header.addEventListener("click", function (event) {
-            let checkbox = this.querySelector(".select-all-rules");
-            let rules = this.nextElementSibling.querySelectorAll(".rule");
-            if (event.target !== checkbox) {
-                checkbox.checked = !checkbox.checked;
-                checkbox.indeterminate = false;
-            }
+        let checkbox = header.querySelector(".select-all-rules");
+
+        checkbox.addEventListener("change", function () {
+            let rules = header.nextElementSibling.querySelectorAll(".rule");
             for (let rule of rules) {
                 rule.select(checkbox.checked);
             }
             let count = checkbox.checked ? rules.length : 0;
-            updateSelectedText(this, count, count);
+            updateSelectedText(header, count, count);
             updateTotalSelected();
         });
     }
