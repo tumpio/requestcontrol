@@ -10,7 +10,7 @@ Requests can be controlled with the following rules:
 
 -  |if| **Filter Request Rule**
 
-   Filter requests by skipping URL inline redirection and trimming URL query parameters.
+   Filter URL redirection and remove URL query parameters. 
 
 -  |ir| **Redirect Request Rule**
 
@@ -87,9 +87,9 @@ License
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 .. _webRequest.onBeforeRequest: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/onBeforeRequest
-.. _Pattern Capturing: https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.rst#redirect-using-pattern-capturing
+.. _Pattern Capturing: https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.wiki#redirect-using-pattern-capturing
 .. _Manual: https://github.com/tumpio/requestcontrol/blob/master/_locales/en/manual.wiki
-.. _FAQ: https://github.com/tumpio/requestcontrol/wiki/FAQ
+.. _FAQ: https://github.com/tumpio/requestcontrol/issues?utf8=%E2%9C%93&q=label%3Aquestion+
 .. _Source code: https://github.com/tumpio/requestcontrol
 .. _License: https://github.com/tumpio/requestcontrol/blob/master/LICENSE
 .. _npm: https://www.npmjs.com/
