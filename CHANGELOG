@@ -1,4 +1,7 @@
-Version 1.12.0 April 22. 2019
+Version 1.12.1 April 27, 2019
+- Update style for more compact layout.
+
+Version 1.12.0 April 22, 2019
 - Add Android support and update layout and style for mobile browsers. #88
 - Add speculative request type. #81
 - Add support for matching requests by origin. #36
