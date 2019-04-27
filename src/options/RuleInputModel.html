@@ -30,9 +30,9 @@
           </label>
         </div>
         <div class="rule-header-buttons">
-          <button class="btn btn-dark btn-edit toggle-edit" data-i18n="edit"></button>
+          <button class="btn btn-edit toggle-edit" data-i18n="edit"></button>
           <button class="btn primary btn-done toggle-edit" data-i18n="done"></button>
-          <button class="btn btn-dark btn-activate" data-i18n="disable"></button>
+          <button class="btn btn-activate" data-i18n="disable"></button>
         </div>
       </div>
     </div>
@@ -161,18 +161,14 @@
             </label>
           </div>
         </div>
-        <hr/>
       </form>
       <div class="row">
-        <button class="btn primary btn-done toggle-edit" data-i18n="done"></button>
+        <button class="btn primary btn-done btn-done-bottom toggle-edit" data-i18n="done"></button>
       </div>
     </div>
   </li>
 </ul>
 <div id="action-redirect" class="row">
-  <div>
-    <small data-i18n="action_description_redirect"></small>
-  </div>
   <div>
     <input type="text" class="redirectUrl card w-100" spellcheck="false" data-i18n-placeholder="redirect_url"/>
   </div>
@@ -185,9 +181,6 @@
 </div>
 <div id="action-filter" class="row">
   <div>
-    <small data-i18n="action_description_filter"></small>
-  </div>
-  <div>
     <label class="btn">
       <input class="filter-toggle" type="checkbox" checked="checked"/>
       <span data-i18n="filter_url_redirection"></span>
@@ -198,9 +191,6 @@
     </label>
   </div>
   <div>
-    <div>
-      <small data-i18n="trim_url_parameters"></small>
-    </div>
     <div class="form-wrap">
       <div class="col-trim-parameters">
         <input type="text" class="input-params params" data-editable-tags="true" data-separator=" "
@@ -221,9 +211,6 @@
 </div>
 <div id="action-whitelist" class="row">
   <div>
-    <small data-i18n="action_description_whitelist"></small>
-  </div>
-  <div>
     <label class="btn">
       <input class="log-whitelist-toggle" type="checkbox"/>
       <span data-i18n="log_whitelisted_requests"></span>
@@ -231,7 +218,4 @@
   </div>
 </div>
 <div id="action-block" class="row">
-  <div>
-    <small data-i18n="action_description_block"></small>
-  </div>
 </div>

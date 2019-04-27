@@ -33,12 +33,32 @@ function createRuleInputs(rules, className) {
     for (let rule of rules) {
         let input = myRuleInputFactory.newInput(rule);
         input.model.id = "rule-" + rule.uuid;
-        document.getElementById(rule.action).appendChild(input.model);
+        insertByOrder(input.model);
         if (className) {
             input.model.classList.add(className);
         }
     }
-    toggleRuleBlocks(true);
+    toggleRuleBlocks();
+}
+
+function insertByOrder(model) {
+    let action = model.getRule().action;
+    if (!action) {
+        return;
+    }
+    let list = document.getElementById(action);
+    let title = model.querySelector(".title").textContent;
+    if (list.childElementCount === 0 || list.querySelector(".rule:last-child .title").textContent.localeCompare(title) < 0) {
+        list.appendChild(model);
+        return;
+    }
+    for (let next of list.querySelectorAll(".rule")) {
+        let nextTitle = next.querySelector(".title").textContent;
+        if (nextTitle.localeCompare(title) >= 0) {
+            list.insertBefore(model, next);
+            break;
+        }
+    }
 }
 
 function getSelectedRuleInputs() {
@@ -383,6 +403,11 @@ document.addEventListener("DOMContentLoaded", function () {
             updateTotalSelected();
         });
     }
+
+    document.addEventListener("rule-edit-completed", function (e) {
+        insertByOrder(e.target);
+        toggleRuleBlocks();
+    });
 
     document.addEventListener("rule-select", function (e) {
         let list = e.detail.parent;

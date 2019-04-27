@@ -236,7 +236,7 @@ RuleInput.prototype = {
         input.classList.add("saved");
         setTimeout(function () {
             input.classList.remove("saved");
-        }, 2000);
+        }, 5000);
     },
 
     toggleActive: function () {
@@ -261,6 +261,9 @@ RuleInput.prototype = {
             this.$(".title").removeAttribute("contenteditable");
             this.$(".description").removeAttribute("contenteditable");
             this.$(".tag").removeAttribute("contenteditable");
+            this.model.dispatchEvent(new CustomEvent("rule-edit-completed", {
+                bubbles: true
+            }));
         }
     },
 

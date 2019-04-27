@@ -76,6 +76,7 @@ code {
 .rule.disabled .btn-activate {
     background: green;
     border-color: green;
+    color: white;
 }
 
 .btn.active {
@@ -88,6 +89,10 @@ code {
 
 .btn > .badge {
     margin-left: .5em;
+}
+
+.btn > span {
+    margin: 0;
 }
 
 #settingsTab .btn {
@@ -176,7 +181,6 @@ form .row {
     font-weight: bold;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #cfcfcf;
     padding: .2em 0;
 }
 
@@ -267,8 +271,16 @@ form .row {
     background: #e0e9f7;
 }
 
-.rule:first-child > .rule-header {
-    border-top: none;
+.rule:not(.editing).saved > .rule-header {
+    border-left: 2px solid green;
+}
+
+.rule.error > .rule-header {
+    border-left: 2px solid red;
+}
+
+.rule:not(.editing).new > .rule-header {
+    border-left: 2px solid orange;
 }
 
 .rule-header-title {
@@ -550,6 +562,10 @@ input:not(:checked) + .icon {
     .toolbar,
     .toc {
         position: sticky;
+    }
+
+    .btn-done-bottom {
+        display: none;
     }
 }
 
