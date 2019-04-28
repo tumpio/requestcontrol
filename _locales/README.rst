@@ -9,7 +9,7 @@ written with underscore, e.g. "en_US".
 
 Locale's directory content:
 
--  messages.json file - Includes all localised strings including
+-  messages.json file - Includes all extension's localised strings including
    extension's name and description.
--  manual.rst - The localised manual written in reStructuredText.
+-  manual.wiki - Is the localised manual written in `MediaWiki <https://www.mediawiki.org/wiki/Help:Formatting>`_.
    A Html page will be auto-generated from it using pandoc.
