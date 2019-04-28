@@ -190,9 +190,6 @@
   "options_title": {
     "message": "Request Control Rules"
   },
-  "options_description": {
-    "message": "Define rules for controlling HTTP requests"
-  },
   "settings_title": {
     "message": "Request Control Settings"
   },
@@ -349,15 +346,6 @@
   },
   "placeholder_trim_parameters": {
     "message": "List of query parameter patterns.."
-  },
-  "request_type": {
-    "message": "Request type: $TYPE$",
-    "placeholders": {
-      "type": {
-        "content": "$1",
-        "example": "Document"
-      }
-    }
   },
   "timestamp": {
     "message": "Timestamp: $TIME$",
@@ -522,18 +510,6 @@
   },
   "extra_url_matchers": {
     "message": "Extra URL matchers"
-  },
-  "action_description_filter": {
-    "message": "Filter URL redirection and trim URL query parameters"
-  },
-  "action_description_redirect": {
-    "message": "Redirect requests to a new URL"
-  },
-  "action_description_block": {
-    "message": "Requests will be blocked before being made"
-  },
-  "action_description_whitelist": {
-    "message": "Requests will be whitelisted from other rules"
   },
   "match_by_origin": {
     "message": "Match by origin"
