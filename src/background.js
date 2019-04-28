@@ -141,12 +141,21 @@ function addRecord(record) {
 function resetRecords(details) {
     if (details.frameId === 0 && records.has(details.tabId)) {
         let tabRecords = records.get(details.tabId);
-        let lastRecord = tabRecords[tabRecords.length - 1];
-        if (lastRecord.target === details.url) {
-            // Keep record of the new main frame request
-            records.set(details.tabId, [lastRecord]);
-            notifier.notify(details.tabId, lastRecord.action, 1);
-        } else {
+        let i = 0;
+        let clear = true;
+        while (i < 5 && tabRecords.length > 0) {
+            let lastRecord = tabRecords.pop();
+            if (lastRecord.target === details.url) {
+                // Keep record of the new main frame request
+                records.set(details.tabId, [lastRecord]);
+                notifier.notify(details.tabId, lastRecord.action, 1);
+                clear = false;
+                break;
+            }
+            i++;
+        }
+
+        if (clear) {
             removeRecords(details.tabId);
             notifier.clear(details.tabId);
         }
