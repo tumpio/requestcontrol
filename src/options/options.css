@@ -193,11 +193,11 @@ form .row {
 }
 
 .header-rules:not(.d-none) {
-    font-size: .9em;
-    font-weight: bold;
     display: flex;
     align-items: center;
     padding: .2em 0;
+    font-size: .9em;
+    background: #ededed;
 }
 
 .header-rules > * {
@@ -346,17 +346,18 @@ form .row {
     display: none;
 }
 
-.rule .title {
-    font-size: .9em;
-}
-
 .rule:not(.editing) .title,
 .rule:not(.editing) .description {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    display: block;
+    display: inline-block;
     max-width: 48em;
+}
+
+.rule:not(.editing) [class$="-wrap"] {
+    display: flex;
+    align-items: baseline;
 }
 
 .rule:not(.editing) .description,

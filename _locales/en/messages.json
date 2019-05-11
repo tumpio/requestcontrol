@@ -48,6 +48,19 @@
       }
     }
   },
+  "rule_title_redirect_to": {
+    "message": "$FROM$ → $TO$",
+    "placeholders": {
+      "from": {
+        "content": "$1",
+        "example": "Redirect: example.com"
+      },
+      "to": {
+        "content": "$2",
+        "example": "redirect.com"
+      }
+    }
+  },
   "rule_title_block": {
     "message": "Block: $HOST$",
     "placeholders": {
@@ -95,7 +108,7 @@
     "message": "Cancel requests before they are made."
   },
   "rule_description_redirect": {
-    "message": "Redirect to $URL$",
+    "message": "Redirect rule to $URL$",
     "placeholders": {
       "url": {
         "content": "$1",

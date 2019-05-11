@@ -519,9 +519,8 @@ RuleInput.prototype = {
         tag = decodeURIComponent(tag);
         this.model.setAttribute("data-type", this.rule.action);
         this.$(".title").textContent = title;
-        this.$(".title").title = title;
+        this.$(".title").title = description;
         this.$(".description").textContent = description;
-        this.$(".description").title = description;
         this.$(".tag").textContent = tag;
         this.$(".tag-badge").textContent = tag;
         this.$(".match-patterns").textContent = createMatchPatterns(this.rule.pattern).length;
@@ -761,4 +760,8 @@ RedirectRuleInput.prototype.updateRule = function () {
 
 RedirectRuleInput.prototype.getDescription = function () {
     return browser.i18n.getMessage(this.description, encodeURIComponent(this.rule.redirectUrl));
+};
+
+RedirectRuleInput.prototype.getTitle = function () {
+    return browser.i18n.getMessage("rule_title_redirect_to", [RuleInput.prototype.getTitle.call(this), encodeURIComponent(this.rule.redirectUrl)]);
 };
