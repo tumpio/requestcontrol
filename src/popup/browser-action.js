@@ -41,10 +41,16 @@ function setRecords(records) {
     document.getElementById("records").classList.remove("hidden");
 }
 
-function getTags(rules) {
+function getTags(details) {
     let tags = [];
+    let ids = [];
+    if (typeof details.rules !== "undefined") {
+        ids = details.rules.map(rule => rule.uuid);
+    } else {
+        ids = details.rule.uuid;
+    }
     for (let rule of myOptionsManager.options.rules) {
-        if (rules.includes(rule.uuid) && rule.tag) {
+        if (ids.includes(rule.uuid) && rule.tag) {
             tags.push(rule.tag);
         }
     }
@@ -65,7 +71,7 @@ function newListItem(details) {
         model.querySelector(".action").textContent = RECORD_TITLES[details.action];
         model.querySelector(".url").textContent = details.url;
     }
-    let tags = getTags(details.rules);
+    let tags = getTags(details);
     let tagsNode = model.querySelector(".tags");
     if (tags.length === 0) {
         tagsNode.parentNode.removeChild(tagsNode);
@@ -102,13 +108,13 @@ function showDetails(details) {
     } else {
         document.getElementById("targetBlock").classList.add("hidden");
     }
-    document.getElementById("editLink").addEventListener("click", function () {
-        browser.tabs.create({
-            url: browser.runtime.getURL("src/options/options.html")
-                + "?edit=" + details.rules.join("&edit=")
-        });
-        window.close();
-    });
+    let editLink = browser.runtime.getURL("src/options/options.html") + "?edit=";
+    if (typeof details.rules === "undefined") {
+        editLink += details.rule.uuid;
+    } else {
+        editLink += details.rules.map(rule => rule.uuid).join("&edit=");
+    }
+    document.getElementById("editLink").href = editLink;
 }
 
 function copyText(e) {
@@ -167,4 +173,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("showRules").addEventListener("click", openOptionsPage);
     document.getElementById("toggleActive").addEventListener("click", toggleActive);
+    document.getElementById("editLink").addEventListener("click", function (e) {
+        e.preventDefault();
+        browser.tabs.create({
+            url: this.href
+        });
+        window.close();
+    });
 });

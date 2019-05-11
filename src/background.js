@@ -2,7 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import {createMatchPatterns, createRule, markRequest} from "./RequestControl/api.js";
+import {
+    createMatchPatterns,
+    createRule,
+    markRequest,
+    markedRequests,
+    resolveRequest
+} from "./RequestControl/api.js";
 import {getNotifier} from "./notifier.js";
 
 /**
@@ -15,7 +21,6 @@ import {getNotifier} from "./notifier.js";
  */
 
 const requestListeners = [];
-const markedRequests = new Map();
 const records = new Map();
 let notifier;
 
@@ -56,11 +61,6 @@ function initOnChange() {
     browser.storage.local.get().then(init);
 }
 
-/**
- * Add rule marker request listener for each active rule.
- * Add requestControlListener for listening all requests for rule processing.
- * @param rules array of rules
- */
 function addRuleListeners(rules) {
     if (!rules) {
         return;
@@ -76,10 +76,7 @@ function addRuleListeners(rules) {
             types: data.types
         };
         let listener = function (details) {
-            let request = markedRequests.get(details.requestId) || details;
-            if (markRequest(request, rule)) {
-                markedRequests.set(request.requestId, request);
-            }
+            markRequest(details, rule);
         };
         browser.webRequest.onBeforeRequest.addListener(listener, filter);
         requestListeners.push(listener);
@@ -89,15 +86,10 @@ function addRuleListeners(rules) {
 }
 
 function requestControlListener(details) {
-    if (markedRequests.has(details.requestId)) {
-        let request = markedRequests.get(details.requestId);
-        markedRequests.delete(request.requestId);
-        return request.resolve(requestControlCallback);
-    }
-    return null;
+    return resolveRequest(details, requestControlCallback);
 }
 
-function requestControlCallback(request, action, updateTab) {
+function requestControlCallback(request, action, updateTab = false) {
     let tabRecordsCount = addRecord({
         action: request.action,
         tabId: request.tabId,
@@ -105,7 +97,8 @@ function requestControlCallback(request, action, updateTab) {
         url: request.url,
         target: request.redirectUrl,
         timestamp: request.timeStamp,
-        rules: request.rules.map(rule => rule.uuid)
+        rule: request.rule,
+        rules: request.rules
     });
     notifier.notify(request.tabId, action, tabRecordsCount);
     if (updateTab) {

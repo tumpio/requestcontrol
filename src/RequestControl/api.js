@@ -8,21 +8,39 @@ import {BlockRule} from "./block.js";
 import {FilterRule} from "./filter.js";
 import {RedirectRule} from "./redirect.js";
 
+export const markedRequests = new Map();
 
-export function markRequest(request, rule) {
-    if (!rule.match(request)) {
+export function markRequest(details, rule) {
+    if (!rule.match(details)) {
         return false;
+    }
+    let request = markedRequests.get(details.requestId);
+    if (typeof request === "undefined") {
+        markedRequests.set(details.requestId, details);
+        request = details;
     }
     if (typeof request.rulePriority === "undefined" || rule.priority > request.rulePriority) {
         request.rulePriority = rule.priority;
-        request.rules = [rule];
+        request.rule = rule;
         request.resolve = rule.resolve;
         request.action = rule.action;
     } else if (rule.priority === request.rulePriority) {
+        if (typeof request.rules === "undefined") {
+            request.rules = [request.rule];
+        }
         request.rules.push(rule);
         request.action |= rule.action;
     }
     return true;
+}
+
+export function resolveRequest(details, callback) {
+    if (markedRequests.has(details.requestId)) {
+        let request = markedRequests.get(details.requestId);
+        markedRequests.delete(request.requestId);
+        return request.resolve(callback);
+    }
+    return null;
 }
 
 export function createRule(data) {

@@ -43,21 +43,21 @@ export class RedirectRule extends ControlRule {
 export function processRedirectRules(callback) {
     let redirectUrl = this.url;
     let skipInlineUrlFilter = false;
-    let appliedRules = [];
     let action = this.action & (FILTER_ACTION | REDIRECT_ACTION);
 
-    for (let rule of this.rules) {
-        if (rule.skipInlineUrlFilter) {
-            skipInlineUrlFilter = true;
-        }
-        let url = rule.apply(redirectUrl);
-        if (url !== redirectUrl) {
-            appliedRules.push(rule);
-            redirectUrl = url;
+    if (typeof this.rules === "undefined") {
+        skipInlineUrlFilter = this.rule.skipInlineUrlFilter;
+        redirectUrl = this.rule.apply(redirectUrl);
+    } else {
+        for (let rule of this.rules) {
+            if (rule.skipInlineUrlFilter) {
+                skipInlineUrlFilter = true;
+            }
+            redirectUrl = rule.apply(redirectUrl);
         }
     }
 
-    if (appliedRules.length > 0) {
+    if (this.url !== redirectUrl) {
         this.redirectUrl = redirectUrl;
 
         if (this.action & FILTER_ACTION && this.type === "sub_frame" && !skipInlineUrlFilter) {
