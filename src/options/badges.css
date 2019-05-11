@@ -16,7 +16,7 @@
 .badge:not(:empty):not(.d-none) {
     display: inline-block;
     padding: .25em .5em;
-    font-size: .7rem;
+    font-size: .6rem;
     font-weight: 700;
     line-height: 1;
     text-align: center;

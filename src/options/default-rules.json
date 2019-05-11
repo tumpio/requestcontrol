@@ -58,7 +58,7 @@
     "active": true
   },
   {
-    "title": "Filter rule for Mozilla's outgoing link redirection service",
+    "title": "Skip Mozilla's outgoing link redirection service",
     "uuid": "3c4d6fa0-e2fb-4079-b3f0-e453ebe289ae",
     "tag": "filter-mozilla",
     "pattern": {
@@ -111,6 +111,6 @@
       "ping"
     ],
     "tag": "block-beacon",
-    "description": "Block Beacon and Ping requests. The Beacon API is often used for logging user activity and sending analytics data to the server."
+    "description": "The Beacon API is often used for logging user activity and sending analytics data to the server."
   }
 ]

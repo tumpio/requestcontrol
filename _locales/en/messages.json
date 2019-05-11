@@ -31,7 +31,7 @@
     }
   },
   "rule_title_filter": {
-    "message": "Filter rule for $HOST$",
+    "message": "Filter: $HOST$",
     "placeholders": {
       "host": {
         "content": "$1",
@@ -40,7 +40,7 @@
     }
   },
   "rule_title_redirect": {
-    "message": "Redirect rule for $HOST$",
+    "message": "Redirect: $HOST$",
     "placeholders": {
       "host": {
         "content": "$1",
@@ -49,7 +49,7 @@
     }
   },
   "rule_title_block": {
-    "message": "Block rule for $HOST$",
+    "message": "Block: $HOST$",
     "placeholders": {
       "host": {
         "content": "$1",
@@ -58,7 +58,7 @@
     }
   },
   "rule_title_whitelist": {
-    "message": "Whitelist rule for $HOST$",
+    "message": "Whitelist: $HOST$",
     "placeholders": {
       "host": {
         "content": "$1",
@@ -92,10 +92,10 @@
     "message": "Trim query parameters"
   },
   "rule_description_block": {
-    "message": "Block requests before they are made."
+    "message": "Cancel requests before they are made."
   },
   "rule_description_redirect": {
-    "message": "Redirect requests to $URL$",
+    "message": "Redirect to $URL$",
     "placeholders": {
       "url": {
         "content": "$1",
@@ -104,10 +104,10 @@
     }
   },
   "rule_description_whitelist": {
-    "message": "Revoke other rules and process requests normally."
+    "message": "Revoke other matched rules."
   },
   "any_url": {
-    "message": "Any URL"
+    "message": "All URLs"
   },
   "and": {
     "message": "$1 and $2"
@@ -317,23 +317,17 @@
       }
     }
   },
-  "redirect_to": {
-    "message": "Redirect Requests To URL"
-  },
   "manual_text_redirect": {
     "message": "Use pattern capturing to redirect based on the original request."
   },
   "filter_url_redirection": {
     "message": "Filter URL Redirection"
   },
-  "trim_url_parameters": {
-    "message": "Trim Query Parameters"
-  },
   "trim_all": {
-    "message": "Remove all"
+    "message": "Remove all parameters"
   },
   "invert_trim": {
-    "message": "Invert trim"
+    "message": "Invert trimming"
   },
   "remove": {
     "message": "Remove"
@@ -345,7 +339,7 @@
     "message": "Redirect URL"
   },
   "placeholder_trim_parameters": {
-    "message": "List of query parameter patterns.."
+    "message": "List of trimmed query parameters.."
   },
   "timestamp": {
     "message": "Timestamp: $TIME$",

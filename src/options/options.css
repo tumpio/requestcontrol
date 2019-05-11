@@ -4,8 +4,12 @@
 
 :root {
     --font: "Open Sans", sans-serif;
-    --primary-color: #315685;
+    --primary-color: #3b67a0;
     --light: #eee;
+}
+
+body {
+    font-size: .9rem;
 }
 
 #rulesTab * + * {
@@ -47,18 +51,21 @@ code {
 .btn {
     display: inline-flex;
     align-items: center;
-    border: 1px solid #343a40;
+    border: 1px solid #d4d4d4;
     cursor: pointer;
-    padding: .6em;
+    padding: .3em .5em;
+    text-transform: initial;
+    letter-spacing: initial;
+    font-size: .9em;
+    border-radius: 2px;
+    vertical-align: middle;
+    background: #f7f7f7;
+    color: #575757;
 }
 
 .btn:disabled {
     opacity: .6;
-}
-
-.btn-dark {
-    background: #343a40;
-    color: white;
+    cursor: default;
 }
 
 .btn-danger {
@@ -68,7 +75,7 @@ code {
 }
 
 .btn.primary {
-    background: #3d7e9a;
+    background: var(--primary-color);
     border: none;
     font-weight: bold;
 }
@@ -96,12 +103,14 @@ code {
 }
 
 #settingsTab .btn {
-    padding: 1em;
+    padding: .6em;
 }
 
 form .btn {
     border: none;
     padding: 0;
+    background: none;
+    color: black;
 }
 
 form .btn > input {
@@ -110,10 +119,17 @@ form .btn > input {
 
 form .card,
 form .card:focus {
-    border: 1px solid #666;
+    border: 1px solid #ccc;
     background: none;
     padding: .2em;
     font-size: .9em;
+    border-radius: 2px;
+}
+
+form select.scheme,
+form select.scheme:focus {
+    padding-top: .4em;
+    padding-bottom: .4em;
 }
 
 form .row {
@@ -177,7 +193,7 @@ form .row {
 }
 
 .header-rules:not(.d-none) {
-    font-size: 0.9em;
+    font-size: .9em;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -195,7 +211,8 @@ form .row {
 
 .select-all-rules,
 .rule-select {
-    margin: 0 1.3rem;
+    margin: 0 .8rem;
+    display: flex;
 }
 
 .rule-select > input {
@@ -312,7 +329,7 @@ form .row {
 }
 
 .rule:not(.editing) .rule-header {
-    padding: .3em 0;
+    padding: .1em 0;
 }
 
 .editing .rule-header > div:first-child > div {
@@ -333,10 +350,6 @@ form .row {
     font-size: .9em;
 }
 
-.rule:not(.editing) .title {
-    font-weight: 600;
-}
-
 .rule:not(.editing) .title,
 .rule:not(.editing) .description {
     white-space: nowrap;
@@ -346,10 +359,15 @@ form .row {
     max-width: 48em;
 }
 
+.rule:not(.editing) .description,
 .rule:not(.editing) .tag-wrap {
     display: none;
 }
 
+.rule:not(.editing) .title:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
 
 .rule-header div[class$=-wrap] > .badge {
     padding: 0;
@@ -369,7 +387,7 @@ form .row {
 .rule-header .title[contenteditable]:focus,
 .rule-header .description[contenteditable]:focus,
 .rule-header .tag[contenteditable]:focus {
-    color: #666;
+    color: black;
 }
 
 .header-info-wrap {
@@ -458,6 +476,15 @@ input:not(:checked) + .icon {
     overflow-x: auto;
 }
 
+.manual-content td,
+.manual-content th {
+    padding: .3em;
+}
+
+.manual-content table p {
+    margin: 0;
+}
+
 .toc {
     top: 0;
     float: right;
@@ -492,7 +519,6 @@ input:not(:checked) + .icon {
 
 .toolbar > button {
     margin: 0 .5em 0 0;
-    padding: .6em .5em;
 }
 
 .toolbar > button:last-child {
@@ -582,7 +608,7 @@ input:not(:checked) + .icon {
     }
 
     .rules-block {
-        border: 1px solid #b1b1b1;
+        border: 1px solid #e7e7e7;
         border-radius: .15rem;
         margin-bottom: 1.3em !important;
     }

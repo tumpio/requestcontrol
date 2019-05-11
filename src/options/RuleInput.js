@@ -140,6 +140,8 @@ function RuleInput(rule) {
     browser.runtime.getBrowserInfo().then(info => {
         if (info.name === "Fennec") {
             this.$(".rule-header").addEventListener("click", this.onHeaderClick.bind(this));
+        } else {
+            this.$(".title").addEventListener("click", this.onHeaderTitleClick.bind(this));
         }
     });
     this.$(".title").addEventListener("keydown", this.onEnterKey.bind(this));
@@ -383,6 +385,13 @@ RuleInput.prototype = {
         if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT"
             && !e.target.hasAttribute("contenteditable")) {
             this.toggleSelect();
+        }
+    },
+
+    onHeaderTitleClick: function (e) {
+        if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT"
+            && !e.target.hasAttribute("contenteditable")) {
+            this.toggleEdit();
         }
     },
 
