@@ -19,7 +19,8 @@
     "build-lit": "cp -v node_modules/@ajusa/lit/src/lit.css src/options/lib/lit/",
     "build-manual": "find ./_locales/ -iname \"manual.wiki\" -type f -exec sh -c 'pandoc \"$0\" --from=mediawiki --to=html --output \"${0%.wiki}.html\"' {} \\;",
     "build": "web-ext build -i=$npm_package_config_ignore --overwrite-dest --artifacts-dir=.releases --verbose",
-    "prebuild": "npm run build-tldts && npm run build-lit && npm run build-manual"
+    "prebuild": "npm run build-tldts && npm run build-lit && npm run build-manual",
+    "postinstall": "npm run prebuild"
   },
   "dependencies": {
     "@ajusa/lit": "^1.1.0",
