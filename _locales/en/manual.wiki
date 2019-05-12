@@ -302,19 +302,17 @@ All the string manipulation rules can be chained using a &quot;|&quot; pipe char
 
 ==== Examples ====
 
-{|
-| <code>https://{hostname}/new/path</code>
-| Uses the hostname of the original request.
-|-
-| <code>https://{hostname/([a-z]{2}).*/$1}/new/path</code>
-| Captures a part of the hostname of the original request.
-|-
-| <code>https://{hostname::-3|/.co/.com}/new/path</code>
-| Uses the hostname of the original request but manipulate its length by three cutting it from the end and replace &quot;.co&quot; with &quot;.com&quot;.
-|-
-| <code>{search.url|decodeURIComponent}</code>
-| Capture &quot;url&quot; search parameter and decode it.
-|}
+<pre>https://{hostname}/new/path</pre>
+Uses the hostname of the original request.
+
+<pre>https://{hostname/([a-z]{2}).*/$1}/new/path</pre>
+Captures a part of the hostname of the original request.
+
+<pre>https://{hostname::-3|/.co/.com}/new/path</pre>
+Uses the hostname of the original request but manipulate its length by three cutting it from the end and replace &quot;.co&quot; with &quot;.com&quot;.
+
+<pre>{search.url|decodeURIComponent}</pre>
+Captures &quot;url&quot; search parameter and decodes it.
 
 === Redirect instruction ===
 
@@ -327,16 +325,14 @@ The value of a redirect instruction can be parametrized using the parameter expa
 
 ==== Examples ====
 
-{|
-| <code>[port=8080]</code>
-| Redirects the original request to a port 8080.
-|-
-| <code>[port=8080][hostname=localhost]</code>
-| Redirects the original request to a port 8080 of localhost.
-|-
-| <code>[port=8080][hostname=localhost][hash={pathname}]</code>
-| Redirects the original request to a port 8080 of localhost where hash is the original request's path.
-|}
+<pre>[port=8080]</pre>
+Redirects the original request to a port 8080.
+
+<pre>[port=8080][hostname=localhost]</pre>
+Redirects the original request to a port 8080 of localhost.
+
+<pre>[port=8080][hostname=localhost][hash={pathname}]</pre>
+Redirects the original request to a port 8080 of localhost where hash is the original request's path.
 
 === List of named parameters ===
 
@@ -374,10 +370,10 @@ Example address used as input:
 | <code>www.example.com:8080</code>
 |-
 | origin
-| <code>https://www.example.com:8080</code>
+| <code><nowiki>https://www.example.com:8080</nowiki></code>
 |-
 | href
-| <code>https://www.example.com:8080/some/path?query=value#hash</code>
+| <code><nowiki>https://www.example.com:8080/some/path?query=value#hash</nowiki></code>
 |}
 
 This manual page is build upon the material of the following MDN wiki documents and is licenced under [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
