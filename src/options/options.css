@@ -339,11 +339,10 @@ form .row {
     overflow-y: auto;
 }
 
-.rule:not(.editing) .btn-done {
-    display: none;
-}
-
 .rule.editing .btn-edit,
+#newRules .btn-done,
+.rule-list:not(#newRules) .btn-create,
+.rule:not(.editing) .btn-done,
 .rule.editing .information {
     display: none;
 }
@@ -594,7 +593,7 @@ pre {
         position: sticky;
     }
 
-    .btn-done-bottom {
+    .btn.bottom {
         display: none;
     }
 }

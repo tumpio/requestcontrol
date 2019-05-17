@@ -239,6 +239,9 @@
   "done": {
     "message": "Done"
   },
+  "create": {
+    "message": "Create"
+  },
   "edit_rule": {
     "message": "Edit rule"
   },

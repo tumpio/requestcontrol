@@ -3,8 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-import {createMatchPatterns} from "/src/RequestControl/api.js";
-import {uuid} from "/src/options/lib/uuid.js";
+import { createMatchPatterns } from "/src/RequestControl/api.js";
+import { uuid } from "/src/options/lib/uuid.js";
 import {
     getSubPage,
     onToggleButtonChange,
@@ -12,8 +12,8 @@ import {
     setButtonDisabled,
     toggleHidden
 } from "/src/options/lib/UiHelpers.js";
-import {translateDocument} from "/src/options/lib/i18n.js";
-import {TagsInput} from "/src/options/lib/tags-input/src/tags-input.js";
+import { translateDocument } from "/src/options/lib/i18n.js";
+import { TagsInput } from "/src/options/lib/tags-input/src/tags-input.js";
 
 /**
  * Request Control Rule Input for rule creation.
@@ -167,13 +167,16 @@ function RuleInput(rule) {
     this.$(".btn-tlds").addEventListener("click", this.toggleTLDs.bind(this));
     this.$(".input-tlds").addEventListener("change", this.onSetTLDs.bind(this));
 
-    this.$(".rule-input").addEventListener("change", this.save.bind(this));
+    this.$(".rule-input").addEventListener("change", this.onChange.bind(this));
 
     for (let action of this.$$(".action")) {
-        action.addEventListener("click", this.onChange.bind(this));
+        action.addEventListener("click", this.onActionChange.bind(this));
     }
     for (let edit of this.$$(".toggle-edit")) {
         edit.addEventListener("click", this.toggleEdit.bind(this));
+    }
+    for (let create of this.$$(".btn-create")) {
+        create.addEventListener("click", this.create.bind(this));
     }
     if (this.rule.action) {
         this.$(".rule-input").appendChild(this.factory.getModel("action-" + this.rule.action));
@@ -211,10 +214,18 @@ RuleInput.prototype = {
         }
     },
 
+    create: function () {
+        this.save()
+            .then(this.toggleEdit.bind(this))
+            .catch(function () {
+                // skip
+            });
+    },
+
     save: function () {
         if (!this.$(".rule-input").reportValidity()) {
             this.model.classList.add("error");
-            return;
+            return Promise.reject();
         }
         this.model.classList.remove("error");
         this.updateRule();
@@ -273,7 +284,7 @@ RuleInput.prototype = {
         this.select(!this.model.classList.contains("selected"));
         this.model.parentNode.dispatchEvent(new CustomEvent("rule-select", {
             bubbles: true,
-            detail: {"action": this.rule.action, parent: this.model.parentNode}
+            detail: { "action": this.rule.action, parent: this.model.parentNode }
         }));
     },
 
@@ -363,6 +374,13 @@ RuleInput.prototype = {
     },
 
     onChange: function () {
+        if (!this.$(".action:checked")) {
+            return;
+        }
+        this.save();
+    },
+
+    onActionChange: function () {
         this.updateRule();
         let newInput = this.factory.newInput(this.rule);
         this.model.parentNode.insertBefore(newInput.model, this.model);
@@ -501,7 +519,7 @@ RuleInput.prototype = {
         this.select(e.target.checked);
         this.model.parentNode.dispatchEvent(new CustomEvent("rule-select", {
             bubbles: true,
-            detail: {"action": this.rule.action, parent: this.model.parentNode}
+            detail: { "action": this.rule.action, parent: this.model.parentNode }
         }));
     },
 
