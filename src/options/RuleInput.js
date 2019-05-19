@@ -169,9 +169,6 @@ function RuleInput(rule) {
 
     this.$(".rule-input").addEventListener("change", this.onChange.bind(this));
 
-    for (let action of this.$$(".action")) {
-        action.addEventListener("click", this.onActionChange.bind(this));
-    }
     for (let edit of this.$$(".toggle-edit")) {
         edit.addEventListener("click", this.toggleEdit.bind(this));
     }
@@ -373,21 +370,18 @@ RuleInput.prototype = {
         this.save();
     },
 
-    onChange: function () {
-        if (!this.$(".action:checked")) {
-            return;
+    onChange: function (e) {
+        let input = this;
+        if (e.target.classList.contains("action")) {
+            this.updateRule();
+            let newInput = this.factory.newInput(this.rule);
+            this.model.parentNode.insertBefore(newInput.model, this.model);
+            this.softRemove();
+            newInput.toggleEdit();
+            input = newInput;
         }
-        this.save();
-    },
-
-    onActionChange: function () {
-        this.updateRule();
-        let newInput = this.factory.newInput(this.rule);
-        this.model.parentNode.insertBefore(newInput.model, this.model);
-        this.softRemove();
-        newInput.toggleEdit();
-        if (newInput.$(".rule-input").reportValidity()) {
-            newInput.save();
+        if (input.model.parentNode.id !== "newRules") {
+            input.save();
         }
     },
 
