@@ -257,6 +257,9 @@
   "create": {
     "message": "Create"
   },
+  "delete": {
+    "message": "Delete"
+  },
   "edit_rule": {
     "message": "Edit rule"
   },

@@ -109,7 +109,7 @@ code {
     padding: .6em;
 }
 
-form .btn {
+form .btn:not(button) {
     border: none;
     padding: 0;
     background: none;
@@ -339,12 +339,19 @@ form .row {
     overflow-y: auto;
 }
 
-.rule.editing .btn-edit,
 #newRules .btn-done,
 .rule-list:not(#newRules) .btn-create,
 .rule:not(.editing) .btn-done,
 .rule.editing .information {
     display: none;
+}
+
+.btn-delete {
+    float: right;
+}
+
+.rule-input-buttons {
+    padding-bottom: .3em;
 }
 
 .rule:not(.editing) .title,
@@ -403,6 +410,11 @@ form .row {
 
 .more-types {
     margin: 0 !important;
+}
+
+.redirectUrl {
+    padding: .4em !important;
+    box-sizing: border-box;
 }
 
 .tags-input {
@@ -586,10 +598,6 @@ pre {
     .toolbar,
     .toc {
         position: sticky;
-    }
-
-    .btn.bottom {
-        display: none;
     }
 }
 

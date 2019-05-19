@@ -168,6 +168,7 @@ function RuleInput(rule) {
     this.$(".input-tlds").addEventListener("change", this.onSetTLDs.bind(this));
 
     this.$(".rule-input").addEventListener("change", this.onChange.bind(this));
+    this.$(".btn-delete").addEventListener("click", this.remove.bind(this));
 
     for (let edit of this.$$(".toggle-edit")) {
         edit.addEventListener("click", this.toggleEdit.bind(this));
@@ -204,7 +205,9 @@ RuleInput.prototype = {
     },
 
     softRemove: function () {
-        this.model.parentNode.removeChild(this.model);
+        this.model.dispatchEvent(new CustomEvent("rule-removed", {
+            bubbles: true
+        }));
         let i = this.indexOfRule();
         if (i !== -1) {
             this.factory.optionsManager.options[this.optionsPath].splice(i, 1);

@@ -409,6 +409,11 @@ document.addEventListener("DOMContentLoaded", function () {
         toggleRuleBlocks();
     });
 
+    document.addEventListener("rule-removed", function (e) {
+        e.target.parentNode.removeChild(e.target);
+        toggleRuleBlocks();
+    });
+
     document.addEventListener("rule-select", function (e) {
         let list = e.detail.parent;
         let header = list.previousElementSibling;

@@ -33,15 +33,13 @@
         </div>
         <div class="rule-header-buttons">
           <button class="btn btn-edit toggle-edit" data-i18n="edit"></button>
-          <button class="btn primary btn-create" data-i18n="create"></button>
-          <button class="btn primary btn-done toggle-edit" data-i18n="done"></button>
           <button class="btn btn-activate" data-i18n="disable"></button>
         </div>
       </div>
     </div>
     <div class="rule-input-area d-none">
       <form class="rule-input c">
-        <small class="form-header row" data-i18n="pattern"></small>
+        <small class="form-header" data-i18n="pattern"></small>
         <div class="row">
           <div class="form-wrap">
             <div class="url-wrap">
@@ -59,11 +57,11 @@
                 <div>
                   <small data-i18n="host"></small>
                   <input type="text" class="host" data-i18n-placeholder="host_placeholder" spellcheck="false"
-                         required="required"/>
+                    required="required" />
                 </div>
                 <div>
                   <small data-i18n="path"></small>
-                  <input type="text" class="path" data-i18n-placeholder="path_placeholder" spellcheck="false"/>
+                  <input type="text" class="path" data-i18n-placeholder="path_placeholder" spellcheck="false" />
                 </div>
               </div>
               <div class="form-group-tlds d-none">
@@ -73,7 +71,7 @@
                 </small>
                 <div class="tlds-block d-none">
                   <input type="text" class="input-tlds tlds d-none" disabled="disabled" spellcheck="false"
-                         autocomplete="off" data-i18n-placeholder="tlds_placeholder" required="required"/>
+                    autocomplete="off" data-i18n-placeholder="tlds_placeholder" required="required" />
                 </div>
               </div>
             </div>
@@ -86,15 +84,15 @@
           </div>
         </div>
         <small class="form-header row collapse-url-matchers collapse-button plus"
-               data-i18n="extra_url_matchers"></small>
+          data-i18n="extra_url_matchers"></small>
         <div class="row">
           <div class="group-url-matchers d-none">
             <small data-i18n="includes"></small>
             <input type="text" class="input-includes" spellcheck="false" autocomplete="off"
-                   data-i18n-placeholder="includes_placeholder"/>
+              data-i18n-placeholder="includes_placeholder" />
             <small data-i18n="excludes"></small>
             <input type="text" class="input-excludes" spellcheck="false" autocomplete="off"
-                   data-i18n-placeholder="excludes_placeholder"/>
+              data-i18n-placeholder="excludes_placeholder" />
             <small data-i18n="match_by_origin"></small>
             <div>
               <label class="btn">
@@ -107,7 +105,7 @@
               </label>
               <label class="btn">
                 <input class="origin-matcher" value="third-party-domain" type="radio" name="origin-matcher"
-                       autocomplete="off">
+                  autocomplete="off">
                 <span data-i18n="third_party_domain"></span>
               </label>
               <label class="btn">
@@ -116,7 +114,7 @@
               </label>
               <label class="btn">
                 <input class="origin-matcher" value="third-party-origin" type="radio" name="origin-matcher"
-                       autocomplete="off">
+                  autocomplete="off">
                 <span data-i18n="third_party_origin"></span>
               </label>
             </div>
@@ -165,16 +163,20 @@
           </div>
         </div>
       </form>
-      <div class="row">
-        <button class="btn primary btn-done bottom toggle-edit" data-i18n="done"></button>
-        <button class="btn primary btn-create bottom" data-i18n="create"></button>
+      <div class="row rule-input-buttons">
+        <button class="btn primary btn-done toggle-edit" data-i18n="done"></button>
+        <button class="btn primary btn-create" data-i18n="create"></button>
+        <button class="btn btn-danger btn-delete">
+          <img src="/icons/ionicons/android-delete.svg" width="16" />
+          <span data-i18n="delete"></span>
+        </button>
       </div>
     </div>
   </li>
 </ul>
 <div id="action-redirect" class="row">
   <div>
-    <input type="text" class="redirectUrl card w-100" spellcheck="false" data-i18n-placeholder="redirect_url"/>
+    <input type="text" class="redirectUrl card w-100" spellcheck="false" data-i18n-placeholder="redirect_url" />
   </div>
   <div>
     <small>
@@ -186,19 +188,19 @@
 <div id="action-filter" class="row">
   <div>
     <label class="btn">
-      <input class="filter-toggle" type="checkbox" checked="checked"/>
+      <input class="filter-toggle" type="checkbox" checked="checked" />
       <span data-i18n="filter_url_redirection"></span>
     </label>
     <label class="btn">
-      <input class="filter-skip-within-same-domain-toggle" type="checkbox"/>
+      <input class="filter-skip-within-same-domain-toggle" type="checkbox" />
       <span data-i18n="skip_within_same_domain"></span>
     </label>
   </div>
   <div>
     <div class="form-wrap">
       <div class="col-trim-parameters">
-        <input type="text" class="input-params params" data-editable-tags="true" data-separator=" "
-               autocomplete="off" spellcheck="false" data-i18n-placeholder="placeholder_trim_parameters"/>
+        <input type="text" class="input-params params" data-editable-tags="true" data-separator=" " autocomplete="off"
+          spellcheck="false" data-i18n-placeholder="placeholder_trim_parameters" />
         <label class="btn">
           <input class="invert-trim" type="checkbox" autocomplete="off">
           <span data-i18n="invert_trim"></span>
@@ -216,7 +218,7 @@
 <div id="action-whitelist" class="row">
   <div>
     <label class="btn">
-      <input class="log-whitelist-toggle" type="checkbox"/>
+      <input class="log-whitelist-toggle" type="checkbox" />
       <span data-i18n="log_whitelisted_requests"></span>
     </label>
   </div>
