@@ -230,8 +230,23 @@
   "new_rule": {
     "message": "New rule"
   },
-  "patterns": {
-    "message": "patterns"
+  "count_patterns": {
+    "message": "$COUNT$ patterns",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
+  "count_types": {
+    "message": "$COUNT$ types",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
   },
   "edit": {
     "message": "Edit"

@@ -1,11 +1,11 @@
 .badge-light {
     color: black;
-    background-color: #fff;
+    background-color: #e1e0e0;
 }
 
 .badge-dark {
-    color: #000;
-    background-color: #e1e0e0;
+    color: white;
+    background-color: #3f3f3f;
 }
 
 .badge-info {

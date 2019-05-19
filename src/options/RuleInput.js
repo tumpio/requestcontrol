@@ -541,7 +541,16 @@ RuleInput.prototype = {
         this.$(".description").textContent = description;
         this.$(".tag").textContent = tag;
         this.$(".tag-badge").textContent = tag;
-        this.$(".match-patterns").textContent = createMatchPatterns(this.rule.pattern).length;
+        this.$(".count-patterns").textContent = browser.i18n.getMessage("count_patterns",
+            [createMatchPatterns(this.rule.pattern).length]);
+        if (!this.rule.types) {
+            this.$(".count-types").textContent = browser.i18n.getMessage("any");
+        } else if (this.rule.types.length === 1) {
+            this.$(".count-types").textContent = browser.i18n.getMessage(this.rule.types[0]);
+        } else {
+            this.$(".count-types").textContent = browser.i18n.getMessage("count_types",
+                [this.rule.types.length]);
+        }
         toggleHidden(tag.length === 0, this.$(".tag-badge").parentNode);
         toggleHidden(tag.length > 0, this.$(".add-tag"));
         this.setActiveState();

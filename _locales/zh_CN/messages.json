@@ -241,10 +241,6 @@
         "message": "新建规则",
         "hash": "ae6aafa16c5645e6f1c1e19aa39fd081"
     },
-    "patterns": {
-        "message": "匹配模式",
-        "hash": "c42cd45c6d2c36c5b22d14be519009dd"
-    },
     "edit": {
         "message": "编辑",
         "hash": "07fa34db2b1ae6134e7ea08b4c43b447"

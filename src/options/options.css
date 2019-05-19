@@ -441,11 +441,6 @@ input:not(:checked) + .icon {
     -moz-user-select: none;
 }
 
-.match-patterns {
-    font-size: 0.95em;
-    padding-top: 0.3em;
-}
-
 .manual-content {
     max-width: 42em;
     margin-left: 0;
