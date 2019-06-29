@@ -7,7 +7,8 @@ import {
     createRule,
     markRequest,
     markedRequests,
-    resolveRequest
+    resolveRequest,
+    ALL_URLS
 } from "./RequestControl/api.js";
 import {getNotifier} from "./notifier.js";
 
@@ -82,7 +83,7 @@ function addRuleListeners(rules) {
         requestListeners.push(listener);
     }
     browser.webRequest.onBeforeRequest.addListener(requestControlListener,
-        {urls: ["<all_urls>"]}, ["blocking"]);
+        {urls: [ALL_URLS]}, ["blocking"]);
 }
 
 function requestControlListener(details) {

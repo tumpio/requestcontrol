@@ -8,6 +8,7 @@ import {BlockRule} from "./block.js";
 import {FilterRule} from "./filter.js";
 import {RedirectRule} from "./redirect.js";
 
+export const ALL_URLS = "*://*/*";  // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
 export const markedRequests = new Map();
 
 export function markRequest(details, rule) {
@@ -82,7 +83,7 @@ export function createMatchPatterns(pattern) {
     let paths = Array.isArray(pattern.path) ? pattern.path : [pattern.path];
 
     if (pattern.allUrls) {
-        return ["<all_urls>"];
+        return [ALL_URLS];
     }
 
     if (!pattern.path || paths.length <= 0) {

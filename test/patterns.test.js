@@ -1,9 +1,9 @@
 import test from "ava";
-import {createMatchPatterns} from "../src/RequestControl/api";
+import {createMatchPatterns, ALL_URLS} from "../src/RequestControl/api";
 
 
 test("Create match patterns", t => {
-    t.deepEqual(createMatchPatterns({allUrls: true}), ["<all_urls>"]);
+    t.deepEqual(createMatchPatterns({allUrls: true}), [ALL_URLS]);
     t.deepEqual(createMatchPatterns({
         scheme: "http",
         host: "example.com"
