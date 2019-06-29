@@ -1,3 +1,7 @@
+Version 1.12.4 June 29, 2019
+- Add workaround for Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=1557300. #100
+- Other improvements to options (rule delete button, create button / new rule validation fix, type badge)
+
 Version 1.12.3 May 12, 2019
 - Update style and manual.
 - Fix rule edit link in popup.
