@@ -351,7 +351,12 @@ form .row {
 }
 
 .rule-input-buttons {
+    padding-top: .3em;
     padding-bottom: .3em;
+}
+
+.rule-input {
+    padding-top: .3em;
 }
 
 .rule:not(.editing) .title,
@@ -676,6 +681,10 @@ pre {
         align-items: flex-start;
         flex-direction: column;
         margin-bottom: .6em !important;
+    }
+
+    .rule.editing .header-info-wrap {
+        display: none !important;
     }
 
     .rule-header {
