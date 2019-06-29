@@ -6,7 +6,9 @@
 import {getDomain} from "../../lib/tldts/tldts-experimental.esm.js";
 
 const tldtsOptions = {
-    extractHostname: false
+    extractHostname: false,
+    validateHostname: false,
+    detectIp: false
 };
 
 export const libTld = {

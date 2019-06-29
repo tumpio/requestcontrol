@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@ajusa/lit": "^1.1.0",
-    "tldts": "^4.0.6"
+    "tldts": "^5.2.0"
   },
   "devDependencies": {
     "@babel/core": "latest",
