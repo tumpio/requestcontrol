@@ -2,11 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import {createRequestMatcher} from "./matchers.js";
-import {LoggedWhitelistRule, WhitelistRule} from "./whitelist.js";
-import {BlockRule} from "./block.js";
-import {FilterRule} from "./filter.js";
-import {RedirectRule} from "./redirect.js";
+import { createRequestMatcher } from "./matchers.js";
+import { LoggedWhitelistRule, WhitelistRule } from "./whitelist.js";
+import { BlockRule } from "./block.js";
+import { FilterRule } from "./filter.js";
+import { RedirectRule } from "./redirect.js";
 
 export const ALL_URLS = "*://*/*";  // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
 export const markedRequests = new Map();

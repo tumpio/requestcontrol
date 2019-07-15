@@ -19,10 +19,11 @@ export class FilterRule extends ControlRule {
     }
 
     apply(url) {
-        // Trim unwanted query parameters before parsing inline url
         let trimmedUrl = this.filterQueryParameters(url);
-        trimmedUrl = this.filterInlineUrl(trimmedUrl);
-        return this.filterQueryParameters(trimmedUrl);
+        if (this.skipInlineUrlParsing) {
+            return trimmedUrl;
+        }
+        return this.filterInlineUrl(trimmedUrl);
     }
 
     filterQueryParameters(url) {
@@ -35,11 +36,8 @@ export class FilterRule extends ControlRule {
     }
 
     filterInlineUrl(url) {
-        if (this.skipInlineUrlParsing) {
-            return url;
-        }
         let inlineUrl = parseInlineUrl(url);
-        if (inlineUrl == null 
+        if (inlineUrl == null
             || this.skipOnSameDomain && DomainMatcher.testUrls(url, inlineUrl)) {
             return url;
         }
