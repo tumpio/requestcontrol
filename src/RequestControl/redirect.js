@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import {ControlRule, FILTER_ACTION, REDIRECT_ACTION} from "./base.js";
-import {QueryParser, URL_PARAMETERS, UrlParser} from "./url.js";
+import { ControlRule, FILTER_ACTION, REDIRECT_ACTION } from "./base.js";
+import { QueryParser, URL_PARAMETERS, UrlParser } from "./url.js";
 
 // For unit tests under node
 const atob = (typeof window !== "undefined") ? window.atob : function (a) {
@@ -62,10 +62,10 @@ export function processRedirectRules(callback) {
 
         if (this.action & FILTER_ACTION && this.type === "sub_frame" && !skipInlineUrlFilter) {
             callback(this, action, true);
-            return {cancel: true};
+            return { cancel: true };
         } else {
             callback(this, action);
-            return {redirectUrl: this.redirectUrl};
+            return { redirectUrl: this.redirectUrl };
         }
     }
     return null;
@@ -102,7 +102,7 @@ class QueryInstruction extends RedirectInstruction {
             value += pattern.resolve(urlParser);
         }
         let queryParser = new QueryParser(urlParser.href);
-        queryParser.set(this.name , value);
+        queryParser.set(this.name, value);
         urlParser.href = queryParser.href;
     }
 }
@@ -152,6 +152,12 @@ class ReplaceStringManipulation {
 
     apply(str) {
         return str.replace(this.pattern, this.replacement);
+    }
+}
+
+class ReplaceAllStringManipulation extends ReplaceStringManipulation {
+    constructor(pattern, replacement) {
+        super(new RegExp(pattern, "g"), replacement);
     }
 }
 
@@ -369,7 +375,8 @@ function parseRedirectParameters(redirectUrl) {
 
 function parseStringManipulations(rules) {
     let manipulations = [];
-    let replacePattern = /^\|?\/(.+?(?!\\).)\/([^|]*)(.*)/;
+    let replacePattern = /^\|?\/(.+?\/[^|]*)(.*)/;
+    let replaceAllPattern = /^\|?\/\/(.+?\/[^|]*)(.*)/;
     let extractPattern = /^\|?(:-?\d*)(:-?\d*)?(.*)/;
     let keywordPattern = /^\|(\w+)(.*)/;
     let keywordManipulations = {
@@ -381,10 +388,23 @@ function parseStringManipulations(rules) {
         "encodebase64": EncodeBase64Manipulation,
     };
     while (typeof rules === "string" && rules.length > 0) {
-        let match = replacePattern.exec(rules);
+        let match = replaceAllPattern.exec(rules);
         if (match !== null) {
-            let [, pattern, replacement, end] = match;
-            manipulations.push(new ReplaceStringManipulation(pattern, replacement));
+            let [, p, end] = match;
+            let [pattern, replacement] = parseReplacePattern(p);
+            if (pattern != null) {
+                manipulations.push(new ReplaceAllStringManipulation(pattern, replacement));
+            }
+            rules = end;
+            continue;
+        }
+        match = replacePattern.exec(rules);
+        if (match !== null) {
+            let [, p, end] = match;
+            let [pattern, replacement] = parseReplacePattern(p);
+            if (pattern != null) {
+                manipulations.push(new ReplaceStringManipulation(pattern, replacement));
+            }
             rules = end;
             continue;
         }
@@ -410,4 +430,18 @@ function parseStringManipulations(rules) {
         }
     }
     return manipulations;
+}
+
+function parseReplacePattern(str) {
+    let counter = 0;
+    for (let i = 0; i < str.length; i++) {
+        if (str.charAt(i) === "\\") {
+            counter++;
+        } else if (str.charAt(i) === "/" && counter === 0 || counter % 1) {
+            return [str.substring(0, i), str.substring(i + 1)];
+        } else {
+            counter = 0;
+        }
+    }
+    return [null, null];
 }

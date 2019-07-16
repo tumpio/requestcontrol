@@ -249,7 +249,14 @@ Parameter expansion supports the following string manipulation formats:
 ==== Substring replacing ====
 
 <pre>{parameter/pattern/replacement}</pre>
-Replace a matched substring in the extracted parameter. The pattern is written in regular expression. A number of special replacement patterns are supported, including referencing of capture groups which are described below.
+
+Replace the first matched substring in expanded parameter.
+
+<pre>{parameter//pattern/replacement}</pre>
+
+Replace all occurrences of matched substring in expanded parameter.
+
+The pattern is written in regular expression. A number of special replacement patterns are supported, including referencing of capture groups which are described below.
 
 {|
 | <code>$n</code>
@@ -276,7 +283,7 @@ Extract a part of the expanded parameter. Offset determines the starting positio
 ==== Decoding and encoding ====
 
 <pre>{parameter|encodingRule}</pre>
-Decode or encode captured pattern.
+Decode or encode expanded pattern.
 
 {|
 | <code>encodeURI</code>

@@ -52,6 +52,30 @@ test("Substring replace pattern - regexp replace", t => {
     t.is(redirectRule.apply(request), target);
 });
 
+test("Substring replace pattern - replace all occurences", t => {
+    let request, target, redirectRule;
+    request = "http://foo.com/foo/foo?foo=bar#foo";
+    target = "http://bar.com/bar/bar?bar=bar#bar";
+    redirectRule = new RedirectRule(0, "{href//foo/bar}");
+    t.is(redirectRule.apply(request), target);
+});
+
+test("Substring replace pattern - replace backslash", t => {
+    let request, target, redirectRule;
+    request = "http:\\/\\/foo.com\\/foo\\/";
+    target = "http://foo.com/foo/";
+    redirectRule = new RedirectRule(0, "{href//\\\\+/}");
+    t.is(redirectRule.apply(request), target);
+});
+
+test("Substring replace pattern - replace all combined", t => {
+    let request, target, redirectRule;
+    request = "http://track.steadyhq.com/track/click/12345678/steadyhq.com?p=eyJzIjoidDJLdmg0NVV4MUJkNFh3N3lrUkR6djRMWlJNIiwidiI6MSwicCI6IntcInVcIjoxMjM0NTY3OCxcInZcIjoxLFwidXJsXCI6XCJodHRwczpcXFwvXFxcL3N0ZWFkeWhxLmNvbVxcXC9wcm9qZWN0XFxcL3Bvc3RzXFxcLzlmYjYwMWU0LWIzMjctNGY2YS01NzljLWU1NGM4NDE1YmY0YlwiLFwiaWRcIjpcIjZmOTNmMTZhYWE0NTQyYjk2M2M2NjEwOGMwZTk4ZjJcIixcInVybF9pZHNcIjpbXCI2OWExOTZiYWIzODNmN2YyZDcxMDQxMjA3MWQ5NjhmNmRiYmVlMDQ4XCJdfSJ9";
+    target = "https://steadyhq.com/project/posts/9fb601e4-b327-4f6a-579c-e54c8415bf4b";
+    redirectRule = new RedirectRule(0, "{search.p|decodeBase64|/.*\"(http.*?)\".*/$1|//\\\\+/}");
+    t.is(redirectRule.apply(request), target);
+});
+
 test("Substring replace pattern - regexp repetition quantifiers ", t => {
     let request, target, redirectRule;
     request = "https://i.imgur.com/cijC2a2l.jpg";
