@@ -5,12 +5,10 @@
 import {
     createMatchPatterns,
     createRule,
-    markRequest,
-    markedRequests,
-    resolveRequest,
     ALL_URLS
 } from "./RequestControl/api.js";
-import {getNotifier} from "./notifier.js";
+import { getNotifier } from "./notifier.js";
+import { markedRequests, mark, resolve } from "./RequestControl/control.js";
 
 /**
  * Background script for processing Request Control rules, adding request listeners and keeping
@@ -77,17 +75,17 @@ function addRuleListeners(rules) {
             types: data.types
         };
         let listener = function (details) {
-            markRequest(details, rule);
+            mark(details, rule);
         };
         browser.webRequest.onBeforeRequest.addListener(listener, filter);
         requestListeners.push(listener);
     }
     browser.webRequest.onBeforeRequest.addListener(requestControlListener,
-        {urls: [ALL_URLS]}, ["blocking"]);
+        { urls: [ALL_URLS] }, ["blocking"]);
 }
 
-function requestControlListener(details) {
-    return resolveRequest(details, requestControlCallback);
+function requestControlListener(request) {
+    return resolve(request, requestControlCallback);
 }
 
 function requestControlCallback(request, action, updateTab = false) {

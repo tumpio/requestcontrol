@@ -9,16 +9,10 @@ import { FilterRule } from "./filter.js";
 import { RedirectRule } from "./redirect.js";
 
 export const ALL_URLS = "*://*/*";  // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
-export const markedRequests = new Map();
 
-export function markRequest(details, rule) {
-    if (!rule.match(details)) {
+export function markRequest(request, rule) {
+    if (!rule.match(request)) {
         return false;
-    }
-    let request = markedRequests.get(details.requestId);
-    if (typeof request === "undefined") {
-        markedRequests.set(details.requestId, details);
-        request = details;
     }
     if (typeof request.rulePriority === "undefined" || rule.priority > request.rulePriority) {
         request.rulePriority = rule.priority;
@@ -33,15 +27,6 @@ export function markRequest(details, rule) {
         request.action |= rule.action;
     }
     return true;
-}
-
-export function resolveRequest(details, callback) {
-    if (markedRequests.has(details.requestId)) {
-        let request = markedRequests.get(details.requestId);
-        markedRequests.delete(request.requestId);
-        return request.resolve(callback);
-    }
-    return null;
 }
 
 export function createRule(data) {
