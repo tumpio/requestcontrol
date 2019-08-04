@@ -379,6 +379,7 @@ RuleInput.prototype = {
             this.updateRule();
             let newInput = this.factory.newInput(this.rule);
             this.model.parentNode.insertBefore(newInput.model, this.model);
+            newInput.select(this.isSelected());
             this.softRemove();
             newInput.toggleEdit();
             input = newInput;
@@ -523,6 +524,10 @@ RuleInput.prototype = {
     select: function (isSelected) {
         this.$(".select").checked = isSelected;
         this.model.classList.toggle("selected", isSelected);
+    },
+
+    isSelected: function() {
+        return this.$(".select").checked;
     },
 
     updateHeader: function () {

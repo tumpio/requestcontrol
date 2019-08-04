@@ -3,14 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-import {RuleInputFactory} from "/src/options/RuleInput.js";
-import {testRules} from "/src/options/RuleTester.js";
-import {BLOCK_ACTION, FILTER_ACTION, REDIRECT_ACTION, WHITELIST_ACTION} from "/src/RequestControl/base.js";
-import {uuid} from "/src/options/lib/uuid.js";
-import {Toc} from "/src/options/lib/toc.js";
-import {OptionsManager} from "/src/options/lib/OptionsManager.js";
-import {getSubPage, toggleDisabled} from "/src/options/lib/UiHelpers.js";
-import {exportObject, importFile} from "/src/options/lib/ImportExport.js";
+import { RuleInputFactory } from "/src/options/RuleInput.js";
+import { testRules } from "/src/options/RuleTester.js";
+import { BLOCK_ACTION, FILTER_ACTION, REDIRECT_ACTION, WHITELIST_ACTION } from "/src/RequestControl/base.js";
+import { uuid } from "/src/options/lib/uuid.js";
+import { Toc } from "/src/options/lib/toc.js";
+import { OptionsManager } from "/src/options/lib/OptionsManager.js";
+import { getSubPage, toggleDisabled } from "/src/options/lib/UiHelpers.js";
+import { exportObject, importFile } from "/src/options/lib/ImportExport.js";
 
 /**
  * Options page for Request Control rule management, settings and manual page.
@@ -233,6 +233,32 @@ function toggleRuleBlocks() {
     }
 }
 
+function updateAllHeaders() {
+    for (let header of document.querySelectorAll(".header-rules")) {
+        updateRuleListHeader(header);
+    }
+}
+
+function updateRuleListHeader(header) {
+    let checkbox = header.querySelector(".select-all-rules");
+    let list = header.nextElementSibling;
+
+    if (!list.querySelector(".select:checked")) {
+        checkbox.checked = false;
+        checkbox.indeterminate = false;
+    } else if (!list.querySelector(".select:not(:checked)")) {
+        checkbox.checked = true;
+        checkbox.indeterminate = false;
+    } else {
+        checkbox.checked = false;
+        checkbox.indeterminate = true;
+    }
+    let count = list.querySelectorAll(".select:checked").length;
+    let total = list.querySelectorAll(".select").length;
+    updateSelectedText(header, count, total);
+    updateTotalSelected();
+}
+
 function updateTotalSelected() {
     let total = document.querySelectorAll(".select:checked");
     for (let totalText of document.querySelectorAll(".total-selected-count")) {
@@ -407,6 +433,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("rule-edit-completed", function (e) {
         insertByOrder(e.target);
         toggleRuleBlocks();
+        updateAllHeaders();
     });
 
     document.addEventListener("rule-removed", function (e) {
@@ -415,23 +442,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.addEventListener("rule-select", function (e) {
-        let list = e.detail.parent;
-        let header = list.previousElementSibling;
-        let selectAll = header.querySelector(".select-all-rules");
-        if (!list.querySelector(".select:checked")) {
-            selectAll.checked = false;
-            selectAll.indeterminate = false;
-        } else if (!list.querySelector(".select:not(:checked)")) {
-            selectAll.checked = true;
-            selectAll.indeterminate = false;
-        } else {
-            selectAll.checked = false;
-            selectAll.indeterminate = true;
-        }
-        let count = list.querySelectorAll(".select:checked").length;
-        let total = list.querySelectorAll(".select").length;
-        updateSelectedText(header, count, total);
-        updateTotalSelected();
+        let header = e.detail.parent.previousElementSibling;
+        updateRuleListHeader(header);
     });
 
     document.getElementById("test-url").addEventListener("input", onRuleTest);
