@@ -94,12 +94,15 @@ class BadgeNotifier extends TitleNotifier {
     }
 }
 
-export function getNotifier(browserInfo) {
-    if (browserInfo.name === "Fennec") {
-        return TitleNotifier;
-    } else {
-        return BadgeNotifier;
-    }
+export function getNotifier() {
+    return browser.runtime.getBrowserInfo()
+        .then(info => {
+            if (info.name === "Fennec") {
+                return TitleNotifier;
+            } else {
+                return BadgeNotifier;
+            }
+        });
 }
 
 function updateBadge(tabId, icon, text) {

@@ -10,25 +10,6 @@ import { RedirectRule } from "./redirect.js";
 
 export const ALL_URLS = "*://*/*";  // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
 
-export function markRequest(request, rule) {
-    if (!rule.match(request)) {
-        return false;
-    }
-    if (typeof request.rulePriority === "undefined" || rule.priority > request.rulePriority) {
-        request.rulePriority = rule.priority;
-        request.rule = rule;
-        request.resolve = rule.resolve;
-        request.action = rule.action;
-    } else if (rule.priority === request.rulePriority) {
-        if (typeof request.rules === "undefined") {
-            request.rules = [request.rule];
-        }
-        request.rules.push(rule);
-        request.action |= rule.action;
-    }
-    return true;
-}
-
 export function createRule(data) {
     let requestMatcher = createRequestMatcher(data);
 

@@ -8,7 +8,7 @@ import {
     ALL_URLS
 } from "./RequestControl/api.js";
 import { getNotifier } from "./notifier.js";
-import { markedRequests, mark, resolve } from "./RequestControl/control.js";
+import { RequestController } from "./RequestControl/control.js";
 
 /**
  * Background script for processing Request Control rules, adding request listeners and keeping
@@ -20,14 +20,12 @@ import { markedRequests, mark, resolve } from "./RequestControl/control.js";
  */
 
 const requestListeners = [];
+const controller = new RequestController();
 const records = new Map();
 let notifier;
 
-Promise.all([
-    browser.runtime.getBrowserInfo(),
-    browser.storage.local.get()
-]).then(([browserInfo, options]) => {
-    notifier = getNotifier(browserInfo);
+browser.storage.local.get().then(async options => {
+    notifier = await getNotifier();
     init(options);
     browser.storage.onChanged.addListener(initOnChange);
 });
@@ -36,7 +34,7 @@ function init(options) {
     if (options.disabled) {
         notifier.disabledState(records);
         records.clear();
-        markedRequests.clear();
+        controller.clear();
         browser.tabs.onRemoved.removeListener(removeRecords);
         browser.webNavigation.onCommitted.removeListener(resetRecords);
         browser.runtime.onMessage.removeListener(getRecords);
@@ -51,10 +49,8 @@ function init(options) {
 }
 
 function initOnChange() {
-    let listener;
     while (requestListeners.length) {
-        listener = requestListeners.pop();
-        browser.webRequest.onBeforeRequest.removeListener(listener);
+        browser.webRequest.onBeforeRequest.removeListener(requestListeners.pop());
     }
     browser.webRequest.onBeforeRequest.removeListener(requestControlListener);
     browser.storage.local.get().then(init);
@@ -74,8 +70,8 @@ function addRuleListeners(rules) {
             urls: urls,
             types: data.types
         };
-        let listener = function (details) {
-            mark(details, rule);
+        let listener = details => {
+            controller.markRequest(details, rule);
         };
         browser.webRequest.onBeforeRequest.addListener(listener, filter);
         requestListeners.push(listener);
@@ -85,26 +81,24 @@ function addRuleListeners(rules) {
 }
 
 function requestControlListener(request) {
-    return resolve(request, requestControlCallback);
-}
-
-function requestControlCallback(request, action, updateTab = false) {
-    let tabRecordsCount = addRecord({
-        action: request.action,
-        tabId: request.tabId,
-        type: request.type,
-        url: request.url,
-        target: request.redirectUrl,
-        timestamp: request.timeStamp,
-        rule: request.rule,
-        rules: request.rules
-    });
-    notifier.notify(request.tabId, action, tabRecordsCount);
-    if (updateTab) {
-        browser.tabs.update(request.tabId, {
-            url: request.redirectUrl
+    return controller.resolve(request, (request, action, updateTab = false) => {
+        let tabRecordsCount = addRecord({
+            action: request.action,
+            tabId: request.tabId,
+            type: request.type,
+            url: request.url,
+            target: request.redirectUrl,
+            timestamp: request.timeStamp,
+            rule: request.rule,
+            rules: request.rules
         });
-    }
+        notifier.notify(request.tabId, action, tabRecordsCount);
+        if (updateTab) {
+            browser.tabs.update(request.tabId, {
+                url: request.redirectUrl
+            });
+        }
+    });
 }
 
 function getRecords() {

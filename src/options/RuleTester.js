@@ -1,13 +1,15 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-import {createMatchPatterns, createRule, markRequest} from "/src/RequestControl/api.js";
+import { createMatchPatterns, createRule } from "/src/RequestControl/api.js";
+import { RequestController } from "/src/RequestControl/control.js";
 
 export function testRules(url, rulePatterns) {
     let testURL, request;
+    let controller = new RequestController();
     try {
         testURL = new URL(url);
-        request = {url: testURL.href};
+        request = { url: testURL.href };
     } catch (e) {
         throw e;
     }
@@ -16,7 +18,7 @@ export function testRules(url, rulePatterns) {
         let matchPatterns = createMatchPatterns(rulePattern.pattern);
         for (let matchPattern of matchPatterns) {
             if (matchPatternToRegExp(matchPattern).test(url)) {
-                markRequest(request, rule);
+                controller.markRequest(request, rule);
                 break;
             }
         }

@@ -1,8 +1,10 @@
 import test from "ava";
 import * as RequestControl from "../src/RequestControl/api";
+import { RequestController } from "../src/RequestControl/control";
 
 test.beforeEach(t => {
     t.context.request = {url: "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F"};
+    t.context.controller = new RequestController();
 });
 
 test("Include match extender - match", t => {
@@ -12,7 +14,7 @@ test("Include match extender - match", t => {
             includes: ["cl?ck", "/a=[0-9]+/", "FOO"]
         }
     });
-    t.truthy(RequestControl.markRequest(t.context.request, rule));
+    t.truthy(t.context.controller.markRequest(t.context.request, rule));
 });
 
 test("Include match extender - no match", t => {
@@ -22,7 +24,7 @@ test("Include match extender - no match", t => {
             includes: ["clock", "/a=[a-z]+/"]
         }
     });
-    t.falsy(RequestControl.markRequest(t.context.request, rule));
+    t.falsy(t.context.controller.markRequest(t.context.request, rule));
 });
 
 test("Exclude match extender - match", t => {
@@ -32,7 +34,7 @@ test("Exclude match extender - match", t => {
             excludes: ["cl?ck", "/a=\\d+/"]
         }
     });
-    t.falsy(RequestControl.markRequest(t.context.request, rule));
+    t.falsy(t.context.controller.markRequest(t.context.request, rule));
 });
 
 test("Exclude match extender - no match", t => {
@@ -42,7 +44,7 @@ test("Exclude match extender - no match", t => {
             excludes: ["clock", "/a=[a-z]+/"]
         }
     });
-    t.truthy(RequestControl.markRequest(t.context.request, rule));
+    t.truthy(t.context.controller.markRequest(t.context.request, rule));
 });
 
 test("Combined include, exclude - match include", t => {
@@ -53,7 +55,7 @@ test("Combined include, exclude - match include", t => {
             excludes: ["clock"]
         }
     });
-    t.truthy(RequestControl.markRequest(t.context.request, rule));
+    t.truthy(t.context.controller.markRequest(t.context.request, rule));
 });
 
 test("Combined include, exclude - no match", t => {
@@ -64,7 +66,7 @@ test("Combined include, exclude - no match", t => {
             excludes: ["clock"]
         }
     });
-    t.falsy(RequestControl.markRequest(t.context.request, rule));
+    t.falsy(t.context.controller.markRequest(t.context.request, rule));
 });
 
 test("Combined include, exclude - match both", t => {
@@ -75,5 +77,5 @@ test("Combined include, exclude - match both", t => {
             excludes: ["click"]
         }
     });
-    t.falsy(RequestControl.markRequest(t.context.request, rule));
+    t.falsy(t.context.controller.markRequest(t.context.request, rule));
 });
