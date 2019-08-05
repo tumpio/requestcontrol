@@ -145,7 +145,7 @@ function toggleActive() {
 function setEnabled(enabled) {
     let button = document.getElementById("toggleActive");
     let textId = enabled ? "activate_false" : "activate_true";
-    let titleId = enabled ? "disable_rules" : "enabled_rules";
+    let titleId = enabled ? "disable_rules" : "enable_rules";
     button.classList.toggle("disabled", !enabled);
     button.textContent = browser.i18n.getMessage(textId);
     button.title = browser.i18n.getMessage(titleId);
