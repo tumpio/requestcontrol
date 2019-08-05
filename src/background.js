@@ -23,11 +23,8 @@ const requestListeners = [];
 const records = new Map();
 let notifier;
 
-Promise.all([
-    browser.runtime.getBrowserInfo(),
-    browser.storage.local.get()
-]).then(([browserInfo, options]) => {
-    notifier = getNotifier(browserInfo);
+browser.storage.local.get().then(async options => {
+    notifier = await getNotifier();
     init(options);
     browser.storage.onChanged.addListener(initOnChange);
 });
@@ -51,10 +48,8 @@ function init(options) {
 }
 
 function initOnChange() {
-    let listener;
     while (requestListeners.length) {
-        listener = requestListeners.pop();
-        browser.webRequest.onBeforeRequest.removeListener(listener);
+        browser.webRequest.onBeforeRequest.removeListener(requestListeners.pop());
     }
     browser.webRequest.onBeforeRequest.removeListener(requestControlListener);
     browser.storage.local.get().then(init);
@@ -74,7 +69,7 @@ function addRuleListeners(rules) {
             urls: urls,
             types: data.types
         };
-        let listener = function (details) {
+        let listener = details => {
             mark(details, rule);
         };
         browser.webRequest.onBeforeRequest.addListener(listener, filter);
@@ -85,26 +80,24 @@ function addRuleListeners(rules) {
 }
 
 function requestControlListener(request) {
-    return resolve(request, requestControlCallback);
-}
-
-function requestControlCallback(request, action, updateTab = false) {
-    let tabRecordsCount = addRecord({
-        action: request.action,
-        tabId: request.tabId,
-        type: request.type,
-        url: request.url,
-        target: request.redirectUrl,
-        timestamp: request.timeStamp,
-        rule: request.rule,
-        rules: request.rules
-    });
-    notifier.notify(request.tabId, action, tabRecordsCount);
-    if (updateTab) {
-        browser.tabs.update(request.tabId, {
-            url: request.redirectUrl
+    return resolve(request, (request, action, updateTab = false) => {
+        let tabRecordsCount = addRecord({
+            action: request.action,
+            tabId: request.tabId,
+            type: request.type,
+            url: request.url,
+            target: request.redirectUrl,
+            timestamp: request.timeStamp,
+            rule: request.rule,
+            rules: request.rules
         });
-    }
+        notifier.notify(request.tabId, action, tabRecordsCount);
+        if (updateTab) {
+            browser.tabs.update(request.tabId, {
+                url: request.redirectUrl
+            });
+        }
+    });
 }
 
 function getRecords() {
