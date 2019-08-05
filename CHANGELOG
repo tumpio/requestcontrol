@@ -1,3 +1,7 @@
+Version 1.13.0 Aug 5, 2019
+- Change query parameter trimming in Filter Rule to not apply to the extracted redirect URL. #99
+- Add replace all substring support for Redirect Rule. #101
+
 Version 1.12.4 June 29, 2019
 - Add workaround for Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=1557300. #100
 - Other improvements to options (rule delete button, create button / new rule validation fix, type badge)
