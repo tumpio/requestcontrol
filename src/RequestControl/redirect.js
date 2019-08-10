@@ -60,7 +60,7 @@ export function processRedirectRules(callback) {
     if (this.url !== redirectUrl) {
         this.redirectUrl = redirectUrl;
 
-        if (this.action & FILTER_ACTION && this.type === "sub_frame" && !skipInlineUrlFilter) {
+        if (this.action == FILTER_ACTION && this.type === "sub_frame" && !skipInlineUrlFilter) {
             callback(this, action, true);
             return { cancel: true };
         } else {
