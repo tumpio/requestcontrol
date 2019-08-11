@@ -1,3 +1,7 @@
+Version 1.13.1 Aug 10, 2019
+- Fix subdocument redirect regression issue #103
+- Fix bad localization key.
+
 Version 1.13.0 Aug 5, 2019
 - Change query parameter trimming in Filter Rule to not apply to the extracted redirect URL. #99
 - Add replace all substring support for Redirect Rule. #101
