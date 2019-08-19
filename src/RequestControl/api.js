@@ -56,10 +56,8 @@ export function createMatchPatterns(pattern) {
         paths = [""];
     }
 
-    let hostTLDWildcardPattern = /^(.+)\.\*$/;
-
     for (let host of hosts) {
-        if (hostTLDWildcardPattern.test(host)) {
+        if (isTLDHostPattern(host)) {
             host = host.slice(0, -1);
             for (let TLD of pattern.topLevelDomains) {
                 for (let path of paths) {
@@ -101,4 +99,9 @@ export function createRegexpPattern(values, insensitive = true, containing = fal
         pattern += containing ? "" : "$";
     }
     return new RegExp(pattern.substring(1), flags);
+}
+
+export function isTLDHostPattern(host) {
+    let hostTLDWildcardPattern = /^(.+)\.\*$/;
+    return hostTLDWildcardPattern.test(host);
 }

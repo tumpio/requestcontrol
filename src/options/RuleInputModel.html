@@ -57,11 +57,12 @@
                 <div>
                   <small data-i18n="host"></small>
                   <input type="text" class="host" data-i18n-placeholder="host_placeholder" spellcheck="false"
-                    required="required" />
+                    data-separator=", " required="required" />
                 </div>
                 <div>
                   <small data-i18n="path"></small>
-                  <input type="text" class="path" data-i18n-placeholder="path_placeholder" spellcheck="false" />
+                  <input type="text" class="path" data-i18n-placeholder="path_placeholder" spellcheck="false"
+                    data-separator=" " />
                 </div>
               </div>
               <div class="form-group-tlds d-none">
@@ -71,7 +72,8 @@
                 </small>
                 <div class="tlds-block d-none">
                   <input type="text" class="input-tlds tlds d-none" disabled="disabled" spellcheck="false"
-                    autocomplete="off" data-i18n-placeholder="tlds_placeholder" required="required" />
+                    autocomplete="off" data-i18n-placeholder="tlds_placeholder" required="required"
+                    data-separator=", " />
                 </div>
               </div>
             </div>
@@ -88,10 +90,10 @@
         <div class="row">
           <div class="group-url-matchers d-none">
             <small data-i18n="includes"></small>
-            <input type="text" class="input-includes" spellcheck="false" autocomplete="off"
+            <input type="text" class="input-includes" spellcheck="false" autocomplete="off" data-separator=""
               data-i18n-placeholder="includes_placeholder" />
             <small data-i18n="excludes"></small>
-            <input type="text" class="input-excludes" spellcheck="false" autocomplete="off"
+            <input type="text" class="input-excludes" spellcheck="false" autocomplete="off" data-separator=""
               data-i18n-placeholder="excludes_placeholder" />
             <small data-i18n="match_by_origin"></small>
             <div>
@@ -199,7 +201,7 @@
   <div>
     <div class="form-wrap">
       <div class="col-trim-parameters">
-        <input type="text" class="input-params params" data-editable-tags="true" data-separator=" " autocomplete="off"
+        <input type="text" class="input-params params" data-editable-tags="true" data-separator="" autocomplete="off"
           spellcheck="false" data-i18n-placeholder="placeholder_trim_parameters" />
         <label class="btn">
           <input class="invert-trim" type="checkbox" autocomplete="off">

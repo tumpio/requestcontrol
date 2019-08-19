@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-import { createMatchPatterns } from "/src/RequestControl/api.js";
+import { createMatchPatterns, isTLDHostPattern } from "/src/RequestControl/api.js";
 import { uuid } from "/src/options/lib/uuid.js";
 import {
     getSubPage,
@@ -20,8 +20,6 @@ import { TagsInput } from "/src/options/lib/tags-input/src/tags-input.js";
  * Prototyped inheritance is used for rule types separation.
  * The same input model in RuleInputModel.html is used for all rule types.
  */
-
-const hostsTLDWildcardPattern = /^(.+\.\*,.+|.+\.\*)$/;
 
 function RequestRule() {
     return {
@@ -304,7 +302,7 @@ RuleInput.prototype = {
     },
 
     validateTLDPattern: function () {
-        let isTldsPattern = !this.$(".any-url").checked && hostsTLDWildcardPattern.test(this.$(".host").value);
+        let isTldsPattern = !this.$(".any-url").checked && this.hostsTagsInput.getValue().some(isTLDHostPattern);
         toggleHidden(!isTldsPattern, this.$(".form-group-tlds"));
         if (isTldsPattern) {
             if (this.tldsTagsInput.getValue().length === 0) {
@@ -604,7 +602,7 @@ RuleInput.prototype = {
             this.rule.pattern.scheme = this.$(".scheme").value;
             this.rule.pattern.host = this.hostsTagsInput.getValue();
             this.rule.pattern.path = this.pathsTagsInput.getValue();
-            if (hostsTLDWildcardPattern.test(this.$(".host").value)) {
+            if (this.rule.pattern.host.some(isTLDHostPattern)) {
                 this.rule.pattern.topLevelDomains = this.tldsTagsInput.getValue();
             }
             delete this.rule.pattern.allUrls;

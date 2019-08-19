@@ -17,6 +17,14 @@ const MOVE_PROPS = ["accept", "accesskey", "autocapitalize", "autofocus", "dir",
     "spellcheck", "step", "tabindex", "title"];
 
 function checkerForSeparator(separator) {
+    function noSeparator() {
+        return {
+            split: s => !s || !s.trim() ? [] : [s],
+            join: arr => arr.join(""),
+            test: () => false
+        };
+    }
+
     function simple(separator) {
         return {
             split: s => !s || !s.trim() ? [] : s.split(separator),
@@ -38,6 +46,10 @@ function checkerForSeparator(separator) {
             join: arr => arr.join(separators[0]),
             test: char => regex.test(char)
         };
+    }
+
+    if (!separator) {
+        return noSeparator();
     }
 
     return separator.length > 1 ? multi(separator) : simple(separator);
@@ -122,7 +134,7 @@ export function TagsInput(input) {
         }
 
         base.tags.appendChild(container);
-        input.value = values.join();
+        input.value = checker.join(values);
     }
 
     function save() {
@@ -261,7 +273,7 @@ export function TagsInput(input) {
     }
 
     const base = createElement("div", "tags-input card"),
-        checker = checkerForSeparator(input.getAttribute("data-separator") || ","),
+        checker = checkerForSeparator(input.getAttribute("data-separator")),
         allowDuplicates = checkAllowDuplicates();
 
     let inputType = input.getAttribute("type");
