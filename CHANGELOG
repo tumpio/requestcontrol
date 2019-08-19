@@ -1,3 +1,7 @@
+Version 1.13.2 Aug 19, 2019
+- Fix comma not accepeted in includes/excludes input fields. #105
+- Fix hosts/paths input field overflow issue with long list of values. #104
+
 Version 1.13.1 Aug 10, 2019
 - Fix subdocument redirect regression issue #103
 - Fix bad localization key.
