@@ -102,6 +102,7 @@ function displayErrorMessage(error) {
 
 function mergeRules(rules, rulesImport) {
     let newRules = [];
+    let mergedRules = [];
     for (let rule of rulesImport) {
         if (!rule.hasOwnProperty("uuid")) {
             rule.uuid = uuid();
@@ -114,6 +115,7 @@ function mergeRules(rules, rulesImport) {
             if (rule.uuid === rules[i].uuid) {
                 rules[i] = rule;
                 merged = true;
+                mergedRules.push(rule);
                 break;
             }
         }
@@ -122,7 +124,7 @@ function mergeRules(rules, rulesImport) {
             newRules.push(rule);
         }
     }
-    return newRules;
+    return [newRules, mergedRules];
 }
 
 function importRules(rulesImport) {
@@ -132,18 +134,17 @@ function importRules(rulesImport) {
         rules = rules.concat(myOptionsManager.options.rules);
     }
 
-    let newRules = [];
-    if (Array.isArray(rulesImport)) {
-        newRules = mergeRules(rules, rulesImport);
-    } else {
-        newRules = mergeRules(rules, [rulesImport]);
-    }
+    let [newRules, merged] = mergeRules(rules, Array.isArray(rulesImport) ? rulesImport : [rulesImport]);
 
     try {
         createRuleInputs(newRules, "new");
         myOptionsManager.saveOption("rules", rules);
         window.location.hash = "#tab-rules";
         document.body.scrollIntoView(false);
+        for (let rule of merged) {
+            let model = document.getElementById("rule-" + rule.uuid);
+            model.setRule(rule);
+        }
     } catch (ex) {
         displayErrorMessage(ex);
     }

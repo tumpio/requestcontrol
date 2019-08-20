@@ -125,6 +125,7 @@ function RuleInput(rule) {
     this.updateHeader();
 
     this.model.getRule = this.getRule.bind(this);
+    this.model.setRule = this.setRule.bind(this);
     this.model.remove = this.remove.bind(this);
     this.model.edit = this.toggleEdit.bind(this);
     this.model.select = this.select.bind(this);
@@ -633,6 +634,12 @@ RuleInput.prototype = {
 
         this.rule.action = this.$(".action:checked").value;
     },
+
+    setRule: function(rule) {
+        this.rule = rule;
+        this.updateHeader();
+        this.updateInputs();
+    }
 };
 
 function BlockRuleInput(rule) {
