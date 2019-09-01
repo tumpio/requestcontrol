@@ -6,56 +6,67 @@ import { createRegexpPattern } from "../src/RequestControl/api";
 test("Filter inline url redirection", t => {
     const request = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2Fkodin-elektroniikka%2Fintel-core-i7-8700k-3-7-ghz-12mb-socket-1151-p41787528";
     const target = "http://bar.com/kodin-elektroniikka/intel-core-i7-8700k-3-7-ghz-12mb-socket-1151-p41787528";
-    t.is(new FilterRule(0, null, false, false, false).apply(request), target);
+    t.is(new FilterRule().apply(request), target);
 });
 
 test("Skip inline url filtering", t => {
     const request = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2Fkodin-elektroniikka%2Fintel-core-i7-8700k-3-7-ghz-12mb-socket-1151-p41787528%3Futm_source%3Dmuropaketti%26utm_medium%3Dcpc%26utm_campaign%3Dmuropaketti";
     const target = "http://foo.com/click?p=240631&a=2314955&g=21407340";
-    t.is(new FilterRule(0, { values: ["url"] }, false, true).apply(request), target);
+    t.is(new FilterRule({
+        paramsFilter: { values: ["url"] },
+        skipRedirectionFilter: true
+    }).apply(request), target);
 });
 
 test("Skip inline url filtering on same domain", t => {
     const request = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Ffoo.com%2Fkodin-elektroniikka%2Fintel-core-i7-8700k-3-7-ghz-12mb-socket-1151-p41787528%3Futm_source%3Dmuropaketti%26utm_medium%3Dcpc%26utm_campaign%3Dmuropaketti";
-    t.is(new FilterRule(0, null, false, false, true).apply(request), request);
+    t.is(new FilterRule({
+        skipOnSameDomain: true
+    }).apply(request), request);
 });
 
 test("Filter inline url redirection - trim query params before", t => {
     const request = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Ffoo.com%2Fkodin-elektroniikka%2Fintel-core-i7-8700k-3-7-ghz-12mb-socket-1151-p41787528%3Futm_source%3Dmuropaketti%26utm_medium%3Dcpc%26utm_campaign%3Dmuropaketti";
     const target = "http://foo.com/click?p=240631&a=2314955&g=21407340";
-    t.is(new FilterRule(0, { values: ["url"] }, false, false, false).apply(request), target);
+    t.is(new FilterRule({
+        paramsFilter: { values: ["url"] }
+    }).apply(request), target);
 });
 
 test("Filter inline url redirection - query params trimming not applied on parsed inline url", t => {
     const request = "http://foo.com/?adobeRef=62716f6088c511e987842211e560f7e80001&sdtid=13131712&sdop=1&sdpid=128047819&sdfid=9&sdfib=1&lno=1&trd=https%20play%20google%20com%20store%20app%20&pv=&au=&u2=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.pockettrend.neomonsters";
     const target = "https://play.google.com/store/apps/details?id=com.pockettrend.neomonsters";
-    t.is(new FilterRule(0, {
-        values: ["u2"],
-        invert: true
-    }, false, false, false).apply(request), target);
+    t.is(new FilterRule({
+        paramsFilter: {
+            values: ["u2"],
+            invert: true
+        }
+    }).apply(request), target);
 });
 
 test("Trim query parameters", t => {
     let request, target, filterRule;
 
-    filterRule = new FilterRule(0, { values: ["utm_*", "feature", "parameter"] }, false, true);
+    filterRule = new FilterRule({ paramsFilter: { values: ["utm_*", "feature", "parameter"] } });
     request = "https://www.youtube.com/watch?v=yWtFGtIlzyQ&feature=em-uploademail?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc";
     target = "https://www.youtube.com/watch?v=yWtFGtIlzyQ?key=value?key=value";
     t.is(filterRule.apply(request), target);
 
-    filterRule = new FilterRule(0, { values: ["utm_source", "utm_medium"] }, false, true);
+    filterRule = new FilterRule({ paramsFilter: { values: ["utm_source", "utm_medium"] } });
     request = "https://www.ghacks.net/2017/04/30/firefox-nightly-marks-legacy-add-ons/?utm_source=feedburner&utm_medium=feed";
     target = "https://www.ghacks.net/2017/04/30/firefox-nightly-marks-legacy-add-ons/";
     t.is(filterRule.apply(request), target);
 
-    filterRule = new FilterRule(0, {
-        values: ["ws_ab_test", "btsid", "algo_expid", "algo_pvid"]
-    }, false, true);
+    filterRule = new FilterRule({
+        paramsFilter: {
+            values: ["ws_ab_test", "btsid", "algo_expid", "algo_pvid"]
+        }
+    });
     request = "https://www.aliexpress.com/item/Xiaomi-Mini-Router-2-4GHz-5GHz-Dual-Band-Max-1167Mbps-Support-Wifi-802-11ac-Xiaomi-Mi/32773978417.html?ws_ab_test=searchweb0_0,searchweb201602_3_10152_10065_10151_10068_436_10136_10137_10157_10060_10138_10155_10062_10156_10154_10056_10055_10054_10059_10099_10103_10102_10096_10169_10147_10052_10053_10142_10107_10050_10051_9985_10084_10083_10080_10082_10081_10110_10111_10112_10113_10114_10181_10183_10182_10078_10079_10073_10070_10123-9985,searchweb201603_2,ppcSwitch_5&btsid=3f9443f8-38ad-472c-b6a6-00b8a3db74a3&algo_expid=8f505cf2-0671-4c52-b976-d7a3169da8bc-6&algo_pvid=8f505cf2-0671-4c52-b976-d7a3169da8bc";
     target = "https://www.aliexpress.com/item/Xiaomi-Mini-Router-2-4GHz-5GHz-Dual-Band-Max-1167Mbps-Support-Wifi-802-11ac-Xiaomi-Mi/32773978417.html";
     t.is(filterRule.apply(request), target);
 
-    filterRule = new FilterRule(0, { values: ["sid"] }, false, true);
+    filterRule = new FilterRule({ paramsFilter: { values: ["sid"] } });
     request = "http://forums.mozillazine.org/viewtopic.php?sid=6fa91cda58212e7e869dc2022b9e6217&f=48&t=1920191";
     target = "http://forums.mozillazine.org/viewtopic.php?f=48&t=1920191";
     t.is(filterRule.apply(request), target);
@@ -68,22 +79,24 @@ test("Trim query parameters", t => {
 test("Trim query parameters (inverted)", t => {
     const request = "https://www.youtube.com/watch?v=yWtFGtIlzyQ&feature=em-uploademail?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc";
     const target = "https://www.youtube.com/watch?feature=em-uploademail?parameter&utm_source?utm_medium=abc&parameter&utm_term?utm_medium=abc";
-    t.is(new FilterRule(0, {
-        values: ["utm_*", "feature", "parameter"],
-        invert: true
-    }, false, true).apply(request), target);
+    t.is(new FilterRule({
+        paramsFilter: {
+            values: ["utm_*", "feature", "parameter"],
+            invert: true
+        }
+    }).apply(request), target);
 });
 
 test("Remove all query parameters", t => {
     const request = "https://www.youtube.com/watch?v=yWtFGtIlzyQ&feature=em-uploademail#hash";
     const target = "https://www.youtube.com/watch#hash";
-    t.is(new FilterRule(0, null, true, true).apply(request), target);
+    t.is(new FilterRule({ trimAllParams: true }).apply(request), target);
 });
 
 test("Filter inline url redirection - trim parameters before inline url parsing", t => {
     const request = "http://go.redirectingat.com/?xs=1&id=xxxxxxx&sref=http%3A%2F%2Fwww.vulture.com%2F2018%2F05%2Fthe-end-of-nature-at-storm-king-art-center-in-new-york.html&xcust=xxxxxxxx&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FNathaniel_Parker_Willis";
     const target = "https://en.wikipedia.org/wiki/Nathaniel_Parker_Willis";
-    t.is(new FilterRule(0, { values: ["sref"] }, false, false).apply(request), target);
+    t.is(new FilterRule({ paramsFilter: { values: ["sref"] } }).apply(request), target);
 });
 
 test("Inline url parsing", t => {
@@ -114,29 +127,36 @@ test("Inline url parsing", t => {
 });
 
 test("Query parameter trimming", t => {
-    t.is(trimQueryParameters("http://site.com/?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
+    t.is(trimQueryParameters(
+        "http://site.com/?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
         createRegexpPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
-            "utm_reader", "utm_place"])),
-        "http://site.com/?parameter&key=value?parameter?key=value");
-    t.is(trimQueryParameters("http://site.com/?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
+            "utm_reader", "utm_place"])
+    ), "http://site.com/?parameter&key=value?parameter?key=value");
+    t.is(trimQueryParameters(
+        "http://site.com/?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
         createRegexpPattern(["utm_medium", "utm_term", "utm_content", "utm_campaign",
-            "utm_reader", "utm_place"])),
-        "http://site.com/?parameter&utm_source&key=value?parameter?key=value");
-    t.is(trimQueryParameters("http://site.com/??utm_source&parameter&utm_source&key=value???utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
+            "utm_reader", "utm_place"])
+    ), "http://site.com/?parameter&utm_source&key=value?parameter?key=value");
+    t.is(trimQueryParameters(
+        "http://site.com/??utm_source&parameter&utm_source&key=value???utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
         createRegexpPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
-            "utm_reader", "utm_place"])),
-        "http://site.com/??parameter&key=value???parameter?key=value");
-    t.is(trimQueryParameters("http://site.com/??utm_source&parameter&utm_source&key=value???utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        createRegexpPattern(["u?m_*"])),
-        "http://site.com/??parameter&key=value???parameter?key=value");
-    t.is(trimQueryParameters("http://site.com/?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
+            "utm_reader", "utm_place"])
+    ), "http://site.com/??parameter&key=value???parameter?key=value");
+    t.is(trimQueryParameters(
+        "http://site.com/??utm_source&parameter&utm_source&key=value???utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
+        createRegexpPattern(["u?m_*"])
+    ), "http://site.com/??parameter&key=value???parameter?key=value");
+    t.is(trimQueryParameters(
+        "http://site.com/?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
         createRegexpPattern(["utm_source", "utm_medium", "utm_term", "utm_content", "utm_campaign",
-            "utm_reader", "utm_place"]), true),
-        "http://site.com/?utm_source?utm_medium=abc&utm_term?utm_medium=abc");
-    t.is(trimQueryParameters("http://site.com/?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        createRegexpPattern(["/[parmetr]+/"]), true),
-        "http://site.com/?parameter?parameter");
-    t.is(trimQueryParameters("http://site.com/?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
-        createRegexpPattern(["/..._.{5,}/"]), false),
-        "http://site.com/?parameter&key=value?parameter&utm_term?key=value");
+            "utm_reader", "utm_place"]), true
+    ), "http://site.com/?utm_source?utm_medium=abc&utm_term?utm_medium=abc");
+    t.is(trimQueryParameters(
+        "http://site.com/?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
+        createRegexpPattern(["/[parmetr]+/"]), true
+    ), "http://site.com/?parameter?parameter");
+    t.is(trimQueryParameters(
+        "http://site.com/?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
+        createRegexpPattern(["/..._.{5,}/"]), false
+    ), "http://site.com/?parameter&key=value?parameter&utm_term?key=value");
 });

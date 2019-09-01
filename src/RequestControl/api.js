@@ -11,24 +11,21 @@ import { RedirectRule } from "./redirect.js";
 export const ALL_URLS = "*://*/*";  // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
 
 export function createRule(data) {
-    let requestMatcher = createRequestMatcher(data);
+    let extraMatchers = createRequestMatcher(data);
 
     switch (data.action) {
         case "whitelist":
             if (data.log) {
-                return new LoggedWhitelistRule(data.uuid, requestMatcher);
+                return new LoggedWhitelistRule(data, extraMatchers);
             } else {
-                return new WhitelistRule(data.uuid, requestMatcher);
+                return new WhitelistRule(data, extraMatchers);
             }
         case "block":
-            return new BlockRule(data.uuid, requestMatcher);
+            return new BlockRule(data, extraMatchers);
         case "redirect":
-            return new RedirectRule(data.uuid, data.redirectUrl,
-                data.redirectDocument, requestMatcher);
+            return new RedirectRule(data, extraMatchers);
         case "filter":
-            return new FilterRule(data.uuid, data.paramsFilter, data.trimAllParams,
-                data.skipRedirectionFilter, data.skipOnSameDomain, 
-                data.redirectDocument, requestMatcher);
+            return new FilterRule(data, extraMatchers);
         default:
             throw new Error("Unsupported rule action");
     }

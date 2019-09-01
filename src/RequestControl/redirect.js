@@ -16,8 +16,13 @@ const btoa = (typeof window !== "undefined") ? window.btoa : function btoa(b) {
 };
 
 export class RedirectRule extends ControlRule {
-    constructor(uuid, redirectUrl, redirectDocument, matcher) {
-        super(uuid, matcher);
+    constructor(
+        {
+            uuid,
+            redirectUrl = "",
+            redirectDocument = false
+        } = {}, matcher) {
+        super({ uuid }, matcher);
         let [parsedUrl, instructions] = parseRedirectInstructions(redirectUrl);
         let patterns = parseRedirectParameters(parsedUrl);
         this.instructions = instructions;
