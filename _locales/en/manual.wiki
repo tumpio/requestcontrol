@@ -31,19 +31,19 @@ Host pattern may match the host of the request URL in following ways:
 
 {|
 | <code>www.example.com</code>
-| Match a complete host.
+| Matches a complete host.
 |
 |-
 | <code>*.example.com</code>
-| Match the given host and any of its subdomains.
+| Matches the given host and any of its subdomains.
 | Will match any subdomain of example.com e.g. '''www'''.example.com , '''good'''.example.com
 |-
 | <code>www.example.*</code>
-| Match the given host and manually listed top-level domains. (can be combined with the subdomain matching)
+| Matches the given host and manually listed top-level domains. (can be combined with the subdomain matching)
 | Write the top-level domains to the top-level domain name list (e.g. ''com'', ''org'').
 |-
 | <code>*</code>
-| Match any host.
+| Matches any host.
 |
 |}
 
@@ -51,25 +51,25 @@ Host pattern may match the host of the request URL in following ways:
 
 Path pattern may subsequently contain any combination of &quot;*&quot; wildcard and any of the characters that are allowed in URL path. The &quot;*&quot; wildcard matches any portion of path and it may appear more than once.
 
-Below is examples of using path patterns.
+Below are examples of using path patterns.
 
 {|
 | <code>*</code>
-| Match any path.
+| Matches any path.
 |-
 | <code>path/a/b/</code>
-| Match exact path &quot;path/a/b/&quot;.
+| Matches the exact path &quot;path/a/b/&quot;.
 |-
 | <code>*b*</code>
-| Match path that contains a component &quot;b&quot; somewhere in the middle.
+| Matches a path that contains a component &quot;b&quot; somewhere in the middle.
 |-
 |
-| Match an empty path.
+| Matches an empty path.
 |}
 
 === Types ===
 
-A type indicates the requested resource. Rule can apply to single or multiple types. All supported types are listed below.
+Filter matched requests by the type of request. The type indicates the requested resource. All supported types are listed below.
 
 {|
 ! Type
@@ -79,37 +79,37 @@ A type indicates the requested resource. Rule can apply to single or multiple ty
 | Indicates a DOM document at the top-level that is retrieved directly within a browser tab. (main frame)
 |-
 | Sub document
-| Indicates a DOM document that is retrieved inside another DOM document. (sub frame)
+| Indicates a DOM document that is retrieved inside another DOM document (&lt;iframe&gt; and &lt;frame&gt; elements).
 |-
 | Stylesheet
 | Indicates a stylesheet (for example, &lt;style&gt; elements).
 |-
 | Script
-| Indicates an executable script (such as JavaScript).
+| Indicates an executable script (such as JavaScript) loaded with &lt;script&gt; element or the Worker API.
 |-
 | Image
 | Indicates an image (for example, &lt;img&gt; elements).
 |-
 | Object
-| Indicates a generic object.
+| Indicates a generic object (&lt;object&gt; and &lt;embed&gt; elements).
 |-
 | Plugin
 | Indicates a request made by a plugin. (object_subrequest)
 |-
 | XMLHttpRequest
-| Indicates an XMLHttpRequest.
+| Indicates a request made by an XMLHttpRequest (xhr) or by Fetch API.
 |-
 | XBL
 | Indicates an XBL binding request.
 |-
 | XSLT
-| Indicates a style sheet transformation.
+| Indicates an XSLT style sheet transformation for an XML document.
 |-
 | Ping
-| Indicates a ping triggered by a click on an &lt;a&gt; element using the ping attribute. Only in use if browser.send_pings is enabled (default is false).
+| Indicates a ping request triggered by an &lt;a&gt; element using the ping attribute. Only in use if browser.send_pings is enabled.
 |-
 | Speculative
-| Indicates a predictive TCP and/or TLS handsake for a request that browser has determined to be coming soon. Only in use if network.http.speculative-parallel-limit is greater than 0 (default is 6).
+| Indicates a predictive TCP and/or TLS handsake for a request that browser has determined to be coming soon. Only in use if network.http.speculative-parallel-limit is greater than 0.
 |-
 | Beacon
 | Indicates a [https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API Beacon] request.
@@ -121,7 +121,7 @@ A type indicates the requested resource. Rule can apply to single or multiple ty
 | Indicates a font loaded via @font-face rule.
 |-
 | Media
-| Indicates a video or audio load.
+| Indicates a video or audio load (&lt;video&gt; and &lt;audio&gt; elements).
 |-
 | WebSocket
 | Indicates a [https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API WebSocket] load.
@@ -130,10 +130,10 @@ A type indicates the requested resource. Rule can apply to single or multiple ty
 | Indicates a [https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP Content Security Policy] report.
 |-
 | Imageset
-| Indicates a request to load an &lt;img&gt; (with the srcset attribute) or &lt;picture&gt;.
+| Indicates a request to load an &lt;img&gt; (with the srcset attribute) or &lt;picture&gt; element.
 |-
 | Web Manifest
-| Indicates a request to load a Web manifest.
+| Indicates a request to load a Web App Manifest.
 |-
 | Other
 | Indicates a request that is not classified as being any of the above types.
@@ -142,7 +142,7 @@ A type indicates the requested resource. Rule can apply to single or multiple ty
 === Action ===
 
 ; [[File:/icons/icon-filter@19.png|image4]] Filter
-: Filter URL redirection and/or remove URL query parameters.
+: Skip URL redirection and/or remove URL query parameters.
 ; [[File:/icons/icon-block@19.png|image5]] Block
 : Cancel requests before they are made.
 ; [[File:/icons/icon-redirect@19.png|image6]] Redirect
@@ -152,28 +152,28 @@ A type indicates the requested resource. Rule can apply to single or multiple ty
 
 == Extra URL Matchers ==
 
-Following matchers extends the matching capabilities of [https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/RequestFilter WebRequest API].
+Following matchers extend the matching capabilities of [https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/RequestFilter WebRequest API].
 
 === Includes and Excludes ===
 
-A list of patterns that request URL must or must not contain. Include and exclude pattern can be defined as a string with support for wildcards &quot;?&quot; and &quot;*&quot; (where &quot;?&quot; matches any single character and &quot;*&quot; matches zero or more characters), or as a regular expression pattern <code>/regexp/</code>.
+Filter matched requests by patterns that can be defined as a string with support for wildcards &quot;?&quot; and &quot;*&quot; (where &quot;?&quot; matches any single character and &quot;*&quot; matches zero or more characters), or as a regular expression pattern.
 
 Include and exclude pattern matching is case insensitive as opposed to [[#host|Host]] and [[#path|Path]] which are case sensitive.
 
-Below is examples of using include and exclude patterns:
+Below are examples of using include and exclude patterns:
 
 {|
 | <code>login</code>
-| Match urls containing &quot;login&quot;.
+| Matches URLs containing &quot;login&quot;.
 |-
 | <code>log?n</code>
-| Matches for example urls containing &quot;login&quot; and &quot;logon&quot;.
+| Matches for example URLs containing &quot;login&quot; and &quot;logon&quot;.
 |-
 | <code>a*b</code>
-| Match urls where &quot;a&quot; is followed by &quot;b&quot;
+| Matches URLs where &quot;a&quot; is followed by &quot;b&quot;
 |-
 | <code>/[?&]a=\d+(&|$)/</code>
-| Match urls containing parameter &quot;a&quot; with digits as value.
+| Matches URLs containing parameter &quot;a&quot; with digits as value.
 |}
 
 === Match by origin ===
@@ -182,19 +182,19 @@ Filter matched requests by origin of request.
 
 {|
 | Any
-| Match requests with any origin
+| Matches requests with any origin
 |-
 | Same domain
-| Match requests on same domain
+| Matches requests on same domain
 |-
 | Same origin
-| Match requests on same origin. Adheres to the [https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy Same-origin policy].
+| Matches requests on same origin. Adheres to the [https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy Same-origin policy].
 |-
 | Third party domain
-| Match requests to third party domain
+| Matches requests to third party domain
 |-
 | Third party origin
-| Match requests to third party origin
+| Matches requests to third party origin
 |}
 
 == Rule priorities ==
@@ -210,17 +210,17 @@ Whitelist rules have the highest priority and they revoke all other rules. Block
 
 Filter rule supports URL query parameter trimming. Trimmed URL parameters are defined either as literal strings with support for &quot;*&quot; and &quot;?&quot; wildcards or using regular expression.
 
-Below is examples of using parameter trimming patterns.
+Below are examples of using query parameter trimming patterns.
 
 {|
 | <code>utm_source</code>
-| Trim any &quot;utm_source&quot; param
+| Trims any &quot;utm_source&quot; parameter
 |-
 | <code>utm_*</code>
-| Trim any param starting with &quot;utm_&quot;
+| Trims any parameter starting with &quot;utm_&quot;
 |-
 | <code>/[0-9]+/</code>
-| Trim any param containing only digits
+| Trims any parameter containing only digits
 |}
 
 === Invert Trim Option ===
@@ -233,9 +233,9 @@ Removes all URL query parameters from matched request.
 
 == Redirect using pattern capturing ==
 
-Redirect rule supports redirecting requests to a manually configured URL. The redirect URL may be parametrized using parameter expansion and redirect instructions. Parameter expansion allows to access a set of named parameters of the original URL. Redirect instructions can be used to modify the original request by changing the parts of the original URL (e.g. by instructing requests to redirect to a different port).
+Redirect rule supports redirecting requests to a manually configured URL. The redirect URL may be parametrized using parameter expansion and redirect instructions. Parameter expansion allows to access and manipulate a set of named parameters of the original URL. Redirect instructions can be used to replace named parameters of original request URL (e.g. by instructing requests to redirect to a different port).
 
-Both methods may be combined. Redirect instructions will be parsed and applied first to the request URL before parameter expansions.
+Both methods may be combined. Redirect instructions will be parsed and applied first before parameter expansions.
 
 Parameter expansion may also be used within a redirect instruction.
 
@@ -250,11 +250,11 @@ Parameter expansion supports the following string manipulation formats:
 
 <pre>{parameter/pattern/replacement}</pre>
 
-Replace the first matched substring in expanded parameter.
+Replaces the first matched substring in expanded parameter.
 
 <pre>{parameter//pattern/replacement}</pre>
 
-Replace all occurrences of matched substring in expanded parameter.
+Replaces all occurrences of matched substring in expanded parameter.
 
 The pattern is written in regular expression. A number of special replacement patterns are supported, including referencing of capture groups which are described below.
 
@@ -283,7 +283,7 @@ Extract a part of the expanded parameter. Offset determines the starting positio
 ==== Decoding and encoding ====
 
 <pre>{parameter|encodingRule}</pre>
-Decode or encode expanded pattern.
+Decode or encode an expanded pattern.
 
 {|
 | <code>encodeURI</code>
@@ -308,7 +308,7 @@ Decode or encode expanded pattern.
 ==== Combining manipulation rules ====
 
 <pre>{parameter(manipulation1)|(manipulation2)...|(manipulationN)}</pre>
-All the string manipulation rules can be chained using a &quot;|&quot; pipe character. The output is the result of the manipulations chain.
+String manipulation rules can be chained using a &quot;|&quot; pipe character. The output is the result of manipulations chain.
 
 ==== Examples ====
 
@@ -318,7 +318,7 @@ Uses the hostname of the original request.
 <pre>https://{hostname/([a-z]{2}).*/$1}/new/path</pre>
 Captures a part of the hostname of the original request.
 
-<pre>https://{hostname::-3|/.co/.com}/new/path</pre>
+<pre>https://{hostname::-3|/\.co/\.com}/new/path</pre>
 Uses the hostname of the original request but manipulate its length by three cutting it from the end and replace &quot;.co&quot; with &quot;.com&quot;.
 
 <pre>{search.url|decodeURIComponent}</pre>
@@ -327,11 +327,11 @@ Captures &quot;url&quot; search parameter and decodes it.
 === Redirect instruction ===
 
 <pre>[parameter=value]</pre>
-Replace a certain part of the original request. The available named parameters are listed at the end of this section.
-
-The value of a redirect instruction can be parametrized using the parameter expansion described above.
+Replace a certain part of the original request. Available named URL parameters are listed at the end of this section.
 
 <pre>[parameter={parameter<manipulations>}]</pre>
+
+The value of a redirect instruction can be parametrized using the parameter expansion described above.
 
 ==== Examples ====
 
@@ -346,7 +346,7 @@ Redirects the original request to a port 8080 of localhost where hash is the ori
 
 === List of named parameters ===
 
-Names of the supported parameters and their example outputs are listed in below table.
+Names of the supported parameters and their example outputs are listed in the table below.
 
 Example address used as input:
 
@@ -392,4 +392,3 @@ This manual page is build upon the material of the following MDN wiki documents 
 # [https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType webRequest.ResourceType] by [https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType$history Mozilla Contributors] is licensed under [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
 # [https://developer.mozilla.org/en-US/docs/Web/API/URL URL] by [https://developer.mozilla.org/en-US/docs/Web/API/URL$history Mozilla Contributors] is licensed under [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
 # [https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsIContentPolicy nsIContentPolicy] by [https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsIContentPolicy$history Mozilla Contributors] is licensed under [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
-

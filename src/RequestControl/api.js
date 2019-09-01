@@ -23,10 +23,12 @@ export function createRule(data) {
         case "block":
             return new BlockRule(data.uuid, requestMatcher);
         case "redirect":
-            return new RedirectRule(data.uuid, data.redirectUrl, requestMatcher);
+            return new RedirectRule(data.uuid, data.redirectUrl,
+                data.redirectDocument, requestMatcher);
         case "filter":
             return new FilterRule(data.uuid, data.paramsFilter, data.trimAllParams,
-                data.skipRedirectionFilter, data.skipOnSameDomain, requestMatcher);
+                data.skipRedirectionFilter, data.skipOnSameDomain, 
+                data.redirectDocument, requestMatcher);
         default:
             throw new Error("Unsupported rule action");
     }

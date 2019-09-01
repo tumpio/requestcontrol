@@ -536,6 +536,9 @@
   "skip_within_same_domain": {
     "message": "Exclude between same domain"
   },
+  "redirect_document_on_other_types": {
+    "message": "Redirect document on other types"
+  },
   "extra_url_matchers": {
     "message": "Extra URL matchers"
   },

@@ -675,8 +675,31 @@ WhitelistRuleInput.prototype.updateRule = function () {
     }
 };
 
-function FilterRuleInput(rule) {
+function BaseRedirectRuleInput(rule) {
     RuleInput.call(this, rule);
+    this.$(".redirect-document").addEventListener("change", onToggleButtonChange);
+}
+
+BaseRedirectRuleInput.prototype = Object.create(RuleInput.prototype);
+BaseRedirectRuleInput.prototype.constructor = FilterRuleInput;
+
+BaseRedirectRuleInput.prototype.updateInputs = function () {
+    RuleInput.prototype.updateInputs.call(this);
+    setButtonChecked(this.$(".redirect-document"), this.rule.redirectDocument);
+};
+
+BaseRedirectRuleInput.prototype.updateRule = function () {
+    RuleInput.prototype.updateRule.call(this);
+
+    if (this.$(".redirect-document").checked) {
+        this.rule.redirectDocument = true;
+    } else {
+        delete this.rule.redirectDocument;
+    }
+};
+
+function FilterRuleInput(rule) {
+    BaseRedirectRuleInput.call(this, rule);
 
     this.paramsTagsInput = new TagsInput(this.$(".input-params"));
 
@@ -686,7 +709,7 @@ function FilterRuleInput(rule) {
     this.$(".filter-skip-within-same-domain-toggle").addEventListener("change", onToggleButtonChange);
 }
 
-FilterRuleInput.prototype = Object.create(RuleInput.prototype);
+FilterRuleInput.prototype = Object.create(BaseRedirectRuleInput.prototype);
 FilterRuleInput.prototype.constructor = FilterRuleInput;
 FilterRuleInput.prototype.title = "rule_title_filter";
 FilterRuleInput.prototype.description = ["rule_description_filter_url",
@@ -722,7 +745,7 @@ FilterRuleInput.prototype.onToggleFilter = function (e) {
 };
 
 FilterRuleInput.prototype.updateInputs = function () {
-    RuleInput.prototype.updateInputs.call(this);
+    BaseRedirectRuleInput.prototype.updateInputs.call(this);
     setButtonChecked(this.$(".filter-toggle"), !this.rule.skipRedirectionFilter);
     setButtonChecked(this.$(".filter-skip-within-same-domain-toggle"), this.rule.skipOnSameDomain);
     setButtonDisabled(this.$(".filter-skip-within-same-domain-toggle"), this.rule.skipRedirectionFilter);
@@ -740,7 +763,7 @@ FilterRuleInput.prototype.updateInputs = function () {
 };
 
 FilterRuleInput.prototype.updateRule = function () {
-    RuleInput.prototype.updateRule.call(this);
+    BaseRedirectRuleInput.prototype.updateRule.call(this);
     this.rule.paramsFilter = {};
     this.rule.paramsFilter.values = this.paramsTagsInput.getValue();
 
@@ -774,21 +797,21 @@ FilterRuleInput.prototype.updateRule = function () {
 };
 
 function RedirectRuleInput(rule) {
-    RuleInput.call(this, rule);
+    BaseRedirectRuleInput.call(this, rule);
 }
 
-RedirectRuleInput.prototype = Object.create(RuleInput.prototype);
+RedirectRuleInput.prototype = Object.create(BaseRedirectRuleInput.prototype);
 RedirectRuleInput.prototype.constructor = RedirectRuleInput;
 RedirectRuleInput.prototype.title = "rule_title_redirect";
 RedirectRuleInput.prototype.description = "rule_description_redirect";
 
 RedirectRuleInput.prototype.updateInputs = function () {
-    RuleInput.prototype.updateInputs.call(this);
+    BaseRedirectRuleInput.prototype.updateInputs.call(this);
     this.$(".redirectUrl").value = this.rule.redirectUrl || "";
 };
 
 RedirectRuleInput.prototype.updateRule = function () {
-    RuleInput.prototype.updateRule.call(this);
+    BaseRedirectRuleInput.prototype.updateRule.call(this);
     this.rule.redirectUrl = this.$(".redirectUrl").value;
 };
 

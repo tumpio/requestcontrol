@@ -111,12 +111,26 @@ test("Request filtered - skip redirection filter", t => {
     t.true(t.context.callback_called(1));
 });
 
-test("Request filtered - block sub_frame redirection", t => {
+test("Request filtered - redirect document on other types", t => {
     t.context.request.type = "sub_frame";
+    t.context.filterRule.redirectDocument = true;
     t.context.controller.markRequest(t.context.request, t.context.filterRule);
     let resolve = t.context.controller.resolve(t.context.request, function (request, action, updateTab) {
         t.true(updateTab);
         t.is(request.redirectUrl, "http://bar.com/");
+        t.context.call_times++;
+    });
+    t.true(resolve.cancel);
+    t.true(t.context.callback_called(1));
+});
+
+test("Request redirected - redirect document on other types", t => {
+    t.context.request.type = "sub_frame";
+    t.context.redirectRule.redirectDocument = true;
+    t.context.controller.markRequest(t.context.request, t.context.redirectRule);
+    let resolve = t.context.controller.resolve(t.context.request, function (request, action, updateTab) {
+        t.true(updateTab);
+        t.is(request.redirectUrl, "https://redirect.url/");
         t.context.call_times++;
     });
     t.true(resolve.cancel);

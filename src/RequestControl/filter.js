@@ -9,13 +9,14 @@ import { DomainMatcher } from "./matchers.js";
 import { parseInlineUrl, trimQueryParameters, UrlParser } from "./url.js";
 
 export class FilterRule extends ControlRule {
-    constructor(uuid, paramsFilter, removeQueryString, skipInlineUrlParsing, skipOnSameDomain, matcher) {
+    constructor(uuid, paramsFilter, removeQueryString, skipInlineUrlParsing, skipOnSameDomain, redirectDocument, matcher) {
         super(uuid, matcher);
         this.queryParamsPattern = (paramsFilter) ? createRegexpPattern(paramsFilter.values) : "";
         this.invertQueryTrimming = (paramsFilter) ? paramsFilter.invert : false;
         this.removeQueryString = removeQueryString;
         this.skipInlineUrlParsing = skipInlineUrlParsing;
         this.skipOnSameDomain = skipOnSameDomain;
+        this.redirectDocument = redirectDocument;
     }
 
     apply(url) {

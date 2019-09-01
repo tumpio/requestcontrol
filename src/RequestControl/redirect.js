@@ -16,12 +16,13 @@ const btoa = (typeof window !== "undefined") ? window.btoa : function btoa(b) {
 };
 
 export class RedirectRule extends ControlRule {
-    constructor(uuid, redirectUrl, matcher) {
+    constructor(uuid, redirectUrl, redirectDocument, matcher) {
         super(uuid, matcher);
         let [parsedUrl, instructions] = parseRedirectInstructions(redirectUrl);
         let patterns = parseRedirectParameters(parsedUrl);
         this.instructions = instructions;
         this.patterns = patterns;
+        this.redirectDocument = redirectDocument;
     }
 
     apply(url) {
@@ -42,33 +43,34 @@ export class RedirectRule extends ControlRule {
 
 export function processRedirectRules(callback) {
     let redirectUrl = this.url;
-    let skipInlineUrlFilter = false;
+    let redirectDocument = false;
     let action = this.action & (FILTER_ACTION | REDIRECT_ACTION);
 
     if (typeof this.rules === "undefined") {
-        skipInlineUrlFilter = this.rule.skipInlineUrlFilter;
+        redirectDocument = this.rule.redirectDocument;
         redirectUrl = this.rule.apply(redirectUrl);
     } else {
         for (let rule of this.rules) {
-            if (rule.skipInlineUrlFilter) {
-                skipInlineUrlFilter = true;
+            if (rule.redirectDocument) {
+                redirectDocument = true;
             }
             redirectUrl = rule.apply(redirectUrl);
         }
     }
 
-    if (this.url !== redirectUrl) {
-        this.redirectUrl = redirectUrl;
-
-        if (this.action == FILTER_ACTION && this.type === "sub_frame" && !skipInlineUrlFilter) {
-            callback(this, action, true);
-            return { cancel: true };
-        } else {
-            callback(this, action);
-            return { redirectUrl: this.redirectUrl };
-        }
+    if (this.url === redirectUrl) {
+        return null;
     }
-    return null;
+
+    this.redirectUrl = redirectUrl;
+
+    if (redirectDocument && this.type !== "main_frame") {
+        callback(this, action, true);
+        return { cancel: true };
+    } else {
+        callback(this, action);
+        return { redirectUrl: this.redirectUrl };
+    }
 }
 
 RedirectRule.prototype.priority = -2;
