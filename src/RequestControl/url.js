@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-import {getDomain} from "../../lib/tldts/tldts-experimental.esm.js";
+import { getDomain } from "../../lib/tldts/tldts-experimental.esm.js";
 
 const tldtsOptions = {
     extractHostname: false,
@@ -36,12 +36,12 @@ export class UrlParser {
     }
 
     get protocol() {
-        let [start, end] = getSchemeStartEnd(this.url);
+        let { start, end } = getSchemeStartEnd(this.url);
         return this.url.slice(start, end);
     }
 
     set protocol(value) {
-        let [start, end] = getSchemeStartEnd(this.url);
+        let { start, end } = getSchemeStartEnd(this.url);
         if (value.endsWith(":"))
             this.url = this.url.slice(0, start) + value + this.url.slice(end);
         else
@@ -49,7 +49,7 @@ export class UrlParser {
     }
 
     get username() {
-        let [start, end] = getAuthStartEnd(this.url);
+        let { start, end } = getAuthStartEnd(this.url);
         let auth = this.url.slice(start, end);
         let i = auth.indexOf(":");
         if (i === -1)
@@ -59,7 +59,7 @@ export class UrlParser {
     }
 
     set username(value) {
-        let [start, end] = getAuthStartEnd(this.url);
+        let { start, end } = getAuthStartEnd(this.url);
         let auth = this.url.slice(start, end);
         let newAuth = value;
         let i = auth.indexOf(":");
@@ -72,7 +72,7 @@ export class UrlParser {
     }
 
     get password() {
-        let [start, end] = getAuthStartEnd(this.url);
+        let { start, end } = getAuthStartEnd(this.url);
         let auth = this.url.slice(start, end);
         let i = auth.indexOf(":");
         if (i === -1)
@@ -82,7 +82,7 @@ export class UrlParser {
     }
 
     set password(value) {
-        let [start, end] = getAuthStartEnd(this.url);
+        let { start, end } = getAuthStartEnd(this.url);
         let auth = this.url.slice(start, end);
         if (auth.length > 0) {
             let [user,] = auth.slice(0, -1).split(":", 2);
@@ -95,12 +95,12 @@ export class UrlParser {
     }
 
     get host() {
-        let [start, end] = getHostStartEnd(this.url);
+        let { start, end } = getHostStartEnd(this.url);
         return this.url.slice(start, end);
     }
 
     set host(value) {
-        let [start, end] = getHostStartEnd(this.url);
+        let { start, end } = getHostStartEnd(this.url);
         this.url = this.url.slice(0, start) + value + this.url.slice(end);
     }
 
@@ -109,17 +109,17 @@ export class UrlParser {
     }
 
     set hostname(value) {
-        let [start, end] = getHostnameStartEnd(this.url);
+        let { start, end } = getHostnameStartEnd(this.url);
         this.url = this.url.slice(0, start) + value + this.url.slice(end);
     }
 
     get port() {
-        let [start, end] = getPortStartEnd(this.url);
+        let { start, end } = getPortStartEnd(this.url);
         return this.url.slice(start, end);
     }
 
     set port(value) {
-        let [start, end] = getPortStartEnd(this.url);
+        let { start, end } = getPortStartEnd(this.url);
         if (value.startsWith(":"))
             this.url = this.url.slice(0, start) + value + this.url.slice(end);
         else
@@ -127,7 +127,7 @@ export class UrlParser {
     }
 
     get pathname() {
-        let [start, end] = getPathStartEnd(this.url);
+        let { start, end } = getPathStartEnd(this.url);
         if (start === end) {
             return "/";
         } else {
@@ -136,7 +136,7 @@ export class UrlParser {
     }
 
     set pathname(value) {
-        let [start, end] = getPathStartEnd(this.url);
+        let { start, end } = getPathStartEnd(this.url);
         if (value.startsWith("/"))
             this.url = this.url.slice(0, start) + value + this.url.slice(end);
         else
@@ -144,12 +144,12 @@ export class UrlParser {
     }
 
     get search() {
-        let [start, end] = getSearchStartEnd(this.url);
+        let { start, end } = getSearchStartEnd(this.url);
         return this.url.slice(start, end);
     }
 
     set search(value) {
-        let [start, end] = getSearchStartEnd(this.url);
+        let { start, end } = getSearchStartEnd(this.url);
         if (value === "")
             this.url = this.url.slice(0, start) + this.url.slice(end);
         else if (value.startsWith("?"))
@@ -212,7 +212,7 @@ export class QueryParser extends UrlParser {
         if (typeof start === "undefined" || this.query.charAt(start + key.length) !== "=")
             return undefined;
         start += key.length + 1;
-        return [start, this.getValueEnd(start)];
+        return { start, end: this.getValueEnd(start) };
     }
 
     get(key) {
@@ -220,7 +220,7 @@ export class QueryParser extends UrlParser {
         if (typeof startEnd === "undefined")
             return "";
         else
-            return this.query.slice(startEnd[0], startEnd[1]);
+            return this.query.slice(startEnd.start, startEnd.end);
     }
 
     set(key, value) {
@@ -252,7 +252,7 @@ export class QueryParser extends UrlParser {
 export const URL_PARAMETERS = Object.getOwnPropertyNames(UrlParser.prototype).filter(x => x !== "constructor");
 
 export function extractHostname(url) {
-    let [start, end] = getHostnameStartEnd(url);
+    let { start, end } = getHostnameStartEnd(url);
     return url.slice(start, end);
 }
 
@@ -284,7 +284,7 @@ function getHostnameStartEnd(url) {
         for (; i < url.length; i++) {
             if (url.charAt(i) === "]") {
                 hostname_end = i + 1;
-                return [hostname_begin, hostname_end];
+                return { start: hostname_begin, end: hostname_end };
             }
         }
     }
@@ -307,7 +307,7 @@ function getHostnameStartEnd(url) {
                 for (; i < url.length; i++) {
                     if (url.charAt(i) === "]") {
                         hostname_end = i + 1;
-                        return [hostname_begin, hostname_end];
+                        return { start: hostname_begin, end: hostname_end };
                     }
                 }
             }
@@ -319,55 +319,54 @@ function getHostnameStartEnd(url) {
             port = true;
         }
     }
-    return [hostname_begin, hostname_end];
+    return { start: hostname_begin, end: hostname_end };
 }
 
 function getPortStartEnd(url) {
-    let [, hostnameEnd] = getHostnameStartEnd(url);
-    let start = hostnameEnd;
+    let { end: start } = getHostnameStartEnd(url);
     if (url.charAt(start) !== ":")
-        return [hostnameEnd, hostnameEnd];
+        return { start, end: start };
     let end = start + 1;
     for (; end < url.length; end++) {
         if (url.charAt(end) === "/")
             break;
     }
-    return [start, end];
+    return { start, end };
 }
 
 function getHostStartEnd(url) {
-    let [start, hostnameEnd] = getHostnameStartEnd(url);
+    let { start, end: hostnameEnd } = getHostnameStartEnd(url);
     if (url.charAt(hostnameEnd) !== ":")
-        return [start, hostnameEnd];
+        return { start, end: hostnameEnd };
     let end = start + 1;
     for (; end < url.length; end++) {
         if (url.charAt(end) === "/")
             break;
     }
-    return [start, end];
+    return { start, end };
 }
 
 export function getAuthStartEnd(url) {
-    let [hostStart,] = getHostnameStartEnd(url);
+    let { start: hostStart } = getHostnameStartEnd(url);
     if (url.charAt(hostStart - 1) !== "@")
-        return [hostStart, hostStart];
-    let [, schemeEnd] = getProtocolStartEnd(url);
-    return [schemeEnd, hostStart];
+        return { start: hostStart, end: hostStart };
+    let { end: schemeEnd } = getProtocolStartEnd(url);
+    return { start: schemeEnd, end: hostStart };
 }
 
 export function getPathStartEnd(url) {
-    let [, protocolEnd] = getProtocolStartEnd(url);
+    let { end: protocolEnd } = getProtocolStartEnd(url);
     let start = url.indexOf("/", protocolEnd);
     let end = url.length;
     if (start === -1) {
-        return [end, end];
+        return { start: end, end };
     } else {
         for (end = start + 1; end < url.length; end++) {
             if (url.charAt(end) === "?" || url.charAt(end) === "#") {
                 break;
             }
         }
-        return [start, end];
+        return { start, end };
     }
 }
 
@@ -375,9 +374,9 @@ export function getSchemeStartEnd(url) {
     let start = 0;
     let end = url.indexOf("://");
     if (end === -1) {
-        return [start, start];
+        return { start, end: start };
     } else {
-        return [start, end + 1];
+        return { start, end: end + 1 };
     }
 }
 
@@ -385,9 +384,9 @@ export function getProtocolStartEnd(url) {
     let start = 0;
     let end = url.indexOf("://");
     if (end === -1) {
-        return [start, start];
+        return { start, end: start };
     } else {
-        return [start, end + 3];
+        return { start, end: end + 3 };
     }
 }
 
@@ -395,9 +394,9 @@ export function getSearchStartEnd(url) {
     let start = url.indexOf("?");
     let end = getHashStart(url);
     if (start === -1) {
-        return [end, end];
+        return { start: end, end };
     } else {
-        return [start, end];
+        return { start, end };
     }
 }
 
