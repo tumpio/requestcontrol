@@ -405,7 +405,7 @@ export function getHashStart(url) {
     return start !== -1 ? start : url.length;
 }
 
-export function trimQueryParameters(url, trimPattern, invert) {
+export function trimQueryParameters(url, trimPattern, invert = false) {
     if (!trimPattern) {
         return url;
     }
@@ -420,19 +420,10 @@ export function trimQueryParameters(url, trimPattern, invert) {
     for (let query of queries) {
         let searchParams = query.split("&");
         let i = searchParams.length;
-        if (invert) {
-            while (i--) {
-                if (!trimPattern.test(searchParams[i].split("=")[0])) {
-                    searchParams.splice(i, 1);
-                    trimmed = true;
-                }
-            }
-        } else {
-            while (i--) {
-                if (trimPattern.test(searchParams[i].split("=")[0])) {
-                    searchParams.splice(i, 1);
-                    trimmed = true;
-                }
+        while (i--) {
+            if (trimPattern.test(searchParams[i].split("=")[0]) !== invert) {
+                searchParams.splice(i, 1);
+                trimmed = true;
             }
         }
         if (searchParams.length > 0) {
