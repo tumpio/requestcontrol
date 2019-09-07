@@ -362,7 +362,7 @@ Example address used as input:
 | <code>www.example.com</code>
 |-
 | port
-| <code>8080</code>
+| <code>:8080</code>
 |-
 | pathname
 | <code>/some/path</code>

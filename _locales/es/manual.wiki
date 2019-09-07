@@ -333,7 +333,7 @@ Dirección de ejemplo usada como entrada:
 | <code>www.ejemplo.com</code>
 |-
 | port (puerto)
-| <code>8080</code>
+| <code>:8080</code>
 |-
 | pathname (ruta)
 | <code>/alguna/ruta</code>

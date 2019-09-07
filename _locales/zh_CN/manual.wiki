@@ -334,7 +334,7 @@ The value of a redirect instruction can be parametrized using the parameter expa
 | <code>www.example.com</code>
 |-
 | port
-| <code>8080</code>
+| <code>:8080</code>
 |-
 | pathname
 | <code>/some/path</code>
