@@ -518,6 +518,9 @@
   "error_invalid_url": {
     "message": "Failed to redirect to new target: Invalid target URL"
   },
+  "error_invalid_rule": {
+    "message": "Error invalid rule"
+  },
   "invalid_target_url": {
     "message": "Invalid target URL: "
   },

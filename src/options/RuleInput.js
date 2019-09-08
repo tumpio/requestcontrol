@@ -14,6 +14,7 @@ import {
 } from "/src/options/lib/UiHelpers.js";
 import { translateDocument } from "/src/options/lib/i18n.js";
 import { TagsInput } from "/src/options/lib/tags-input/src/tags-input.js";
+import { createRule } from "../RequestControl/api.js";
 
 /**
  * Request Control Rule Input for rule creation.
@@ -222,18 +223,38 @@ RuleInput.prototype = {
     },
 
     save: function () {
-        if (!this.$(".rule-input").reportValidity()) {
-            this.model.classList.add("error");
+        if (!this.isValid()) {
             return Promise.reject();
         }
-        this.model.classList.remove("error");
-        this.updateRule();
         if (this.indexOfRule() === -1) {
             this.factory.optionsManager.options[this.optionsPath].push(this.rule);
         }
         return this.factory.optionsManager.saveOption(this.optionsPath)
             .then(this.updateHeader.bind(this))
             .then(this.toggleSaved.bind(this));
+    },
+
+    isValid: function () {
+        let isValid = true;
+
+        if (!this.$(".rule-input").reportValidity()) {
+            isValid = false;
+        }
+
+        try {
+            this.updateRule();
+            createRule(this.rule);
+        } catch {
+            isValid = false;
+        }
+
+        if (isValid) {
+            this.model.classList.remove("error");
+        } else {
+            this.model.classList.add("error");
+        }
+
+        return true;
     },
 
     toggleParent: function () {
@@ -525,7 +546,7 @@ RuleInput.prototype = {
         this.model.classList.toggle("selected", isSelected);
     },
 
-    isSelected: function() {
+    isSelected: function () {
         return this.$(".select").checked;
     },
 
@@ -635,7 +656,7 @@ RuleInput.prototype = {
         this.rule.action = this.$(".action:checked").value;
     },
 
-    setRule: function(rule) {
+    setRule: function (rule) {
         this.rule = rule;
         this.updateHeader();
         this.updateInputs();

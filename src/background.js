@@ -39,8 +39,8 @@ function init(options) {
         browser.webNavigation.onCommitted.removeListener(resetRecords);
         browser.runtime.onMessage.removeListener(getRecords);
     } else {
-        addRuleListeners(options.rules);
         notifier.enabledState();
+        addRuleListeners(options.rules);
         browser.tabs.onRemoved.addListener(removeRecords);
         browser.webNavigation.onCommitted.addListener(resetRecords);
         browser.runtime.onMessage.addListener(getRecords);
@@ -64,17 +64,21 @@ function addRuleListeners(rules) {
         if (!data.active) {
             continue;
         }
-        let rule = createRule(data);
-        let urls = createMatchPatterns(data.pattern);
-        let filter = {
-            urls: urls,
-            types: data.types
-        };
-        let listener = details => {
-            controller.markRequest(details, rule);
-        };
-        browser.webRequest.onBeforeRequest.addListener(listener, filter);
-        requestListeners.push(listener);
+        try {
+            let rule = createRule(data);
+            let urls = createMatchPatterns(data.pattern);
+            let filter = {
+                urls: urls,
+                types: data.types
+            };
+            let listener = details => {
+                controller.markRequest(details, rule);
+            };
+            browser.webRequest.onBeforeRequest.addListener(listener, filter);
+            requestListeners.push(listener);
+        } catch {
+            notifier.error(null, browser.i18n.getMessage("error_invalid_rule"));
+        }
     }
     browser.webRequest.onBeforeRequest.addListener(requestControlListener,
         { urls: [ALL_URLS] }, ["blocking"]);

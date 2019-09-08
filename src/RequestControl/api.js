@@ -90,7 +90,7 @@ export function createRegexpPattern(values, insensitive = true, containing = fal
         let testRegexp = param.match(regexpParam);
         pattern += "|";
         pattern += containing ? "" : "^";
-        if (testRegexp) {
+        if (testRegexp && isValidRegExp(testRegexp[1])) {
             pattern += testRegexp[1];
         } else {
             pattern += param.replace(regexpChars, "\\$&").replace(/\*/g, ".*").replace(/\?/g, ".");
@@ -103,4 +103,13 @@ export function createRegexpPattern(values, insensitive = true, containing = fal
 export function isTLDHostPattern(host) {
     let hostTLDWildcardPattern = /^(.+)\.\*$/;
     return hostTLDWildcardPattern.test(host);
+}
+
+function isValidRegExp(pattern) {
+    try {
+        new RegExp(pattern);
+    } catch {
+        return false;
+    }
+    return true;
 }

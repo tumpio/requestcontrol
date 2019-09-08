@@ -44,7 +44,7 @@ class TitleNotifier {
         updateTitle(tabId, recordsCount.toString());
     }
 
-    static error(tabId, action, error) {
+    static error(tabId, error) {
         updateTitle(tabId, error);
     }
 
@@ -70,9 +70,9 @@ class BadgeNotifier extends TitleNotifier {
         updateBadge(tabId, REQUEST_CONTROL_ICONS[action], recordsCount.toString());
     }
 
-    static error(tabId, action, error) {
-        super.error(tabId, action, error);
-        updateBadge(tabId, REQUEST_CONTROL_ICONS[action], String.fromCodePoint(10071));
+    static error(tabId, error) {
+        super.error(tabId, error);
+        updateBadge(tabId, REQUEST_CONTROL_ICONS[NO_ACTION], "!");
     }
 
     static clear(tabId) {
