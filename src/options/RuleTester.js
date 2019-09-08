@@ -5,14 +5,9 @@ import { createMatchPatterns, createRule } from "/src/RequestControl/api.js";
 import { RequestController } from "/src/RequestControl/control.js";
 
 export function testRules(url, rulePatterns) {
-    let testURL, request;
+    let testURL = new URL(url);
+    let request = { url: testURL.href };
     let controller = new RequestController();
-    try {
-        testURL = new URL(url);
-        request = { url: testURL.href };
-    } catch (e) {
-        throw e;
-    }
     for (let rulePattern of rulePatterns) {
         let rule = createRule(rulePattern);
         let matchPatterns = createMatchPatterns(rulePattern.pattern);
