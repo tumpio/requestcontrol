@@ -43,6 +43,7 @@ test("username - get", t => {
     t.is(new UrlParser("https://user@domain.com").username, "user");
     t.is(new UrlParser("https://user:@domain.com").username, "user");
     t.is(new UrlParser("https://user:pass@domain.com").username, "user");
+    t.is(new UrlParser("user:pass@domain.com").username, "user");
 });
 
 test("username - set", t => {
@@ -63,6 +64,7 @@ test("password - get", t => {
     t.is(new UrlParser("https://user:@domain.com").password, "");
     t.is(new UrlParser("https://user:pass@domain.com").password, "pass");
     t.is(new UrlParser("https://user:pass:@domain.com").password, "pass:");
+    t.is(new UrlParser("user:pass:@domain.com").password, "pass:");
 });
 
 test("password - set", t => {
@@ -229,6 +231,7 @@ test("path - get", t => {
     t.is(new UrlParser("https://domain.com/").pathname, "/");
     t.is(new UrlParser("https://domain.com:8080/path").pathname, "/path");
     t.is(new UrlParser("https://user:@domain.com/path/path.href?foo=bar#haash").pathname, "/path/path.href");
+    t.is(new UrlParser("user:@domain.com/path/path.href?foo=bar#haash").pathname, "/path/path.href");
 });
 
 test("path - set same", t => {

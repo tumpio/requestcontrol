@@ -59,6 +59,10 @@ test("Same domain - match", t => {
     t.truthy(t.context.controller.markRequest({
         url: "http://google.com"
     }, t.context.sameDomainRule));
+    t.truthy(t.context.controller.markRequest({
+        originUrl: "http://google.com",
+        url: "data:image/png;base64,iVBORw0KG=="
+    }, t.context.sameDomainRule));
 });
 
 test("Same domain - no match", t => {
@@ -146,6 +150,10 @@ test("Third Party Domain - no match", t => {
     }, t.context.thirdPartyDomainRule));
     t.falsy(t.context.controller.markRequest({
         url: "http://google.com"
+    }, t.context.thirdPartyDomainRule));
+    t.falsy(t.context.controller.markRequest({
+        originUrl: "http://google.com",
+        url: "data:image/png;base64,iVBORw0KG=="
     }, t.context.thirdPartyDomainRule));
 });
 

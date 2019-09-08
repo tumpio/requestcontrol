@@ -251,7 +251,7 @@ export class QueryParser extends UrlParser {
 
 export const URL_PARAMETERS = Object.getOwnPropertyNames(UrlParser.prototype).filter(x => x !== "constructor");
 
-export function extractHostname(url) {
+function extractHostname(url) {
     let { start, end } = getHostnameStartEnd(url);
     return url.slice(start, end);
 }
@@ -346,7 +346,7 @@ function getHostStartEnd(url) {
     return { start, end };
 }
 
-export function getAuthStartEnd(url) {
+function getAuthStartEnd(url) {
     let { start: hostStart } = getHostnameStartEnd(url);
     if (url.charAt(hostStart - 1) !== "@")
         return { start: hostStart, end: hostStart };
@@ -354,7 +354,7 @@ export function getAuthStartEnd(url) {
     return { start: schemeEnd, end: hostStart };
 }
 
-export function getPathStartEnd(url) {
+function getPathStartEnd(url) {
     let { end: protocolEnd } = getProtocolStartEnd(url);
     let start = url.indexOf("/", protocolEnd);
     let end = url.length;
@@ -370,7 +370,7 @@ export function getPathStartEnd(url) {
     }
 }
 
-export function getSchemeStartEnd(url) {
+function getSchemeStartEnd(url) {
     let start = 0;
     let end = url.indexOf("://");
     if (end === -1) {
@@ -380,7 +380,7 @@ export function getSchemeStartEnd(url) {
     }
 }
 
-export function getProtocolStartEnd(url) {
+function getProtocolStartEnd(url) {
     let start = 0;
     let end = url.indexOf("://");
     if (end === -1) {
@@ -390,7 +390,7 @@ export function getProtocolStartEnd(url) {
     }
 }
 
-export function getSearchStartEnd(url) {
+function getSearchStartEnd(url) {
     let start = url.indexOf("?");
     let end = getHashStart(url);
     if (start === -1) {
@@ -400,7 +400,7 @@ export function getSearchStartEnd(url) {
     }
 }
 
-export function getHashStart(url) {
+function getHashStart(url) {
     let start = url.indexOf("#");
     return start !== -1 ? start : url.length;
 }

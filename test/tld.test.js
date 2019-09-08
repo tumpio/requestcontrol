@@ -12,5 +12,6 @@ test("Get domain name", t => {
     t.is(libTld.getDomain("localhost"), null);
     t.is(libTld.getDomain("about:blank"), null);
     t.is(libTld.getDomain("192.168.0.1"), "192.168.0.1");
+    t.is(libTld.getDomain("192.168.0.f0"), "0.f0");
     t.is(libTld.getDomain("http://192.168.0.1:8080"), "192.168.0.1");
 });

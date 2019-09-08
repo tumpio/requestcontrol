@@ -44,6 +44,15 @@ test("Resolve non-marked request", t => {
     t.true(t.context.callback_called(0));
 });
 
+test("Resolve request after clear", t => {
+    t.context.controller.markRequest(t.context.request, t.context.blockRule);
+    t.is(t.context.controller.markedRequests.size, 1);
+    t.context.controller.clear();
+    let resolve = t.context.controller.resolve(t.context.request, t.context.callback);
+    t.falsy(resolve);
+    t.true(t.context.callback_called(0));
+});
+
 test("Rule creation fails", t => {
     t.throws(() => {
         createRule("no-action");
