@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-import { getDomain } from "../../lib/tldts/tldts-experimental.esm.js";
+import { getDomain } from "../../lib/tldts/index.esm.min.js";
 
 const tldtsOptions = {
     extractHostname: false,

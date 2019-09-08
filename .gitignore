@@ -1,11 +1,10 @@
-.idea/
+.vscode/
 .releases/
 manual.html
 node_modules
 .nyc_output/
 coverage/
 coverage.lcov
-*.min.css
 
 lib/tldts/*.js
 src/options/lib/lit/lit.css
