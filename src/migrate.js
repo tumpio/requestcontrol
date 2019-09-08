@@ -11,7 +11,7 @@ function handleInstalled(details) {
 
         let versions = details.previousVersion.split(".");
 
-        // migrate from < 1.14.*
+        // migrate from < 1.14
         if (Number(versions[0]) < 1 ||
             (Number(versions[0]) === 1 && Number(versions[1]) < 14)) {
 
