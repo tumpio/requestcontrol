@@ -9,6 +9,7 @@ import {
 } from "./RequestControl/api.js";
 import { getNotifier } from "./notifier.js";
 import { RequestController } from "./RequestControl/control.js";
+import { REDIRECT_ACTION, FILTER_ACTION } from "./RequestControl/base.js";
 
 /**
  * Background script for processing Request Control rules, adding request listeners and keeping
@@ -133,9 +134,11 @@ function resetRecords(details) {
         let tabRecords = records.get(details.tabId);
         let i = 0;
         let clear = true;
+        let isServerRedirect = details.transitionQualifiers.includes("server_redirect");
         while (i < 5 && tabRecords.length > 0) {
             let lastRecord = tabRecords.pop();
-            if (lastRecord.target === details.url) {
+            if (lastRecord.target === details.url || 
+                isServerRedirect && lastRecord.action & (REDIRECT_ACTION | FILTER_ACTION)) {
                 // Keep record of the new main frame request
                 records.set(details.tabId, [lastRecord]);
                 notifier.notify(details.tabId, lastRecord.action, 1);
