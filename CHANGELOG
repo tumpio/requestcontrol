@@ -1,3 +1,8 @@
+Version 1.14.0 Sep 8, 2019
+- Add option to redirect document (update tab) from other requests types. #103
+- Fix invalid regexp pattern breaking all other rules. #107
+- Keep last record when redirect/filter rule is followed by a server redirection.
+
 Version 1.13.3 Aug 22, 2019
 - Fix hosts/paths input field overflow issue with long list of values (2nd fix). #104
 - Fix updating of input fields for merged rules after import.
