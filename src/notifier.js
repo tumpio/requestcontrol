@@ -11,33 +11,15 @@ import {
     WHITELIST_ACTION
 } from "./RequestControl/base.js";
 
-export const REQUEST_CONTROL_ICONS = {};
-REQUEST_CONTROL_ICONS[WHITELIST_ACTION] = {
-    19: "/icons/icon-whitelist@19.png",
-    38: "/icons/icon-whitelist@38.png"
+export const REQUEST_CONTROL_ICONS = {
+    [NO_ACTION]: "/icons/icon.svg",
+    [DISABLED_STATE]: "/icons/icon-disabled.svg",
+    [WHITELIST_ACTION]: "/icons/icon-whitelist.svg",
+    [BLOCK_ACTION]: "/icons/icon-block.svg",
+    [FILTER_ACTION]: "/icons/icon-filter.svg",
+    [REDIRECT_ACTION]: "/icons/icon-redirect.svg",
+    [FILTER_ACTION | REDIRECT_ACTION]: "/icons/icon-redirect.svg"
 };
-REQUEST_CONTROL_ICONS[BLOCK_ACTION] = {
-    19: "/icons/icon-block@19.png",
-    38: "/icons/icon-block@38.png"
-};
-REQUEST_CONTROL_ICONS[FILTER_ACTION] = {
-    19: "/icons/icon-filter@19.png",
-    38: "/icons/icon-filter@38.png"
-};
-REQUEST_CONTROL_ICONS[REDIRECT_ACTION] = {
-    19: "/icons/icon-redirect@19.png",
-    38: "/icons/icon-redirect@38.png"
-};
-REQUEST_CONTROL_ICONS[NO_ACTION] = {
-    19: "/icons/icon-blank@19.png",
-    38: "/icons/icon-blank@38.png"
-};
-REQUEST_CONTROL_ICONS[DISABLED_STATE] = {
-    19: "/icons/icon-disabled@19.png",
-    38: "/icons/icon-disabled@38.png"
-};
-REQUEST_CONTROL_ICONS[FILTER_ACTION | REDIRECT_ACTION] = REQUEST_CONTROL_ICONS[FILTER_ACTION];
-
 
 class TitleNotifier {
     static notify(tabId, action, recordsCount) {
@@ -65,6 +47,12 @@ class TitleNotifier {
 }
 
 class BadgeNotifier extends TitleNotifier {
+
+    constructor() {
+        super();
+        browser.browserAction.setBadgeBackgroundColor({ color: "#E6E6E6" });
+    }
+
     static notify(tabId, action, recordsCount) {
         super.notify(tabId, action, recordsCount);
         updateBadge(tabId, REQUEST_CONTROL_ICONS[action], recordsCount.toString());

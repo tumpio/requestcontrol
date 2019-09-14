@@ -103,7 +103,7 @@ License
    :target: https://travis-ci.org/tumpio/requestcontrol
 .. |codecov| image:: https://codecov.io/gh/tumpio/requestcontrol/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/tumpio/requestcontrol
-.. |if| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-filter@19.png
-.. |ir| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-redirect@19.png
-.. |ib| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-block@19.png
-.. |iw| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-whitelist@19.png
+.. |if| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-filter.svg
+.. |ir| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-redirect.svg
+.. |ib| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-block.svg
+.. |iw| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-whitelist.svg

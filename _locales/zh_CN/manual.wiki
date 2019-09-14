@@ -160,13 +160,13 @@ A type indicates the requested resource. Rule can apply from one to many types, 
 
 === 动作 ===
 
-; [[File:/icons/icon-filter@19.png|image4]] Filter
+; [[File:/icons/icon-filter.svg|16px]] Filter
 : Filter URL redirection and/or remove URL query parameters.
-; [[File:/icons/icon-block@19.png|image5]] Block
+; [[File:/icons/icon-block.svg|16px]] Block
 : Cancel requests before they are made.
-; [[File:/icons/icon-redirect@19.png|image6]] Redirect
+; [[File:/icons/icon-redirect.svg|16px]] Redirect
 : Redirect requests to manually configured redirect URL.
-; [[File:/icons/icon-whitelist@19.png|image7]] Whitelist
+; [[File:/icons/icon-whitelist.svg|16px]] Whitelist
 : Whitelist and optionally log requests.
 
 == Rule priorities ==

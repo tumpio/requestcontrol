@@ -449,7 +449,7 @@ form .row {
     display: block;
 }
 
-input:not(:checked) + .icon {
+input:not(:checked):not(:hover) + .icon {
     filter: grayscale(100%);
 }
 

@@ -161,14 +161,14 @@ Un tipo indica el recurso solicitado. Una regla se puede aplicar de uno a muchos
 === Acción ===
 
 <dl>
-<dt>[[File:/icons/icon-filter@19.png|image4]] Filtrado</dt>
+<dt>[[File:/icons/icon-filter.svg|16px]] Filtrado</dt>
 <dd><p>Cualquier petición que satisfaga una regla de filtrado será filtrada de acuerdo a la configuración de esta regla:</p>
 <p>- Con filtrado de redireccionamiento de URL la petición es guiada directamente a la URL de redireccionamiento contenida. - Con el recortado de parámetros de URL los parámetros de URL configurados se eliminarán de las peticiones.</p></dd>
-<dt>[[File:/icons/icon-block@19.png|image5]] Bloqueo</dt>
+<dt>[[File:/icons/icon-block.svg|16px]] Bloqueo</dt>
 <dd><p>Cualquier petición que satisfaga una regla de bloqueo será cancelada antes de efectuarse.</p></dd>
-<dt>[[File:/icons/icon-redirect@19.png|image6]] Redireccionamiento</dt>
+<dt>[[File:/icons/icon-redirect.svg|16px]] Redireccionamiento</dt>
 <dd><p>Cualquier petición que satisfaga una regla de redireccionamiento será redirigida a la URL de redireccionamiento configurada.</p></dd>
-<dt>[[File:/icons/icon-whitelist@19.png|image7]] Lista blanca</dt>
+<dt>[[File:/icons/icon-whitelist.svg|16px]] Lista blanca</dt>
 <dd><p>Cualquier petición que satisfaga una regla de lista blanca procederá normalmente sin que se tome ninguna acción de cualquiera de las otras reglas que también se satisfagan.</p></dd></dl>
 
 == Prioridades de las reglas ==

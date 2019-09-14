@@ -62,7 +62,7 @@ function newListItem(details) {
     model.removeAttribute("id");
     model.querySelector(".type").textContent = browser.i18n.getMessage(details.type);
     model.querySelector(".timestamp").textContent = timestamp(details.timestamp);
-    model.querySelector(".icon").src = REQUEST_CONTROL_ICONS[details.action][19];
+    model.querySelector(".icon").src = REQUEST_CONTROL_ICONS[details.action];
 
     if (details.error) {
         model.querySelector(".icon").src = "/icons/ionicons/alert-circled.svg";

@@ -2,11 +2,11 @@
     "name": "__MSG_extensionName__",
     "description": "__MSG_extensionDescription__",
     "default_locale": "en",
-    "version": "1.14.0",
+    "version": "1.15.0a1",
     "manifest_version": 2,
     "icons": {
-        "48": "icons/icon-48.png",
-        "96": "icons/icon-96.png"
+        "48": "icons/icon.svg",
+        "96": "icons/icon.svg"
     },
     "applications": {
         "gecko": {
@@ -29,10 +29,7 @@
     },
     "browser_action": {
         "browser_style": false,
-        "default_icon": {
-            "19": "icons/icon-blank@19.png",
-            "38": "icons/icon-blank@38.png"
-        },
+        "default_icon": "icons/icon.svg",
         "default_title": "__MSG_extensionName__",
         "default_popup": "src/popup/browser-action.html"
     },
