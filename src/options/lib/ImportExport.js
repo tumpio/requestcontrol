@@ -4,19 +4,25 @@
 
 /**
  * Export object as json file download
- * @param name file name
- * @param object object to export
- * @returns {Promise.<TResult>}
  */
+export function exportObject(
+    link,
+    name,
+    object,
+    mimeType = "application/json",
+    replacer = null,
+    space = 2
+) {
+    const data = JSON.stringify(object, replacer, space),
+        blob = new Blob([data], { type: mimeType }),
+        url = URL.createObjectURL(blob);
 
-export function exportObject(name, object, replacer) {
-    let mimeType = "application/json",
-        data = JSON.stringify(object, replacer, 2),
-        blob = new Blob([data], {type: mimeType});
-    return browser.downloads.download({
-        url: URL.createObjectURL(blob),
-        filename: name
-    }).then(revokeObjectUrl);
+    link.href = url;
+    link.download = name;
+
+    setTimeout(() => {
+        URL.revokeObjectURL(url);
+    }, 0);
 }
 
 /**
@@ -41,10 +47,3 @@ export function importFile(file) {
         reader.readAsText(file);
     });
 }
-
-function revokeObjectUrl(id) {
-    browser.downloads.search({id}).then(download =>
-        URL.revokeObjectURL(download.url)
-    );
-}
-

@@ -16,7 +16,6 @@
     },
     "permissions": [
         "<all_urls>",
-        "downloads",
         "storage",
         "webNavigation",
         "webRequest",

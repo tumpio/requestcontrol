@@ -737,17 +737,17 @@ pre {
         display: none;
     }
 
-    .mobile-toolbar > button {
+    .mobile-toolbar > .btn {
         opacity: 1;
         font-size: 1em;
         justify-content: space-evenly;
         height: 20%;
-        max-height: 10em;
+        max-height: 5em;
         border: none;
         margin-bottom: .2em !important;
     }
 
-    .mobile-toolbar > button > img {
+    .mobile-toolbar > .btn > img {
         width: 2em;
     }
 

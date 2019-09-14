@@ -166,14 +166,6 @@ function loadDefaultRules() {
     });
 }
 
-function exportReplacer(key, value) {
-    // strip parameter trim pattern from exported rules
-    if (key === "pattern" && typeof value === "string") {
-        return undefined;
-    }
-    return value;
-}
-
 function onRuleTest() {
     let result = document.getElementById("testResult");
     result.textContent = "";
@@ -374,7 +366,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("exportRules").addEventListener("click", function () {
         let fileName = browser.i18n.getMessage("export-file-name");
-        exportObject(fileName, myOptionsManager.options.rules, exportReplacer);
+        exportObject(this, fileName, myOptionsManager.options.rules);
     });
 
     document.getElementById("importRules").addEventListener("change", function (e) {
@@ -387,7 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let input of getSelectedRuleInputs()) {
             rules.push(input.getRule());
         }
-        exportObject(fileName, rules, exportReplacer);
+        exportObject(this, fileName, rules);
     });
 
     document.getElementById("removeSelectedRules").addEventListener("click", function () {
