@@ -3,14 +3,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-import { RuleInputFactory } from "/src/options/RuleInput.js";
-import { testRules } from "/src/options/RuleTester.js";
-import { BLOCK_ACTION, FILTER_ACTION, REDIRECT_ACTION, WHITELIST_ACTION } from "/src/RequestControl/base.js";
-import { uuid } from "/src/options/lib/uuid.js";
-import { Toc } from "/src/options/lib/toc.js";
-import { OptionsManager } from "/src/options/lib/OptionsManager.js";
-import { getSubPage, toggleDisabled } from "/src/options/lib/UiHelpers.js";
-import { exportObject, importFile } from "/src/options/lib/ImportExport.js";
+import { RuleInputFactory } from "./RuleInput.js";
+import { testRules } from "./RuleTester.js";
+import { uuid } from "./lib/uuid.js";
+import { Toc } from "./lib/toc.js";
+import { OptionsManager } from "./lib/OptionsManager.js";
+import { getSubPage, toggleDisabled } from "./lib/UiHelpers.js";
+import { exportObject, importFile } from "./lib/ImportExport.js";
+import { WhitelistRule, LoggedWhitelistRule } from "../RequestControl/whitelist.js";
+import { BlockRule } from "../RequestControl/block.js";
+import { RedirectRule } from "../RequestControl/redirect.js";
+import { FilterRule } from "../RequestControl/filter.js";
 
 /**
  * Options page for Request Control rule management, settings and manual page.
@@ -181,36 +184,36 @@ function onRuleTest() {
         result.textContent = browser.i18n.getMessage("invalid_test_url");
         return;
     }
-    if (!request.resolve) {
+    if (!request.rule) {
         result.textContent = browser.i18n.getMessage("no_match");
         return;
     }
-    let resolve = request.resolve(function (request, action) {
-        switch (action) {
-            case WHITELIST_ACTION:
+    request.resolve = request.rule.constructor.resolve;
+    let resolve = request.resolve(function (request) {
+        switch (request.rule.constructor) {
+            case WhitelistRule:
+            case LoggedWhitelistRule:
                 result.textContent = browser.i18n.getMessage("whitelisted");
                 break;
-            case BLOCK_ACTION:
+            case BlockRule:
                 result.textContent = browser.i18n.getMessage("blocked");
                 break;
-            case REDIRECT_ACTION:
-            case FILTER_ACTION:
-            case FILTER_ACTION | REDIRECT_ACTION:
-                result.textContent = request.redirectUrl;
+            case RedirectRule:
+            case FilterRule:
+                try {
+                    new URL(request.redirectUrl);
+                    result.textContent = request.redirectUrl;
+                } catch (e) {
+                    result.textContent = browser.i18n.getMessage("invalid_target_url") + request.redirectUrl;
+                }
                 break;
             default:
                 break;
         }
     });
 
-    if (request.redirectUrl) {
-        try {
-            new URL(request.redirectUrl);
-        } catch (e) {
-            result.textContent = browser.i18n.getMessage("invalid_target_url") + request.redirectUrl;
-        }
-    } else if (!resolve) {
-        if (request.action & ~WHITELIST_ACTION) {
+    if (!resolve) {
+        if (!(request.rule instanceof WhitelistRule)) {
             result.textContent = browser.i18n.getMessage("matched_no_change");
         } else {
             result.textContent = browser.i18n.getMessage("whitelisted");

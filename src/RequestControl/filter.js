@@ -2,9 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { ControlRule, FILTER_ACTION } from "./base.js";
+import { ControlRule } from "./base.js";
 import { createRegexpPattern } from "./api.js";
-import { processRedirectRules } from "./redirect.js";
+import { RedirectRule } from "./redirect.js";
 import { DomainMatcher } from "./matchers.js";
 import { parseInlineUrl, trimQueryParameters, UrlParser } from "./url.js";
 
@@ -51,9 +51,7 @@ export class FilterRule extends ControlRule {
         }
         return inlineUrl;
     }
-
 }
 
-FilterRule.prototype.priority = -2;
-FilterRule.prototype.action = FILTER_ACTION;
-FilterRule.prototype.resolve = processRedirectRules;
+FilterRule.resolve = RedirectRule.resolve;
+FilterRule.icon = "/icons/icon-filter.svg";

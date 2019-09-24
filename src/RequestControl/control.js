@@ -2,6 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+import { WhitelistRule } from "./whitelist.js";
+import { BlockRule } from "./block.js";
+import { RedirectRule } from "./redirect.js";
+import { FilterRule } from "./filter.js";
+
+WhitelistRule.priority = 0;
+BlockRule.priority = -1;
+RedirectRule.priority = -2;
+FilterRule.priority = -3;
+
 export class RequestController {
     constructor() {
         this.markedRequests = new Map();
@@ -16,17 +26,10 @@ export class RequestController {
             this.markedRequests.set(details.requestId, details);
             request = details;
         }
-        if (typeof request.rulePriority === "undefined" || rule.priority > request.rulePriority) {
-            request.rulePriority = rule.priority;
+        if (typeof request.rule === "undefined" ||
+            rule.constructor.priority > request.rule.constructor.priority
+        ) {
             request.rule = rule;
-            request.resolve = rule.resolve;
-            request.action = rule.action;
-        } else if (rule.priority === request.rulePriority) {
-            if (typeof request.rules === "undefined") {
-                request.rules = [request.rule];
-            }
-            request.rules.push(rule);
-            request.action |= rule.action;
         }
         return true;
     }
@@ -35,6 +38,7 @@ export class RequestController {
         if (this.markedRequests.has(details.requestId)) {
             let request = this.markedRequests.get(details.requestId);
             this.markedRequests.delete(request.requestId);
+            request.resolve = request.rule.constructor.resolve;
             return request.resolve(callback);
         }
         return null;

@@ -124,7 +124,7 @@ test("Request filtered - redirect document on other types", t => {
     t.context.request.type = "sub_frame";
     t.context.filterRule.redirectDocument = true;
     t.context.controller.markRequest(t.context.request, t.context.filterRule);
-    let resolve = t.context.controller.resolve(t.context.request, function (request, action, updateTab) {
+    let resolve = t.context.controller.resolve(t.context.request, function (request, updateTab) {
         t.true(updateTab);
         t.is(request.redirectUrl, "http://bar.com/");
         t.context.call_times++;
@@ -137,7 +137,7 @@ test("Request redirected - redirect document on other types", t => {
     t.context.request.type = "sub_frame";
     t.context.redirectRule.redirectDocument = true;
     t.context.controller.markRequest(t.context.request, t.context.redirectRule);
-    let resolve = t.context.controller.resolve(t.context.request, function (request, action, updateTab) {
+    let resolve = t.context.controller.resolve(t.context.request, function (request, updateTab) {
         t.true(updateTab);
         t.is(request.redirectUrl, "https://redirect.url/");
         t.context.call_times++;
@@ -146,15 +146,15 @@ test("Request redirected - redirect document on other types", t => {
     t.true(t.context.callback_called(1));
 });
 
-test("Request filtered - multiple rules", t => {
-    t.context.request.url += decodeURIComponent("?utm_source=blaa&a=b");
+test("Request redirected - redirect rule overrides filter rule", t => {
+    t.context.request.url = "http://foo.com/?utm_source=blaa";
     t.context.controller.markRequest(t.context.request, createRule({
         action: "redirect",
-        redirectUrl: "{href/http%3A/https%3A}"
+        redirectUrl: "[hostname=bar.com]"
     }));
-    t.context.controller.markRequest(t.context.request, t.context.filterRule);
     t.context.controller.markRequest(t.context.request, t.context.filterParamsRule);
+    
     let resolve = t.context.controller.resolve(t.context.request, t.context.callback);
-    t.is(resolve.redirectUrl, "https://bar.com/");
+    t.is(resolve.redirectUrl, "http://bar.com/?utm_source=blaa");
     t.true(t.context.callback_called(1));
 });

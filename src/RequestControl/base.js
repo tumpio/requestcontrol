@@ -18,10 +18,3 @@ export class BaseMatchExtender {
         return true;
     }
 }
-
-export const NO_ACTION = 0;
-export const WHITELIST_ACTION = 1 << 1;
-export const BLOCK_ACTION = 1 << 2;
-export const REDIRECT_ACTION = 1 << 3;
-export const FILTER_ACTION = 1 << 4;
-export const DISABLED_STATE = 1 << 5;

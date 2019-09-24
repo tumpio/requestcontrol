@@ -2,22 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import {BLOCK_ACTION, FILTER_ACTION, NO_ACTION, REDIRECT_ACTION, WHITELIST_ACTION} from "/src/RequestControl/base.js";
-import {OptionsManager} from "/src/options/lib/OptionsManager.js";
-import {REQUEST_CONTROL_ICONS} from "/src/notifier.js";
-
-/**
- * Browser Action for displaying applied rules for current tab.
- */
+import { OptionsManager } from "../options/lib/OptionsManager.js";
 
 const myOptionsManager = new OptionsManager();
-const RECORD_TITLES = {};
-RECORD_TITLES[WHITELIST_ACTION] = browser.i18n.getMessage("title_whitelist");
-RECORD_TITLES[BLOCK_ACTION] = browser.i18n.getMessage("title_block");
-RECORD_TITLES[FILTER_ACTION] = browser.i18n.getMessage("title_filter");
-RECORD_TITLES[REDIRECT_ACTION] = browser.i18n.getMessage("title_redirect");
-RECORD_TITLES[NO_ACTION] = "";
-RECORD_TITLES[FILTER_ACTION | REDIRECT_ACTION] = RECORD_TITLES[FILTER_ACTION];
 
 function setRecords(records) {
     if (!records) {
@@ -41,42 +28,30 @@ function setRecords(records) {
     document.getElementById("records").classList.remove("hidden");
 }
 
-function getTags(details) {
-    let tags = [];
-    let ids = [];
-    if (typeof details.rules !== "undefined") {
-        ids = details.rules.map(rule => rule.uuid);
-    } else {
-        ids = details.rule.uuid;
-    }
+function getRule(uuid) {
     for (let rule of myOptionsManager.options.rules) {
-        if (ids.includes(rule.uuid) && rule.tag) {
-            tags.push(rule.tag);
+        if (rule.uuid === uuid) {
+            return rule;
         }
     }
-    return tags;
+    return null;
 }
 
 function newListItem(details) {
+    let rule = getRule(details.rule.uuid);
     let model = document.getElementById("entryModel").cloneNode(true);
     model.removeAttribute("id");
     model.querySelector(".type").textContent = browser.i18n.getMessage(details.type);
     model.querySelector(".timestamp").textContent = timestamp(details.timestamp);
-    model.querySelector(".icon").src = REQUEST_CONTROL_ICONS[details.action];
+    model.querySelector(".icon").src = `/icons/icon-${rule.action}.svg`;
+    model.querySelector(".action").textContent = browser.i18n.getMessage(`title_${rule.action}`);
+    model.querySelector(".url").textContent = details.url;
 
-    if (details.error) {
-        model.querySelector(".icon").src = "/icons/ionicons/alert-circled.svg";
-        model.querySelector(".action").textContent = browser.i18n.getMessage(details.error.name);
-    } else {
-        model.querySelector(".action").textContent = RECORD_TITLES[details.action];
-        model.querySelector(".url").textContent = details.url;
-    }
-    let tags = getTags(details);
     let tagsNode = model.querySelector(".tags");
-    if (tags.length === 0) {
-        tagsNode.parentNode.removeChild(tagsNode);
+    if (rule.tag) {
+        tagsNode.textContent = decodeURIComponent(rule.tag);
     } else {
-        tagsNode.textContent = decodeURIComponent(tags.join(", "));
+        tagsNode.parentNode.removeChild(tagsNode);
     }
     return model;
 }
@@ -108,13 +83,8 @@ function showDetails(details) {
     } else {
         document.getElementById("targetBlock").classList.add("hidden");
     }
-    let editLink = browser.runtime.getURL("src/options/options.html") + "?edit=";
-    if (typeof details.rules === "undefined") {
-        editLink += details.rule.uuid;
-    } else {
-        editLink += details.rules.map(rule => rule.uuid).join("&edit=");
-    }
-    document.getElementById("editLink").href = editLink;
+    document.getElementById("editLink").href =
+        browser.runtime.getURL("src/options/options.html") + `?edit=${details.rule.uuid}`;
 }
 
 function copyText(e) {

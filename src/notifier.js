@@ -2,27 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import {
-    BLOCK_ACTION,
-    DISABLED_STATE,
-    FILTER_ACTION,
-    NO_ACTION,
-    REDIRECT_ACTION,
-    WHITELIST_ACTION
-} from "./RequestControl/base.js";
-
-export const REQUEST_CONTROL_ICONS = {
-    [NO_ACTION]: "/icons/icon.svg",
-    [DISABLED_STATE]: "/icons/icon-disabled.svg",
-    [WHITELIST_ACTION]: "/icons/icon-whitelist.svg",
-    [BLOCK_ACTION]: "/icons/icon-block.svg",
-    [FILTER_ACTION]: "/icons/icon-filter.svg",
-    [REDIRECT_ACTION]: "/icons/icon-redirect.svg",
-    [FILTER_ACTION | REDIRECT_ACTION]: "/icons/icon-redirect.svg"
-};
+const DISABLED_ICON = "/icons/icon-disabled.svg";
+const DEFAULT_ICON = "/icons/icon.svg";
 
 class TitleNotifier {
-    static notify(tabId, action, recordsCount) {
+    static notify(tabId, rule, recordsCount) {
         updateTitle(tabId, recordsCount.toString());
     }
 
@@ -53,24 +37,24 @@ class BadgeNotifier extends TitleNotifier {
         browser.browserAction.setBadgeBackgroundColor({ color: "#E6E6E6" });
     }
 
-    static notify(tabId, action, recordsCount) {
-        super.notify(tabId, action, recordsCount);
-        updateBadge(tabId, REQUEST_CONTROL_ICONS[action], recordsCount.toString());
+    static notify(tabId, rule, recordsCount) {
+        super.notify(tabId, rule, recordsCount);
+        updateBadge(tabId, rule.constructor.icon, recordsCount.toString());
     }
 
     static error(tabId, error) {
         super.error(tabId, error);
-        updateBadge(tabId, REQUEST_CONTROL_ICONS[NO_ACTION], "!");
+        updateBadge(tabId, DEFAULT_ICON, "!");
     }
 
     static clear(tabId) {
         super.clear(tabId);
-        updateBadge(tabId, REQUEST_CONTROL_ICONS[NO_ACTION], "");
+        updateBadge(tabId, DEFAULT_ICON, "");
     }
 
     static disabledState(records) {
         super.disabledState(records);
-        updateBadge(null, REQUEST_CONTROL_ICONS[DISABLED_STATE], "");
+        updateBadge(null, DISABLED_ICON, "");
         for (let [tabId,] of records) {
             updateBadge(tabId, null, "");
         }
@@ -78,7 +62,7 @@ class BadgeNotifier extends TitleNotifier {
 
     static enabledState() {
         super.enabledState();
-        updateBadge(null, REQUEST_CONTROL_ICONS[NO_ACTION], "");
+        updateBadge(null, DEFAULT_ICON, "");
     }
 }
 

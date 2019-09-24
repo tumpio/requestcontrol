@@ -204,8 +204,6 @@ Filter matched requests by origin of request.
 # Redirect rule
 # Filter rule
 
-Whitelist rules have the highest priority and they revoke all other rules. Block rules are applied second and they revoke redirect and filter rules. Finally redirect rules will be applied before filter rules. If more than one redirect or filter rule matches same request, each of them will be applied one after another.
-
 == Trimming URL parameters ==
 
 Filter rule supports URL query parameter trimming. Trimmed URL parameters are defined either as literal strings with support for &quot;*&quot; and &quot;?&quot; wildcards or using regular expression.

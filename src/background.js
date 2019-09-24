@@ -9,7 +9,6 @@ import {
 } from "./RequestControl/api.js";
 import { getNotifier } from "./notifier.js";
 import { RequestController } from "./RequestControl/control.js";
-import { REDIRECT_ACTION, FILTER_ACTION } from "./RequestControl/base.js";
 
 /**
  * Background script for processing Request Control rules, adding request listeners and keeping
@@ -86,18 +85,16 @@ function addRuleListeners(rules) {
 }
 
 function requestControlListener(request) {
-    return controller.resolve(request, (request, action, updateTab = false) => {
+    return controller.resolve(request, (request, updateTab = false) => {
         let tabRecordsCount = addRecord({
-            action: request.action,
             tabId: request.tabId,
             type: request.type,
             url: request.url,
             target: request.redirectUrl,
             timestamp: request.timeStamp,
-            rule: request.rule,
-            rules: request.rules
+            rule: request.rule
         });
-        notifier.notify(request.tabId, action, tabRecordsCount);
+        notifier.notify(request.tabId, request.rule, tabRecordsCount);
         if (updateTab) {
             browser.tabs.update(request.tabId, {
                 url: request.redirectUrl
@@ -132,23 +129,35 @@ function addRecord(record) {
 function resetRecords(details) {
     if (details.frameId === 0 && records.has(details.tabId)) {
         let tabRecords = records.get(details.tabId);
-        let i = 0;
-        let clear = true;
         let isServerRedirect = details.transitionQualifiers.includes("server_redirect");
+        let keep = [];
+        let lastRecord;
+
+        let i = 0;
         while (i < 5 && tabRecords.length > 0) {
-            let lastRecord = tabRecords.pop();
-            if (lastRecord.target === details.url || 
-                isServerRedirect && lastRecord.action & (REDIRECT_ACTION | FILTER_ACTION)) {
-                // Keep record of the new main frame request
-                records.set(details.tabId, [lastRecord]);
-                notifier.notify(details.tabId, lastRecord.action, 1);
-                clear = false;
+            lastRecord = tabRecords.pop();
+            if (lastRecord.target === details.url ||
+                isServerRedirect && lastRecord.target) {
+                keep.push(lastRecord);
                 break;
             }
             i++;
         }
 
-        if (clear) {
+        let j = 0;
+        while (j < 5 && tabRecords.length > 0) {
+            let record = tabRecords.pop();
+            if (record.target && record.target === lastRecord.url) {
+                keep.unshift(record);
+                lastRecord = record;
+            }
+            j++;
+        }
+
+        if (keep.length) {
+            records.set(details.tabId, keep);
+            notifier.notify(details.tabId, keep[keep.length - 1].rule, keep.length);
+        } else {
             removeRecords(details.tabId);
             notifier.clear(details.tabId);
         }

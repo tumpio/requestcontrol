@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { ControlRule, FILTER_ACTION, REDIRECT_ACTION } from "./base.js";
+import { ControlRule } from "./base.js";
 import { QueryParser, URL_PARAMETERS, UrlParser } from "./url.js";
 
 // For unit tests under node
@@ -44,44 +44,27 @@ export class RedirectRule extends ControlRule {
         }
         return parser.href;
     }
-}
 
-export function processRedirectRules(callback) {
-    let redirectUrl = this.url;
-    let redirectDocument = false;
-    let action = this.action & (FILTER_ACTION | REDIRECT_ACTION);
+    static resolve(callback) {
+        let redirectUrl = this.rule.apply(this.url);
 
-    if (typeof this.rules === "undefined") {
-        redirectDocument = this.rule.redirectDocument;
-        redirectUrl = this.rule.apply(redirectUrl);
-    } else {
-        for (let rule of this.rules) {
-            if (rule.redirectDocument) {
-                redirectDocument = true;
-            }
-            redirectUrl = rule.apply(redirectUrl);
+        if (this.url === redirectUrl) {
+            return null;
+        }
+    
+        this.redirectUrl = redirectUrl;
+    
+        if (this.rule.redirectDocument && this.type !== "main_frame") {
+            callback(this, true);
+            return { cancel: true };
+        } else {
+            callback(this);
+            return { redirectUrl: this.redirectUrl };
         }
     }
-
-    if (this.url === redirectUrl) {
-        return null;
-    }
-
-    this.redirectUrl = redirectUrl;
-
-    if (redirectDocument && this.type !== "main_frame") {
-        callback(this, action, true);
-        return { cancel: true };
-    } else {
-        callback(this, action);
-        return { redirectUrl: this.redirectUrl };
-    }
 }
 
-RedirectRule.prototype.priority = -2;
-RedirectRule.prototype.action = REDIRECT_ACTION;
-RedirectRule.prototype.resolve = processRedirectRules;
-
+RedirectRule.icon = "/icons/icon-redirect.svg";
 
 class RedirectInstruction {
     constructor(name, patterns) {
