@@ -13,7 +13,7 @@ export function testRules(url, rulePatterns) {
         let matchPatterns = createMatchPatterns(rulePattern.pattern);
         for (let matchPattern of matchPatterns) {
             if (matchPatternToRegExp(matchPattern).test(url)) {
-                controller.markRequest(request, rule);
+                controller.mark(request, rule);
                 break;
             }
         }

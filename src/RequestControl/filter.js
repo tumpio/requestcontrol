@@ -2,13 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { ControlRule } from "./base.js";
 import { createRegexpPattern } from "./api.js";
-import { RedirectRule } from "./redirect.js";
+import { BaseRedirectRule } from "./redirect.js";
 import { DomainMatcher } from "./matchers.js";
 import { parseInlineUrl, trimQueryParameters, UrlParser } from "./url.js";
 
-export class FilterRule extends ControlRule {
+export class FilterRule extends BaseRedirectRule {
     constructor({
         uuid,
         paramsFilter = null,
@@ -17,13 +16,12 @@ export class FilterRule extends ControlRule {
         skipOnSameDomain = false,
         redirectDocument = false
     } = {}, matcher) {
-        super({ uuid }, matcher);
+        super({ uuid, redirectDocument }, matcher);
         this.queryParamsPattern = (paramsFilter) ? createRegexpPattern(paramsFilter.values) : null;
         this.invertQueryTrimming = (paramsFilter) ? paramsFilter.invert : false;
         this.removeQueryString = trimAllParams;
         this.skipInlineUrlParsing = skipRedirectionFilter;
         this.skipOnSameDomain = skipOnSameDomain;
-        this.redirectDocument = redirectDocument;
     }
 
     apply(url) {
@@ -53,5 +51,4 @@ export class FilterRule extends ControlRule {
     }
 }
 
-FilterRule.resolve = RedirectRule.resolve;
 FilterRule.icon = "/icons/icon-filter.svg";

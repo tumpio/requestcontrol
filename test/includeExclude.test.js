@@ -14,7 +14,7 @@ test("Include match extender - match", t => {
             includes: ["cl?ck", "/a=[0-9]+/", "FOO"]
         }
     });
-    t.truthy(t.context.controller.markRequest(t.context.request, rule));
+    t.truthy(t.context.controller.mark(t.context.request, rule));
 });
 
 test("Include match extender - no match", t => {
@@ -24,7 +24,7 @@ test("Include match extender - no match", t => {
             includes: ["clock", "/a=[a-z]+/"]
         }
     });
-    t.falsy(t.context.controller.markRequest(t.context.request, rule));
+    t.falsy(t.context.controller.mark(t.context.request, rule));
 });
 
 test("Exclude match extender - match", t => {
@@ -34,7 +34,7 @@ test("Exclude match extender - match", t => {
             excludes: ["cl?ck", "/a=\\d+/"]
         }
     });
-    t.falsy(t.context.controller.markRequest(t.context.request, rule));
+    t.falsy(t.context.controller.mark(t.context.request, rule));
 });
 
 test("Exclude match extender - no match", t => {
@@ -44,7 +44,7 @@ test("Exclude match extender - no match", t => {
             excludes: ["clock", "/a=[a-z]+/"]
         }
     });
-    t.truthy(t.context.controller.markRequest(t.context.request, rule));
+    t.truthy(t.context.controller.mark(t.context.request, rule));
 });
 
 test("Combined include, exclude - match include", t => {
@@ -55,7 +55,7 @@ test("Combined include, exclude - match include", t => {
             excludes: ["clock"]
         }
     });
-    t.truthy(t.context.controller.markRequest(t.context.request, rule));
+    t.truthy(t.context.controller.mark(t.context.request, rule));
 });
 
 test("Combined include, exclude - no match", t => {
@@ -66,7 +66,7 @@ test("Combined include, exclude - no match", t => {
             excludes: ["clock"]
         }
     });
-    t.falsy(t.context.controller.markRequest(t.context.request, rule));
+    t.falsy(t.context.controller.mark(t.context.request, rule));
 });
 
 test("Combined include, exclude - match both", t => {
@@ -77,7 +77,7 @@ test("Combined include, exclude - match both", t => {
             excludes: ["click"]
         }
     });
-    t.falsy(t.context.controller.markRequest(t.context.request, rule));
+    t.falsy(t.context.controller.mark(t.context.request, rule));
 });
 
 test("Invalid regexp - treated as literal string", t => {
@@ -87,5 +87,5 @@ test("Invalid regexp - treated as literal string", t => {
             excludes: ["/click\\/"]
         }
     });
-    t.falsy(t.context.controller.markRequest({ url: "http://click\\/" }, rule));
+    t.falsy(t.context.controller.mark({ url: "http://click\\/" }, rule));
 });

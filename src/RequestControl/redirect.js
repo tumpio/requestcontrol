@@ -4,6 +4,7 @@
 
 import { ControlRule } from "./base.js";
 import { QueryParser, URL_PARAMETERS, UrlParser } from "./url.js";
+import { BLOCKING_RESPONSE } from "./block.js";
 
 // For unit tests under node
 const atob = (typeof window !== "undefined") ? window.atob : function (a) {
@@ -15,19 +16,47 @@ const btoa = (typeof window !== "undefined") ? window.btoa : function btoa(b) {
     return buffer.toString("base64");
 };
 
-export class RedirectRule extends ControlRule {
+export class BaseRedirectRule extends ControlRule {
+    constructor(
+        {
+            uuid,
+            redirectDocument = false
+        } = {}, matcher) {
+        super({ uuid }, matcher);
+        this.redirectDocument = redirectDocument;
+    }
+
+    resolve(request) {
+        let redirectUrl = this.apply(request.url);
+
+        if (request.url === redirectUrl) {
+            return null;
+        }
+
+        if (this.redirectDocument && request.type !== "main_frame") {
+            this.constructor
+                .updateTab(request.tabId, redirectUrl)
+                .then(() => this.constructor.notify(this, request, redirectUrl));
+            return BLOCKING_RESPONSE;
+        } else {
+            this.constructor.notify(this, request, redirectUrl);
+            return { redirectUrl: redirectUrl };
+        }
+    }
+}
+
+export class RedirectRule extends BaseRedirectRule {
     constructor(
         {
             uuid,
             redirectUrl = "",
             redirectDocument = false
         } = {}, matcher) {
-        super({ uuid }, matcher);
+        super({ uuid, redirectDocument }, matcher);
         let [parsedUrl, instructions] = parseRedirectInstructions(redirectUrl);
         let patterns = parseRedirectParameters(parsedUrl);
         this.instructions = instructions;
         this.patterns = patterns;
-        this.redirectDocument = redirectDocument;
     }
 
     apply(url) {
@@ -43,24 +72,6 @@ export class RedirectRule extends ControlRule {
             instruction.apply(parser);
         }
         return parser.href;
-    }
-
-    static resolve(callback) {
-        let redirectUrl = this.rule.apply(this.url);
-
-        if (this.url === redirectUrl) {
-            return null;
-        }
-    
-        this.redirectUrl = redirectUrl;
-    
-        if (this.rule.redirectDocument && this.type !== "main_frame") {
-            callback(this, true);
-            return { cancel: true };
-        } else {
-            callback(this);
-            return { redirectUrl: this.redirectUrl };
-        }
     }
 }
 

@@ -4,8 +4,9 @@
 
 import { WhitelistRule } from "./whitelist.js";
 import { BlockRule } from "./block.js";
-import { RedirectRule } from "./redirect.js";
+import { RedirectRule, BaseRedirectRule } from "./redirect.js";
 import { FilterRule } from "./filter.js";
+import { ControlRule } from "./base.js";
 
 WhitelistRule.priority = 0;
 BlockRule.priority = -1;
@@ -13,38 +14,32 @@ RedirectRule.priority = -2;
 FilterRule.priority = -3;
 
 export class RequestController {
-    constructor() {
-        this.markedRequests = new Map();
+    constructor(notify, updateTab) {
+        this.requests = new Map();
+        ControlRule.notify = notify;
+        BaseRedirectRule.updateTab = updateTab;
     }
 
-    markRequest(details, rule) {
-        if (!rule.match(details)) {
+    mark(request, rule) {
+        if (!rule.match(request)) {
             return false;
         }
-        let request = this.markedRequests.get(details.requestId);
-        if (typeof request === "undefined") {
-            this.markedRequests.set(details.requestId, details);
-            request = details;
-        }
-        if (typeof request.rule === "undefined" ||
-            rule.constructor.priority > request.rule.constructor.priority
+        let current = this.requests.get(request.requestId);
+        if (typeof current !== "undefined" &&
+            current.constructor.priority >= rule.constructor.priority
         ) {
-            request.rule = rule;
+            return false;
         }
+        this.requests.set(request.requestId, rule);
         return true;
     }
 
-    resolve(details, callback) {
-        if (this.markedRequests.has(details.requestId)) {
-            let request = this.markedRequests.get(details.requestId);
-            this.markedRequests.delete(request.requestId);
-            request.resolve = request.rule.constructor.resolve;
-            return request.resolve(callback);
+    resolve(request) {
+        if (!this.requests.has(request.requestId)) {
+            return null;
         }
-        return null;
-    }
-
-    clear() {
-        this.markedRequests.clear();
+        let rule = this.requests.get(request.requestId);
+        this.requests.delete(request.requestId);
+        return rule.resolve(request);
     }
 }

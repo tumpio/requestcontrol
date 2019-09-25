@@ -188,8 +188,7 @@ function onRuleTest() {
         result.textContent = browser.i18n.getMessage("no_match");
         return;
     }
-    request.resolve = request.rule.constructor.resolve;
-    let resolve = request.resolve(function (request) {
+    let resolve = request.rule.constructor.resolve(request, function (request) {
         switch (request.rule.constructor) {
             case WhitelistRule:
             case LoggedWhitelistRule:

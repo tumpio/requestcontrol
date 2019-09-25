@@ -4,10 +4,12 @@
 
 import { ControlRule } from "./base.js";
 
+export const BLOCKING_RESPONSE = { cancel: true };
+
 export class BlockRule extends ControlRule {
-    static resolve(callback) {
-        callback(this);
-        return { cancel: true };
+    resolve(request) {
+        this.constructor.notify(this, request);
+        return BLOCKING_RESPONSE;
     }
 }
 

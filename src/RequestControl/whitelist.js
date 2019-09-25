@@ -5,15 +5,15 @@
 import { ControlRule } from "./base.js";
 
 export class WhitelistRule extends ControlRule {
-    static resolve() {
+    resolve() {
         return null;
     }
 }
 
 export class LoggedWhitelistRule extends WhitelistRule {
-    static resolve(callback) {
-        callback(this);
-        return super.resolve();
+    resolve(request) {
+        this.constructor.notify(this, request);
+        return null;
     }
 }
 

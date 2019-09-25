@@ -11,14 +11,14 @@ import { getNotifier } from "./notifier.js";
 import { RequestController } from "./RequestControl/control.js";
 import * as records from "./records.js";
 
-const requestListeners = [];
-const controller = new RequestController();
+const listeners = [];
+const controller = new RequestController(notify, updateTab);
 let notifier;
 
 browser.storage.local.get().then(async options => {
     notifier = await getNotifier();
     init(options);
-    browser.storage.onChanged.addListener(initOnChange);
+    browser.storage.onChanged.addListener(onChanged);
 });
 
 function init(options) {
@@ -28,26 +28,26 @@ function init(options) {
         browser.webNavigation.onCommitted.removeListener(onNavigation);
         notifier.disabledState(records.all());
         records.clear();
-        controller.clear();
+        controller.requests.clear();
     } else {
         browser.tabs.onRemoved.addListener(records.removeTabRecords);
         browser.runtime.onMessage.addListener(records.getTabRecords);
         browser.webNavigation.onCommitted.addListener(onNavigation);
         notifier.enabledState();
-        addRuleListeners(options.rules);
+        addListeners(options.rules);
     }
     browser.webRequest.handlerBehaviorChanged();
 }
 
-function initOnChange() {
-    while (requestListeners.length) {
-        browser.webRequest.onBeforeRequest.removeListener(requestListeners.pop());
+function onChanged() {
+    while (listeners.length) {
+        browser.webRequest.onBeforeRequest.removeListener(listeners.pop());
     }
-    browser.webRequest.onBeforeRequest.removeListener(requestControlListener);
+    browser.webRequest.onBeforeRequest.removeListener(controlListener);
     browser.storage.local.get().then(init);
 }
 
-function addRuleListeners(rules) {
+function addListeners(rules) {
     if (!rules) {
         return;
     }
@@ -62,43 +62,41 @@ function addRuleListeners(rules) {
                 urls: urls,
                 types: data.types
             };
-            let listener = details => {
-                controller.markRequest(details, rule);
+            let listener = request => {
+                controller.mark(request, rule);
             };
             browser.webRequest.onBeforeRequest.addListener(listener, filter);
-            requestListeners.push(listener);
+            listeners.push(listener);
         } catch {
             notifier.error(null, browser.i18n.getMessage("error_invalid_rule"));
         }
     }
     browser.webRequest.onBeforeRequest.addListener(
-        requestControlListener,
+        controlListener,
         { urls: [ALL_URLS] },
         ["blocking"]
     );
 }
 
-function requestControlListener(request) {
-    return controller.resolve(request, (request, updateTab = false) => {
-        if (updateTab) {
-            browser.tabs.update(request.tabId, {
-                url: request.redirectUrl
-            }).then(recordAndNotify(request));
-        } else {
-            recordAndNotify(request);
-        }
+function controlListener(request) {
+    return controller.resolve(request);
+}
+
+function updateTab(tabId, url) {
+    return browser.tabs.update(tabId, {
+        url: url
     });
 }
 
-function recordAndNotify(request) {
+function notify(rule, request, target = null) {
     let count = records.add(request.tabId, {
         type: request.type,
         url: request.url,
-        target: request.redirectUrl,
+        target: target,
         timestamp: request.timeStamp,
-        rule: request.rule
+        rule: rule
     });
-    notifier.notify(request.tabId, request.rule, count);
+    notifier.notify(request.tabId, rule, count);
 }
 
 function onNavigation(details) {
