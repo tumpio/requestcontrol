@@ -9,19 +9,10 @@ import {
 } from "./RequestControl/api.js";
 import { getNotifier } from "./notifier.js";
 import { RequestController } from "./RequestControl/control.js";
-
-/**
- * Background script for processing Request Control rules, adding request listeners and keeping
- * record of controlled requests.
- *
- * Request listener (webRequest.onBeforeListener) is added for each active rule. When request
- * matches a rule it will be marked for rule processing. The request is then resolved according
- * the marked rules.
- */
+import * as records from "./records.js";
 
 const requestListeners = [];
 const controller = new RequestController();
-const records = new Map();
 let notifier;
 
 browser.storage.local.get().then(async options => {
@@ -32,18 +23,18 @@ browser.storage.local.get().then(async options => {
 
 function init(options) {
     if (options.disabled) {
-        notifier.disabledState(records);
+        browser.tabs.onRemoved.removeListener(records.removeTabRecords);
+        browser.runtime.onMessage.removeListener(records.getTabRecords);
+        browser.webNavigation.onCommitted.removeListener(onNavigation);
+        notifier.disabledState(records.all());
         records.clear();
         controller.clear();
-        browser.tabs.onRemoved.removeListener(removeRecords);
-        browser.webNavigation.onCommitted.removeListener(resetRecords);
-        browser.runtime.onMessage.removeListener(getRecords);
     } else {
+        browser.tabs.onRemoved.addListener(records.removeTabRecords);
+        browser.runtime.onMessage.addListener(records.getTabRecords);
+        browser.webNavigation.onCommitted.addListener(onNavigation);
         notifier.enabledState();
         addRuleListeners(options.rules);
-        browser.tabs.onRemoved.addListener(removeRecords);
-        browser.webNavigation.onCommitted.addListener(resetRecords);
-        browser.runtime.onMessage.addListener(getRecords);
     }
     browser.webRequest.handlerBehaviorChanged();
 }
@@ -80,86 +71,48 @@ function addRuleListeners(rules) {
             notifier.error(null, browser.i18n.getMessage("error_invalid_rule"));
         }
     }
-    browser.webRequest.onBeforeRequest.addListener(requestControlListener,
-        { urls: [ALL_URLS] }, ["blocking"]);
+    browser.webRequest.onBeforeRequest.addListener(
+        requestControlListener,
+        { urls: [ALL_URLS] },
+        ["blocking"]
+    );
 }
 
 function requestControlListener(request) {
     return controller.resolve(request, (request, updateTab = false) => {
-        let tabRecordsCount = addRecord({
-            tabId: request.tabId,
-            type: request.type,
-            url: request.url,
-            target: request.redirectUrl,
-            timestamp: request.timeStamp,
-            rule: request.rule
-        });
-        notifier.notify(request.tabId, request.rule, tabRecordsCount);
         if (updateTab) {
             browser.tabs.update(request.tabId, {
                 url: request.redirectUrl
-            });
-        }
-    });
-}
-
-function getRecords() {
-    return browser.tabs.query({
-        currentWindow: true,
-        active: true
-    }).then(tabs => {
-        return records.get(tabs[0].id);
-    });
-}
-
-function removeRecords(tabId) {
-    records.delete(tabId);
-}
-
-function addRecord(record) {
-    let recordsForTab = records.get(record.tabId);
-    if (!recordsForTab) {
-        recordsForTab = [];
-        records.set(record.tabId, recordsForTab);
-    }
-    recordsForTab.push(record);
-    return recordsForTab.length;
-}
-
-function resetRecords(details) {
-    if (details.frameId === 0 && records.has(details.tabId)) {
-        let tabRecords = records.get(details.tabId);
-        let isServerRedirect = details.transitionQualifiers.includes("server_redirect");
-        let keep = [];
-        let lastRecord;
-
-        let i = 0;
-        while (i < 5 && tabRecords.length > 0) {
-            lastRecord = tabRecords.pop();
-            if (lastRecord.target === details.url ||
-                isServerRedirect && lastRecord.target) {
-                keep.push(lastRecord);
-                break;
-            }
-            i++;
-        }
-
-        let j = 0;
-        while (j < 5 && tabRecords.length > 0) {
-            let record = tabRecords.pop();
-            if (record.target && record.target === lastRecord.url) {
-                keep.unshift(record);
-                lastRecord = record;
-            }
-            j++;
-        }
-
-        if (keep.length) {
-            records.set(details.tabId, keep);
-            notifier.notify(details.tabId, keep[keep.length - 1].rule, keep.length);
+            }).then(recordAndNotify(request));
         } else {
-            removeRecords(details.tabId);
-            notifier.clear(details.tabId);
+            recordAndNotify(request);
         }
+    });
+}
+
+function recordAndNotify(request) {
+    let count = records.add(request.tabId, {
+        type: request.type,
+        url: request.url,
+        target: request.redirectUrl,
+        timestamp: request.timeStamp,
+        rule: request.rule
+    });
+    notifier.notify(request.tabId, request.rule, count);
+}
+
+function onNavigation(details) {
+    if (details.frameId !== 0 || !records.has(details.tabId)) {
+        return;
+    }
+    let isServerRedirect = details.transitionQualifiers.includes("server_redirect");
+    let keep = records.getLastRedirectRecords(details.tabId, details.url, isServerRedirect);
+
+    if (keep.length) {
+        records.setTabRecords(details.tabId, keep);
+        notifier.notify(details.tabId, keep[keep.length - 1].rule, keep.length);
+    } else {
+        records.removeTabRecords(details.tabId);
+        notifier.clear(details.tabId);
     }
 }
