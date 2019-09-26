@@ -6,6 +6,7 @@ const DISABLED_ICON = "/icons/icon-disabled.svg";
 const DEFAULT_ICON = "/icons/icon.svg";
 
 class TitleNotifier {
+    static setup() { }
     static notify(tabId, rule, recordsCount) {
         updateTitle(tabId, recordsCount.toString());
     }
@@ -32,8 +33,8 @@ class TitleNotifier {
 
 class BadgeNotifier extends TitleNotifier {
 
-    constructor() {
-        super();
+    static setup() {
+        super.setup();
         browser.browserAction.setBadgeBackgroundColor({ color: "#E6E6E6" });
     }
 
@@ -69,11 +70,14 @@ class BadgeNotifier extends TitleNotifier {
 export function getNotifier() {
     return browser.runtime.getBrowserInfo()
         .then(info => {
+            let notifier;
             if (info.name === "Fennec") {
-                return TitleNotifier;
+                notifier = TitleNotifier;
             } else {
-                return BadgeNotifier;
+                notifier = BadgeNotifier;
             }
+            notifier.setup();
+            return notifier;
         });
 }
 
