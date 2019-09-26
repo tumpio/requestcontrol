@@ -12,9 +12,3 @@ export class ControlRule {
         return this.matcher.test(request);
     }
 }
-
-export class BaseMatchExtender {
-    static test() {
-        return true;
-    }
-}

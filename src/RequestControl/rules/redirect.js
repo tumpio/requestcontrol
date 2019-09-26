@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { ControlRule } from "./base.js";
-import { QueryParser, URL_PARAMETERS, UrlParser } from "./url.js";
+import { QueryParser, URL_PARAMETERS, UrlParser } from "../url.js";
 import { BLOCKING_RESPONSE } from "./block.js";
 
 // For unit tests under node

@@ -2,9 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import {BaseMatchExtender} from "./base.js";
-import {libTld, UrlParser} from "./url.js";
-import {createRegexpPattern} from "./api.js";
+import { libTld, UrlParser } from "./url.js";
+import { createRegexpPattern } from "./api.js";
+
+export class BaseMatchExtender {
+    static test() {
+        return true;
+    }
+}
 
 export class RequestMatcher {
     constructor(matchers) {

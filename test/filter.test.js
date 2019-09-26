@@ -1,5 +1,5 @@
 import test from "ava";
-import { FilterRule } from "../src/RequestControl/filter";
+import { FilterRule } from "../src/RequestControl/rules/filter";
 import { parseInlineUrl, trimQueryParameters } from "../src/RequestControl/url";
 import { createRegexpPattern } from "../src/RequestControl/api";
 
