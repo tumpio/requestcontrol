@@ -1,64 +1,63 @@
-import test from "ava";
 import {createMatchPatterns, ALL_URLS} from "../src/main/api";
 
 
-test("Create match patterns", t => {
-    t.deepEqual(createMatchPatterns({allUrls: true}), [ALL_URLS]);
-    t.deepEqual(createMatchPatterns({
+test("Create match patterns", () => {
+    expect(createMatchPatterns({allUrls: true})).toEqual([ALL_URLS]);
+    expect(createMatchPatterns({
         scheme: "http",
         host: "example.com"
-    }),
-    ["http://example.com/"]);
-    t.deepEqual(createMatchPatterns({
+    })).toEqual(["http://example.com/"]);
+    expect(createMatchPatterns({
         scheme: "http",
         host: "example.com",
         path: "some/path"
-    }),
-    ["http://example.com/some/path"]);
-    t.deepEqual(createMatchPatterns({
+    })).toEqual(["http://example.com/some/path"]);
+    expect(createMatchPatterns({
         scheme: "https",
         host: ["first.com", "second.com"],
         path: "some/path"
-    }).sort(),
-    ["https://first.com/some/path", "https://second.com/some/path"].sort());
-    t.deepEqual(createMatchPatterns({
+    }).sort()).toEqual(["https://first.com/some/path", "https://second.com/some/path"].sort());
+    expect(createMatchPatterns({
         scheme: "*",
         host: ["first.com", "second.com"],
         path: ["first/path", "second/path"]
-    }).sort(),
-    ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
-        "*://second.com/second/path"].sort());
-    t.deepEqual(createMatchPatterns({
+    }).sort()).toEqual(
+        ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
+            "*://second.com/second/path"].sort()
+    );
+    expect(createMatchPatterns({
         scheme: "*",
         host: ["first.com", "second.com"],
         path: ["first/path", "second/path"]
-    }).sort(),
-    ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
-        "*://second.com/second/path"].sort());
-    t.deepEqual(createMatchPatterns({
+    }).sort()).toEqual(
+        ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
+            "*://second.com/second/path"].sort()
+    );
+    expect(createMatchPatterns({
         scheme: "https",
         host: ["first.com", "second.*"],
         path: "some/path",
         topLevelDomains: ["com", "org"]
-    }).sort(),
-    ["https://first.com/some/path", "https://second.com/some/path",
+    }).sort()).toEqual(["https://first.com/some/path", "https://second.com/some/path",
         "https://second.org/some/path"].sort());
-    t.deepEqual(createMatchPatterns({
+    expect(createMatchPatterns({
         scheme: "*",
         host: ["first.com", "second.*"],
         path: ["first/path", "second/path"],
         topLevelDomains: ["com", "org"]
-    }).sort(),
-    ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
-        "*://second.com/second/path", "*://second.org/first/path",
-        "*://second.org/second/path"].sort());
-    t.deepEqual(createMatchPatterns({
+    }).sort()).toEqual(
+        ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
+            "*://second.com/second/path", "*://second.org/first/path",
+            "*://second.org/second/path"].sort()
+    );
+    expect(createMatchPatterns({
         scheme: "*",
         host: ["first.com", "second.*"],
         path: ["/first/path", "second/path"],
         topLevelDomains: ["com", "org"]
-    }).sort(),
-    ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
-        "*://second.com/second/path", "*://second.org/first/path",
-        "*://second.org/second/path"].sort());
+    }).sort()).toEqual(
+        ["*://first.com/first/path", "*://first.com/second/path", "*://second.com/first/path",
+            "*://second.com/second/path", "*://second.org/first/path",
+            "*://second.org/second/path"].sort()
+    );
 });

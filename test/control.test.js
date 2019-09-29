@@ -1,19 +1,31 @@
-import test from "ava";
 import { createRule } from "../src/main/api";
 import { RequestController } from "../src/main/control";
 
-test.beforeEach(t => {
-    t.context.controller = new RequestController(() => {}, () => Promise.resolve());
-    t.context.request = {requestId: 0, url: "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F"};
-    t.context.blockRule = createRule({action: "block"});
-    t.context.whitelistRule = createRule({action: "whitelist"});
-    t.context.logRule = createRule({action: "whitelist", log: true});
-    t.context.filterRule = createRule({action: "filter"});
-    t.context.redirectRule = createRule({
+let controller;
+let request;
+let blockRule;
+let whitelistRule;
+let logRule;
+let filterRule;
+let redirectRule;
+let filterParamsRule;
+let mockNotify;
+let mockUpdateTab;
+
+beforeEach(() => {
+    mockNotify = jest.fn();
+    mockUpdateTab = jest.fn();
+    controller = new RequestController(mockNotify, mockUpdateTab);
+    request = { requestId: 0, url: "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F" };
+    blockRule = createRule({ action: "block" });
+    whitelistRule = createRule({ action: "whitelist" });
+    logRule = createRule({ action: "whitelist", log: true });
+    filterRule = createRule({ action: "filter" });
+    redirectRule = createRule({
         action: "redirect",
         redirectUrl: "https://redirect.url/"
     });
-    t.context.filterParamsRule = createRule({
+    filterParamsRule = createRule({
         "action": "filter",
         "skipRedirectionFilter": true,
         "paramsFilter": {
@@ -25,106 +37,133 @@ test.beforeEach(t => {
     });
 });
 
-test.afterEach(t => {
-    t.true(t.context.controller.requests.size === 0);
+afterEach(() => {
+    expect(controller.requests.size).toBe(0);
 });
 
-test("Resolve non-marked request", t => {
-    let resolve = t.context.controller.resolve(t.context.request);
-    t.falsy(resolve);
+describe("Resolving non-marked requests", () => {
+    afterEach(() => {
+        expect(mockNotify.mock.calls.length).toBe(0);
+        expect(mockUpdateTab.mock.calls.length).toBe(0);
+    });
+
+    test("Resolve non-marked request", () => {
+        const resolve = controller.resolve(request);
+        expect(resolve).toBeFalsy();
+    });
+
+    test("Resolve marked request after clear", () => {
+        controller.mark(request, blockRule);
+        expect(controller.requests.size).toBe(1);
+        controller.requests.clear();
+        const resolve = controller.resolve(request);
+        expect(resolve).toBeFalsy();
+    });
 });
 
-test("Resolve request after clear", t => {
-    t.context.controller.mark(t.context.request, t.context.blockRule);
-    t.is(t.context.controller.requests.size, 1);
-    t.context.controller.requests.clear();
-    let resolve = t.context.controller.resolve(t.context.request);
-    t.falsy(resolve);
-});
-
-test("Rule creation fails", t => {
-    t.throws(() => {
+test("Rule creation fails", () => {
+    expect(() => {
         createRule("no-action");
-    }, Error);
+    }).toThrowError(Error);
 });
 
-test("Request blocked", t => {
-    t.context.controller.mark(t.context.request, t.context.filterRule);
-    t.context.controller.mark(t.context.request, t.context.blockRule);
-    t.context.controller.mark(t.context.request, t.context.redirectRule);
-    t.is(t.context.controller.requests.size, 1);
-    let resolve = t.context.controller.resolve(t.context.request);
-    t.true(resolve.cancel);
+describe("user is not notified", () => {
+    afterEach(() => {
+        expect(mockNotify.mock.calls.length).toBe(0);
+    });
+
+    test("when request is whitelisted", () => {
+        controller.mark(request, filterRule);
+        controller.mark(request, whitelistRule);
+        controller.mark(request, blockRule);
+        controller.mark(request, redirectRule);
+        const resolve = controller.resolve(request);
+        expect(resolve).toBeFalsy();
+    });
+
+    test("when request is filtered and rule is not applied", () => {
+        request = { requestId: 0, url: "http://bar.com/" };
+        controller.mark(request, filterRule);
+        const resolve = controller.resolve(request);
+        expect(resolve).toBeFalsy();
+    });
 });
 
-test("Request whitelisted", t => {
-    t.context.controller.mark(t.context.request, t.context.filterRule);
-    t.context.controller.mark(t.context.request, t.context.whitelistRule);
-    t.context.controller.mark(t.context.request, t.context.blockRule);
-    t.context.controller.mark(t.context.request, t.context.redirectRule);
-    let resolve = t.context.controller.resolve(t.context.request);
-    t.falsy(resolve);
+describe("user is notified", () => {
+    afterEach(() => {
+        expect(mockNotify.mock.calls.length).toBe(1);
+    });
+
+    test("Request blocked", () => {
+        controller.mark(request, filterRule);
+        controller.mark(request, blockRule);
+        controller.mark(request, redirectRule);
+        expect(controller.requests.size).toBe(1);
+        const resolve = controller.resolve(request);
+        expect(resolve.cancel).toBe(true);
+    });
+
+    test("Request whitelisted and logged", () => {
+        controller.mark(request, filterRule);
+        controller.mark(request, logRule);
+        controller.mark(request, blockRule);
+        controller.mark(request, redirectRule);
+        const resolve = controller.resolve(request);
+        expect(resolve).toBeFalsy();
+    });
+
+    test("Request redirected", () => {
+        controller.mark(request, redirectRule);
+        const resolve = controller.resolve(request);
+        expect(resolve.redirectUrl).toBe("https://redirect.url/");
+    });
+
+    test("Request filtered", () => {
+        controller.mark(request, filterRule);
+        const resolve = controller.resolve(request);
+        expect(resolve.redirectUrl).toBe("http://bar.com/");
+    });
+
+    test("Request filtered - skip redirection filter", () => {
+        request.url += "&utm_source=blaa";
+        controller.mark(request, filterParamsRule);
+        const resolve = controller.resolve(request);
+        expect(resolve.redirectUrl).toBe("http://foo.com/click?url=http%3A%2F%2Fbar.com%2F");
+    });
+
+    test("Request redirected - redirect rule overrides filter rule", () => {
+        request.url = "http://foo.com/?utm_source=blaa";
+        controller.mark(request, createRule({
+            action: "redirect",
+            redirectUrl: "[hostname=bar.com]"
+        }));
+        controller.mark(request, filterParamsRule);
+        const resolve = controller.resolve(request);
+        expect(resolve.redirectUrl).toBe("http://bar.com/?utm_source=blaa");
+    });
 });
 
-test("Request whitelisted and logged", t => {
-    t.context.controller.mark(t.context.request, t.context.filterRule);
-    t.context.controller.mark(t.context.request, t.context.logRule);
-    t.context.controller.mark(t.context.request, t.context.blockRule);
-    t.context.controller.mark(t.context.request, t.context.redirectRule);
-    let resolve = t.context.controller.resolve(t.context.request);
-    t.falsy(resolve);
-});
+describe("redirect document on other types", () => {
+    afterEach(() => {
+        expect(mockUpdateTab.mock.calls.length).toBe(1);
+        return mockUpdateTab().then(() => expect(mockNotify.mock.calls.length).toBe(1));
+    });
 
-test("Request redirected", t => {
-    t.context.controller.mark(t.context.request, t.context.redirectRule);
-    let resolve = t.context.controller.resolve(t.context.request);
-    t.is(resolve.redirectUrl, "https://redirect.url/");
-});
+    test("Request filtered", () => {
+        request.type = "sub_frame";
+        filterRule.redirectDocument = true;
+        controller.mark(request, filterRule);
+        mockUpdateTab.mockReturnValue(Promise.resolve());
+        const resolve = controller.resolve(request);
+        expect(resolve.cancel).toBe(true);
+    });
 
-test("Request filtered", t => {
-    t.context.controller.mark(t.context.request, t.context.filterRule);
-    let resolve = t.context.controller.resolve(t.context.request);
-    t.is(resolve.redirectUrl, "http://bar.com/");
-});
-
-test("Request filtered - rules not applied", t => {
-    let request = {requestId: 0, url: "http://bar.com/"};
-    t.context.controller.mark(request, t.context.filterRule);
-    let resolve = t.context.controller.resolve(request, t.context.callback);
-    t.falsy(resolve);
-});
-
-test("Request filtered - skip redirection filter", t => {
-    t.context.request.url += "&utm_source=blaa";
-    t.context.controller.mark(t.context.request, t.context.filterParamsRule);
-    let resolve = t.context.controller.resolve(t.context.request);
-    t.is(resolve.redirectUrl, "http://foo.com/click?url=http%3A%2F%2Fbar.com%2F");
-});
-
-test("Request filtered - redirect document on other types", t => {
-    t.context.request.type = "sub_frame";
-    t.context.filterRule.redirectDocument = true;
-    t.context.controller.mark(t.context.request, t.context.filterRule);
-    let resolve = t.context.controller.resolve(t.context.request);
-    t.true(resolve.cancel);
-});
-
-test("Request redirected - redirect document on other types", t => {
-    t.context.request.type = "sub_frame";
-    t.context.redirectRule.redirectDocument = true;
-    t.context.controller.mark(t.context.request, t.context.redirectRule);
-    let resolve = t.context.controller.resolve(t.context.request);
-    t.true(resolve.cancel);
-});
-
-test("Request redirected - redirect rule overrides filter rule", t => {
-    t.context.request.url = "http://foo.com/?utm_source=blaa";
-    t.context.controller.mark(t.context.request, createRule({
-        action: "redirect",
-        redirectUrl: "[hostname=bar.com]"
-    }));
-    t.context.controller.mark(t.context.request, t.context.filterParamsRule);
-    
-    let resolve = t.context.controller.resolve(t.context.request);
-    t.is(resolve.redirectUrl, "http://bar.com/?utm_source=blaa");
+    test("Request redirected", () => {
+        request.type = "sub_frame";
+        redirectRule.redirectDocument = true;
+        controller.mark(request, redirectRule);
+        mockUpdateTab.mockReturnValue(Promise.resolve());
+        const resolve = controller.resolve(request);
+        expect(resolve.cancel).toBe(true);
+    });
 });

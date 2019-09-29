@@ -1,53 +1,55 @@
-import test from "ava";
 import * as RequestControl from "../src/main/api";
 import { RequestController } from "../src/main/control";
 
-test.beforeEach(t => {
-    t.context.request = { url: "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F" };
-    t.context.controller = new RequestController();
+let request;
+let controller;
+
+beforeEach(() => {
+    request = { url: "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F" };
+    controller = new RequestController();
 });
 
-test("Include match extender - match", t => {
+test("Include match extender - match", () => {
     let rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             includes: ["cl?ck", "/a=[0-9]+/", "FOO"]
         }
     });
-    t.truthy(t.context.controller.mark(t.context.request, rule));
+    expect(controller.mark(request, rule)).toBeTruthy();
 });
 
-test("Include match extender - no match", t => {
+test("Include match extender - no match", () => {
     let rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             includes: ["clock", "/a=[a-z]+/"]
         }
     });
-    t.falsy(t.context.controller.mark(t.context.request, rule));
+    expect(controller.mark(request, rule)).toBeFalsy();
 });
 
-test("Exclude match extender - match", t => {
+test("Exclude match extender - match", () => {
     let rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             excludes: ["cl?ck", "/a=\\d+/"]
         }
     });
-    t.falsy(t.context.controller.mark(t.context.request, rule));
+    expect(controller.mark(request, rule)).toBeFalsy();
 });
 
-test("Exclude match extender - no match", t => {
+test("Exclude match extender - no match", () => {
     let rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             excludes: ["clock", "/a=[a-z]+/"]
         }
     });
-    t.truthy(t.context.controller.mark(t.context.request, rule));
+    expect(controller.mark(request, rule)).toBeTruthy();
 });
 
-test("Combined include, exclude - match include", t => {
+test("Combined include, exclude - match include", () => {
     let rule = RequestControl.createRule({
         action: "filter",
         pattern: {
@@ -55,10 +57,10 @@ test("Combined include, exclude - match include", t => {
             excludes: ["clock"]
         }
     });
-    t.truthy(t.context.controller.mark(t.context.request, rule));
+    expect(controller.mark(request, rule)).toBeTruthy();
 });
 
-test("Combined include, exclude - no match", t => {
+test("Combined include, exclude - no match", () => {
     let rule = RequestControl.createRule({
         action: "filter",
         pattern: {
@@ -66,10 +68,10 @@ test("Combined include, exclude - no match", t => {
             excludes: ["clock"]
         }
     });
-    t.falsy(t.context.controller.mark(t.context.request, rule));
+    expect(controller.mark(request, rule)).toBeFalsy();
 });
 
-test("Combined include, exclude - match both", t => {
+test("Combined include, exclude - match both", () => {
     let rule = RequestControl.createRule({
         action: "filter",
         pattern: {
@@ -77,15 +79,15 @@ test("Combined include, exclude - match both", t => {
             excludes: ["click"]
         }
     });
-    t.falsy(t.context.controller.mark(t.context.request, rule));
+    expect(controller.mark(request, rule)).toBeFalsy();
 });
 
-test("Invalid regexp - treated as literal string", t => {
+test("Invalid regexp - treated as literal string", () => {
     let rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             excludes: ["/click\\/"]
         }
     });
-    t.falsy(t.context.controller.mark({ url: "http://click\\/" }, rule));
+    expect(controller.mark({ url: "http://click\\/" }, rule)).toBeFalsy();
 });

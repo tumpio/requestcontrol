@@ -1,29 +1,32 @@
-import test from "ava";
 import * as RequestControl from "../src/main/api";
 import { RequestController } from "../src/main/control";
 
-const controller = () => new RequestController();
+let controller = () => new RequestController();
+let sameDomainRule;
+let sameOriginRule;
+let thirdPartyDomainRule;
+let thirdPartyOriginRule;
 
-test.beforeEach(t => {
-    t.context.sameDomainRule = RequestControl.createRule({
+beforeEach(() => {
+    sameDomainRule = RequestControl.createRule({
         action: "filter",
         pattern: {
             origin: "same-domain"
         }
     });
-    t.context.thirdPartyDomainRule = RequestControl.createRule({
+    thirdPartyDomainRule = RequestControl.createRule({
         action: "filter",
         pattern: {
             origin: "third-party-domain"
         }
     });
-    t.context.sameOriginRule = RequestControl.createRule({
+    sameOriginRule = RequestControl.createRule({
         action: "filter",
         pattern: {
             origin: "same-origin"
         }
     });
-    t.context.thirdPartyOriginRule = RequestControl.createRule({
+    thirdPartyOriginRule = RequestControl.createRule({
         action: "filter",
         pattern: {
             origin: "third-party-origin"
@@ -31,256 +34,256 @@ test.beforeEach(t => {
     });
 });
 
-test("Same domain - match", t => {
+test("Same domain - match", () => {
     let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
-    t.truthy(controller().mark({
+    expect(controller().mark({
         originUrl: "http://foo.com/",
         url: url
-    }, t.context.sameDomainRule));
-    t.truthy(controller().mark({
+    }, sameDomainRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://foo.com:8000/path.index",
         url: url
-    }, t.context.sameDomainRule));
-    t.truthy(controller().mark({
+    }, sameDomainRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://user@foo.com:8000/path.index",
         url: url
-    }, t.context.sameDomainRule));
-    t.truthy(controller().mark({
+    }, sameDomainRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://user:pass@foo.com:8000/path.index",
         url: url
-    }, t.context.sameDomainRule));
-    t.truthy(controller().mark({
+    }, sameDomainRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
         url: "http://192.0.0.1:8080"
-    }, t.context.sameDomainRule));
-    t.truthy(controller().mark({
+    }, sameDomainRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://mail.google.com/path.index",
         url: "http://google.com"
-    }, t.context.sameDomainRule));
-    t.truthy(controller().mark({
+    }, sameDomainRule)).toBeTruthy();
+    expect(controller().mark({
         url: "http://google.com"
-    }, t.context.sameDomainRule));
-    t.truthy(controller().mark({
+    }, sameDomainRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "http://google.com",
         url: "data:image/png;base64,iVBORw0KG=="
-    }, t.context.sameDomainRule));
+    }, sameDomainRule)).toBeTruthy();
 });
 
-test("Same domain - no match", t => {
+test("Same domain - no match", () => {
     let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
-    t.falsy(controller().mark({
+    expect(controller().mark({
         originUrl: "http://foo.bar.com/",
         url: url
-    }, t.context.sameDomainRule));
-    t.falsy(controller().mark({
+    }, sameDomainRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://foo2.com:8000/path.index",
         url: url
-    }, t.context.sameDomainRule));
-    t.falsy(controller().mark({
+    }, sameDomainRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://user@ab.foo2.com:8000/path.index",
         url: url
-    }, t.context.sameDomainRule));
-    t.falsy(controller().mark({
+    }, sameDomainRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://user:pass@foo.com.au:8000/path.index",
         url: url
-    }, t.context.sameDomainRule));
-    t.falsy(controller().mark({
+    }, sameDomainRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
         url: "http://192.0.0.2:8080"
-    }, t.context.sameDomainRule));
-    t.falsy(controller().mark({
+    }, sameDomainRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://mail.google.com/path.index",
         url: "http://google.com.abc"
-    }, t.context.sameDomainRule));
+    }, sameDomainRule)).toBeFalsy();
 });
 
-test("Third Party Domain - match", t => {
+test("Third Party Domain - match", () => {
     let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
-    t.truthy(controller().mark({
+    expect(controller().mark({
         originUrl: "http://foo.bar.com/",
         url: url
-    }, t.context.thirdPartyDomainRule));
-    t.truthy(controller().mark({
+    }, thirdPartyDomainRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://foo2.com:8000/path.index",
         url: url
-    }, t.context.thirdPartyDomainRule));
-    t.truthy(controller().mark({
+    }, thirdPartyDomainRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://user@ab.foo2.com:8000/path.index",
         url: url
-    }, t.context.thirdPartyDomainRule));
-    t.truthy(controller().mark({
+    }, thirdPartyDomainRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://user:pass@foo.com.au:8000/path.index",
         url: url
-    }, t.context.thirdPartyDomainRule));
-    t.truthy(controller().mark({
+    }, thirdPartyDomainRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
         url: "http://192.0.0.2:8080"
-    }, t.context.thirdPartyDomainRule));
-    t.truthy(controller().mark({
+    }, thirdPartyDomainRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://mail.google.com/path.index",
         url: "http://google.com.abc"
-    }, t.context.thirdPartyDomainRule));
+    }, thirdPartyDomainRule)).toBeTruthy();
 });
 
 
-test("Third Party Domain - no match", t => {
+test("Third Party Domain - no match", () => {
     let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
-    t.falsy(controller().mark({
+    expect(controller().mark({
         originUrl: "http://foo.com/",
         url: url
-    }, t.context.thirdPartyDomainRule));
-    t.falsy(controller().mark({
+    }, thirdPartyDomainRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://foo.com:8000/path.index",
         url: url
-    }, t.context.thirdPartyDomainRule));
-    t.falsy(controller().mark({
+    }, thirdPartyDomainRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://user@foo.com:8000/path.index",
         url: url
-    }, t.context.thirdPartyDomainRule));
-    t.falsy(controller().mark({
+    }, thirdPartyDomainRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://user:pass@foo.com:8000/path.index",
         url: url
-    }, t.context.thirdPartyDomainRule));
-    t.falsy(controller().mark({
+    }, thirdPartyDomainRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
         url: "http://192.0.0.1:8080"
-    }, t.context.thirdPartyDomainRule));
-    t.falsy(controller().mark({
+    }, thirdPartyDomainRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://mail.google.com/path.index",
         url: "http://google.com"
-    }, t.context.thirdPartyDomainRule));
-    t.falsy(controller().mark({
+    }, thirdPartyDomainRule)).toBeFalsy();
+    expect(controller().mark({
         url: "http://google.com"
-    }, t.context.thirdPartyDomainRule));
-    t.falsy(controller().mark({
+    }, thirdPartyDomainRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "http://google.com",
         url: "data:image/png;base64,iVBORw0KG=="
-    }, t.context.thirdPartyDomainRule));
+    }, thirdPartyDomainRule)).toBeFalsy();
 });
 
-test("Same origin - match", t => {
+test("Same origin - match", () => {
     let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
-    t.truthy(controller().mark({
+    expect(controller().mark({
         originUrl: "http://foo.com/",
         url: url
-    }, t.context.sameOriginRule));
-    t.truthy(controller().mark({
+    }, sameOriginRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "http://foo.com/path.index",
         url: url
-    }, t.context.sameOriginRule));
-    t.truthy(controller().mark({
+    }, sameOriginRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "http://user@foo.com/path.index",
         url: url
-    }, t.context.sameOriginRule));
-    t.truthy(controller().mark({
+    }, sameOriginRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "http://user:pass@foo.com/path.index#hash",
         url: url
-    }, t.context.sameOriginRule));
-    t.truthy(controller().mark({
+    }, sameOriginRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
         url: "https://192.0.0.1:8080"
-    }, t.context.sameOriginRule));
-    t.truthy(controller().mark({
+    }, sameOriginRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://mail.google.com/path.index",
         url: "https://mail.google.com"
-    }, t.context.sameOriginRule));
-    t.truthy(controller().mark({
+    }, sameOriginRule)).toBeTruthy();
+    expect(controller().mark({
         url: "http://google.com"
-    }, t.context.sameOriginRule));
+    }, sameOriginRule)).toBeTruthy();
 });
 
-test("Same origin - no match", t => {
+test("Same origin - no match", () => {
     let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
-    t.falsy(controller().mark({
+    expect(controller().mark({
         originUrl: "http://foo.bar.com/",
         url: url
-    }, t.context.sameOriginRule));
-    t.falsy(controller().mark({
+    }, sameOriginRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://foo.com/path.index",
         url: url
-    }, t.context.sameOriginRule));
-    t.falsy(controller().mark({
+    }, sameOriginRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "http://user@foo.com:8000/path.index",
         url: url
-    }, t.context.sameOriginRule));
-    t.falsy(controller().mark({
+    }, sameOriginRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "http://user:pass@ab.foo.com/path.index",
         url: url
-    }, t.context.sameOriginRule));
-    t.falsy(controller().mark({
+    }, sameOriginRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
         url: "https://192.0.0.2:8080"
-    }, t.context.sameOriginRule));
-    t.falsy(controller().mark({
+    }, sameOriginRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://mail.google.com/path.index",
         url: "http://mail.google.com/path.index"
-    }, t.context.sameOriginRule));
+    }, sameOriginRule)).toBeFalsy();
 });
 
 
-test("Third party origin - match", t => {
+test("Third party origin - match", () => {
     let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
-    t.truthy(controller().mark({
+    expect(controller().mark({
         originUrl: "https://foo.com/",
         url: url
-    }, t.context.thirdPartyOriginRule));
-    t.truthy(controller().mark({
+    }, thirdPartyOriginRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "http://foo.com:8080/path.index",
         url: url
-    }, t.context.thirdPartyOriginRule));
-    t.truthy(controller().mark({
+    }, thirdPartyOriginRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://user@foo.com/path.index",
         url: url
-    }, t.context.thirdPartyOriginRule));
-    t.truthy(controller().mark({
+    }, thirdPartyOriginRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "http://user:pass@foo.com:8080/path.index#hash",
         url: url
-    }, t.context.thirdPartyOriginRule));
-    t.truthy(controller().mark({
+    }, thirdPartyOriginRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
         url: "http://192.0.0.1:8080"
-    }, t.context.thirdPartyOriginRule));
-    t.truthy(controller().mark({
+    }, thirdPartyOriginRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://mail.google.com/path.index",
         url: "http://ab.google.com"
-    }, t.context.thirdPartyOriginRule));
-    t.truthy(controller().mark({
+    }, thirdPartyOriginRule)).toBeTruthy();
+    expect(controller().mark({
         originUrl: "https://mail.google.com/path.index",
         url: "http://google.com.au"
-    }, t.context.thirdPartyOriginRule));
+    }, thirdPartyOriginRule)).toBeTruthy();
 });
 
-test("Third party origin - no match", t => {
+test("Third party origin - no match", () => {
     let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
-    t.falsy(controller().mark({
+    expect(controller().mark({
         originUrl: "http://foo.com/",
         url: url
-    }, t.context.thirdPartyOriginRule));
-    t.falsy(controller().mark({
+    }, thirdPartyOriginRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "http://foo.com/path.index",
         url: url
-    }, t.context.thirdPartyOriginRule));
-    t.falsy(controller().mark({
+    }, thirdPartyOriginRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "http://user@foo.com/path.index",
         url: url
-    }, t.context.thirdPartyOriginRule));
-    t.falsy(controller().mark({
+    }, thirdPartyOriginRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "http://user:pass@foo.com/path.index",
         url: url
-    }, t.context.thirdPartyOriginRule));
-    t.falsy(controller().mark({
+    }, thirdPartyOriginRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
         url: "https://192.0.0.1:8080"
-    }, t.context.thirdPartyOriginRule));
-    t.falsy(controller().mark({
+    }, thirdPartyOriginRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "http://mail.google.com/path.index",
         url: "http://mail.google.com/path.index"
-    }, t.context.thirdPartyOriginRule));
-    t.falsy(controller().mark({
+    }, thirdPartyOriginRule)).toBeFalsy();
+    expect(controller().mark({
         originUrl: "http://mail.google.com:8080/path.index",
         url: "http://mail.google.com:8080/path.index"
-    }, t.context.thirdPartyOriginRule));
-    t.falsy(controller().mark({
+    }, thirdPartyOriginRule)).toBeFalsy();
+    expect(controller().mark({
         url: "http://google.com"
-    }, t.context.thirdPartyOriginRule));
+    }, thirdPartyOriginRule)).toBeFalsy();
 });

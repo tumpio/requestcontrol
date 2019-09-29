@@ -6,13 +6,12 @@
     "value": "git+https://github.com/tumpio/requestcontrol.git"
   },
   "config": {
-    "ignore": "test/ coverage/ README* **/manual.wiki *.lcov package*.json"
+    "ignore": "test/ coverage/ README* **/manual.wiki package*.json"
   },
   "scripts": {
     "start": "web-ext run -i=$npm_package_config_ignore --bc --url about:debugging#addons",
-    "test": "nyc ava -v",
-    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "coverage-html": "nyc report --reporter=html",
+    "test": "jest",
+    "coverage": "codecov",
     "lint": "eslint src/ test/ --ignore-pattern lib/tldts/*.js",
     "lint-build": "npm run lint && addons-linter .releases/request_control-$(node -p \"require('./manifest.json').version\").zip",
     "build-tldts": "cp -v node_modules/tldts-experimental/dist/index.esm.min.js lib/tldts/",
@@ -29,45 +28,42 @@
   },
   "devDependencies": {
     "@babel/core": "latest",
+    "@babel/preset-env": "latest",
     "@babel/register": "latest",
     "addons-linter": "latest",
-    "ava": "latest",
-    "babel-plugin-istanbul": "latest",
+    "babel-jest": "latest",
     "codecov": "latest",
     "eslint": "latest",
-    "eslint-plugin-ava": "latest",
+    "eslint-plugin-jest": "latest",
     "eslint-plugin-import": "latest",
     "eslint-plugin-node": "latest",
     "eslint-plugin-promise": "latest",
     "eslint-plugin-standard": "latest",
-    "esm": "latest",
-    "nyc": "latest",
+    "jest": "latest",
     "web-ext": "latest"
   },
   "babel": {
-    "env": {
-      "test": {
-        "plugins": [
-          "istanbul"
-        ]
-      }
-    }
-  },
-  "ava": {
-    "require": [
-      "esm"
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
     ]
   },
-  "nyc": {
-    "include": [
-      "src/main/**/*.js"
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/main/**/*"
     ],
-    "require": [
-      "esm",
-      "@babel/register"
-    ],
-    "sourceMap": false,
-    "instrument": false
+    "coverageReporters": [
+      "text-summary",
+      "lcov"
+    ]
   },
   "eslintConfig": {
     "extends": "eslint:recommended",
@@ -75,14 +71,15 @@
       "es6": true,
       "browser": true,
       "node": true,
-      "webextensions": true
+      "webextensions": true,
+      "jest": true
     },
     "parserOptions": {
       "sourceType": "module",
       "ecmaVersion": 2019
     },
     "plugins": [
-      "ava",
+      "jest",
       "import",
       "node",
       "promise",
