@@ -6,23 +6,23 @@ Request Control - Firefox extension
 An extension to control HTTP requests. Provides front-end for Firefox
 `webRequest.onBeforeRequest`_ API for HTTP request management.
 
-Requests can be controlled with the following rules:
+Requests can be controlled with following rules:
 
--  |if| **Filter Request Rule**
+-  **Filter Requests Rule**
 
-   Filter URL redirection and remove URL query parameters. 
+   Skip URL redirection and remove URL query parameters.
 
--  |ir| **Redirect Request Rule**
+-  **Redirect Requests Rule**
 
    Rewrite requests with support for `Pattern Capturing`_ to redirect based on the original request.
 
--  |ib| **Block Request Rule**
+-  **Block Requests Rule**
 
    Block requests before they are made.
 
--  |iw| **Whitelist Request Rule**
+-  **Whitelist Requests Rule**
 
-   Whitelist requests without taking actions of other matched rules.
+   Whitelist requests from other rules.
 
 | `Manual`_
 | `FAQ`_
@@ -36,7 +36,6 @@ Support
 -  Suggest new features
 -  Help to translate
 -  Contribute
--  Donate
 
 Development
 ~~~~~~~~~~~
@@ -70,7 +69,7 @@ Build extension
 External Libraries
 ~~~~~~~~~~~~~~~~~~
 
-Request control uses the following external libraries,
+Request Control uses following external libraries,
 
 -  `lit`_ is licensed under the MIT license.
 -  `tags-input`_ and it's fork by `@pirxpilot`_ are licensed under the MIT license.
@@ -103,7 +102,3 @@ License
    :target: https://travis-ci.org/tumpio/requestcontrol
 .. |codecov| image:: https://codecov.io/gh/tumpio/requestcontrol/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/tumpio/requestcontrol
-.. |if| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-filter.svg
-.. |ir| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-redirect.svg
-.. |ib| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-block.svg
-.. |iw| image:: https://raw.githubusercontent.com/tumpio/requestcontrol/master/icons/icon-whitelist.svg
