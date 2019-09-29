@@ -1,6 +1,6 @@
 import test from "ava";
-import * as RequestControl from "../src/RequestControl/api";
-import { RequestController } from "../src/RequestControl/control";
+import * as RequestControl from "../src/main/api";
+import { RequestController } from "../src/main/control";
 
 test.beforeEach(t => {
     t.context.request = { url: "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F" };

@@ -1,5 +1,5 @@
 import test from "ava";
-import {createMatchPatterns, ALL_URLS} from "../src/RequestControl/api";
+import {createMatchPatterns, ALL_URLS} from "../src/main/api";
 
 
 test("Create match patterns", t => {

@@ -1,8 +1,8 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-import { createMatchPatterns, createRule } from "/src/RequestControl/api.js";
-import { RequestController } from "/src/RequestControl/control.js";
+import { createMatchPatterns, createRule } from "../main/api.js";
+import { RequestController } from "../main/control.js";
 
 export function testRules(url, rulePatterns) {
     let testURL = new URL(url);

@@ -1,6 +1,6 @@
 import test from "ava";
-import * as RequestControl from "../src/RequestControl/api";
-import { RequestController } from "../src/RequestControl/control";
+import * as RequestControl from "../src/main/api";
+import { RequestController } from "../src/main/control";
 
 const controller = () => new RequestController();
 

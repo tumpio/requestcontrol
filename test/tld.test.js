@@ -1,5 +1,5 @@
 import test from "ava";
-import {libTld} from "../src/RequestControl/url";
+import {libTld} from "../src/main/url";
 
 test("Get domain name", t => {
     t.is(libTld.getDomain("http://example.com"), "example.com");

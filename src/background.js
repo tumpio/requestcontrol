@@ -6,9 +6,9 @@ import {
     createMatchPatterns,
     createRule,
     ALL_URLS
-} from "./RequestControl/api.js";
+} from "./main/api.js";
 import { getNotifier } from "./notifier.js";
-import { RequestController } from "./RequestControl/control.js";
+import { RequestController } from "./main/control.js";
 import * as records from "./records.js";
 
 const listeners = [];

@@ -1,5 +1,5 @@
 import test from "ava";
-import {UrlParser, QueryParser} from "../src/RequestControl/url.js";
+import {UrlParser, QueryParser} from "../src/main/url.js";
 
 test("href - get", t => {
     let url = "https://domain.com";

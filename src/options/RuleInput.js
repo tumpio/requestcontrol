@@ -3,18 +3,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-import { createMatchPatterns, isTLDHostPattern } from "/src/RequestControl/api.js";
-import { uuid } from "/src/options/lib/uuid.js";
+import { createRule, createMatchPatterns, isTLDHostPattern } from "../main/api.js";
+import { uuid } from "./lib/uuid.js";
 import {
     getSubPage,
     onToggleButtonChange,
     setButtonChecked,
     setButtonDisabled,
     toggleHidden
-} from "/src/options/lib/UiHelpers.js";
-import { translateDocument } from "/src/options/lib/i18n.js";
-import { TagsInput } from "/src/options/lib/tags-input/src/tags-input.js";
-import { createRule } from "../RequestControl/api.js";
+} from "./lib/UiHelpers.js";
+import { translateDocument } from "./lib/i18n.js";
+import { TagsInput } from "./lib/tags-input/src/tags-input.js";
 
 /**
  * Request Control Rule Input for rule creation.

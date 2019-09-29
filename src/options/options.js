@@ -10,10 +10,10 @@ import { Toc } from "./lib/toc.js";
 import { OptionsManager } from "./lib/OptionsManager.js";
 import { getSubPage, toggleDisabled } from "./lib/UiHelpers.js";
 import { exportObject, importFile } from "./lib/ImportExport.js";
-import { WhitelistRule, LoggedWhitelistRule } from "../RequestControl/whitelist.js";
-import { BlockRule } from "../RequestControl/block.js";
-import { RedirectRule } from "../RequestControl/redirect.js";
-import { FilterRule } from "../RequestControl/filter.js";
+import { WhitelistRule, LoggedWhitelistRule } from "../main/rules/whitelist.js";
+import { BlockRule } from "../main/rules/block.js";
+import { RedirectRule } from "../main/rules/redirect.js";
+import { FilterRule } from "../main/rules/filter.js";
 
 /**
  * Options page for Request Control rule management, settings and manual page.

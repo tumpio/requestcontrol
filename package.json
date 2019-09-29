@@ -60,7 +60,7 @@
   },
   "nyc": {
     "include": [
-      "src/RequestControl/*.js"
+      "src/main/**/*.js"
     ],
     "require": [
       "esm",

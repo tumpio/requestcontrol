@@ -1,6 +1,6 @@
 import test from "ava";
-import { createRule } from "../src/RequestControl/api";
-import { RequestController } from "../src/RequestControl/control";
+import { createRule } from "../src/main/api";
+import { RequestController } from "../src/main/control";
 
 test.beforeEach(t => {
     t.context.controller = new RequestController(() => {}, () => Promise.resolve());
