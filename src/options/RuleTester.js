@@ -1,26 +1,70 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 import { createMatchPatterns, createRule } from "../main/api.js";
 import { RequestController } from "../main/control.js";
+import { LoggedWhitelistRule, WhitelistRule } from "../main/rules/whitelist.js";
+import { BlockRule } from "../main/rules/block.js";
+import { RedirectRule } from "../main/rules/redirect.js";
+import { FilterRule } from "../main/rules/filter.js";
 
-export function testRules(url, rulePatterns) {
-    let testURL = new URL(url);
-    let request = { url: testURL.href };
+export function testRules(testUrl, rulePatterns) {
+    try {
+        new URL(testUrl);
+    } catch (e) {
+        return browser.i18n.getMessage("invalid_test_url");
+    }
     let controller = new RequestController();
-    for (let rulePattern of rulePatterns) {
-        let rule = createRule(rulePattern);
-        let matchPatterns = createMatchPatterns(rulePattern.pattern);
-        for (let matchPattern of matchPatterns) {
-            if (matchPatternToRegExp(matchPattern).test(url)) {
-                controller.mark(request, rule);
-                break;
+    let request = { requestId: 0, url: testUrl };
+
+    try {
+        for (let rulePattern of rulePatterns) {
+            let rule = createRule(rulePattern);
+            let matchPatterns = createMatchPatterns(rulePattern.pattern);
+            for (let matchPattern of matchPatterns) {
+                if (matchPatternToRegExp(matchPattern).test(request.url)) {
+                    controller.mark(request, rule);
+                    break;
+                }
             }
         }
+    } catch (e) {
+        return browser.i18n.getMessage("error_invalid_rule");
     }
-    return request;
+    let rule = controller.requests.get(request.requestId);
+
+    if (!rule) {
+        return browser.i18n.getMessage("no_match");
+    }
+    return testRule(rule, testUrl);
 }
 
+function testRule(rule, testUrl) {
+    let redirectUrl;
+    switch (rule.constructor) {
+        case WhitelistRule:
+        case LoggedWhitelistRule:
+            return browser.i18n.getMessage("whitelisted");
+        case BlockRule:
+            return browser.i18n.getMessage("blocked");
+        case RedirectRule:
+        case FilterRule:
+            redirectUrl = rule.apply(testUrl);
+            try {
+                new URL(redirectUrl);
+                if (redirectUrl !== testUrl) {
+                    return redirectUrl;
+                } else {
+                    return browser.i18n.getMessage("matched_no_change");
+                }
+            } catch (e) {
+                return browser.i18n.getMessage("invalid_target_url") + redirectUrl;
+            }
+        default:
+            break;
+    }
+}
 
 /**
  * Transforms a valid match pattern into a regular expression

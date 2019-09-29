@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-
 import { RuleInputFactory } from "./RuleInput.js";
 import { testRules } from "./RuleTester.js";
 import { uuid } from "./lib/uuid.js";
@@ -10,14 +9,6 @@ import { Toc } from "./lib/toc.js";
 import { OptionsManager } from "./lib/OptionsManager.js";
 import { getSubPage, toggleDisabled } from "./lib/UiHelpers.js";
 import { exportObject, importFile } from "./lib/ImportExport.js";
-import { WhitelistRule, LoggedWhitelistRule } from "../main/rules/whitelist.js";
-import { BlockRule } from "../main/rules/block.js";
-import { RedirectRule } from "../main/rules/redirect.js";
-import { FilterRule } from "../main/rules/filter.js";
-
-/**
- * Options page for Request Control rule management, settings and manual page.
- */
 
 const myOptionsManager = new OptionsManager();
 const myRuleInputFactory = new RuleInputFactory();
@@ -171,53 +162,8 @@ function loadDefaultRules() {
 
 function onRuleTest() {
     let result = document.getElementById("testResult");
-    result.textContent = "";
-    let rules = [];
-    for (let input of getSelectedRuleInputs()) {
-        let rule = input.getRule();
-        rules.push(rule);
-    }
-    let request;
-    try {
-        request = testRules(this.value, rules);
-    } catch (e) {
-        result.textContent = browser.i18n.getMessage("invalid_test_url");
-        return;
-    }
-    if (!request.rule) {
-        result.textContent = browser.i18n.getMessage("no_match");
-        return;
-    }
-    let resolve = request.rule.constructor.resolve(request, function (request) {
-        switch (request.rule.constructor) {
-            case WhitelistRule:
-            case LoggedWhitelistRule:
-                result.textContent = browser.i18n.getMessage("whitelisted");
-                break;
-            case BlockRule:
-                result.textContent = browser.i18n.getMessage("blocked");
-                break;
-            case RedirectRule:
-            case FilterRule:
-                try {
-                    new URL(request.redirectUrl);
-                    result.textContent = request.redirectUrl;
-                } catch (e) {
-                    result.textContent = browser.i18n.getMessage("invalid_target_url") + request.redirectUrl;
-                }
-                break;
-            default:
-                break;
-        }
-    });
-
-    if (!resolve) {
-        if (!(request.rule instanceof WhitelistRule)) {
-            result.textContent = browser.i18n.getMessage("matched_no_change");
-        } else {
-            result.textContent = browser.i18n.getMessage("whitelisted");
-        }
-    }
+    let rules = getSelectedRuleInputs().map(input => input.getRule());
+    result.textContent = testRules(this.value, rules);
 }
 
 function toggleRuleBlocks() {
@@ -346,7 +292,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 let rules = query.getAll("edit");
                 for (let rule of rules) {
                     let ruleInput = document.getElementById("rule-" + rule);
-                    ruleInput.select(true);
                     ruleInput.edit();
                     ruleInput.scrollIntoView();
                 }
