@@ -6,16 +6,6 @@ import { ControlRule } from "./base.js";
 import { QueryParser, URL_PARAMETERS, UrlParser } from "../url.js";
 import { BLOCKING_RESPONSE } from "./block.js";
 
-// For unit tests under node
-const atob = (typeof window !== "undefined") ? window.atob : function (a) {
-    let buffer = Buffer.from(a, "base64");
-    return buffer.toString("binary");
-};
-const btoa = (typeof window !== "undefined") ? window.btoa : function btoa(b) {
-    let buffer = Buffer.from(b, "binary");
-    return buffer.toString("base64");
-};
-
 export class BaseRedirectRule extends ControlRule {
     constructor(
         {
