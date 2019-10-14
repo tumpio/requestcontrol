@@ -4,9 +4,10 @@
 
 const DISABLED_ICON = "/icons/icon-disabled.svg";
 const DEFAULT_ICON = "/icons/icon.svg";
+const DEFAULT_BADGE_COLOR = "#f9f9fa";
 
 class TitleNotifier {
-    static setup() { }
+
     static notify(tabId, rule, recordsCount) {
         updateTitle(tabId, recordsCount.toString());
     }
@@ -16,27 +17,22 @@ class TitleNotifier {
     }
 
     static clear(tabId) {
-        updateTitle(tabId, "");
+        updateTitle(tabId);
     }
 
     static disabledState(records) {
         updateTitle(null, "Disabled");
         for (let [tabId,] of records) {
-            updateTitle(tabId, "");
+            updateTitle(tabId);
         }
     }
 
     static enabledState() {
-        updateTitle(null, "");
+        updateTitle();
     }
 }
 
 class BadgeNotifier extends TitleNotifier {
-
-    static setup() {
-        super.setup();
-        browser.browserAction.setBadgeBackgroundColor({ color: "#f9f9fa" });
-    }
 
     static notify(tabId, rule, recordsCount) {
         super.notify(tabId, rule, recordsCount);
@@ -45,43 +41,44 @@ class BadgeNotifier extends TitleNotifier {
 
     static error(tabId, error) {
         super.error(tabId, error);
-        updateBadge(tabId, DEFAULT_ICON, "!");
+        updateBadge(tabId, DEFAULT_ICON, "!", "#d70022");
     }
 
     static clear(tabId) {
         super.clear(tabId);
-        updateBadge(tabId, DEFAULT_ICON, "");
+        updateBadge(tabId);
     }
 
     static disabledState(records) {
         super.disabledState(records);
-        updateBadge(null, DISABLED_ICON, "");
+        updateBadge(null, DISABLED_ICON);
         for (let [tabId,] of records) {
-            updateBadge(tabId, null, "");
+            updateBadge(tabId);
         }
     }
 
     static enabledState() {
         super.enabledState();
-        updateBadge(null, DEFAULT_ICON, "");
+        updateBadge();
     }
 }
 
 export function getNotifier() {
     return browser.runtime.getBrowserInfo()
         .then(info => {
-            let notifier;
             if (info.name === "Fennec") {
-                notifier = TitleNotifier;
-            } else {
-                notifier = BadgeNotifier;
+                return TitleNotifier;
             }
-            notifier.setup();
-            return notifier;
+            return BadgeNotifier;
         });
 }
 
-function updateBadge(tabId, icon, text) {
+function updateBadge(
+    tabId = null,
+    icon = DEFAULT_ICON,
+    text = "",
+    color = DEFAULT_BADGE_COLOR
+) {
     browser.browserAction.setBadgeText({
         tabId: tabId,
         text: text
@@ -90,9 +87,10 @@ function updateBadge(tabId, icon, text) {
         tabId: tabId,
         path: icon
     });
+    browser.browserAction.setBadgeBackgroundColor({ color: color });
 }
 
-function updateTitle(tabId, state) {
+function updateTitle(tabId = null, state = "") {
     let title;
     if (state) {
         title = browser.i18n.getMessage("main_title_with_state", state);
