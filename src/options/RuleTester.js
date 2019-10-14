@@ -8,6 +8,7 @@ import { LoggedWhitelistRule, WhitelistRule } from "../main/rules/whitelist.js";
 import { BlockRule } from "../main/rules/block.js";
 import { RedirectRule } from "../main/rules/redirect.js";
 import { FilterRule } from "../main/rules/filter.js";
+import { SecureRule } from "../main/rules/secure.js";
 
 export function testRules(testUrl, rulePatterns) {
     try {
@@ -61,6 +62,8 @@ function testRule(rule, testUrl) {
             } catch (e) {
                 return browser.i18n.getMessage("invalid_target_url") + redirectUrl;
             }
+        case SecureRule:
+            return browser.i18n.getMessage("upgraded_to_secure");
         default:
             break;
     }

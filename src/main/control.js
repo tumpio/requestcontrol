@@ -7,11 +7,13 @@ import { BlockRule } from "./rules/block.js";
 import { RedirectRule, BaseRedirectRule } from "./rules/redirect.js";
 import { FilterRule } from "./rules/filter.js";
 import { ControlRule } from "./rules/base.js";
+import { SecureRule } from "./rules/secure.js";
 
 WhitelistRule.priority = 0;
 BlockRule.priority = -1;
-RedirectRule.priority = -2;
-FilterRule.priority = -3;
+SecureRule.priority = -2;
+RedirectRule.priority = -3;
+FilterRule.priority = -4;
 
 export class RequestController {
     constructor(notify, updateTab) {

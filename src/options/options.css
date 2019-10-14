@@ -455,6 +455,10 @@ input:not(:checked):not(:hover) + .icon {
     filter: grayscale(100%);
 }
 
+input:disabled + span {
+    opacity: .4;
+}
+
 .manual-block-collapse {
     cursor: pointer;
     -moz-user-select: none;

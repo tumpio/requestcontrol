@@ -7,6 +7,7 @@ import { LoggedWhitelistRule, WhitelistRule } from "./rules/whitelist.js";
 import { BlockRule } from "./rules/block.js";
 import { FilterRule } from "./rules/filter.js";
 import { RedirectRule } from "./rules/redirect.js";
+import { SecureRule } from "./rules/secure.js";
 
 export const ALL_URLS = "*://*/*";  // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
 
@@ -26,6 +27,8 @@ export function createRule(data) {
             return new RedirectRule(data, extraMatchers);
         case "filter":
             return new FilterRule(data, extraMatchers);
+        case "secure":
+            return new SecureRule(data, extraMatchers);
         default:
             throw new Error("Unsupported rule action");
     }

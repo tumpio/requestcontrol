@@ -103,6 +103,8 @@ RuleInputFactory.prototype = {
                 return new RedirectRuleInput(rule);
             case "whitelist":
                 return new WhitelistRuleInput(rule);
+            case "secure":
+                return new SecureRuleInput(rule);
             default:
                 return new RuleInput(rule);
         }
@@ -223,8 +225,10 @@ RuleInput.prototype = {
 
     save: function () {
         if (!this.isValid()) {
+            this.model.classList.add("error");
             return Promise.reject();
         }
+        this.model.classList.remove("error");
         if (this.indexOfRule() === -1) {
             this.factory.optionsManager.options[this.optionsPath].push(this.rule);
         }
@@ -234,25 +238,15 @@ RuleInput.prototype = {
     },
 
     isValid: function () {
-        let isValid = true;
-
         if (!this.$(".rule-input").reportValidity()) {
-            isValid = false;
+            return false;
         }
-
         try {
             this.updateRule();
             createRule(this.rule);
         } catch {
-            isValid = false;
+            return false;
         }
-
-        if (isValid) {
-            this.model.classList.remove("error");
-        } else {
-            this.model.classList.add("error");
-        }
-
         return true;
     },
 
@@ -395,7 +389,7 @@ RuleInput.prototype = {
     onChange: function (e) {
         let input = this;
         if (e.target.classList.contains("action")) {
-            this.updateRule();
+            this.onActionChange();
             let newInput = this.factory.newInput(this.rule);
             this.model.parentNode.insertBefore(newInput.model, this.model);
             newInput.select(this.isSelected());
@@ -406,6 +400,10 @@ RuleInput.prototype = {
         if (input.model.parentNode.id !== "newRules") {
             input.save();
         }
+    },
+
+    onActionChange: function () {
+        this.updateRule();
     },
 
     onEnterKey: function (e) {
@@ -670,6 +668,26 @@ BlockRuleInput.prototype = Object.create(RuleInput.prototype);
 BlockRuleInput.prototype.constructor = BlockRuleInput;
 BlockRuleInput.prototype.title = "rule_title_block";
 BlockRuleInput.prototype.description = "rule_description_block";
+
+function SecureRuleInput(rule) {
+    RuleInput.call(this, rule);
+    rule.pattern.scheme = "http";
+    delete rule.pattern.allUrls;
+
+    this.$(".scheme").disabled = true;
+    this.$(".any-url").disabled = true;
+}
+
+SecureRuleInput.prototype = Object.create(RuleInput.prototype);
+SecureRuleInput.prototype.constructor = SecureRuleInput;
+SecureRuleInput.prototype.title = "rule_title_secure";
+SecureRuleInput.prototype.description = "rule_description_secure";
+
+SecureRuleInput.prototype.onActionChange = function () {
+    this.$(".scheme").disabled = false;
+    this.$(".any-url").disabled = false;
+    RuleInput.prototype.onActionChange.call(this);
+};
 
 function WhitelistRuleInput(rule) {
     RuleInput.call(this, rule);

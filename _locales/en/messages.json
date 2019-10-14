@@ -79,6 +79,15 @@
       }
     }
   },
+  "rule_title_secure": {
+    "message": "Secure: $HOST$",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
   "rule_title_new": {
     "message": "New Rule"
   },
@@ -118,6 +127,9 @@
   },
   "rule_description_whitelist": {
     "message": "Revoke other matched rules."
+  },
+  "rule_description_secure": {
+    "message": "Upgrade non-secure (HTTP) requests to secure (HTTPS)."
   },
   "any_url": {
     "message": "All URLs"
@@ -323,6 +335,9 @@
   "whitelist": {
     "message": "Whitelist"
   },
+  "secure": {
+    "message": "Secure"
+  },
   "filter_rules": {
     "message": "Filter rules"
   },
@@ -334,6 +349,9 @@
   },
   "whitelist_rules": {
     "message": "Whitelist rules"
+  },
+  "secure_rules": {
+    "message": "Secure rules"
   },
   "new_rules": {
     "message": "New rules"
@@ -514,6 +532,9 @@
   },
   "blocked": {
     "message": "Blocked"
+  },
+  "upgraded_to_secure": {
+    "message": "Upgraded to secure"
   },
   "error_invalid_url": {
     "message": "Failed to redirect to new target: Invalid target URL"

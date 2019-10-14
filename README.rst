@@ -8,19 +8,23 @@ An extension to control HTTP requests. Provides front-end for Firefox
 
 Requests can be controlled with following rules:
 
--  **Filter Requests Rule**
+-  **Filter Rule**
 
    Skip URL redirection and remove URL query parameters.
 
--  **Redirect Requests Rule**
+-  **Redirect Rule**
 
    Rewrite requests with support for `Pattern Capturing`_ to redirect based on the original request.
 
--  **Block Requests Rule**
+-  **Secure Rule**
+
+   Upgrade non-secure (HTTP) requests to secure (HTTPS).
+
+-  **Block Rule**
 
    Block requests before they are made.
 
--  **Whitelist Requests Rule**
+-  **Whitelist Rule**
 
    Whitelist requests from other rules.
 

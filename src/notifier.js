@@ -35,7 +35,7 @@ class BadgeNotifier extends TitleNotifier {
 
     static setup() {
         super.setup();
-        browser.browserAction.setBadgeBackgroundColor({ color: "#E6E6E6" });
+        browser.browserAction.setBadgeBackgroundColor({ color: "#f9f9fa" });
     }
 
     static notify(tabId, rule, recordsCount) {

@@ -1,3 +1,8 @@
+Version 1.15.0 x, 2019
+- Change Filter/Redirect rule actions to be applied and reported individually.
+- Remove Downloads API dependency for rule export.
+- Update icons and badge color.
+
 Version 1.14.0 Sep 8, 2019
 - Add option to redirect document (update tab) from other requests types. #103
 - Fix invalid regexp pattern breaking all other rules. #107
