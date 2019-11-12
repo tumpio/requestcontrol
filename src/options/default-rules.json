@@ -97,7 +97,7 @@
       "values": [
         "utm_*"
       ]
-    }
+  }
   },
   {
     "title": "Block Beacon and Ping requests",
@@ -113,5 +113,23 @@
     ],
     "tag": "block-beacon",
     "description": "The Beacon API is often used for logging user activity and sending analytics data to the server."
+  },
+  {
+    "title": "Stop Facebook's outgoing link redirection service tracking",
+    "uuid": "07be1337-ceec-4a93-a49e-67e051124a7f",
+    "description": "This filter rule prevents Facebook from obtaining the URL of clicked search link via URL redirection.",
+    "tag": "filter-facebook",
+    "pattern": {
+      "scheme": "*",
+      "host": "l.facebook.*",
+      "topLevelDomains": [ "com", "net" ],
+      "path": "l.php?u=*"
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true
   }
 ]
