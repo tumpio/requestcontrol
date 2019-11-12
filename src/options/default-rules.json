@@ -131,5 +131,32 @@
     ],
     "action": "filter",
     "active": true
+  },
+  {
+    "title": "Remove FBCLID query parameters",
+    "uuid": "07be1337-4d49-475b-9062-8b191099621b",
+    "description": "Remove fbclid query parameters from requests. Facebook click identifier query parameters are commonly used as a method to analyze the origin of traffic.",
+    "tag": "filter-facebook",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*fbclid*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "paramsFilter": {
+      "values": [
+        "fbclid"
+      ]
+    },
+    "skipRedirectionFilter": true
   }
 ]
