@@ -7,11 +7,13 @@
     --primary-color: #3b67a0;
     --light: #b1b1b1;
     --background: rgb(249, 249, 250);
+    --text-color: rgb(0, 0, 0);
 }
 
 body {
     font-size: .9rem;
     background: var(--background);
+    color: var(--text-color);
 }
 
 #rulesTab * + * {
