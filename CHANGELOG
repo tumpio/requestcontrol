@@ -1,5 +1,8 @@
-Version 1.15.0 x, 2019
-- Change Filter/Redirect rule actions to be applied and reported individually.
+Version 1.15.0 Mar. 11, 2020
+- Add Secure rule to upgrade HTTP requests to HTTPS.
+- Add new default rules: FBCLID stripping rule and FB redirection service rule. @AreYouLoco
+- Fix text color when default color is changed. @Zocker1999NET
+- Fix filter/redirect actions to be applied and logged separately.
 - Remove Downloads API dependency for rule export.
 - Update icons and badge color.
 
