@@ -88,6 +88,7 @@ function matchPatternToRegExp(pattern) {
     const matchPatternRegExp = new RegExp(
         `^${schemeSegment}://${hostSegment}/${pathSegment}$`
     );
+    const regexpChars = /[.+^$?{}()|[\]\\]/g; // excluding "*"
 
     let match = matchPatternRegExp.exec(pattern);
     if (!match) {
@@ -116,7 +117,7 @@ function matchPatternToRegExp(pattern) {
             regex += "[^/]*?";
             host = host.substring(2);
         }
-        regex += host.replace(/\./g, "\\.");
+        regex += host.replace(regexpChars, "\\$&");
     }
 
     if (path) {
@@ -124,7 +125,7 @@ function matchPatternToRegExp(pattern) {
             regex += "(/.*)?";
         } else if (path.charAt(0) !== "/") {
             regex += "/";
-            regex += path.replace(/\./g, "\\.").replace(/\?/g, "\\?").replace(/\*/g, ".*?");
+            regex += path.replace(regexpChars, "\\$&").replace(/\*/g, ".*?");
             regex += "/?";
         }
     }
