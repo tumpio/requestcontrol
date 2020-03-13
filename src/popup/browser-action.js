@@ -6,25 +6,43 @@ import { OptionsManager } from "../options/lib/OptionsManager.js";
 
 const myOptionsManager = new OptionsManager();
 
+document.addEventListener("DOMContentLoaded", function () {
+    myOptionsManager.loadOptions().then(function () {
+        if (myOptionsManager.options.disabled) {
+            setEnabled(false);
+            return Promise.reject("");
+        } else {
+            return browser.runtime.sendMessage(null);
+        }
+    }).then(records => {
+        setEnabled(true);
+        if (myOptionsManager.options.rules) {
+            setRecords(records);
+        }
+        let copyButtons = document.getElementsByClassName("copyButton");
+        for (let copyButton of copyButtons) {
+            copyButton.addEventListener("click", copyText);
+            copyButton.addEventListener("mouseleave", copied);
+        }
+    });
+
+    document.getElementById("showRules").addEventListener("click", openOptionsPage);
+    document.getElementById("toggleActive").addEventListener("click", toggleActive);
+    document.getElementById("editLink").addEventListener("click", editRule);
+});
+
 function setRecords(records) {
     if (!records) {
         return;
     }
 
-    let recordsList = document.getElementById("records");
+    let list = document.getElementById("records");
 
-    for (let i = records.length - 1; i >= 0; i--) {
-        let item = newListItem(records[i]);
-        recordsList.appendChild(item);
-        item.dataset.record = i.toString();
-        item.querySelector(".entry-header").addEventListener("click", function () {
-            let details = document.getElementById("details");
-            item.appendChild(details);
-            showDetails(records[i]);
-        });
+    for (let record of records) {
+        list.prepend(newListItem(record));
     }
-    recordsList.querySelector(".entry:first-child .entry-header").click();
 
+    list.querySelector(".entry:first-child .entry-header").click();
     document.getElementById("records").classList.remove("hidden");
 }
 
@@ -37,23 +55,28 @@ function getRule(uuid) {
     return null;
 }
 
-function newListItem(details) {
-    let rule = getRule(details.rule.uuid);
-    let model = document.getElementById("entryModel").cloneNode(true);
-    model.removeAttribute("id");
-    model.querySelector(".type").textContent = browser.i18n.getMessage(details.type);
-    model.querySelector(".timestamp").textContent = timestamp(details.timestamp);
-    model.querySelector(".icon").src = `/icons/icon-${rule.action}.svg`;
-    model.querySelector(".action").textContent = browser.i18n.getMessage(`title_${rule.action}`);
-    model.querySelector(".url").textContent = details.url;
+function newListItem(record) {
+    let rule = getRule(record.rule.uuid);
+    let item = document.getElementById("entryTemplate").content.cloneNode(true);
+    item.querySelector(".type").textContent = browser.i18n.getMessage(record.type);
+    item.querySelector(".timestamp").textContent = timestamp(record.timestamp);
+    item.querySelector(".icon").src = `/icons/icon-${rule.action}.svg`;
+    item.querySelector(".action").textContent = browser.i18n.getMessage(`title_${rule.action}`);
+    item.querySelector(".url").textContent = record.url;
 
-    let tagsNode = model.querySelector(".tags");
+    let tagsNode = item.querySelector(".tags");
     if (rule.tag) {
         tagsNode.textContent = decodeURIComponent(rule.tag);
     } else {
         tagsNode.parentNode.removeChild(tagsNode);
     }
-    return model;
+
+    item.querySelector(".entry-header").addEventListener("click", function () {
+        let details = document.getElementById("details");
+        this.parentNode.appendChild(details);
+        showDetails(record);
+    });
+    return item;
 }
 
 function timestamp(ms) {
@@ -121,33 +144,10 @@ function setEnabled(enabled) {
     button.title = browser.i18n.getMessage(titleId);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    myOptionsManager.loadOptions().then(function () {
-        if (myOptionsManager.options.disabled) {
-            setEnabled(false);
-            return Promise.reject("");
-        } else {
-            return browser.runtime.sendMessage(null);
-        }
-    }).then(records => {
-        setEnabled(true);
-        if (myOptionsManager.options.rules) {
-            setRecords(records);
-        }
-        let copyButtons = document.getElementsByClassName("copyButton");
-        for (let copyButton of copyButtons) {
-            copyButton.addEventListener("click", copyText);
-            copyButton.addEventListener("mouseleave", copied);
-        }
+function editRule(e) {
+    e.preventDefault();
+    browser.tabs.create({
+        url: this.href
     });
-
-    document.getElementById("showRules").addEventListener("click", openOptionsPage);
-    document.getElementById("toggleActive").addEventListener("click", toggleActive);
-    document.getElementById("editLink").addEventListener("click", function (e) {
-        e.preventDefault();
-        browser.tabs.create({
-            url: this.href
-        });
-        window.close();
-    });
-});
+    window.close();
+}
