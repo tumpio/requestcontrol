@@ -1,5 +1,7 @@
-Version 1.15.1 x, 2020
-- Fix popup height when placed to overflow menu. #111 
+Version 1.15.1 Mar. 13, 2020
+- Fix popup height when placed to overflow menu. #111
+- Fix rule tester regexp escaping. #113
+- Fix selected rules exporting.
 
 Version 1.15.0 Mar. 11, 2020
 - Add Secure rule to upgrade HTTP requests to HTTPS.
