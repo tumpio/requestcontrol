@@ -36,6 +36,7 @@ export function toggleDisabled(disabled) {
     if (typeof disabled === "boolean") {
         for (let i = 1; i < arguments.length; i++) {
             arguments[i].disabled = disabled;
+            arguments[i].classList.toggle("disabled", disabled);
         }
     } else if (disabled) {
         disabled.disabled = !disabled.disabled;
