@@ -36,7 +36,7 @@ Host pattern may match the host of the request URL in following ways:
 |-
 | <code>*.example.com</code>
 | Matches the given host and any of its subdomains.
-| Will match any subdomain of example.com e.g. '''www'''.example.com , '''good'''.example.com
+| Will match example.com and all subdomains of example.com e.g. '''www'''.example.com , '''good'''.example.com
 |-
 | <code>www.example.*</code>
 | Matches the given host and manually listed top-level domains. (can be combined with the subdomain matching)
