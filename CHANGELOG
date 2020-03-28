@@ -1,12 +1,15 @@
+Version 1.15.2 Mar. 28, 2020
+- Fix Filter rule not being applied when multiple filter rules were matching to a single request. #111
+
 Version 1.15.1 Mar. 13, 2020
 - Fix popup height when placed to overflow menu. #111
 - Fix rule tester regexp escaping. #113
 - Fix selected rules exporting.
 
 Version 1.15.0 Mar. 11, 2020
-- Add Secure rule to upgrade HTTP requests to HTTPS.
-- Add new default rules: FBCLID stripping rule and FB redirection service rule. @AreYouLoco
-- Fix text color when default color is changed. @Zocker1999NET
+- Add Secure action to upgrade HTTP requests to HTTPS.
+- Add new default rules: FBCLID stripping rule and FB redirection service rule. #110 by @AreYouLoco
+- Fix text color when default color is changed. #112 by @Zocker1999NET
 - Fix filter/redirect actions to be applied and logged separately.
 - Remove Downloads API dependency for rule export.
 - Update icons and badge color.
