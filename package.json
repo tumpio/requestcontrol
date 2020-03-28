@@ -24,22 +24,22 @@
   },
   "dependencies": {
     "@ajusa/lit": "^1.1.0",
-    "tldts-experimental": "^5.6.10"
+    "tldts-experimental": "^5.6.15"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.7",
-    "@babel/preset-env": "^7.8.7",
-    "@babel/register": "^7.8.6",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/register": "^7.9.0",
     "addons-linter": "^1.22.0",
-    "babel-jest": "^25.1.0",
+    "babel-jest": "^25.2.3",
     "codecov": "^3.6.5",
     "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-jest": "^23.8.2",
-    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "latest",
     "eslint-plugin-standard": "latest",
-    "jest": "^25.1.0",
+    "jest": "^25.2.3",
     "web-ext": "^4.1.0"
   },
   "babel": {
