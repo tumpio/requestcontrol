@@ -4,6 +4,7 @@ import { RequestController } from "../src/main/control";
 let controller;
 let request;
 let blockRule;
+let secureRule;
 let whitelistRule;
 let logRule;
 let filterRule;
@@ -18,6 +19,7 @@ beforeEach(() => {
     controller = new RequestController(mockNotify, mockUpdateTab);
     request = { requestId: 0, url: "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F" };
     blockRule = createRule({ action: "block" });
+    secureRule = createRule({ action: "secure" });
     whitelistRule = createRule({ action: "whitelist" });
     logRule = createRule({ action: "whitelist", log: true });
     filterRule = createRule({ action: "filter" });
@@ -77,6 +79,7 @@ describe("user is not notified", () => {
         controller.mark(request, whitelistRule);
         controller.mark(request, blockRule);
         controller.mark(request, redirectRule);
+        controller.mark(request, secureRule);
         const resolve = controller.resolve(request);
         expect(resolve).toBeFalsy();
     });
@@ -84,6 +87,14 @@ describe("user is not notified", () => {
     test("when request is filtered and rule is not applied", () => {
         request = { requestId: 0, url: "http://bar.com/" };
         controller.mark(request, filterRule);
+        const resolve = controller.resolve(request);
+        expect(resolve).toBeFalsy();
+    });
+
+    test("when multiple whitelist rules are applied to single request", () => {
+        controller.mark(request, createRule({ action: "whitelist" }));
+        controller.mark(request, createRule({ action: "whitelist" }));
+        expect(controller.requests.size).toBe(1);
         const resolve = controller.resolve(request);
         expect(resolve).toBeFalsy();
     });
@@ -95,12 +106,20 @@ describe("user is notified", () => {
     });
 
     test("Request blocked", () => {
+        controller.mark(request, secureRule);
         controller.mark(request, filterRule);
         controller.mark(request, blockRule);
         controller.mark(request, redirectRule);
         expect(controller.requests.size).toBe(1);
         const resolve = controller.resolve(request);
         expect(resolve.cancel).toBe(true);
+    });
+
+    test("when logged rule applied after whitelist rule", () => {
+        controller.mark(request, createRule({ action: "whitelist" }));
+        controller.mark(request, logRule);
+        const resolve = controller.resolve(request);
+        expect(resolve).toBeFalsy();
     });
 
     test("Request whitelisted and logged", () => {
@@ -124,6 +143,14 @@ describe("user is notified", () => {
         expect(resolve.redirectUrl).toBe("http://bar.com/");
     });
 
+    test("Request upgraded to secure", () => {
+        controller.mark(request, filterRule);
+        controller.mark(request, redirectRule);
+        controller.mark(request, secureRule);
+        const resolve = controller.resolve(request);
+        expect(resolve.upgradeToSecure).toBeTruthy();
+    });
+
     test("Request filtered - skip redirection filter", () => {
         request.url += "&utm_source=blaa";
         controller.mark(request, filterParamsRule);
@@ -140,6 +167,30 @@ describe("user is notified", () => {
         controller.mark(request, filterParamsRule);
         const resolve = controller.resolve(request);
         expect(resolve.redirectUrl).toBe("http://bar.com/?utm_source=blaa");
+    });
+
+    test("when multiple block rules are applied to same request", () => {
+        controller.mark(request, createRule({ action: "block" }));
+        controller.mark(request, createRule({ action: "block" }));
+        expect(controller.requests.size).toBe(1);
+        const resolve = controller.resolve(request);
+        expect(resolve.cancel).toBeTruthy();
+    });
+
+    test("when multiple secure rules are applied to same request", () => {
+        controller.mark(request, createRule({ action: "secure" }));
+        controller.mark(request, createRule({ action: "secure" }));
+        expect(controller.requests.size).toBe(1);
+        const resolve = controller.resolve(request);
+        expect(resolve.upgradeToSecure).toBeTruthy();
+    });
+
+    test("when multiple logged whitelist rules are applied to same request", () => {
+        controller.mark(request, createRule({ action: "whitelist", log: true }));
+        controller.mark(request, createRule({ action: "whitelist", log: true }));
+        expect(controller.requests.size).toBe(1);
+        const resolve = controller.resolve(request);
+        expect(resolve).toBeFalsy();
     });
 });
 
@@ -165,5 +216,88 @@ describe("redirect document on other types", () => {
         mockUpdateTab.mockReturnValue(Promise.resolve());
         const resolve = controller.resolve(request);
         expect(resolve.cancel).toBe(true);
+    });
+});
+
+describe("When multiple rules match a request", () => {
+    test("first filter that changes the url gets applied", () => {
+        request = { requestId: 0, url: "https://youtube.com/watch?v=OipJYWhMi3k&feature=em-uploademail" };
+        controller.mark(request, createRule({ action: "filter" }));
+        controller.mark(request, createRule({
+            "action": "filter",
+            "paramsFilter": {
+                "values": [
+                    "utm_*",
+                    "ref_*"
+                ]
+            }
+        }));
+
+        controller.mark(request, createRule({
+            "action": "filter",
+            "paramsFilter": {
+                "values": [
+                    "app",
+                    "attribution_link",
+                    "feature"
+                ]
+            }
+        }));
+
+        const resolve = controller.resolve(request);
+        expect(resolve.redirectUrl).toBe("https://youtube.com/watch?v=OipJYWhMi3k");
+    });
+    test("no matched filter rule gets applied", () => {
+        request = { requestId: 0, url: "https://youtube.com/watch?v=OipJYWhMi3k&feature=em-uploademail" };
+        controller.mark(request, createRule({ action: "filter" }));
+        controller.mark(request, createRule({
+            "action": "filter",
+            "paramsFilter": {
+                "values": [
+                    "utm_*",
+                    "ref_*"
+                ]
+            }
+        }));
+
+        controller.mark(request, createRule({
+            "action": "filter",
+            "paramsFilter": {
+                "values": [
+                    "app",
+                    "attribution_link"
+                ]
+            }
+        }));
+
+        const resolve = controller.resolve(request);
+        expect(resolve).toBeFalsy();
+    });
+    test("no matched filter rule gets applied", () => {
+        request = { requestId: 0, url: "https://youtube.com/watch?v=OipJYWhMi3k&feature=em-uploademail" };
+        controller.mark(request, createRule({ action: "filter" }));
+        controller.mark(request, createRule({
+            "action": "filter",
+            "paramsFilter": {
+                "values": [
+                    "utm_*",
+                    "ref_*"
+                ]
+            }
+        }));
+
+        controller.mark(request, createRule({
+            "action": "filter",
+            "paramsFilter": {
+                "values": [
+                    "feature"
+                ]
+            }
+        }));
+
+        controller.mark(request, redirectRule);
+
+        const resolve = controller.resolve(request);
+        expect(resolve.redirectUrl).toBe("https://redirect.url/");
     });
 });
