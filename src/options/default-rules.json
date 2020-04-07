@@ -184,5 +184,33 @@
       ]
     },
     "tag": "filter-allegro"
+  },
+  {
+    "uuid": "be5a0735-f75b-41a5-86fc-05ce546906b9",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "Filter%3A%20Facebook%20session%20and%20reference%20parameters",
+    "paramsFilter": {
+      "values": [
+        "eid",
+        "fref",
+        "hc_ref",
+        "ref"
+      ]
+    },
+    "tag": "filter-facebook"
   }
 ]
