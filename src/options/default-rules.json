@@ -158,5 +158,31 @@
       ]
     },
     "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "b46c4495-3949-4e5e-85ff-6e2a5c6dbb73",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "allegro.pl"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "Filter%3A%20Allegro.pl%20session%20and%20recommend%20parameters",
+    "paramsFilter": {
+      "values": [
+        "reco_id",
+        "sid"
+      ]
+    },
+    "tag": "filter-allegro"
   }
 ]
