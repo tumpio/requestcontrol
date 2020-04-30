@@ -14,7 +14,7 @@ WhitelistRule.priority = -1;
 BlockRule.priority = -2;
 SecureRule.priority = -3;
 RedirectRule.priority = -4;
-FilterRule.priority = -5;
+FilterRule.priority = -4;
 
 Object.defineProperty(ControlRule.prototype, "priority", {
     get: function () {
