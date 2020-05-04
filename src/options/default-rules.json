@@ -5,8 +5,13 @@
     "tag": "filter-multiple",
     "pattern": {
       "scheme": "*",
-      "host": ["*.tradedoubler.com", "out.reddit.com", "steamcommunity.com"],
-      "path": "*url=*"
+      "host": [
+        "*.tradedoubler.com",
+        "disq.us",
+        "out.reddit.com",
+        "steamcommunity.com"
+      ],
+      "path": ["*url=*"]
     },
     "types": ["main_frame"],
     "action": "filter",
@@ -19,7 +24,7 @@
     "tag": "filter-google",
     "pattern": {
       "scheme": "*",
-      "host": "*.google.*",
+      "host": ["*.google.*"],
       "topLevelDomains": [
         "com", "ad", "ae", "com.af", "com.ag", "com.ai", "al", "am", "co.ao", "com.ar", "as", "at", "com.au", "az",
         "ba", "com.bd", "be", "bf", "bg", "com.bh", "bi", "bj", "com.bn", "com.bo", "com.br", "bs", "bt", "co.bw", "by",
@@ -36,7 +41,11 @@
         "com.tw", "co.tz", "com.ua", "co.ug", "co.uk", "com.uy", "co.uz", "com.vc", "co.ve", "vg", "co.vi", "com.vn",
         "vu", "ws", "rs", "co.za", "co.zm", "co.zw", "cat"
       ],
-      "path": "url?*"
+      "path": ["url?*"],
+      "excludes": [
+        "accounts.google.*",
+        "consent.google.*"
+      ]
     },
     "types": ["main_frame", "sub_frame"],
     "action": "filter",
@@ -49,8 +58,8 @@
     "tag": "filter-deviantArt",
     "pattern": {
       "scheme": "*",
-      "host": "*.deviantart.com",
-      "path": "*outgoing?*"
+      "host": ["*.deviantart.com"],
+      "path": ["*outgoing?*"]
     },
     "types": [
       "main_frame"
@@ -64,8 +73,8 @@
     "tag": "filter-mozilla",
     "pattern": {
       "scheme": "*",
-      "host": "outgoing.prod.mozaws.net",
-      "path": "*"
+      "host": ["outgoing.prod.mozaws.net"],
+      "path": ["*"]
     },
     "types": [
       "main_frame"
@@ -76,16 +85,10 @@
   {
     "title": "Remove UTM query parameters",
     "uuid": "5276a290-b21a-4deb-a86e-aa54c3ff1bcc",
-    "description": "Remove UTM query parameters from requests. UTM query parameters are commonly used as a method to analyze the origin of traffic.",
-    "tag": "filter-utm",
+    "description": "Replicates Neat URL extension. Removes common tracking query parameters from all requests to all websites. Recommended to use whitelist filters when necessary, instead of disabling this rule.",
+    "tag": "filter-multiple",
     "pattern": {
-      "scheme": "*",
-      "host": [
-        "*"
-      ],
-      "path": [
-        "*utm_*"
-      ]
+      "allUrls": true
     },
     "types": [
       "main_frame"
@@ -95,14 +98,23 @@
     "skipRedirectionFilter": true,
     "paramsFilter": {
       "values": [
-        "utm_*"
+        "CNDID", "_hsenc", "_openstat", "action_object_map", "action_ref_map", "action_type_map",
+        "fb_action_ids", "fb_action_types", "fb_ref", "fb_source", "fbclid",
+        "ga_campaign", "ga_content", "ga_medium", "ga_place", "ga_source", "ga_term", "gs_l",
+        "hmb_campaign", "hmb_medium", "hmb_source", "mbid", "mkt_tok",
+        "sc_campaign", "sc_channel", "sc_content", "sc_country", "sc_geo", "sc_medium", "sc_outcome",
+        "spJobID", "spMailingID", "spReportId", "spUserID",
+        "trk", "trkCampaign", "utm_*", "yclid"
       ]
-  }
+    }
   },
   {
     "title": "Block Beacon and Ping requests",
     "uuid": "32db1f93-f99d-4c45-8485-e5c7beec5a69",
     "pattern": {
+      "scheme": "*",
+      "host": [],
+      "path": [],
       "allUrls": true
     },
     "action": "block",
@@ -158,5 +170,312 @@
       ]
     },
     "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "6c24db22-32ed-48fb-bbbd-9e84fb432002",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "deref-gmx.com"
+      ],
+      "path": [
+        "*/dereferrer/*"
+      ]
+    },
+    "types": ["main_frame"],
+    "action": "filter",
+    "active": true,
+    "redirectUrl": "",
+    "tag": "filter-gmx"
+  },
+  {
+    "uuid": "c7ca4ba4-1a16-4b98-b645-62d22ae582ee",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "duckduckgo.com"
+      ],
+      "path": [
+        "l/?*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-duckduckgo"
+  },
+  {
+    "uuid": "4a6b8caf-3d0b-4c95-876e-b2cdcde1eb6a",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "t.umblr.com"
+      ],
+      "path": [
+        "redirect?*"
+      ]
+    },
+    "types": [ "main_frame" ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-tumblr"
+  },
+  {
+    "uuid": "92a96b21-9076-43c2-b030-167bf420e733",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "www.facebook.com"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [ "main_frame" ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-facebook",
+    "paramsFilter": {
+      "values": [
+        "ref",
+        "referral_code",
+        "rid",
+        "rt"
+      ]
+    },
+    "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "6777c741-8818-49d0-b536-ae3471520825",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "www.linkedin.com"
+      ],
+      "path": [
+        "*redir/redirect?*"
+      ]
+    },
+    "types": [ "main_frame" ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-linkedin"
+  },
+  {
+    "uuid": "1fa1d22e-7694-46f0-9da6-fa6536433406",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.youtube.com"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-google",
+    "paramsFilter": {
+      "values": [
+        "feature",
+        "gclid",
+        "kw"
+      ]
+    },
+    "skipRedirectionFilter": true,
+    "description": "Imported from Neat URL webextension."
+  },
+  {
+    "uuid": "6dc06a86-2356-4521-a0c5-08372846df15",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.amazon.*",
+        "*.primevideo.*"
+      ],
+      "path": [
+        "*"
+      ],
+      "topLevelDomains": [
+        "ae", "ca", "cn", "co.jp", "co.uk", "com", "com.au", "com.br", "com.mx", "com.tr",
+        "de", "es", "fr", "in", "it", "nl", "sg"
+      ]
+    },
+    "types": [
+      "main_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "Remove Amazon query parameters (on both store and Prime Video)",
+    "skipRedirectionFilter": true,
+    "paramsFilter": {
+      "values": [
+        "clientContext",
+        "field-keywords",
+        "ie",
+        "language",
+        "location",
+        "mgh",
+        "node",
+        "openid.*",
+        "url"
+      ],
+      "invert": true
+    },
+    "tag": "filter-amazon"
+  },
+  {
+    "title": "Remove query parameters from Bing",
+    "uuid": "f53e0a5e-d658-4da5-9b12-143e24c4e1ba",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.bing.com"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-bing",
+    "paramsFilter": {
+      "values": [
+        "cvid",
+        "form",
+        "pq",
+        "qs",
+        "sc",
+        "sk",
+        "sp"
+      ]
+    },
+    "description": "Imported from Neat URL webextension."
+  },
+  {
+    "uuid": "0b0d8660-3c95-40ba-8c53-d72328a6cf00",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.google.*"
+      ],
+      "path": [
+        "*"
+      ],
+      "topLevelDomains": [
+        "com", "ad", "ae", "com.af", "com.ag", "com.ai", "al", "am", "co.ao", "com.ar", "as", "at", "com.au", "az",
+        "ba", "com.bd", "be", "bf", "bg", "com.bh", "bi", "bj", "com.bn", "com.bo", "com.br", "bs", "bt", "co.bw", "by",
+        "com.bz", "ca", "cd", "cf", "cg", "ch", "ci", "co.ck", "cl", "cm", "cn", "com.co", "co.cr", "com.cu", "cv",
+        "com.cy", "cz", "de", "dj", "dk", "dm", "com.do", "dz", "com.ec", "ee", "com.eg", "es", "com.et", "fi",
+        "com.fj", "fm", "fr", "ga", "ge", "gg", "com.gh", "com.gi", "gl", "gm", "gp", "gr", "com.gt", "gy", "com.hk",
+        "hn", "hr", "ht", "hu", "co.id", "ie", "co.il", "im", "co.in", "iq", "is", "it", "je", "com.jm", "jo", "co.jp",
+        "co.ke", "com.kh", "ki", "kg", "co.kr", "com.kw", "kz", "la", "com.lb", "li", "lk", "co.ls", "lt", "lu", "lv",
+        "com.ly", "co.ma", "md", "me", "mg", "mk", "ml", "com.mm", "mn", "ms", "com.mt", "mu", "mv", "mw", "com.mx",
+        "com.my", "co.mz", "com.na", "com.nf", "com.ng", "com.ni", "ng", "ne", "nl", "no", "com.np", "nr", "nu",
+        "co.nz", "com.om", "com.pa", "com.pe", "com.pg", "com.ph", "com.pk", "pl", "pn", "com.pr", "ps", "pt", "com.py",
+        "com.qa", "ro", "ru", "rw", "com.sa", "com.sb", "sc", "se", "com.sg", "sh", "si", "sk", "com.sl", "sn", "so",
+        "sm", "sr", "st", "com.sv", "td", "tg", "co.th", "com.tj", "tk", "tl", "tm", "tn", "to", "com.tr", "tt",
+        "com.tw", "co.tz", "com.ua", "co.ug", "co.uk", "com.uy", "co.uz", "com.vc", "co.ve", "vg", "co.vi", "com.vn",
+        "vu", "ws", "rs", "co.za", "co.zm", "co.zw", "cat"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "paramsFilter": {
+      "values": [
+        "el",
+        "gws_rd",
+        "sel",
+        "ved"
+      ]
+    },
+    "title": "Remove query parameters from Google links",
+    "tag": "filter-google",
+    "description": "Imported from Neat URL webextension.",
+    "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "4ead820a-429f-4e7c-a7ca-7241305bcedb",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "youtu.be"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [
+      "main_frame"
+    ],
+    "action": "redirect",
+    "active": true,
+    "redirectUrl": "https://www.youtube.com/watch?v={pathname:1}{search/^\\?/&}{hash}",
+    "tag": "redirect-google"
+  },
+  {
+    "uuid": "816c76d6-ad2e-4f7c-94be-e2436c93fe34",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.amazon.*"
+      ],
+      "path": [
+        "*/picassoRedirect.html/*"
+      ],
+      "topLevelDomains": [
+        "ae", "ca", "cn", "co.jp", "co.uk", "com", "com.au", "com.br", "com.mx", "com.tr",
+        "de", "es", "fr", "in", "it", "nl", "sg"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "redirect",
+    "active": true,
+    "title": "Skip Picasso redirect (used on occasion by Amazon to track probable purchases)",
+    "tag": "redirect-amazon",
+    "redirectUrl": "https://{hostname}{search/.*url=(.*)/$1|decodeURIComponent}&alpha",
+    "paramsFilter": {
+      "values": [
+        "url"
+      ]
+    }
+  },
+  {
+    "title": "Block Youtube mouselogger",
+    "uuid": "23f612f1-d903-4715-99a5-5559035400e5",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.youtube.com"
+      ],
+      "path": [
+        "youtubei/v1/log_event*"
+      ]
+    },
+    "types": [
+      "xmlhttprequest"
+    ],
+    "action": "block",
+    "active": false,
+    "description": "May cause issues after the end of the video if logged in. Disabled by default.",
+    "tag": "filter-google"
   }
 ]
