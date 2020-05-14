@@ -479,22 +479,24 @@
     "tag": "filter-google"
   },
   {
-    "title": "Filter GIF Tracking Parameters",
+    "title": "Filter tracking parameters in images",
     "uuid": "6468e7a9-440d-4727-a09e-c1a5cc386948",
     "pattern": {
       "scheme": "*",
       "host": [
         "*"
       ],
-      "path": [
-        "*.gif*"
+      "path": [],
+      "allUrls": true,
+      "includes": [
+        "/\\.(gif|jpg|jpeg|png|webp)\\?/"
       ]
     },
     "action": "filter",
     "active": true,
-    "description": "Imported from GIF Tracking Protection webextension",
+    "description": "Based on GIF Tracking Protection webextension",
     "skipRedirectionFilter": true,
     "trimAllParams": true,
-    "tag": "filter-gif"
+    "tag": "filter-img"
   }
 ]
