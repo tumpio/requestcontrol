@@ -486,17 +486,65 @@
       "host": [
         "*"
       ],
-      "path": [],
-      "allUrls": true,
-      "includes": [
-        "/\\.(gif|jpg|jpeg|png|webp)\\?/"
-      ]
+      "path": [
+        "*"
+      ],
+      "excludes": [
+        "http://*.imgix.net/",
+        "https://*.imgix.net/",
+        "https://web.whatsapp.com/",
+        "https://www.google.com/recaptcha/api2/payload*"
+      ],
+      "allUrls": true
     },
     "action": "filter",
     "active": true,
-    "description": "Based on GIF Tracking Protection webextension",
+    "description": "Inspired by GIF Tracking Protection webextension",
     "skipRedirectionFilter": true,
-    "trimAllParams": true,
-    "tag": "filter-img"
+    "tag": "filter-img",
+    "types": [
+      "image"
+    ],
+    "paramsFilter": {
+      "values": [
+        "_nc_ht",
+        "_nc_ohc",
+        "auto",
+        "crop",
+        "fit",
+        "format",
+        "frame",
+        "h",
+        "height",
+        "oe",
+        "oh",
+        "q",
+        "size",
+        "url",
+        "w",
+        "width"
+      ],
+      "invert": true
+    }
+  },
+  {
+    "uuid": "297fb0c7-d052-4031-9947-fc7a9b7690af",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "web.whatsapp.com"
+      ],
+      "path": [
+        "/pp?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "WhatsApp Web images",
+    "tag": "filter-whatsapp",
+    "description": "User avatars in WhatsApp Web need an extra rule to filter URL parameters"
   }
 ]
