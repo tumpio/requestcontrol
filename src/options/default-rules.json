@@ -588,6 +588,7 @@
         "imgid",
         "layer",
         "layers",
+        "name",
         "oe",
         "oh",
         "output",
