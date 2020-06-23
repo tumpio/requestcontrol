@@ -262,7 +262,7 @@
         "redirect?*"
       ]
     },
-    "types": [ "main_frame" ],
+    "types": ["main_frame"],
     "action": "filter",
     "active": true,
     "tag": "filter-tumblr"
@@ -278,7 +278,7 @@
         "*"
       ]
     },
-    "types": [ "main_frame" ],
+    "types": ["main_frame"],
     "action": "filter",
     "active": true,
     "tag": "filter-facebook",
@@ -303,7 +303,7 @@
         "*redir/redirect?*"
       ]
     },
-    "types": [ "main_frame" ],
+    "types": ["main_frame"],
     "action": "filter",
     "active": true,
     "tag": "filter-linkedin"
@@ -671,46 +671,6 @@
     },
     "title": "Anonymize Google Street View",
     "tag": "filter-google"
-  },
-  {
-    "uuid": "802e0c21-922e-4501-a652-da805caedb01",
-    "pattern": {
-      "scheme": "*",
-      "host": [
-        "i9.ytimg.com"
-      ],
-      "path": [
-        "/sb/*/storyboard*"
-      ]
-    },
-    "types": [
-      "image"
-    ],
-    "action": "whitelist",
-    "active": true,
-    "title": "Restore YouTube seekbar previews",
-    "description": "The general filter rule breaks the preview shown upon hovering over the seekbar. This rule restores them at the cost of sending unknown metadata to YouTube servers. Disabling this rule will not break YouTube's other functions.",
-    "tag": "whitelist-youtube"
-  },
-  {
-    "uuid": "bebe6410-8d55-46d5-9003-6c0d92e7526a",
-    "pattern": {
-      "scheme": "*",
-      "host": [
-        "i.ytimg.com"
-      ],
-      "path": [
-        "/an_webp/*/*default_6s.webp*"
-      ]
-    },
-    "types": [
-      "image"
-    ],
-    "action": "whitelist",
-    "active": true,
-    "title": "Restore YouTube video previews",
-    "description": "YouTube should show several frames of a video when hovering a thumbnail with the cursor. This rule restores that functionality%2C but sends extra metada to Google's servers. Disabling this rule will not break YouTube's other functions.",
-    "tag": "whitelist-youtube"
   },
   {
     "uuid": "802e0c21-922e-4501-a652-da805caedb01",
