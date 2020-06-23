@@ -711,5 +711,29 @@
     "title": "Restore YouTube video previews",
     "description": "YouTube should show several frames of a video when hovering a thumbnail with the cursor. This rule restores that functionality%2C but sends extra metada to Google's servers. Disabling this rule will not break YouTube's other functions.",
     "tag": "whitelist-youtube"
+  },
+  {
+    "uuid": "26b61cb2-b847-40c1-bd89-c31327434643",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "img.dafont.com",
+        "render.fontstruct.com",
+        "render01.fontshop.com",
+        "www.signbank.org"
+      ],
+      "path": [
+        "*"
+      ],
+      "origin": "same-domain"
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Custom banners and transcription sites",
+    "description": "Sites dedicated to typesetting, transcription, or custom banners have legitimate reasons to use PHP requests with no common pattern.",
+    "tag": "whitelist-fonts"
   }
 ]
