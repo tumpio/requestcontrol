@@ -88,7 +88,11 @@
     "description": "Replicates Neat URL extension. Removes common tracking query parameters from all requests to all websites. Recommended to use whitelist filters when necessary, instead of disabling this rule.",
     "tag": "filter-multiple",
     "pattern": {
-      "allUrls": true
+      "allUrls": true,
+      "excludes": [
+        "http://navigator-bs.gmx.com/*",
+        "https://navigator-bs.gmx.com/*"
+      ]
     },
     "types": [
       "main_frame"
@@ -535,16 +539,24 @@
       ],
       "excludes": [
         "http://*.imgix.net/",
+        "http://external-preview.redd.it/*",
+        "http://external.fbcn9-1.fna.fbcdn.net/static_map.php?*",
+        "http://maps.googleapis.com/maps/vt?*",
+        "http://wiki.ubuntu.com/*action=AttachFile",
         "https://*.imgix.net/",
         "https://duckduckgo.com/mapkit/?*",
         "https://external-content.duckduckgo.com/*",
         "http://geo*.ggpht.com/cbk?*",
+        "https://external-preview.redd.it/*",
+        "https://external.fbcn9-1.fna.fbcdn.net/static_map.php?*",
         "https://geo*.ggpht.com/cbk?*",
         "http://preview.redd.it/*",
+        "https://maps.googleapis.com/maps/vt?*",
         "https://preview.redd.it/*",
         "http://styles.redditmedia.com/*",
         "https://styles.redditmedia.com/*",
         "http://www.google.com/maps/vt?*",
+        "https://wiki.ubuntu.com/*action=AttachFile",
         "https://www.google.com/maps/vt?*",
         "https://www.google.com/recaptcha/api2/payload*",
         "https://web.whatsapp.com/"
