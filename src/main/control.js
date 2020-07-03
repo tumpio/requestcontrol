@@ -67,7 +67,7 @@ export class RequestController {
     }
 }
 
-class CompositeRule {
+export class CompositeRule {
     constructor(ruleA, ruleB) {
         if (ruleA instanceof RedirectRule) {
             this.rules = [ruleA, ruleB];

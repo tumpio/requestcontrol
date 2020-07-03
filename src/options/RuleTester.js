@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { createMatchPatterns, createRule } from "../main/api.js";
-import { RequestController } from "../main/control.js";
+import { RequestController, CompositeRule } from "../main/control.js";
 import { LoggedWhitelistRule, WhitelistRule } from "../main/rules/whitelist.js";
 import { BlockRule } from "../main/rules/block.js";
 import { RedirectRule } from "../main/rules/redirect.js";
@@ -62,6 +62,24 @@ function testRule(rule, testUrl) {
             } catch (e) {
                 return browser.i18n.getMessage("invalid_target_url") + redirectUrl;
             }
+        case CompositeRule:
+            redirectUrl = rule.rules.reduce((url, r) => {
+                let change = r.apply(url);
+                if (change !== null) {
+                    return change;
+                }
+                return url;
+            }, testUrl);
+            try {
+                new URL(redirectUrl);
+                if (redirectUrl !== testUrl) {
+                    return redirectUrl;
+                } else {
+                    return browser.i18n.getMessage("matched_no_change");
+                }
+            } catch (e) {
+                return browser.i18n.getMessage("invalid_target_url") + redirectUrl;
+            }
         case SecureRule:
             return browser.i18n.getMessage("upgraded_to_secure");
         default:
@@ -79,15 +97,13 @@ function testRule(rule, testUrl) {
  */
 function matchPatternToRegExp(pattern) {
     if (pattern === "" || pattern === "<all_urls>") {
-        return (/^(?:http|https):\/\//);
+        return /^(?:http|https):\/\//;
     }
 
     const schemeSegment = "(\\*|http|https)";
     const hostSegment = "(\\*|(?:\\*\\.)?(?:[^/*]+))?";
     const pathSegment = "(.*)";
-    const matchPatternRegExp = new RegExp(
-        `^${schemeSegment}://${hostSegment}/${pathSegment}$`
-    );
+    const matchPatternRegExp = new RegExp(`^${schemeSegment}://${hostSegment}/${pathSegment}$`);
     const regexpChars = /[.+^$?{}()|[\]\\]/g; // excluding "*"
 
     let match = matchPatternRegExp.exec(pattern);
