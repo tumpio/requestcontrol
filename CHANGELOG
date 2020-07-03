@@ -1,3 +1,6 @@
+Version 1.15.4 Jul. 3, 2020
+- Fix required validation after 1.15.3. #131
+
 Version 1.15.3 Jul. 3, 2020
 - Fix Redirect rule not being applied when multiple rules were matching a single request. #111
 - Fix rule tester with multiple redirect rules.
