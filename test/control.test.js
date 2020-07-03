@@ -291,4 +291,30 @@ describe("When multiple rules match a request", () => {
         const resolve = controller.resolve(request);
         expect(resolve.redirectUrl).toBe("https://redirect.url1/");
     });
+    test("redirect rule matches first before any filter rule", () => {
+        request = { requestId: 0, url: "https://youtube.com/watch?v=OipJYWhMi3k&feature=em-uploademail" };
+        controller.mark(request, createRule({
+            "action": "filter",
+            "paramsFilter": {
+                "values": [
+                    "v"
+                ]
+            }
+        }));
+        controller.mark(request, createRule({
+            "action": "filter",
+            "paramsFilter": {
+                "values": [
+                    "feature"
+                ]
+            }
+        }));
+        controller.mark(request, createRule({
+            action: "redirect",
+            redirectUrl: "https://redirect.url/"
+        }));
+
+        const resolve = controller.resolve(request);
+        expect(resolve.redirectUrl).toBe("https://redirect.url/");
+    });
 });

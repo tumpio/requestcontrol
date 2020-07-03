@@ -19,7 +19,7 @@ FilterRule.priority = -4;
 Object.defineProperty(ControlRule.prototype, "priority", {
     get: function () {
         return this.constructor.priority;
-    }
+    },
 });
 
 export class RequestController {
@@ -36,14 +36,12 @@ export class RequestController {
 
         let current = this.requests.get(request.requestId);
 
-        if (typeof current === "undefined" ||
-            rule.priority > current.priority) {
+        if (typeof current === "undefined" || rule.priority > current.priority) {
             this.requests.set(request.requestId, rule);
             return true;
         }
 
-        if (rule.priority === current.priority &&
-            rule instanceof BaseRedirectRule) {
+        if (rule.priority === current.priority && rule instanceof BaseRedirectRule) {
             this.compose(current, rule, request);
             return true;
         }
@@ -71,12 +69,20 @@ export class RequestController {
 
 class CompositeRule {
     constructor(ruleA, ruleB) {
-        this.rules = [ruleA, ruleB];
+        if (ruleA instanceof RedirectRule) {
+            this.rules = [ruleA, ruleB];
+        } else {
+            this.rules = [ruleB, ruleA];
+        }
         this.priority = ruleA.priority;
     }
 
     add(rule) {
-        this.rules.push(rule);
+        if (rule instanceof RedirectRule) {
+            this.rules.unshift(rule);
+        } else {
+            this.rules.push(rule);
+        }
     }
 
     resolve(request) {
