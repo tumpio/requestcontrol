@@ -124,6 +124,7 @@ form .btn > input {
 }
 
 form .card,
+form .tags-input,
 form .card:focus {
     border: 1px solid #ccc;
     background: white;

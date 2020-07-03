@@ -317,17 +317,15 @@ RuleInput.prototype = {
     },
 
     validateTLDPattern: function () {
-        let isTldsPattern = !this.$(".any-url").checked && this.hostsTagsInput.getValue().some(isTLDHostPattern);
+        let isTldsPattern = !this.$(".any-url").checked && this.hostsTagsInput.value.some(isTLDHostPattern);
         toggleHidden(!isTldsPattern, this.$(".form-group-tlds"));
+        this.tldsTagsInput.disabled = !isTLDHostPattern;
         if (isTldsPattern) {
-            if (this.tldsTagsInput.getValue().length === 0) {
+            if (this.tldsTagsInput.value.length === 0) {
                 this.$(".btn-tlds").classList.add("text-danger");
                 this.$(".btn-tlds").parentNode.classList.add("has-error");
                 toggleHidden(!isTldsPattern, this.$(".tlds-block"));
             }
-            this.tldsTagsInput.enable();
-        } else {
-            this.tldsTagsInput.disable();
         }
     },
 
@@ -497,15 +495,11 @@ RuleInput.prototype = {
         this.setAnyUrl(e.target.checked);
     },
 
-    setAnyUrl: function (bool) {
-        setButtonChecked(this.$(".any-url"), bool);
-        toggleHidden(bool, this.$(".url-wrap"));
+    setAnyUrl: function (enabled) {
+        setButtonChecked(this.$(".any-url"), enabled);
+        toggleHidden(enabled, this.$(".url-wrap"));
         this.validateTLDPattern();
-        if (bool) {
-            this.hostsTagsInput.disable();
-        } else {
-            this.hostsTagsInput.enable();
-        }
+        this.hostsTagsInput.disabled = enabled;
     },
 
     onSelectAnyType: function (e) {
@@ -523,7 +517,7 @@ RuleInput.prototype = {
     },
 
     onSetTLDs: function () {
-        let numberOfTlds = this.tldsTagsInput.getValue().length;
+        let numberOfTlds = this.tldsTagsInput.value.length;
         let error = numberOfTlds === 0;
         this.$(".btn-tlds > .badge").textContent = numberOfTlds;
         this.$(".btn-tlds").classList.toggle("text-danger", error);
@@ -577,24 +571,24 @@ RuleInput.prototype = {
 
     updateInputs: function () {
         this.$(".scheme").value = this.rule.pattern.scheme || "*";
-        this.hostsTagsInput.setValue(this.rule.pattern.host);
-        this.pathsTagsInput.setValue(this.rule.pattern.path);
+        this.hostsTagsInput.value = this.rule.pattern.host;
+        this.pathsTagsInput.value = this.rule.pattern.path;
 
         if (this.rule.action) {
             setButtonChecked(this.$(".action[value=" + this.rule.action + "]"), true);
         }
 
         if (this.rule.pattern.topLevelDomains) {
-            this.tldsTagsInput.setValue(this.rule.pattern.topLevelDomains);
+            this.tldsTagsInput.value = this.rule.pattern.topLevelDomains;
             this.onSetTLDs();
         }
 
         if (this.rule.pattern.includes) {
-            this.includesTagsInput.setValue(this.rule.pattern.includes);
+            this.includesTagsInput.value = this.rule.pattern.includes;
         }
 
         if (this.rule.pattern.excludes) {
-            this.excludesTagsInput.setValue(this.rule.pattern.excludes);
+            this.excludesTagsInput.value = this.rule.pattern.excludes;
         }
 
         if (this.rule.pattern.origin) {
@@ -619,15 +613,15 @@ RuleInput.prototype = {
             this.rule.pattern.allUrls = true;
         } else {
             this.rule.pattern.scheme = this.$(".scheme").value;
-            this.rule.pattern.host = this.hostsTagsInput.getValue();
-            this.rule.pattern.path = this.pathsTagsInput.getValue();
+            this.rule.pattern.host = this.hostsTagsInput.value;
+            this.rule.pattern.path = this.pathsTagsInput.value;
             if (this.rule.pattern.host.some(isTLDHostPattern)) {
-                this.rule.pattern.topLevelDomains = this.tldsTagsInput.getValue();
+                this.rule.pattern.topLevelDomains = this.tldsTagsInput.value;
             }
             delete this.rule.pattern.allUrls;
         }
-        let includes = this.includesTagsInput.getValue();
-        let excludes = this.excludesTagsInput.getValue();
+        let includes = this.includesTagsInput.value;
+        let excludes = this.excludesTagsInput.value;
         let origin = this.$(".origin-matcher:checked");
         if (includes.length > 0) {
             this.rule.pattern.includes = includes;
@@ -788,7 +782,7 @@ FilterRuleInput.prototype.updateInputs = function () {
     setButtonChecked(this.$(".filter-skip-within-same-domain-toggle"), this.rule.skipOnSameDomain);
     setButtonDisabled(this.$(".filter-skip-within-same-domain-toggle"), this.rule.skipRedirectionFilter);
     if (this.rule.paramsFilter && Array.isArray(this.rule.paramsFilter.values)) {
-        this.paramsTagsInput.setValue(this.rule.paramsFilter.values);
+        this.paramsTagsInput.value = this.rule.paramsFilter.values;
 
         if (this.rule.paramsFilter.invert) {
             setButtonChecked(this.$(".invert-trim"), true);
@@ -803,7 +797,7 @@ FilterRuleInput.prototype.updateInputs = function () {
 FilterRuleInput.prototype.updateRule = function () {
     BaseRedirectRuleInput.prototype.updateRule.call(this);
     this.rule.paramsFilter = {};
-    this.rule.paramsFilter.values = this.paramsTagsInput.getValue();
+    this.rule.paramsFilter.values = this.paramsTagsInput.value;
 
     if (this.rule.paramsFilter.values.length > 0) {
         if (this.$(".invert-trim").checked) {
