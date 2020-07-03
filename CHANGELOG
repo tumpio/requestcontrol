@@ -1,5 +1,10 @@
+Version 1.15.3 Jul. 3, 2020
+- Fix Redirect rule not being applied when multiple rules were matching a single request. #111
+- Fix rule tester with multiple redirect rules.
+- Remove backspace deleting added parameters. #128
+
 Version 1.15.2 Mar. 28, 2020
-- Fix Filter rule not being applied when multiple filter rules were matching to a single request. #111
+- Fix Filter rule not being applied when multiple filter rules were matching a single request. #111
 
 Version 1.15.1 Mar. 13, 2020
 - Fix popup height when placed to overflow menu. #111
