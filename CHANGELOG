@@ -1,3 +1,6 @@
+Version 1.15.5 Jul. 7, 2020
+- Fix rule creation after 1.15.3. #131
+
 Version 1.15.4 Jul. 3, 2020
 - Fix required validation after 1.15.3. #131
 
