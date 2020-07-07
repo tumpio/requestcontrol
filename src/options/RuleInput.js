@@ -319,7 +319,7 @@ RuleInput.prototype = {
     validateTLDPattern: function () {
         let isTldsPattern = !this.$(".any-url").checked && this.hostsTagsInput.value.some(isTLDHostPattern);
         toggleHidden(!isTldsPattern, this.$(".form-group-tlds"));
-        this.tldsTagsInput.disabled = !isTLDHostPattern;
+        this.tldsTagsInput.disabled = !isTldsPattern;
         if (isTldsPattern) {
             if (this.tldsTagsInput.value.length === 0) {
                 this.$(".btn-tlds").classList.add("text-danger");
