@@ -3,9 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { createRule, createMatchPatterns, isTLDHostPattern } from "../main/api.js";
-import { uuid } from "./lib/uuid.js";
-import { onToggleButtonChange, setButtonChecked, setButtonDisabled, toggleHidden } from "./lib/ui-helpers.js";
-import { TagsInput } from "./lib/tags-input/src/tags-input.js";
+import { uuid } from "../util/uuid.js";
+import { onToggleButtonChange, setButtonChecked, setButtonDisabled, toggleHidden } from "../util/ui-helpers.js";
+import { TagsInput } from "../util/tags-input/src/tags-input.js";
 
 export function newRuleInput(
     rule = {

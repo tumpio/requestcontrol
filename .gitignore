@@ -7,4 +7,4 @@ coverage/
 coverage.lcov
 
 lib/tldts/*.js
-src/options/lib/lit/lit.css
+lib/lit/lit.css

@@ -4,10 +4,10 @@
 
 import { newRuleInput } from "./rule-input.js";
 import { testRules } from "./rule-tester.js";
-import { uuid } from "./lib/uuid.js";
-import { Toc } from "./lib/toc.js";
-import { exportObject, importFile } from "./lib/import-export.js";
-import { translateTemplates } from "./lib/i18n.js";
+import { uuid } from "../util/uuid.js";
+import { Toc } from "../util/toc.js";
+import { exportObject, importFile } from "../util/import-export.js";
+import { translateTemplates } from "../util/i18n.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
     await fetchTypes();

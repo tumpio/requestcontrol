@@ -1,4 +1,4 @@
-[submodule "src/options/lib/tags-input"]
-	path = src/options/lib/tags-input
+[submodule "src/util/tags-input"]
+	path = src/util/tags-input
 	url = https://github.com/tumpio/tags-input.git
 	branch = request-control
