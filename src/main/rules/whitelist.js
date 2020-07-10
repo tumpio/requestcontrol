@@ -18,3 +18,4 @@ export class LoggedWhitelistRule extends WhitelistRule {
 }
 
 WhitelistRule.icon = "/icons/icon-whitelist.svg";
+WhitelistRule.action = "whitelist";

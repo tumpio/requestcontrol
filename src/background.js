@@ -2,11 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import {
-    createMatchPatterns,
-    createRule,
-    ALL_URLS
-} from "./main/api.js";
+import { createMatchPatterns, createRule, ALL_URLS } from "./main/api.js";
 import { getNotifier } from "./notifier.js";
 import { RequestController } from "./main/control.js";
 import * as records from "./records.js";
@@ -15,7 +11,7 @@ const listeners = [];
 const controller = new RequestController(notify, updateTab);
 let notifier;
 
-browser.storage.local.get().then(async options => {
+browser.storage.local.get().then(async (options) => {
     notifier = await getNotifier();
     init(options);
     browser.storage.onChanged.addListener(onChanged);
@@ -60,9 +56,9 @@ function addListeners(rules) {
             let urls = createMatchPatterns(data.pattern);
             let filter = {
                 urls: urls,
-                types: data.types
+                types: data.types,
             };
-            let listener = request => {
+            let listener = (request) => {
                 controller.mark(request, rule);
             };
             browser.webRequest.onBeforeRequest.addListener(listener, filter);
@@ -71,11 +67,7 @@ function addListeners(rules) {
             notifier.error(null, browser.i18n.getMessage("error_invalid_rule"));
         }
     }
-    browser.webRequest.onBeforeRequest.addListener(
-        controlListener,
-        { urls: [ALL_URLS] },
-        ["blocking"]
-    );
+    browser.webRequest.onBeforeRequest.addListener(controlListener, { urls: [ALL_URLS] }, ["blocking"]);
 }
 
 function controlListener(request) {
@@ -84,17 +76,18 @@ function controlListener(request) {
 
 function updateTab(tabId, url) {
     return browser.tabs.update(tabId, {
-        url: url
+        url: url,
     });
 }
 
 function notify(rule, request, target = null) {
     let count = records.add(request.tabId, {
+        action: rule.constructor.action,
         type: request.type,
         url: request.url,
         target: target,
         timestamp: request.timeStamp,
-        rule: rule
+        rule: rule,
     });
     notifier.notify(request.tabId, rule, count);
 }

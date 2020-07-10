@@ -14,3 +14,4 @@ export class SecureRule extends ControlRule {
 }
 
 SecureRule.icon = "/icons/icon-secure.svg";
+SecureRule.action = "secure";

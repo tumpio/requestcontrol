@@ -14,3 +14,4 @@ export class BlockRule extends ControlRule {
 }
 
 BlockRule.icon = "/icons/icon-block.svg";
+BlockRule.action = "block";

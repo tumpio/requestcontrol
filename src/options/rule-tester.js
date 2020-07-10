@@ -54,14 +54,13 @@ function testRule(rule, testUrl) {
             redirectUrl = rule.apply(testUrl);
             try {
                 new URL(redirectUrl);
-                if (redirectUrl !== testUrl) {
-                    return redirectUrl;
-                } else {
-                    return browser.i18n.getMessage("matched_no_change");
-                }
             } catch (e) {
                 return browser.i18n.getMessage("invalid_target_url") + redirectUrl;
             }
+            if (redirectUrl === testUrl) {
+                return browser.i18n.getMessage("matched_no_change");
+            }
+            return redirectUrl;
         case CompositeRule:
             redirectUrl = rule.rules.reduce((url, r) => {
                 let change = r.apply(url);
@@ -72,14 +71,13 @@ function testRule(rule, testUrl) {
             }, testUrl);
             try {
                 new URL(redirectUrl);
-                if (redirectUrl !== testUrl) {
-                    return redirectUrl;
-                } else {
-                    return browser.i18n.getMessage("matched_no_change");
-                }
             } catch (e) {
                 return browser.i18n.getMessage("invalid_target_url") + redirectUrl;
             }
+            if (redirectUrl === testUrl) {
+                return browser.i18n.getMessage("matched_no_change");
+            }
+            return redirectUrl;
         case SecureRule:
             return browser.i18n.getMessage("upgraded_to_secure");
         default:

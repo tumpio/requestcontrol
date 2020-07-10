@@ -10,13 +10,14 @@ import { parseInlineUrl, trimQueryParameters, UrlParser } from "../url.js";
 export class FilterRule extends BaseRedirectRule {
     constructor({
         uuid,
+        tag,
         paramsFilter = null,
         trimAllParams = false,
         skipRedirectionFilter = false,
         skipOnSameDomain = false,
         redirectDocument = false
     } = {}, matcher) {
-        super({ uuid, redirectDocument }, matcher);
+        super({ uuid, tag, redirectDocument }, matcher);
         this.queryParamsPattern = (paramsFilter) ? createRegexpPattern(paramsFilter.values) : null;
         this.invertQueryTrimming = (paramsFilter) ? paramsFilter.invert : false;
         this.removeQueryString = trimAllParams;
@@ -52,3 +53,4 @@ export class FilterRule extends BaseRedirectRule {
 }
 
 FilterRule.icon = "/icons/icon-filter.svg";
+FilterRule.action = "filter";

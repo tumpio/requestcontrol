@@ -3,64 +3,56 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/src/options/badges.css" />
-    <link rel="stylesheet" href="browser-action.css" />
-    <script type="module" src="/src/options/lib/i18n.js"></script>
-    <script type="module" src="browser-action.js"></script>
-  </head>
-  <body>
-    <div class="content">
-      <div id="records" class="hidden"></div>
-      <div class="header">
-        <label id="showRules" class="btn" data-i18n="options_title"></label>
-        <label id="toggleActive" class="btn"></label>
-      </div>
-    </div>
-    <div id="details" class="hidden">
-      <div class="text-shortcut">
-        <button
-          class="copyButton tooltip"
-          data-copy-target="url"
-          data-i18n-title="copy_to_clipboard"
-        >
-          <img src="/icons/firefox/copy.svg" width="20" />
-          <span class="tooltiptext" data-i18n="copied"></span>
-        </button>
-      </div>
-      <small data-i18n="request_url"></small>
-      <pre id="url"></pre>
-      <div id="targetBlock" class="hidden">
-        <div class="text-shortcut">
-          <button
-            class="copyButton tooltip"
-            data-copy-target="target"
-            data-i18n-title="copy_to_clipboard"
-          >
-            <img src="/icons/firefox/copy.svg" width="20" />
-            <span class="tooltiptext" data-i18n="copied"></span>
-          </button>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/src/options/badges.css" />
+        <link rel="stylesheet" href="browser-action.css" />
+        <script defer type="module" src="/src/options/lib/i18n.js"></script>
+        <script defer type="module" src="browser-action.js"></script>
+    </head>
+    <body>
+        <div class="content">
+            <div id="records" class="hidden"></div>
+            <div class="header">
+                <label id="showRules" class="btn" data-i18n="options_title"></label>
+                <label id="toggleActive" class="btn"></label>
+            </div>
         </div>
-        <small data-i18n="new_target"></small>
-        <pre id="target"></pre>
-      </div>
-      <a id="editLink" href="" data-i18n="edit_rule"></a>
-    </div>
-    <template id="entryTemplate">
-      <div class="entry">
-        <div class="entry-header">
-          <small class="timestamp"></small>
-          <img class="icon" src="/icons/icon.svg" height="16" />
-          <span class="action"></span>
-          <span class="url"></span>
-          <div>
-            <label class="tags badge badge-light"></label>
-            <label class="type badge badge-info"></label>
-          </div>
+        <div id="details" class="hidden">
+            <div class="text-shortcut">
+                <button class="copyButton tooltip" data-copy-target="url" data-i18n-title="copy_to_clipboard">
+                    <img src="/icons/firefox/copy.svg" width="20" />
+                    <span class="tooltiptext" data-i18n="copied"></span>
+                </button>
+            </div>
+            <small data-i18n="request_url"></small>
+            <pre id="url"></pre>
+            <div id="targetBlock" class="hidden">
+                <div class="text-shortcut">
+                    <button class="copyButton tooltip" data-copy-target="target" data-i18n-title="copy_to_clipboard">
+                        <img src="/icons/firefox/copy.svg" width="20" />
+                        <span class="tooltiptext" data-i18n="copied"></span>
+                    </button>
+                </div>
+                <small data-i18n="new_target"></small>
+                <pre id="target"></pre>
+            </div>
+            <a id="editLink" href="" data-i18n="edit_rule"></a>
         </div>
-      </div>
-    </template>
-  </body>
+        <template id="entryTemplate">
+            <div class="entry">
+                <div class="entry-header">
+                    <small class="timestamp"></small>
+                    <img class="icon" src="/icons/icon.svg" height="16" />
+                    <span class="action"></span>
+                    <span class="url"></span>
+                    <div>
+                        <label class="tags badge badge-light"></label>
+                        <label class="type badge badge-info"></label>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </body>
 </html>

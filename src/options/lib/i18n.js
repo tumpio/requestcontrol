@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-
 /**
  * i18n WebExt-API HTML document translator
  * Translates nodes marked with dataset (data-i18n, data-i18n-title, data-i18n-placeholder)
@@ -10,18 +9,20 @@
  * @param documentNode
  */
 export function translateDocument(documentNode) {
-    let textNodes = documentNode.querySelectorAll("[data-i18n]");
-    let titleNodes = documentNode.querySelectorAll("[data-i18n-title]");
-    let placeholderNodes = documentNode.querySelectorAll("[data-i18n-placeholder]");
-
-    for (let node of textNodes) {
+    documentNode.querySelectorAll("[data-i18n]").forEach((node) => {
         node.textContent = browser.i18n.getMessage(node.dataset.i18n);
-    }
-    for (let node of titleNodes) {
+    });
+    documentNode.querySelectorAll("[data-i18n-title]").forEach((node) => {
         node.title = browser.i18n.getMessage(node.dataset.i18nTitle);
-    }
-    for (let node of placeholderNodes) {
+    });
+    documentNode.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
         node.placeholder = browser.i18n.getMessage(node.dataset.i18nPlaceholder);
+    });
+}
+
+export function translateTemplates() {
+    for (let template of document.getElementsByTagName("template")) {
+        translateDocument(template.content);
     }
 }
 

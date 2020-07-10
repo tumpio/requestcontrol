@@ -76,11 +76,8 @@
       }
     }
   },
-  "rule_description_filter_url": {
+  "rule_description_filter": {
     "message": "Filtra el redireccionamiento de URL"
-  },
-  "rule_description_filter_parameters": {
-    "message": "Recorta parámetros de URL"
   },
   "rule_description_block": {
     "message": "Bloquea peticiones antes de que se efectúen."
@@ -99,9 +96,6 @@
   },
   "any_url": {
     "message": "Cualquier URL"
-  },
-  "and": {
-    "message": "$1 y $2"
   },
   "activate_false": {
     "message": "Deshabilitar"

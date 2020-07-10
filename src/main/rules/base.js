@@ -3,8 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 export class ControlRule {
-    constructor({ uuid }, matcher) {
+    constructor({ uuid, tag }, matcher) {
         this.uuid = uuid;
+        this.tag = tag;
         this.matcher = matcher;
     }
 

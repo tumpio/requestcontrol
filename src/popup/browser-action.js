@@ -2,99 +2,65 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { OptionsManager } from "../options/lib/OptionsManager.js";
+document.addEventListener("DOMContentLoaded", async function () {
+    const { disabled } = await browser.storage.local.get("disabled");
 
-const myOptionsManager = new OptionsManager();
+    updateDisabled(disabled === true);
 
-document.addEventListener("DOMContentLoaded", function () {
-    myOptionsManager.loadOptions().then(function () {
-        if (myOptionsManager.options.disabled) {
-            setEnabled(false);
-            return Promise.reject("");
-        } else {
-            return browser.runtime.sendMessage(null);
-        }
-    }).then(records => {
-        setEnabled(true);
-        if (myOptionsManager.options.rules) {
-            setRecords(records);
-        }
-        let copyButtons = document.getElementsByClassName("copyButton");
-        for (let copyButton of copyButtons) {
-            copyButton.addEventListener("click", copyText);
-            copyButton.addEventListener("mouseleave", copied);
-        }
-    });
+    if (disabled === true) {
+        return;
+    }
+
+    for (const copyButton of document.getElementsByClassName("copyButton")) {
+        copyButton.addEventListener("click", copyText);
+        copyButton.addEventListener("mouseleave", copied);
+    }
 
     document.getElementById("showRules").addEventListener("click", openOptionsPage);
     document.getElementById("toggleActive").addEventListener("click", toggleActive);
     document.getElementById("editLink").addEventListener("click", editRule);
+
+    getRecords();
 });
 
-function setRecords(records) {
+async function getRecords() {
+    const records = await browser.runtime.sendMessage(null);
+
     if (!records) {
         return;
     }
 
-    let list = document.getElementById("records");
+    const list = document.getElementById("records");
 
-    for (let record of records) {
-        list.prepend(newListItem(record));
-    }
+    records.forEach((record) => list.prepend(newListItem(record)));
 
     list.querySelector(".entry:first-child .entry-header").click();
     document.getElementById("records").classList.remove("hidden");
 }
 
-function getRule(uuid) {
-    for (let rule of myOptionsManager.options.rules) {
-        if (rule.uuid === uuid) {
-            return rule;
-        }
-    }
-    return null;
-}
-
 function newListItem(record) {
-    let rule = getRule(record.rule.uuid);
-    let item = document.getElementById("entryTemplate").content.cloneNode(true);
+    const item = document.getElementById("entryTemplate").content.cloneNode(true);
+
     item.querySelector(".type").textContent = browser.i18n.getMessage(record.type);
     item.querySelector(".timestamp").textContent = timestamp(record.timestamp);
-    item.querySelector(".icon").src = `/icons/icon-${rule.action}.svg`;
-    item.querySelector(".action").textContent = browser.i18n.getMessage(`title_${rule.action}`);
+    item.querySelector(".icon").src = `/icons/icon-${record.action}.svg`;
+    item.querySelector(".action").textContent = browser.i18n.getMessage(`title_${record.action}`);
     item.querySelector(".url").textContent = record.url;
 
-    let tagsNode = item.querySelector(".tags");
-    if (rule.tag) {
-        tagsNode.textContent = decodeURIComponent(rule.tag);
+    const tagsNode = item.querySelector(".tags");
+
+    if (record.rule.tag) {
+        tagsNode.textContent = decodeURIComponent(record.rule.tag);
     } else {
-        tagsNode.parentNode.removeChild(tagsNode);
+        tagsNode.remove();
     }
 
     item.querySelector(".entry-header").addEventListener("click", function () {
-        let details = document.getElementById("details");
+        const details = document.getElementById("details");
         this.parentNode.appendChild(details);
         showDetails(record);
     });
     return item;
-}
-
-function timestamp(ms) {
-    let d = new Date(ms);
-    return padDigit(d.getHours(), 2) +
-        ":" + padDigit(d.getMinutes(), 2) +
-        ":" + padDigit(d.getSeconds(), 2) +
-        "." + padDigit(d.getMilliseconds(), 3);
-}
-
-function padDigit(digit, padSize) {
-    let str = digit.toString();
-    let pad = padSize - str.length;
-    if (pad > 0) {
-        return "0".repeat(pad) + str;
-    } else {
-        return str;
-    }
 }
 
 function showDetails(details) {
@@ -110,11 +76,62 @@ function showDetails(details) {
         browser.runtime.getURL("src/options/options.html") + `?edit=${details.rule.uuid}`;
 }
 
+function openOptionsPage() {
+    browser.runtime.openOptionsPage();
+    window.close();
+}
+
+async function toggleActive() {
+    const disabled = !this.classList.contains("disabled");
+    await browser.storage.local.set({ disabled });
+    updateDisabled(disabled);
+}
+
+function updateDisabled(disabled) {
+    const button = document.getElementById("toggleActive");
+    const textId = disabled ? "activate_true" : "activate_false";
+    const titleId = disabled ? "enable_rules" : "disable_rules";
+    button.classList.toggle("disabled", disabled);
+    button.textContent = browser.i18n.getMessage(textId);
+    button.title = browser.i18n.getMessage(titleId);
+}
+
+function editRule(e) {
+    e.preventDefault();
+    browser.tabs.create({
+        url: this.href,
+    });
+    window.close();
+}
+
+function timestamp(ms) {
+    const d = new Date(ms);
+    return (
+        padDigit(d.getHours(), 2) +
+        ":" +
+        padDigit(d.getMinutes(), 2) +
+        ":" +
+        padDigit(d.getSeconds(), 2) +
+        "." +
+        padDigit(d.getMilliseconds(), 3)
+    );
+}
+
+function padDigit(digit, padSize) {
+    const str = digit.toString();
+    const pad = padSize - str.length;
+    if (pad > 0) {
+        return "0".repeat(pad) + str;
+    } else {
+        return str;
+    }
+}
+
 function copyText(e) {
-    let range = document.createRange();
-    let text = document.getElementById(e.currentTarget.dataset.copyTarget);
+    const range = document.createRange();
+    const text = document.getElementById(e.currentTarget.dataset.copyTarget);
     range.selectNodeContents(text);
-    let selection = window.getSelection();
+    const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
     document.execCommand("Copy");
@@ -123,31 +140,4 @@ function copyText(e) {
 
 function copied(e) {
     e.currentTarget.classList.remove("copied");
-}
-
-function openOptionsPage() {
-    browser.runtime.openOptionsPage();
-    window.close();
-}
-
-function toggleActive() {
-    myOptionsManager.saveOption("disabled", !myOptionsManager.options.disabled);
-    setEnabled(!myOptionsManager.options.disabled);
-}
-
-function setEnabled(enabled) {
-    let button = document.getElementById("toggleActive");
-    let textId = enabled ? "activate_false" : "activate_true";
-    let titleId = enabled ? "disable_rules" : "enable_rules";
-    button.classList.toggle("disabled", !enabled);
-    button.textContent = browser.i18n.getMessage(textId);
-    button.title = browser.i18n.getMessage(titleId);
-}
-
-function editRule(e) {
-    e.preventDefault();
-    browser.tabs.create({
-        url: this.href
-    });
-    window.close();
 }

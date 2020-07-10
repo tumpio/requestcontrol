@@ -10,9 +10,10 @@ export class BaseRedirectRule extends ControlRule {
     constructor(
         {
             uuid,
+            tag,
             redirectDocument = false
         } = {}, matcher) {
-        super({ uuid }, matcher);
+        super({ uuid, tag }, matcher);
         this.redirectDocument = redirectDocument;
     }
 
@@ -39,10 +40,11 @@ export class RedirectRule extends BaseRedirectRule {
     constructor(
         {
             uuid,
+            tag,
             redirectUrl = "",
             redirectDocument = false
         } = {}, matcher) {
-        super({ uuid, redirectDocument }, matcher);
+        super({ uuid, tag, redirectDocument }, matcher);
         let [parsedUrl, instructions] = parseRedirectInstructions(redirectUrl);
         let patterns = parseRedirectParameters(parsedUrl);
         this.instructions = instructions;
@@ -66,6 +68,7 @@ export class RedirectRule extends BaseRedirectRule {
 }
 
 RedirectRule.icon = "/icons/icon-redirect.svg";
+RedirectRule.action = "redirect";
 
 class RedirectInstruction {
     constructor(name, patterns) {

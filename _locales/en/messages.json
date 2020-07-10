@@ -107,17 +107,14 @@
       }
     }
   },
-  "rule_description_filter_url": {
-    "message": "Filter redirection requests"
-  },
-  "rule_description_filter_parameters": {
-    "message": "Trim query parameters"
+  "rule_description_filter": {
+    "message": "Skip redirection requests or trim query parameters"
   },
   "rule_description_block": {
     "message": "Cancel requests before they are made."
   },
   "rule_description_redirect": {
-    "message": "Redirect rule to $URL$",
+    "message": "Redirect request to $URL$",
     "placeholders": {
       "url": {
         "content": "$1",
@@ -133,9 +130,6 @@
   },
   "any_url": {
     "message": "All URLs"
-  },
-  "and": {
-    "message": "$1 and $2"
   },
   "activate_false": {
     "message": "Disable"

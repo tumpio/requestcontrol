@@ -72,12 +72,8 @@
         },
         "hash": "52a8903b73e536e803ffc463683d4de8"
     },
-    "rule_description_filter_url": {
+    "rule_description_filter": {
         "message": "过滤 URL 重定向"
-    },
-    "rule_description_filter_parameters": {
-        "message": "削减 URL 参数",
-        "hash": "5b99ed4986c195f42c03b9ca155e32ef"
     },
     "rule_description_block": {
         "message": "在请求发出前拦截。",
@@ -96,10 +92,6 @@
     "any_url": {
         "message": "任何 URL",
         "hash": "c8089e50fca0eddba46f1bc7238d73ee"
-    },
-    "and": {
-        "message": "$1 和 $2",
-        "hash": "e16c0dbaab8bcbc3ae6e6739411779f5"
     },
     "activate_false": {
         "message": "禁用",

@@ -40,6 +40,7 @@
     "eslint-plugin-promise": "latest",
     "eslint-plugin-standard": "latest",
     "jest": "^25.5.4",
+    "jshint": "^2.11.1",
     "web-ext": "^4.3.0"
   },
   "babel": {
@@ -76,7 +77,7 @@
     },
     "parserOptions": {
       "sourceType": "module",
-      "ecmaVersion": 2019
+      "ecmaVersion": 11
     },
     "plugins": [
       "jest",
@@ -103,5 +104,8 @@
       ],
       "no-prototype-builtins": "off"
     }
+  },
+  "jshintConfig": {
+    "esversion": 11
   }
 }
