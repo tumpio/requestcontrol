@@ -7,9 +7,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     updateDisabled(disabled === true);
 
-    if (disabled === true) {
-        return;
-    }
 
     for (const copyButton of document.getElementsByClassName("copyButton")) {
         copyButton.addEventListener("click", copyText);
@@ -20,7 +17,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("toggleActive").addEventListener("click", toggleActive);
     document.getElementById("editLink").addEventListener("click", editRule);
 
-    getRecords();
+    if (disabled !== true) {
+        getRecords();
+    }
 });
 
 async function getRecords() {
