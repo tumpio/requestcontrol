@@ -1,0 +1,179 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+.d-none {
+    display: none !important;
+}
+
+.v-hidden {
+    visibility: hidden;
+}
+
+.c {
+    padding-top: 0;
+    padding-bottom: 0;
+    max-width: 70em;
+}
+
+hr {
+    border-color: var(--light);
+    border-width: 1px;
+    border-bottom: none;
+}
+
+code {
+    color: brown;
+}
+
+.card {
+    border-width: 2px;
+}
+
+.card:focus {
+    border-color: #3d7e9a;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid transparent;
+    cursor: pointer;
+    padding: 0.4em 0.5em;
+    text-transform: initial;
+    letter-spacing: initial;
+    font-size: 0.9em;
+    border-radius: 2px;
+    vertical-align: middle;
+    background: #e6e6e6;
+    color: rgb(12, 12, 13);
+}
+
+.btn:disabled,
+a.disabled {
+    opacity: 0.6;
+    cursor: default;
+    pointer-events: none;
+}
+
+.btn-danger {
+    background: #ff3d33;
+    border-color: #ff3d33;
+    color: white;
+}
+
+.btn.primary {
+    background: var(--primary-color);
+    border: none;
+    font-weight: bold;
+}
+
+.rule.disabled .btn-activate {
+    background: green;
+    border-color: green;
+    color: white;
+}
+
+.btn.active {
+    border-color: #3d7e9a;
+}
+
+.btn > img {
+    margin-right: 0.5em;
+}
+
+.btn > .badge {
+    margin-left: 0.5em;
+}
+
+.btn > span {
+    margin: 0;
+}
+
+form .btn:not(button) {
+    border: none;
+    padding: 0;
+    background: none;
+    color: black;
+}
+
+form .btn > input {
+    margin-right: 0.5em;
+}
+
+form .card,
+form .tags-input,
+form .card:focus {
+    border: 1px solid #ccc;
+    background: white;
+    padding: 0.2em;
+    font-size: 0.9em;
+    border-radius: 2px;
+}
+
+form select.scheme,
+form select.scheme:focus {
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+}
+
+form .row {
+    border-spacing: 0;
+}
+
+.rule-input-area .row {
+    margin-bottom: 0.3em !important;
+}
+
+.form-header {
+    font-weight: bold;
+    margin-bottom: 0.3em !important;
+}
+
+input:not(:checked):not(:hover) + .icon {
+    filter: grayscale(100%);
+}
+
+input:disabled + span {
+    opacity: 0.4;
+}
+
+pre {
+    padding: 0.6em;
+    border-width: 1px;
+}
+
+.collapse-button:hover {
+    cursor: pointer;
+    color: #343a40;
+    -moz-user-select: none;
+}
+
+.collapse-button:before {
+    content: "";
+    display: inline-block;
+    border-left: 0.4em solid transparent;
+    border-right: 0.4em solid transparent;
+    border-top: 0.4em solid #343a40;
+    border-bottom: none;
+    vertical-align: super;
+    margin-right: 0.3em;
+}
+
+.collapse-button.collapsed:before {
+    border-left: 0.4em solid transparent;
+    border-right: 0.4em solid transparent;
+    border-top: none;
+    border-bottom: 0.4em solid #343a40;
+}
+
+.collapse-button.plus:before {
+    content: "+";
+    border: none;
+    vertical-align: baseline;
+    font-weight: bold;
+}
+
+.collapse-button.plus.collapsed:before {
+    content: "-";
+}

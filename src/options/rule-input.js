@@ -133,8 +133,10 @@ class RuleInput {
             this.model.dispatchEvent(
                 new CustomEvent("rule-edit-completed", {
                     bubbles: true,
+                    composed: true,
                     detail: {
                         action: this.rule.action,
+                        input: this,
                     },
                 })
             );
@@ -230,11 +232,15 @@ class RuleInput {
     }
 
     onCreate() {
+        if (!this.isValid()) {
+            this.reportValidity();
+            return;
+        }
         this.model.dispatchEvent(
             new CustomEvent("rule-created", {
                 bubbles: true,
+                composed: true,
                 detail: {
-                    input: this,
                     rule: this.rule,
                 },
             })
@@ -242,15 +248,13 @@ class RuleInput {
     }
 
     onChange(e) {
-        try {
-            this.updateRule();
-        } finally {
-            this.updateHeader();
-        }
+        this.updateRule();
+        this.updateHeader();
+
         if (e.target.classList.contains("action")) {
             this.onActionChange();
         } else {
-            this.notifyChanged();
+            this.notifyChangedIfValid();
         }
     }
 
@@ -258,6 +262,7 @@ class RuleInput {
         this.model.dispatchEvent(
             new CustomEvent("rule-action-changed", {
                 bubbles: true,
+                composed: true,
                 detail: {
                     input: this,
                 },
@@ -269,6 +274,7 @@ class RuleInput {
         this.model.dispatchEvent(
             new CustomEvent("rule-deleted", {
                 bubbles: true,
+                composed: true,
                 detail: {
                     uuid: this.rule.uuid,
                 },
@@ -375,14 +381,24 @@ class RuleInput {
         this.model.dispatchEvent(
             new CustomEvent("rule-selected", {
                 bubbles: true,
+                composed: true,
             })
         );
+    }
+
+    notifyChangedIfValid() {
+        if (!this.isValid()) {
+            this.notifyInvalid();
+        } else {
+            this.notifyChanged();
+        }
     }
 
     notifyChanged() {
         this.model.dispatchEvent(
             new CustomEvent("rule-changed", {
                 bubbles: true,
+                composed: true,
                 detail: {
                     rule: this.rule,
                     input: this,
@@ -391,8 +407,20 @@ class RuleInput {
         );
     }
 
+    notifyInvalid() {
+        this.model.dispatchEvent(
+            new CustomEvent("rule-invalid", {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    input: this,
+                },
+            })
+        );
+    }
+
     isValid() {
-        if (!this.$(".rule-input").reportValidity()) {
+        if (!this.$(".rule-input").checkValidity()) {
             return false;
         }
         try {
@@ -400,7 +428,13 @@ class RuleInput {
         } catch {
             return false;
         }
+        this.model.classList.remove("error");
         return true;
+    }
+
+    reportValidity() {
+        this.model.classList.toggle("error", this.isValid());
+        this.$(".rule-input").reportValidity();
     }
 
     setType(value, bool) {
@@ -544,7 +578,10 @@ class RuleInput {
             delete this.rule.types;
         }
 
-        this.rule.action = this.$(".action:checked").value;
+        const action = this.$(".action:checked");
+        if (action) {
+            this.rule.action = action.value;
+        }
     }
 }
 

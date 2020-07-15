@@ -5,14 +5,14 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/lib/lit/lit.css" />
-        <link rel="stylesheet" href="../util/tags-input/src/tags-input.css" />
+        <link rel="stylesheet" href="common.css" />
         <link rel="stylesheet" href="options.css" />
-        <link rel="stylesheet" href="../util/badges.css" />
-        <script defer src="../util/tab.js"></script>
-        <script defer src="../util/modal.js"></script>
-        <script defer src="../util/collapse.js"></script>
-        <script defer type="module" src="../util/i18n.js"></script>
-        <script defer type="module" src="options.js"></script>
+        <script src="../util/tab.js"></script>
+        <script src="../util/modal.js"></script>
+        <script src="../util/collapse.js"></script>
+        <script type="module" src="../util/i18n.js"></script>
+        <script type="module" src="rule-list.js"></script>
+        <script type="module" src="options.js"></script>
         <title data-i18n="options_title"></title>
     </head>
 
@@ -45,65 +45,22 @@
                 </div>
             </div>
             <div id="rulesTab" class="tab-pane active">
-                <div class="rules-block d-none">
-                    <div class="header-rules">
-                        <input type="checkbox" class="select-all-rules" autocomplete="off" />
-                        <img src="/icons/icon-filter.svg" alt="" height="16" />
-                        <span data-i18n="filter_rules"></span>
-                        <small class="selected-rules-count d-none"></small>
-                        <a class="collapse-button" data-collapse-target="#filter"></a>
-                    </div>
-                    <ul id="filter" class="rule-list"></ul>
-                </div>
-                <div class="rules-block d-none">
-                    <div class="header-rules">
-                        <input type="checkbox" class="select-all-rules" autocomplete="off" />
-                        <img src="/icons/icon-redirect.svg" alt="" height="16" />
-                        <span data-i18n="redirect_rules"></span>
-                        <small class="selected-rules-count d-none"></small>
-                        <a class="collapse-button" data-collapse-target="#redirect"></a>
-                    </div>
-                    <ul id="redirect" class="rule-list"></ul>
-                </div>
-                <div class="rules-block d-none">
-                    <div class="header-rules">
-                        <input type="checkbox" class="select-all-rules" autocomplete="off" />
-                        <img src="/icons/icon-secure.svg" alt="" height="16" />
-                        <span data-i18n="secure_rules"></span>
-                        <small class="selected-rules-count d-none"></small>
-                        <a class="collapse-button" data-collapse-target="#secure"></a>
-                    </div>
-                    <ul id="secure" class="rule-list"></ul>
-                </div>
-                <div class="rules-block d-none">
-                    <div class="header-rules">
-                        <input type="checkbox" class="select-all-rules" autocomplete="off" />
-                        <img src="/icons/icon-block.svg" alt="" height="16" />
-                        <span data-i18n="block_rules"></span>
-                        <small class="selected-rules-count d-none"></small>
-                        <a class="collapse-button" data-collapse-target="#block"></a>
-                    </div>
-                    <ul id="block" class="rule-list"></ul>
-                </div>
-                <div class="rules-block d-none">
-                    <div class="header-rules">
-                        <input type="checkbox" class="select-all-rules" autocomplete="off" />
-                        <img src="/icons/icon-whitelist.svg" alt="" height="16" />
-                        <span data-i18n="whitelist_rules"></span>
-                        <small class="selected-rules-count d-none"></small>
-                        <a class="collapse-button" data-collapse-target="#whitelist"></a>
-                    </div>
-                    <ul id="whitelist" class="rule-list"></ul>
-                </div>
-                <div class="rules-block d-none">
-                    <div class="header-rules">
-                        <input type="checkbox" class="select-all-rules" autocomplete="off" />
-                        <span data-i18n="new_rules"></span>
-                        <small class="selected-rules-count d-none"></small>
-                        <a class="collapse-button" data-collapse-target="#newRules"></a>
-                    </div>
-                    <ul id="newRules" class="rule-list"></ul>
-                </div>
+                <rule-list id="filter" icon="/icons/icon-filter.svg" text="filter_rules" class="d-none"></rule-list>
+                <rule-list
+                    id="redirect"
+                    icon="/icons/icon-redirect.svg"
+                    text="redirect_rules"
+                    class="d-none"
+                ></rule-list>
+                <rule-list id="secure" icon="/icons/icon-secure.svg" text="secure_rules" class="d-none"></rule-list>
+                <rule-list id="block" icon="/icons/icon-block.svg" text="block_rules" class="d-none"></rule-list>
+                <rule-list
+                    id="whitelist"
+                    icon="/icons/icon-whitelist.svg"
+                    text="whitelist_rules"
+                    class="d-none"
+                ></rule-list>
+                <rule-list id="new" text="new_rules" class="d-none"></rule-list>
                 <div class="toolbar">
                     <button id="addNewRule" class="btn">
                         <img src="/icons/ionicons/android-add.svg" width="16" />
@@ -112,7 +69,7 @@
                     <div class="mobile-toolbar">
                         <button
                             id="testSelectedRules"
-                            class="btn btn-selected-rules-action"
+                            class="btn btn-selected-action"
                             disabled="disabled"
                             autocomplete="off"
                             data-toggle="modal"
@@ -120,31 +77,31 @@
                         >
                             <img src="/icons/ionicons/shuffle.svg" width="16" />
                             <span data-i18n="test_selected"></span>
-                            <span class="badge badge-light total-selected-count">0</span>
+                            <span class="badge badge-light selected-count">0</span>
                         </button>
                         <button
                             id="exportSelectedRules"
-                            class="btn btn-selected-rules-action"
+                            class="btn btn-selected-action"
                             disabled="disabled"
                             autocomplete="off"
                         >
                             <img src="/icons/ionicons/code-download.svg" width="16" />
                             <span data-i18n="export_selected"></span>
-                            <span class="badge badge-light total-selected-count">0</span>
+                            <span class="badge badge-light selected-count">0</span>
                         </button>
                         <button
                             id="removeSelectedRules"
-                            class="btn btn-danger btn-selected-rules-action"
+                            class="btn btn-danger btn-selected-action"
                             disabled="disabled"
                             autocomplete="off"
                         >
                             <img src="/icons/ionicons/android-delete.svg" width="16" />
                             <span data-i18n="remove_selected"></span>
-                            <span class="badge badge-light total-selected-count">0</span>
+                            <span class="badge badge-light selected-count">0</span>
                         </button>
                     </div>
                     <button id="selectedRules" class="btn">
-                        <span class="total-selected-count">0</span>
+                        <span class="selected-count">0</span>
                         <span data-i18n="selected_rules"></span>
                     </button>
                 </div>
@@ -575,6 +532,23 @@
                         <span data-i18n="log_whitelisted_requests"></span>
                     </label>
                 </div>
+            </div>
+        </template>
+        <template id="rule-list">
+            <link rel="stylesheet" href="/lib/lit/lit.css" />
+            <link rel="stylesheet" href="../util/tags-input/src/tags-input.css" />
+            <link rel="stylesheet" href="../util/badges.css" />
+            <link rel="stylesheet" href="common.css" />
+            <link rel="stylesheet" href="rule-list.css" />
+            <div class="container">
+                <div class="header">
+                    <input class="select-all" type="checkbox" autocomplete="off" />
+                    <img id="icon" alt="" height="16" />
+                    <span id="title"></span>
+                    <small class="selected-text d-none"></small>
+                    <a class="collapse-button"></a>
+                </div>
+                <ul class="list"></ul>
             </div>
         </template>
     </body>
