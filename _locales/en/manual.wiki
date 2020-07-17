@@ -99,9 +99,6 @@ Filter matched requests by the type of request. The type indicates the requested
 | XMLHttpRequest
 | Indicates a request made by an XMLHttpRequest (xhr) or by Fetch API.
 |-
-| XBL
-| Indicates an XBL binding request.
-|-
 | XSLT
 | Indicates an XSLT style sheet transformation for an XML document.
 |-

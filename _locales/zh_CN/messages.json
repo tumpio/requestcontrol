@@ -141,10 +141,6 @@
         "message": "XMLHttpRequest",
         "hash": "72e53ea15498d6caea3c9bf304783914"
     },
-    "xbl": {
-        "message": "XBL",
-        "hash": "5b54207cdcd87839f9526dcf35e3ce69"
-    },
     "xslt": {
         "message": "XSLT",
         "hash": "f75a36287dc9adaf111dbff21158c4fa"

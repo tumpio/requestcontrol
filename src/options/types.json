@@ -15,9 +15,8 @@
   "sub_frame": 1,
   "web_manifest": 15,
   "websocket": 13,
-  "xbl": 17,
-  "xml_dtd": 18,
+  "xml_dtd": 17,
   "xmlhttprequest": 14,
-  "xslt": 19,
-  "other": 20
+  "xslt": 18,
+  "other": 19
 }

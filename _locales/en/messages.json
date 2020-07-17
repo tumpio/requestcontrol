@@ -167,9 +167,6 @@
   "xmlhttprequest": {
     "message": "XMLHttpRequest"
   },
-  "xbl": {
-    "message": "XBL"
-  },
   "xslt": {
     "message": "XSLT"
   },

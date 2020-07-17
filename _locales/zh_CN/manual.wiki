@@ -121,9 +121,6 @@ A type indicates the requested resource. Rule can apply from one to many types, 
 | XMLHttpRequest
 | Indicates an XMLHttpRequest.
 |-
-| XBL
-| Indicates an XBL binding request.
-|-
 | XSLT
 | Indicates a style sheet transformation.
 |-

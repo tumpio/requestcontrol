@@ -121,9 +121,6 @@ Un tipo indica el recurso solicitado. Una regla se puede aplicar de uno a muchos
 | XMLHttpRequest
 | Indica una petición HTTP de XML. (XMLHttpRequest)
 |-
-| XBL
-| Indica una petición de vinculado (binding) XBL.
-|-
 | XSLT
 | Indica una transformación de hoja de estilo
 |-
