@@ -16,6 +16,11 @@ body {
     color: var(--text-color);
 }
 
+#rulesTab * + * {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 #settingsTab h3 {
     margin: 0;
 }
@@ -238,9 +243,24 @@ body {
     }
 }
 
+@media (min-width: 35em) {
+    rule-list {
+        display: block;
+        border: 1px solid #d4d4d4;
+        background: white;
+        border-radius: 0.15rem;
+        margin-bottom: 1.3em !important;
+        box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+    }
+}
+
 @media (max-width: 35em) {
     body {
         margin: 0;
+    }
+
+    rule-list {
+        margin-bottom: 1.3em !important;
     }
 
     #tabs {

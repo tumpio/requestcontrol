@@ -20,90 +20,89 @@ export function newRuleInput(
         active: true,
     }
 ) {
-    const template = document.getElementById("ruleInput");
-    const model = template.content.cloneNode(true).querySelector(".rule");
-
+    let input;
     switch (rule.action) {
         case "filter":
-            return new FilterRuleInput(rule, model);
+            input = new FilterRuleInput();
+            break;
         case "block":
-            return new BlockRuleInput(rule, model);
+            input = new BlockRuleInput();
+            break;
         case "redirect":
-            return new RedirectRuleInput(rule, model);
+            input = new RedirectRuleInput();
+            break;
         case "whitelist":
-            return new WhitelistRuleInput(rule, model);
+            input = new WhitelistRuleInput();
+            break;
         case "secure":
-            return new SecureRuleInput(rule, model);
+            input = new SecureRuleInput();
+            break;
         default:
-            return new RuleInput(rule, model);
+            input = new RuleInput();
     }
+    input.id = rule.uuid;
+    input.dataset.uuid = rule.uuid;
+    input.rule = rule;
+    input.classList.add("not-edited");
+    input.spellcheck = false;
+    return input;
 }
 
-class RuleInput {
-    constructor(rule, model) {
-        this.rule = rule;
-        this.model = model;
-        this.model.id = "rule-" + rule.uuid;
-        this.model.dataset.uuid = rule.uuid;
-        this.model.input = this;
+const getIsMobile = (() => browser.runtime.getBrowserInfo().then((info) => info.name === "Fennec"))();
 
-        this.hostsTagsInput = new TagsInput(this.$(".host"));
-        this.pathsTagsInput = new TagsInput(this.$(".path"));
-        this.tldsTagsInput = new TagsInput(this.$(".input-tlds"));
-        this.includesTagsInput = new TagsInput(this.$(".input-includes"));
-        this.excludesTagsInput = new TagsInput(this.$(".input-excludes"));
+class RuleInput extends HTMLElement {
+    constructor() {
+        super();
+        const template = document.getElementById("rule-input");
+        this.attachShadow({ mode: "open" }).appendChild(template.content.cloneNode(true));
+        const root = this.shadowRoot;
 
-        this.$(".title").addEventListener("keydown", this.onEnterKey.bind(this));
-        this.$(".title").addEventListener("blur", this.onSetTitle.bind(this));
-        this.$(".description").addEventListener("keydown", this.onEnterKey.bind(this));
-        this.$(".description").addEventListener("blur", this.onSetDescription.bind(this));
-        this.$(".tag").addEventListener("keydown", this.onEnterKey.bind(this));
-        this.$(".tag").addEventListener("blur", this.onSetTag.bind(this));
-        this.$(".add-tag").addEventListener("click", this.onAddTag.bind(this));
-        this.$(".select").addEventListener("change", this.onSelect.bind(this));
-        this.$(".btn-activate").addEventListener("click", this.toggleActive.bind(this));
-        this.$(".host").addEventListener("change", this.validateTLDPattern.bind(this));
-        this.$(".any-url").addEventListener("change", this.onSelectAnyUrl.bind(this));
-        this.$(".collapse-url-matchers").addEventListener("click", this.toggleMatchers.bind(this));
-        this.$(".btn-group-types").addEventListener("change", onToggleButtonChange, false);
-        this.$(".btn-group-types").addEventListener("change", this.sortTypes.bind(this), false);
-        this.$(".more-types").addEventListener("change", this.onShowMoreTypes.bind(this), false);
-        this.$(".any-type").addEventListener("change", this.onSelectAnyType.bind(this));
-        this.$(".btn-tlds").addEventListener("click", this.toggleTLDs.bind(this));
-        this.$(".input-tlds").addEventListener("change", this.onSetTLDs.bind(this));
-        this.$(".rule-input").addEventListener("change", this.onChange.bind(this));
-        this.$(".btn-delete").addEventListener("click", this.onDelete.bind(this));
-        this.$(".btn-create").addEventListener("click", this.onCreate.bind(this));
-        this.$$(".toggle-edit").forEach((edit) => edit.addEventListener("click", this.toggleEdit.bind(this)));
+        this.hostsTagsInput = new TagsInput(root.getElementById("host"));
+        this.pathsTagsInput = new TagsInput(root.getElementById("path"));
+        this.tldsTagsInput = new TagsInput(root.getElementById("tlds"));
+        this.includesTagsInput = new TagsInput(root.getElementById("includes"));
+        this.excludesTagsInput = new TagsInput(root.getElementById("excludes"));
 
-        browser.runtime.getBrowserInfo().then((info) => {
-            if (info.name === "Fennec") {
-                this.$(".rule-header").addEventListener("click", this.onHeaderClick.bind(this));
+        root.getElementById("title").addEventListener("keydown", this.onEnterKey.bind(this));
+        root.getElementById("title").addEventListener("blur", this.onSetTitle.bind(this));
+        root.getElementById("description").addEventListener("keydown", this.onEnterKey.bind(this));
+        root.getElementById("description").addEventListener("blur", this.onSetDescription.bind(this));
+        root.getElementById("tag").addEventListener("keydown", this.onEnterKey.bind(this));
+        root.getElementById("tag").addEventListener("blur", this.onSetTag.bind(this));
+        root.getElementById("add-tag").addEventListener("click", this.onAddTag.bind(this));
+        root.getElementById("select").addEventListener("change", this.onSelect.bind(this));
+        root.getElementById("activate").addEventListener("click", this.toggleActive.bind(this));
+        root.getElementById("host").addEventListener("change", this.validateTLDPattern.bind(this));
+        root.getElementById("any-url").addEventListener("change", this.onSelectAnyUrl.bind(this));
+        root.getElementById("collapse-matchers").addEventListener("click", this.toggleMatchers.bind(this));
+        root.getElementById("types").addEventListener("change", onToggleButtonChange, false);
+        root.getElementById("types").addEventListener("change", this.sortTypes.bind(this), false);
+        root.getElementById("more-types").addEventListener("change", this.onShowMoreTypes.bind(this), false);
+        root.getElementById("any-type").addEventListener("change", this.onSelectAnyType.bind(this));
+        root.getElementById("collapse-tlds").addEventListener("click", this.toggleTLDs.bind(this));
+        root.getElementById("tlds").addEventListener("change", this.onSetTLDs.bind(this));
+        root.getElementById("form").addEventListener("change", this.onChange.bind(this));
+        root.getElementById("delete").addEventListener("click", this.onDelete.bind(this));
+        root.getElementById("create").addEventListener("click", this.onCreate.bind(this));
+        this.shadowRoot
+            .querySelectorAll(".toggle-edit")
+            .forEach((edit) => edit.addEventListener("click", this.toggleEdit.bind(this)));
+
+        getIsMobile.then((isMobile) => {
+            if (isMobile) {
+                this.shadowRoot.getElementById("header").addEventListener("click", this.onHeaderClick.bind(this));
             } else {
-                this.$(".title").addEventListener("click", this.onHeaderTitleClick.bind(this));
+                this.shadowRoot.getElementById("title").addEventListener("click", this.onHeaderTitleClick.bind(this));
             }
         });
-
-        if (this.rule.action) {
-            const actions = document.getElementById("actions-" + this.rule.action);
-            if (actions) {
-                this.$(".rule-input").appendChild(actions.content.cloneNode(true));
-            }
-        }
-
-        this.updateHeader();
     }
 
-    $(selector) {
-        return this.model.querySelector(selector);
-    }
-
-    $$(selector) {
-        return this.model.querySelectorAll(selector);
+    focus() {
+        this.shadowRoot.getElementById("host").focus();
     }
 
     toggleSaved() {
-        const input = this.model;
+        const input = this;
         input.classList.add("saved");
         setTimeout(function () {
             input.classList.remove("saved");
@@ -117,20 +116,20 @@ class RuleInput {
     }
 
     toggleEdit() {
-        toggleHidden(this.$(".rule-input-area"));
-        if (this.model.classList.toggle("editing")) {
-            this.$(".title").setAttribute("contenteditable", true);
-            this.$(".description").setAttribute("contenteditable", true);
-            this.$(".tag").setAttribute("contenteditable", true);
-            if (this.model.classList.contains("not-edited")) {
-                this.model.classList.remove("not-edited");
+        toggleHidden(this.shadowRoot.getElementById("input-area"));
+        if (this.classList.toggle("editing")) {
+            this.shadowRoot.getElementById("title").setAttribute("contenteditable", true);
+            this.shadowRoot.getElementById("description").setAttribute("contenteditable", true);
+            this.shadowRoot.getElementById("tag").setAttribute("contenteditable", true);
+            if (this.classList.contains("not-edited")) {
+                this.classList.remove("not-edited");
                 this.updateInputs();
             }
         } else {
-            this.$(".title").removeAttribute("contenteditable");
-            this.$(".description").removeAttribute("contenteditable");
-            this.$(".tag").removeAttribute("contenteditable");
-            this.model.dispatchEvent(
+            this.shadowRoot.getElementById("title").removeAttribute("contenteditable");
+            this.shadowRoot.getElementById("description").removeAttribute("contenteditable");
+            this.shadowRoot.getElementById("tag").removeAttribute("contenteditable");
+            this.dispatchEvent(
                 new CustomEvent("rule-edit-completed", {
                     bubbles: true,
                     composed: true,
@@ -144,29 +143,55 @@ class RuleInput {
     }
 
     toggleMatchers() {
-        toggleHidden(this.$(".group-url-matchers"));
-        this.$(".collapse-url-matchers").classList.toggle("collapsed");
+        toggleHidden(this.shadowRoot.getElementById("matchers"));
+        this.shadowRoot.getElementById("collapse-matchers").classList.toggle("collapsed");
     }
 
     toggleTLDs() {
-        toggleHidden(this.$(".tlds-block"));
-        this.$(".btn-tlds").classList.toggle("collapsed");
+        toggleHidden(this.shadowRoot.getElementById("tlds-area"));
+        this.shadowRoot.getElementById("collapse-tlds").classList.toggle("collapsed");
     }
 
     validateTLDPattern() {
-        const isTldsPattern = !this.$(".any-url").checked && this.hostsTagsInput.value.some(isTLDHostPattern);
-        toggleHidden(!isTldsPattern, this.$(".form-group-tlds"));
+        const isTldsPattern =
+            !this.shadowRoot.getElementById("any-url").checked && this.hostsTagsInput.value.some(isTLDHostPattern);
+        toggleHidden(!isTldsPattern, this.shadowRoot.getElementById("tlds-form"));
         this.tldsTagsInput.disabled = !isTldsPattern;
         if (isTldsPattern) {
             if (this.tldsTagsInput.value.length === 0) {
-                this.$(".btn-tlds").classList.add("text-danger");
-                this.$(".btn-tlds").parentNode.classList.add("has-error");
-                toggleHidden(!isTldsPattern, this.$(".tlds-block"));
+                this.shadowRoot.getElementById("collapse-tlds").classList.add("text-danger");
+                this.shadowRoot.getElementById("collapse-tlds").parentNode.classList.add("has-error");
+                toggleHidden(!isTldsPattern, this.shadowRoot.getElementById("tlds-area"));
             }
         }
     }
 
+    set rule(rule) {
+        this._rule = rule;
+        this.updateHeader();
+    }
+
+    get rule() {
+        return this._rule;
+    }
+
     get title() {
+        if (this._ctitle) {
+            return this._ctitle;
+        }
+        let title;
+        if (this.rule.title) {
+            title = decodeURIComponent(this.rule.title);
+        } else if (this.rule.name) {
+            title = decodeURIComponent(this.rule.name);
+        } else {
+            title = this.defaultTitle;
+        }
+        this._ctitle = title;
+        return title;
+    }
+
+    get defaultTitle() {
         let hosts = "";
         if (this.rule.pattern.allUrls) {
             hosts = browser.i18n.getMessage("any_url");
@@ -185,6 +210,7 @@ class RuleInput {
     }
 
     set title(str) {
+        this._ctitle = null;
         const title = encodeURIComponent(str.trim());
         if (title) {
             this.rule.title = title;
@@ -197,10 +223,25 @@ class RuleInput {
     }
 
     get description() {
+        if (this._cdescription) {
+            return this._cdescription;
+        }
+        let description;
+        if (this.rule.description) {
+            description = decodeURIComponent(this.rule.description);
+        } else {
+            description = this.defaultDescription;
+        }
+        this._cdescription = description;
+        return description;
+    }
+
+    get defaultDescription() {
         return browser.i18n.getMessage(this.constructor.DESCRIPTION_KEY);
     }
 
     set description(str) {
+        this._cdescription = null;
         const description = encodeURIComponent(str.trim());
         if (description) {
             this.rule.description = description;
@@ -212,15 +253,30 @@ class RuleInput {
     }
 
     set selected(isSelected) {
-        this.model.classList.toggle("selected", isSelected);
-        this.$(".select").checked = isSelected;
+        this.classList.toggle("selected", isSelected);
+        this.shadowRoot.getElementById("select").checked = isSelected;
     }
 
     get selected() {
-        return this.$(".select").checked;
+        return this.shadowRoot.getElementById("select").checked;
     }
 
-    setTag(str) {
+    get tag() {
+        if (this._ctag) {
+            return this._ctag;
+        }
+        let tag;
+        if (this.rule.tag) {
+            tag = decodeURIComponent(this.rule.tag);
+        } else {
+            tag = "";
+        }
+        this._ctag = tag;
+        return tag;
+    }
+
+    set tag(str) {
+        this._ctag = null;
         const tag = encodeURIComponent(str.trim());
         if (tag) {
             this.rule.tag = tag;
@@ -236,7 +292,7 @@ class RuleInput {
             this.reportValidity();
             return;
         }
-        this.model.dispatchEvent(
+        this.dispatchEvent(
             new CustomEvent("rule-created", {
                 bubbles: true,
                 composed: true,
@@ -259,7 +315,7 @@ class RuleInput {
     }
 
     onActionChange() {
-        this.model.dispatchEvent(
+        this.dispatchEvent(
             new CustomEvent("rule-action-changed", {
                 bubbles: true,
                 composed: true,
@@ -271,7 +327,7 @@ class RuleInput {
     }
 
     onDelete() {
-        this.model.dispatchEvent(
+        this.dispatchEvent(
             new CustomEvent("rule-deleted", {
                 bubbles: true,
                 composed: true,
@@ -297,7 +353,7 @@ class RuleInput {
             e.target.tagName !== "INPUT" &&
             !e.target.hasAttribute("contenteditable")
         ) {
-            this.$(".select").click();
+            this.shadowRoot.getElementById("select").click();
         }
     }
 
@@ -327,21 +383,22 @@ class RuleInput {
 
     onAddTag(e) {
         toggleHidden(e.target);
-        this.$(".tag").focus();
+        this.shadowRoot.getElementById("tag").focus();
     }
 
     onSetTag(e) {
-        this.setTag(e.target.textContent);
+        this.tag = e.target.textContent;
     }
 
     onShowMoreTypes(e) {
         e.stopPropagation();
-        const extraTypes = this.$$(".extra-type:not(:checked)");
-        this.$(".more-types").parentNode.querySelector(".text").textContent = browser.i18n.getMessage(
-            "show_more_" + !this.$(".more-types").checked
+        const extraTypes = this.shadowRoot.querySelectorAll(".extra-type:not(:checked)");
+        const moreButton = this.shadowRoot.getElementById("more-types");
+        moreButton.parentNode.querySelector(".text").textContent = browser.i18n.getMessage(
+            "show_more_" + !moreButton.checked
         );
         for (const type of extraTypes) {
-            toggleHidden(!this.$(".more-types").checked, type.parentNode);
+            toggleHidden(!moreButton.checked, type.parentNode);
         }
     }
 
@@ -350,8 +407,8 @@ class RuleInput {
     }
 
     setAnyUrl(enabled) {
-        setButtonChecked(this.$(".any-url"), enabled);
-        toggleHidden(enabled, this.$(".url-wrap"));
+        setButtonChecked(this.shadowRoot.getElementById("any-url"), enabled);
+        toggleHidden(enabled, this.shadowRoot.getElementById("url-area"));
         this.validateTLDPattern();
         this.hostsTagsInput.disabled = enabled;
     }
@@ -361,24 +418,24 @@ class RuleInput {
     }
 
     setAnyType(bool) {
-        setButtonChecked(this.$(".any-type"), bool);
-        toggleHidden(bool, this.$(".btn-group-types"));
+        setButtonChecked(this.shadowRoot.getElementById("any-type"), bool);
+        toggleHidden(bool, this.shadowRoot.getElementById("types"));
         if (bool) {
-            this.$$(".type:checked").forEach((type) => setButtonChecked(type, false));
+            this.shadowRoot.querySelectorAll(".type:checked").forEach((type) => setButtonChecked(type, false));
         }
     }
 
     onSetTLDs() {
         const numberOfTlds = this.tldsTagsInput.value.length;
         const error = numberOfTlds === 0;
-        this.$(".btn-tlds > .badge").textContent = numberOfTlds;
-        this.$(".btn-tlds").classList.toggle("text-danger", error);
-        this.$(".btn-tlds").parentNode.classList.toggle("has-error", error);
+        this.shadowRoot.querySelector("#collapse-tlds > .badge").textContent = numberOfTlds;
+        this.shadowRoot.getElementById("collapse-tlds").classList.toggle("text-danger", error);
+        this.shadowRoot.getElementById("collapse-tlds").parentNode.classList.toggle("has-error", error);
     }
 
     onSelect(e) {
         this.selected = e.target.checked;
-        this.model.dispatchEvent(
+        this.dispatchEvent(
             new CustomEvent("rule-selected", {
                 bubbles: true,
                 composed: true,
@@ -395,7 +452,7 @@ class RuleInput {
     }
 
     notifyChanged() {
-        this.model.dispatchEvent(
+        this.dispatchEvent(
             new CustomEvent("rule-changed", {
                 bubbles: true,
                 composed: true,
@@ -408,7 +465,7 @@ class RuleInput {
     }
 
     notifyInvalid() {
-        this.model.dispatchEvent(
+        this.dispatchEvent(
             new CustomEvent("rule-invalid", {
                 bubbles: true,
                 composed: true,
@@ -420,7 +477,7 @@ class RuleInput {
     }
 
     isValid() {
-        if (!this.$(".rule-input").checkValidity()) {
+        if (!this.shadowRoot.getElementById("form").checkValidity()) {
             return false;
         }
         try {
@@ -428,23 +485,23 @@ class RuleInput {
         } catch {
             return false;
         }
-        this.model.classList.remove("error");
+        this.classList.remove("error");
         return true;
     }
 
     reportValidity() {
-        this.model.classList.toggle("error", this.isValid());
-        this.$(".rule-input").reportValidity();
+        this.classList.toggle("error", !this.isValid());
+        this.shadowRoot.getElementById("form").reportValidity();
     }
 
     setType(value, bool) {
-        const type = this.$(".type[value=" + value + "]");
+        const type = this.shadowRoot.querySelector(".type[value=" + value + "]");
         setButtonChecked(type, bool);
         toggleHidden(false, type.parentNode);
     }
 
     sortTypes() {
-        const list = this.$(".btn-group-types");
+        const list = this.shadowRoot.getElementById("types");
         let sorting = true;
         let i, types, swap;
         while (sorting) {
@@ -469,42 +526,43 @@ class RuleInput {
     }
 
     updateHeader() {
-        const title = decodeURIComponent(this.rule.title || this.rule.name || this.title);
-        const description = decodeURIComponent(this.rule.description || this.description);
-        const tag = decodeURIComponent(this.rule.tag || "");
-        this.model.setAttribute("data-type", this.rule.action);
-        this.$(".title").textContent = title;
-        this.$(".title").title = description;
-        this.$(".description").textContent = description;
-        this.$(".tag").textContent = tag;
-        this.$(".tag-badge").textContent = tag;
-        this.$(".count-patterns").textContent = browser.i18n.getMessage("count_patterns", [
+        this.setAttribute("data-type", this.rule.action);
+        this.shadowRoot.getElementById("title").textContent = this.title;
+        this.shadowRoot.getElementById("title").title = this.description;
+        this.shadowRoot.getElementById("description").textContent = this.description;
+        this.shadowRoot.getElementById("tag").textContent = this.tag;
+        this.shadowRoot.getElementById("tag-badge").textContent = this.tag;
+        this.shadowRoot.getElementById("patterns-badge").textContent = browser.i18n.getMessage("count_patterns", [
             createMatchPatterns(this.rule.pattern).length,
         ]);
         if (!this.rule.types) {
-            this.$(".count-types").textContent = browser.i18n.getMessage("any");
+            this.shadowRoot.getElementById("types-badge").textContent = browser.i18n.getMessage("any");
         } else if (this.rule.types.length === 1) {
-            this.$(".count-types").textContent = browser.i18n.getMessage(this.rule.types[0]);
+            this.shadowRoot.getElementById("types-badge").textContent = browser.i18n.getMessage(this.rule.types[0]);
         } else {
-            this.$(".count-types").textContent = browser.i18n.getMessage("count_types", [this.rule.types.length]);
+            this.shadowRoot.getElementById("types-badge").textContent = browser.i18n.getMessage("count_types", [
+                this.rule.types.length,
+            ]);
         }
-        toggleHidden(tag.length === 0, this.$(".tag-badge").parentNode);
-        toggleHidden(tag.length > 0, this.$(".add-tag"));
+        toggleHidden(this.tag.length === 0, this.shadowRoot.getElementById("tag-badge").parentNode);
+        toggleHidden(this.tag.length > 0, this.shadowRoot.getElementById("add-tag"));
         this.updateActiveState();
     }
 
     updateActiveState() {
-        this.model.classList.toggle("disabled", !this.rule.active);
-        this.$(".btn-activate").textContent = browser.i18n.getMessage("activate_" + !this.rule.active);
+        this.classList.toggle("disabled", !this.rule.active);
+        this.shadowRoot.getElementById("activate").textContent = browser.i18n.getMessage(
+            "activate_" + !this.rule.active
+        );
     }
 
     updateInputs() {
-        this.$(".scheme").value = this.rule.pattern.scheme || "*";
+        this.shadowRoot.getElementById("scheme").value = this.rule.pattern.scheme || "*";
         this.hostsTagsInput.value = this.rule.pattern.host;
         this.pathsTagsInput.value = this.rule.pattern.path;
 
         if (this.rule.action) {
-            setButtonChecked(this.$(".action[value=" + this.rule.action + "]"), true);
+            setButtonChecked(this.shadowRoot.querySelector(".action[value=" + this.rule.action + "]"), true);
         }
 
         if (this.rule.pattern.topLevelDomains) {
@@ -521,7 +579,10 @@ class RuleInput {
         }
 
         if (this.rule.pattern.origin) {
-            setButtonChecked(this.$(".origin-matcher[value=" + this.rule.pattern.origin + "]"), true);
+            setButtonChecked(
+                this.shadowRoot.querySelector(".origin-matcher[value=" + this.rule.pattern.origin + "]"),
+                true
+            );
         }
 
         if (!this.rule.types || this.rule.types.length === 0) {
@@ -538,10 +599,10 @@ class RuleInput {
     }
 
     updateRule() {
-        if (this.$(".any-url").checked) {
+        if (this.shadowRoot.getElementById("any-url").checked) {
             this.rule.pattern.allUrls = true;
         } else {
-            this.rule.pattern.scheme = this.$(".scheme").value;
+            this.rule.pattern.scheme = this.shadowRoot.getElementById("scheme").value;
             this.rule.pattern.host = this.hostsTagsInput.value;
             this.rule.pattern.path = this.pathsTagsInput.value;
             if (this.rule.pattern.host.some(isTLDHostPattern)) {
@@ -552,7 +613,7 @@ class RuleInput {
 
         const includes = this.includesTagsInput.value;
         const excludes = this.excludesTagsInput.value;
-        const origin = this.$(".origin-matcher:checked");
+        const origin = this.shadowRoot.querySelector(".origin-matcher:checked");
 
         if (includes.length > 0) {
             this.rule.pattern.includes = includes;
@@ -572,55 +633,61 @@ class RuleInput {
             delete this.rule.pattern.origin;
         }
 
-        this.rule.types = Array.from(this.$$(".type:checked"), (type) => type.value);
+        this.rule.types = Array.from(this.shadowRoot.querySelectorAll(".type:checked"), (type) => type.value);
 
-        if (this.rule.types.length === 0 || this.$(".any-type").checked) {
+        if (this.rule.types.length === 0 || this.shadowRoot.getElementById("any-type").checked) {
             delete this.rule.types;
         }
 
-        const action = this.$(".action:checked");
+        const action = this.shadowRoot.querySelector(".action:checked");
         if (action) {
             this.rule.action = action.value;
         }
     }
 }
 
-class BlockRuleInput extends RuleInput {
-    constructor(rule, model) {
-        super(rule, model);
-    }
-}
+class BlockRuleInput extends RuleInput {}
 
 class SecureRuleInput extends RuleInput {
-    constructor(rule, model) {
-        super(rule, model);
+    constructor() {
+        super();
+        this.shadowRoot.getElementById("scheme").disabled = true;
+        this.shadowRoot.getElementById("any-url").disabled = true;
+    }
+
+    set rule(rule) {
         rule.pattern.scheme = "http";
         delete rule.pattern.allUrls;
-        this.$(".scheme").disabled = true;
-        this.$(".any-url").disabled = true;
+        super.rule = rule;
+    }
+
+    get rule() {
+        return super.rule;
     }
 
     onActionChange() {
-        this.$(".scheme").disabled = false;
-        this.$(".any-url").disabled = false;
+        this.shadowRoot.getElementById("scheme").disabled = false;
+        this.shadowRoot.getElementById("any-url").disabled = false;
         super.onActionChange();
     }
 }
 
 class WhitelistRuleInput extends RuleInput {
-    constructor(rule, model) {
-        super(rule, model);
-        this.$(".log-whitelist-toggle").addEventListener("change", onToggleButtonChange);
+    constructor() {
+        super();
+        const actions = document.getElementById("actions-whitelist");
+        this.shadowRoot.getElementById("form").appendChild(actions.content.cloneNode(true));
+        this.shadowRoot.getElementById("log-whitelist").addEventListener("change", onToggleButtonChange);
     }
 
     updateInputs() {
         super.updateInputs();
-        setButtonChecked(this.$(".log-whitelist-toggle"), this.rule.log === true);
+        setButtonChecked(this.shadowRoot.getElementById("log-whitelist"), this.rule.log === true);
     }
 
     updateRule() {
         super.updateRule();
-        if (this.$(".log-whitelist-toggle").checked) {
+        if (this.shadowRoot.getElementById("log-whitelist").checked) {
             this.rule.log = true;
         } else {
             delete this.rule.log;
@@ -629,19 +696,14 @@ class WhitelistRuleInput extends RuleInput {
 }
 
 class BaseRedirectRuleInput extends RuleInput {
-    constructor(rule, model) {
-        super(rule, model);
-        this.$(".redirect-document").addEventListener("change", onToggleButtonChange);
-    }
-
     updateInputs() {
         super.updateInputs();
-        setButtonChecked(this.$(".redirect-document"), this.rule.redirectDocument);
+        setButtonChecked(this.shadowRoot.getElementById("redirect-document"), this.rule.redirectDocument);
     }
 
     updateRule() {
         super.updateRule();
-        if (this.$(".redirect-document").checked) {
+        if (this.shadowRoot.getElementById("redirect-document").checked) {
             this.rule.redirectDocument = true;
         } else {
             delete this.rule.redirectDocument;
@@ -650,43 +712,47 @@ class BaseRedirectRuleInput extends RuleInput {
 }
 
 class FilterRuleInput extends BaseRedirectRuleInput {
-    constructor(rule, model) {
-        super(rule, model);
-        this.paramsTagsInput = new TagsInput(this.$(".input-params"));
-        this.$(".trim-all-params").addEventListener("change", this.onToggleTrimAll.bind(this));
-        this.$(".invert-trim").addEventListener("change", onToggleButtonChange);
-        this.$(".filter-toggle").addEventListener("change", this.onToggleFilter.bind(this));
-        this.$(".filter-skip-within-same-domain-toggle").addEventListener("change", onToggleButtonChange);
+    constructor() {
+        super();
+        const actions = document.getElementById("actions-filter");
+        this.shadowRoot.getElementById("form").appendChild(actions.content.cloneNode(true));
+
+        this.paramsTagsInput = new TagsInput(this.shadowRoot.getElementById("input-params"));
+        this.shadowRoot.getElementById("trim-all-params").addEventListener("change", this.onToggleTrimAll.bind(this));
+        this.shadowRoot.getElementById("invert-trim").addEventListener("change", onToggleButtonChange);
+        this.shadowRoot.getElementById("filter-redirection").addEventListener("change", this.onToggleFilter.bind(this));
+        this.shadowRoot.getElementById("skip-same-domain").addEventListener("change", onToggleButtonChange);
+        this.shadowRoot.getElementById("redirect-document").addEventListener("change", onToggleButtonChange);
     }
 
     onToggleTrimAll(e) {
         setButtonChecked(e.target, e.target.checked);
-        toggleHidden(e.target.checked, this.$(".col-trim-parameters"));
+        toggleHidden(e.target.checked, this.shadowRoot.getElementById("trim-parameters"));
     }
 
     onToggleFilter(e) {
         const checked = e.target.checked;
         setButtonChecked(e.target, checked);
-        setButtonDisabled(this.$(".filter-skip-within-same-domain-toggle"), !checked);
+        setButtonDisabled(this.shadowRoot.getElementById("skip-same-domain"), !checked);
         if (!checked) {
-            setButtonChecked(this.$(".filter-skip-within-same-domain-toggle"), false);
+            setButtonChecked(this.shadowRoot.getElementById("skip-same-domain"), false);
         }
     }
 
     updateInputs() {
         super.updateInputs();
-        setButtonChecked(this.$(".filter-toggle"), !this.rule.skipRedirectionFilter);
-        setButtonChecked(this.$(".filter-skip-within-same-domain-toggle"), this.rule.skipOnSameDomain);
-        setButtonDisabled(this.$(".filter-skip-within-same-domain-toggle"), this.rule.skipRedirectionFilter);
+        setButtonChecked(this.shadowRoot.getElementById("filter-redirection"), !this.rule.skipRedirectionFilter);
+        setButtonChecked(this.shadowRoot.getElementById("skip-same-domain"), this.rule.skipOnSameDomain);
+        setButtonDisabled(this.shadowRoot.getElementById("skip-same-domain"), this.rule.skipRedirectionFilter);
         if (this.rule.paramsFilter && Array.isArray(this.rule.paramsFilter.values)) {
             this.paramsTagsInput.value = this.rule.paramsFilter.values;
             if (this.rule.paramsFilter.invert) {
-                setButtonChecked(this.$(".invert-trim"), true);
+                setButtonChecked(this.shadowRoot.getElementById("invert-trim"), true);
             }
         }
         if (this.rule.trimAllParams) {
-            setButtonChecked(this.$(".trim-all-params"), true);
-            toggleHidden(true, this.$(".col-trim-parameters"));
+            setButtonChecked(this.shadowRoot.getElementById("trim-all-params"), true);
+            toggleHidden(true, this.shadowRoot.getElementById("trim-parameters"));
         }
     }
 
@@ -695,7 +761,7 @@ class FilterRuleInput extends BaseRedirectRuleInput {
         this.rule.paramsFilter = {};
         this.rule.paramsFilter.values = this.paramsTagsInput.value;
         if (this.rule.paramsFilter.values.length > 0) {
-            if (this.$(".invert-trim").checked) {
+            if (this.shadowRoot.getElementById("invert-trim").checked) {
                 this.rule.paramsFilter.invert = true;
             } else {
                 delete this.rule.paramsFilter.invert;
@@ -703,17 +769,17 @@ class FilterRuleInput extends BaseRedirectRuleInput {
         } else {
             delete this.rule.paramsFilter;
         }
-        if (this.$(".filter-toggle").checked) {
+        if (this.shadowRoot.getElementById("filter-redirection").checked) {
             delete this.rule.skipRedirectionFilter;
         } else {
             this.rule.skipRedirectionFilter = true;
         }
-        if (this.$(".filter-skip-within-same-domain-toggle").checked) {
+        if (this.shadowRoot.getElementById("skip-same-domain").checked) {
             this.rule.skipOnSameDomain = true;
         } else {
             delete this.rule.skipOnSameDomain;
         }
-        if (this.$(".trim-all-params").checked) {
+        if (this.shadowRoot.getElementById("trim-all-params").checked) {
             this.rule.trimAllParams = true;
         } else {
             delete this.rule.trimAllParams;
@@ -722,29 +788,33 @@ class FilterRuleInput extends BaseRedirectRuleInput {
 }
 
 class RedirectRuleInput extends BaseRedirectRuleInput {
-    constructor(rule, model) {
-        super(rule, model);
+    constructor() {
+        super();
+        const actions = document.getElementById("actions-redirect");
+        this.shadowRoot.getElementById("form").appendChild(actions.content.cloneNode(true));
+
+        this.shadowRoot.getElementById("redirect-document").addEventListener("change", onToggleButtonChange);
     }
 
-    get title() {
+    get defaultTitle() {
         return browser.i18n.getMessage("rule_title_redirect_to", [
-            super.title,
+            super.defaultTitle,
             encodeURIComponent(this.rule.redirectUrl),
         ]);
     }
 
-    get description() {
+    get defaultDescription() {
         return browser.i18n.getMessage("rule_description_redirect", encodeURIComponent(this.rule.redirectUrl));
     }
 
     updateInputs() {
         super.updateInputs();
-        this.$(".redirectUrl").value = this.rule.redirectUrl || "";
+        this.shadowRoot.getElementById("redirect-url").value = this.rule.redirectUrl || "";
     }
 
     updateRule() {
         super.updateRule();
-        this.rule.redirectUrl = this.$(".redirectUrl").value;
+        this.rule.redirectUrl = this.shadowRoot.getElementById("redirect-url").value;
     }
 }
 
@@ -759,3 +829,10 @@ WhitelistRuleInput.DESCRIPTION_KEY = "rule_description_whitelist";
 FilterRuleInput.TITLE_KEY = "rule_title_filter";
 FilterRuleInput.DESCRIPTION_KEY = "rule_description_filter";
 RedirectRuleInput.TITLE_KEY = "rule_title_redirect";
+
+customElements.define("filter-rule-input", FilterRuleInput);
+customElements.define("redirect-rule-input", RedirectRuleInput);
+customElements.define("secure-rule-input", SecureRuleInput);
+customElements.define("block-rule-input", BlockRuleInput);
+customElements.define("whitelist-rule-input", WhitelistRuleInput);
+customElements.define("new-rule-input", RuleInput);

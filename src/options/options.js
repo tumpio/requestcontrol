@@ -256,7 +256,7 @@ async function fetchTypes() {
         mode: "same-origin",
     });
     const types = await response.json();
-    const template = document.getElementById("ruleInput");
+    const template = document.getElementById("rule-input");
     const typesContainer = template.content.querySelector(".btn-group-types");
     const sorted = [];
 

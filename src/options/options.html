@@ -182,285 +182,267 @@
                 <div class="modal-body"></div>
             </div>
         </div>
-        <template id="ruleInput">
-            <li class="rule not-edited" spellcheck="false">
-                <div class="rule-header">
-                    <div class="rule-select">
-                        <input type="checkbox" class="select" autocomplete="off" />
+        <template id="rule-input">
+            <link rel="stylesheet" href="/lib/lit/lit.css" />
+            <link rel="stylesheet" href="../util/tags-input/src/tags-input.css" />
+            <link rel="stylesheet" href="../util/badges.css" />
+            <link rel="stylesheet" href="common.css" />
+            <link rel="stylesheet" href="rule-input.css" />
+            <div id="header" class="rule-header">
+                <div class="rule-select">
+                    <input id="select" type="checkbox" autocomplete="off" />
+                </div>
+                <div class="rule-header-title">
+                    <div class="title-wrap">
+                        <small class="badge edit-label" data-i18n="name"></small>
+                        <label id="title" class="title" data-i18n="new_rule"></label>
                     </div>
-                    <div class="rule-header-title">
-                        <div class="title-wrap">
-                            <small class="badge edit-label" data-i18n="name"></small>
-                            <label class="title" data-i18n="new_rule"></label>
-                        </div>
-                        <div class="description-wrap">
-                            <small class="badge edit-label" data-i18n="description"></small>
-                            <small class="description"></small>
-                        </div>
-                        <div class="tag-wrap">
-                            <small class="badge edit-label" data-i18n="tag"></small>
-                            <button type="button" class="badge add-tag" data-i18n="add_tag"></button>
-                            <small class="tag"></small>
-                        </div>
+                    <div class="description-wrap">
+                        <small class="badge edit-label" data-i18n="description"></small>
+                        <small id="description" class="description"></small>
                     </div>
-                    <div class="header-info-wrap">
-                        <div class="information">
-                            <label class="badge badge-light">
-                                <span class="tag-badge"></span>
-                            </label>
-                            <label class="badge badge-info">
-                                <span class="count-types"></span>
-                            </label>
-                            <label class="badge badge-dark">
-                                <span class="count-patterns"></span>
-                            </label>
-                        </div>
-                        <div class="rule-header-buttons">
-                            <button class="btn btn-edit toggle-edit" data-i18n="edit"></button>
-                            <button class="btn btn-activate" data-i18n="disable"></button>
-                        </div>
+                    <div class="tag-wrap">
+                        <small class="badge edit-label" data-i18n="tag"></small>
+                        <button id="add-tag" type="button" class="badge add-tag" data-i18n="add_tag"></button>
+                        <small id="tag" class="tag"></small>
                     </div>
                 </div>
-                <div class="rule-input-area d-none">
-                    <form class="rule-input c">
-                        <small class="form-header" data-i18n="pattern"></small>
-                        <div class="row">
-                            <div class="form-wrap">
-                                <div class="url-wrap">
-                                    <div class="form-group-pattern">
+                <div class="header-info-wrap">
+                    <div class="information">
+                        <label class="badge badge-light">
+                            <span id="tag-badge" class="tag-badge"></span>
+                        </label>
+                        <label class="badge badge-info">
+                            <span id="types-badge" class="count-types"></span>
+                        </label>
+                        <label class="badge badge-dark">
+                            <span id="patterns-badge" class="count-patterns"></span>
+                        </label>
+                    </div>
+                    <div class="rule-header-buttons">
+                        <button class="btn btn-edit toggle-edit" data-i18n="edit"></button>
+                        <button id="activate" class="btn btn-activate" data-i18n="disable"></button>
+                    </div>
+                </div>
+            </div>
+            <div id="input-area" class="d-none">
+                <form id="form" class="rule-input c">
+                    <small class="form-header" data-i18n="pattern"></small>
+                    <div class="row">
+                        <div class="form-wrap">
+                            <div id="url-area" class="url-wrap">
+                                <div class="form-group-pattern">
+                                    <div>
+                                        <small data-i18n="scheme"></small>
                                         <div>
-                                            <small data-i18n="scheme"></small>
-                                            <div>
-                                                <select class="scheme card">
-                                                    <option value="http">http</option>
-                                                    <option value="https">https</option>
-                                                    <option value="*" selected>http/https</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <small data-i18n="host"></small>
-                                            <input
-                                                type="text"
-                                                class="host"
-                                                data-i18n-placeholder="host_placeholder"
-                                                spellcheck="false"
-                                                data-separator=", "
-                                                required="required"
-                                            />
-                                        </div>
-                                        <div>
-                                            <small data-i18n="path"></small>
-                                            <input
-                                                type="text"
-                                                class="path"
-                                                data-i18n-placeholder="path_placeholder"
-                                                spellcheck="false"
-                                                data-separator=" "
-                                            />
+                                            <select id="scheme" class="scheme card">
+                                                <option value="http">http</option>
+                                                <option value="https">https</option>
+                                                <option value="*" selected>http/https</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="form-group-tlds d-none">
-                                        <small class="btn-tlds collapse-button plus">
-                                            <span data-i18n="top_level_domains"></span>
-                                            <span class="badge badge-dark">0</span>
-                                        </small>
-                                        <div class="tlds-block d-none">
-                                            <input
-                                                type="text"
-                                                class="input-tlds tlds d-none"
-                                                disabled="disabled"
-                                                spellcheck="false"
-                                                autocomplete="off"
-                                                data-i18n-placeholder="tlds_placeholder"
-                                                required="required"
-                                                data-separator=", "
-                                            />
-                                        </div>
+                                    <div>
+                                        <small data-i18n="host"></small>
+                                        <input
+                                            id="host"
+                                            type="text"
+                                            data-i18n-placeholder="host_placeholder"
+                                            spellcheck="false"
+                                            data-separator=", "
+                                            required="required"
+                                        />
+                                    </div>
+                                    <div>
+                                        <small data-i18n="path"></small>
+                                        <input
+                                            id="path"
+                                            type="text"
+                                            data-i18n-placeholder="path_placeholder"
+                                            spellcheck="false"
+                                            data-separator=" "
+                                        />
                                     </div>
                                 </div>
-                                <div class="any-wrap any-url-wrap">
-                                    <label class="btn">
-                                        <input class="any-url" type="checkbox" autocomplete="off" />
-                                        <span data-i18n="any_url"></span>
-                                    </label>
+                                <div id="tlds-form" class="d-none">
+                                    <small id="collapse-tlds" class="collapse-button plus">
+                                        <span data-i18n="top_level_domains"></span>
+                                        <span class="badge badge-dark">0</span>
+                                    </small>
+                                    <div id="tlds-area" class="d-none">
+                                        <input
+                                            id="tlds"
+                                            type="text"
+                                            class="d-none"
+                                            disabled="disabled"
+                                            spellcheck="false"
+                                            autocomplete="off"
+                                            data-i18n-placeholder="tlds_placeholder"
+                                            required="required"
+                                            data-separator=", "
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <small
-                            class="form-header row collapse-url-matchers collapse-button plus"
-                            data-i18n="extra_url_matchers"
-                        ></small>
-                        <div class="row">
-                            <div class="group-url-matchers d-none">
-                                <small data-i18n="includes"></small>
-                                <input
-                                    type="text"
-                                    class="input-includes"
-                                    spellcheck="false"
-                                    autocomplete="off"
-                                    data-separator=""
-                                    data-i18n-placeholder="includes_placeholder"
-                                />
-                                <small data-i18n="excludes"></small>
-                                <input
-                                    type="text"
-                                    class="input-excludes"
-                                    spellcheck="false"
-                                    autocomplete="off"
-                                    data-separator=""
-                                    data-i18n-placeholder="excludes_placeholder"
-                                />
-                                <small data-i18n="match_by_origin"></small>
-                                <div>
-                                    <label class="btn">
-                                        <input
-                                            class="origin-matcher"
-                                            value="any"
-                                            type="radio"
-                                            name="origin-matcher"
-                                            autocomplete="off"
-                                            checked
-                                        />
-                                        <span data-i18n="any"></span>
-                                    </label>
-                                    <label class="btn">
-                                        <input
-                                            class="origin-matcher"
-                                            value="same-domain"
-                                            type="radio"
-                                            name="origin-matcher"
-                                            autocomplete="off"
-                                        />
-                                        <span data-i18n="same_domain"></span>
-                                    </label>
-                                    <label class="btn">
-                                        <input
-                                            class="origin-matcher"
-                                            value="third-party-domain"
-                                            type="radio"
-                                            name="origin-matcher"
-                                            autocomplete="off"
-                                        />
-                                        <span data-i18n="third_party_domain"></span>
-                                    </label>
-                                    <label class="btn">
-                                        <input
-                                            class="origin-matcher"
-                                            value="same-origin"
-                                            type="radio"
-                                            name="origin-matcher"
-                                            autocomplete="off"
-                                        />
-                                        <span data-i18n="same_origin"></span>
-                                    </label>
-                                    <label class="btn">
-                                        <input
-                                            class="origin-matcher"
-                                            value="third-party-origin"
-                                            type="radio"
-                                            name="origin-matcher"
-                                            autocomplete="off"
-                                        />
-                                        <span data-i18n="third_party_origin"></span>
-                                    </label>
-                                </div>
+                            <div class="any-wrap any-url-wrap">
+                                <label class="btn">
+                                    <input id="any-url" type="checkbox" autocomplete="off" />
+                                    <span data-i18n="any_url"></span>
+                                </label>
                             </div>
                         </div>
-                        <small class="form-header row" data-i18n="types"></small>
-                        <div class="row">
-                            <div class="form-wrap">
-                                <div class="btn-group-types">
-                                    <label class="btn">
-                                        <input class="more-types v-hidden" type="checkbox" autocomplete="off" />
-                                        <span class="text" data-i18n="show_more_true"></span>
-                                    </label>
-                                </div>
-                                <div class="any-wrap">
-                                    <label class="btn">
-                                        <input class="any-type" type="checkbox" autocomplete="off" />
-                                        <span data-i18n="any_type"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <small class="form-header" data-i18n="action"></small>
-                        <div class="row">
+                    </div>
+                    <small
+                        id="collapse-matchers"
+                        class="form-header row collapse-button plus"
+                        data-i18n="extra_url_matchers"
+                    ></small>
+                    <div class="row">
+                        <div id="matchers" class="d-none">
+                            <small data-i18n="includes"></small>
+                            <input
+                                id="includes"
+                                type="text"
+                                spellcheck="false"
+                                autocomplete="off"
+                                data-separator=""
+                                data-i18n-placeholder="includes_placeholder"
+                            />
+                            <small data-i18n="excludes"></small>
+                            <input
+                                id="excludes"
+                                type="text"
+                                spellcheck="false"
+                                autocomplete="off"
+                                data-separator=""
+                                data-i18n-placeholder="excludes_placeholder"
+                            />
+                            <small data-i18n="match_by_origin"></small>
                             <div>
                                 <label class="btn">
                                     <input
-                                        class="action"
-                                        value="filter"
+                                        class="origin-matcher"
+                                        value="any"
                                         type="radio"
-                                        name="action"
+                                        name="origin-matcher"
                                         autocomplete="off"
-                                        required
+                                        checked
                                     />
-                                    <img class="icon" src="/icons/icon-filter.svg" height="16" />
-                                    <span data-i18n="filter"></span>
+                                    <span data-i18n="any"></span>
                                 </label>
                                 <label class="btn">
                                     <input
-                                        class="action"
-                                        value="redirect"
+                                        class="origin-matcher"
+                                        value="same-domain"
                                         type="radio"
-                                        name="action"
+                                        name="origin-matcher"
                                         autocomplete="off"
                                     />
-                                    <img class="icon" src="/icons/icon-redirect.svg" height="16" />
-                                    <span data-i18n="redirect"></span>
+                                    <span data-i18n="same_domain"></span>
                                 </label>
                                 <label class="btn">
                                     <input
-                                        class="action"
-                                        value="secure"
+                                        class="origin-matcher"
+                                        value="third-party-domain"
                                         type="radio"
-                                        name="action"
+                                        name="origin-matcher"
                                         autocomplete="off"
                                     />
-                                    <img class="icon" src="/icons/icon-secure.svg" height="16" />
-                                    <span data-i18n="secure"></span>
-                                </label>
-                                <label class="btn">
-                                    <input class="action" value="block" type="radio" name="action" autocomplete="off" />
-                                    <img class="icon" src="/icons/icon-block.svg" height="16" />
-                                    <span data-i18n="block"></span>
+                                    <span data-i18n="third_party_domain"></span>
                                 </label>
                                 <label class="btn">
                                     <input
-                                        class="action"
-                                        value="whitelist"
+                                        class="origin-matcher"
+                                        value="same-origin"
                                         type="radio"
-                                        name="action"
+                                        name="origin-matcher"
                                         autocomplete="off"
                                     />
-                                    <img class="icon" src="/icons/icon-whitelist.svg" height="16" />
-                                    <span data-i18n="whitelist"></span>
+                                    <span data-i18n="same_origin"></span>
+                                </label>
+                                <label class="btn">
+                                    <input
+                                        class="origin-matcher"
+                                        value="third-party-origin"
+                                        type="radio"
+                                        name="origin-matcher"
+                                        autocomplete="off"
+                                    />
+                                    <span data-i18n="third_party_origin"></span>
                                 </label>
                             </div>
                         </div>
-                    </form>
-                    <div class="row rule-input-buttons">
-                        <button class="btn primary btn-done toggle-edit" data-i18n="done"></button>
-                        <button class="btn primary btn-create" data-i18n="create"></button>
-                        <button class="btn btn-danger btn-delete">
-                            <img src="/icons/ionicons/android-delete.svg" width="16" />
-                            <span data-i18n="delete"></span>
-                        </button>
                     </div>
+                    <small class="form-header row" data-i18n="types"></small>
+                    <div class="row">
+                        <div class="form-wrap">
+                            <div id="types" class="btn-group-types">
+                                <label class="btn">
+                                    <input id="more-types" class="v-hidden" type="checkbox" autocomplete="off" />
+                                    <span class="text" data-i18n="show_more_true"></span>
+                                </label>
+                            </div>
+                            <div class="any-wrap">
+                                <label class="btn">
+                                    <input id="any-type" type="checkbox" autocomplete="off" />
+                                    <span data-i18n="any_type"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="form-header" data-i18n="action"></small>
+                    <div class="row">
+                        <div>
+                            <label class="btn">
+                                <input
+                                    class="action"
+                                    value="filter"
+                                    type="radio"
+                                    name="action"
+                                    autocomplete="off"
+                                    required
+                                />
+                                <img class="icon" src="/icons/icon-filter.svg" height="16" />
+                                <span data-i18n="filter"></span>
+                            </label>
+                            <label class="btn">
+                                <input class="action" value="redirect" type="radio" name="action" autocomplete="off" />
+                                <img class="icon" src="/icons/icon-redirect.svg" height="16" />
+                                <span data-i18n="redirect"></span>
+                            </label>
+                            <label class="btn">
+                                <input class="action" value="secure" type="radio" name="action" autocomplete="off" />
+                                <img class="icon" src="/icons/icon-secure.svg" height="16" />
+                                <span data-i18n="secure"></span>
+                            </label>
+                            <label class="btn">
+                                <input class="action" value="block" type="radio" name="action" autocomplete="off" />
+                                <img class="icon" src="/icons/icon-block.svg" height="16" />
+                                <span data-i18n="block"></span>
+                            </label>
+                            <label class="btn">
+                                <input class="action" value="whitelist" type="radio" name="action" autocomplete="off" />
+                                <img class="icon" src="/icons/icon-whitelist.svg" height="16" />
+                                <span data-i18n="whitelist"></span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+                <div class="row rule-input-buttons">
+                    <button class="btn primary btn-done toggle-edit" data-i18n="done"></button>
+                    <button id="create" class="btn primary btn-create" data-i18n="create"></button>
+                    <button id="delete" class="btn btn-danger btn-delete">
+                        <img src="/icons/ionicons/android-delete.svg" width="16" />
+                        <span data-i18n="delete"></span>
+                    </button>
                 </div>
-            </li>
-        </template>
-        <template id="typeButton">
-            <label class="btn">
-                <input class="type" type="checkbox" autocomplete="off" />
-                <span></span>
-            </label>
+            </div>
         </template>
         <template id="actions-redirect">
             <div class="row">
                 <div>
                     <input
+                        id="redirect-url"
                         type="text"
                         class="redirectUrl card w-100"
                         spellcheck="false"
@@ -475,7 +457,7 @@
                 </div>
                 <div>
                     <label class="btn">
-                        <input class="redirect-document" type="checkbox" />
+                        <input id="redirect-document" type="checkbox" />
                         <span data-i18n="redirect_document_on_other_types"></span>
                     </label>
                 </div>
@@ -485,24 +467,24 @@
             <div class="row">
                 <div>
                     <label class="btn">
-                        <input class="filter-toggle" type="checkbox" checked="checked" />
+                        <input id="filter-redirection" type="checkbox" checked="checked" />
                         <span data-i18n="filter_url_redirection"></span>
                     </label>
                     <label class="btn">
-                        <input class="filter-skip-within-same-domain-toggle" type="checkbox" />
+                        <input id="skip-same-domain" type="checkbox" />
                         <span data-i18n="skip_within_same_domain"></span>
                     </label>
                     <label class="btn">
-                        <input class="redirect-document" type="checkbox" />
+                        <input id="redirect-document" type="checkbox" />
                         <span data-i18n="redirect_document_on_other_types"></span>
                     </label>
                 </div>
                 <div>
                     <div class="form-wrap">
-                        <div class="col-trim-parameters">
+                        <div id="trim-parameters" class="col-trim-parameters">
                             <input
+                                id="input-params"
                                 type="text"
-                                class="input-params params"
                                 data-editable-tags="true"
                                 data-separator=""
                                 autocomplete="off"
@@ -510,13 +492,13 @@
                                 data-i18n-placeholder="placeholder_trim_parameters"
                             />
                             <label class="btn">
-                                <input class="invert-trim" type="checkbox" autocomplete="off" />
+                                <input id="invert-trim" type="checkbox" autocomplete="off" />
                                 <span data-i18n="invert_trim"></span>
                             </label>
                         </div>
                         <div class="any-wrap">
                             <label class="btn">
-                                <input class="trim-all-params" type="checkbox" autocomplete="off" />
+                                <input id="trim-all-params" type="checkbox" autocomplete="off" />
                                 <span data-i18n="trim_all"></span>
                             </label>
                         </div>
@@ -528,27 +510,31 @@
             <div class="row">
                 <div>
                     <label class="btn">
-                        <input class="log-whitelist-toggle" type="checkbox" />
+                        <input id="log-whitelist" type="checkbox" />
                         <span data-i18n="log_whitelisted_requests"></span>
                     </label>
                 </div>
             </div>
         </template>
+        <template id="typeButton">
+            <label class="btn">
+                <input class="type" type="checkbox" autocomplete="off" />
+                <span></span>
+            </label>
+        </template>
         <template id="rule-list">
             <link rel="stylesheet" href="/lib/lit/lit.css" />
-            <link rel="stylesheet" href="../util/tags-input/src/tags-input.css" />
-            <link rel="stylesheet" href="../util/badges.css" />
             <link rel="stylesheet" href="common.css" />
             <link rel="stylesheet" href="rule-list.css" />
             <div class="container">
                 <div class="header">
-                    <input class="select-all" type="checkbox" autocomplete="off" />
+                    <input id="select-all" class="select-all" type="checkbox" autocomplete="off" />
                     <img id="icon" alt="" height="16" />
                     <span id="title"></span>
-                    <small class="selected-text d-none"></small>
-                    <a class="collapse-button"></a>
+                    <small id="selected-text" class="d-none"></small>
+                    <a id="collapse" class="collapse-button"></a>
                 </div>
-                <ul class="list"></ul>
+                <ul id="list" class="list"></ul>
             </div>
         </template>
     </body>

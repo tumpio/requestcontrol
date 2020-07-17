@@ -68,12 +68,6 @@ a.disabled {
     font-weight: bold;
 }
 
-.rule.disabled .btn-activate {
-    background: green;
-    border-color: green;
-    color: white;
-}
-
 .btn.active {
     border-color: #3d7e9a;
 }
@@ -88,46 +82,6 @@ a.disabled {
 
 .btn > span {
     margin: 0;
-}
-
-form .btn:not(button) {
-    border: none;
-    padding: 0;
-    background: none;
-    color: black;
-}
-
-form .btn > input {
-    margin-right: 0.5em;
-}
-
-form .card,
-form .tags-input,
-form .card:focus {
-    border: 1px solid #ccc;
-    background: white;
-    padding: 0.2em;
-    font-size: 0.9em;
-    border-radius: 2px;
-}
-
-form select.scheme,
-form select.scheme:focus {
-    padding-top: 0.4em;
-    padding-bottom: 0.4em;
-}
-
-form .row {
-    border-spacing: 0;
-}
-
-.rule-input-area .row {
-    margin-bottom: 0.3em !important;
-}
-
-.form-header {
-    font-weight: bold;
-    margin-bottom: 0.3em !important;
 }
 
 input:not(:checked):not(:hover) + .icon {

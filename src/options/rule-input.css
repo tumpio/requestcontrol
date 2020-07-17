@@ -1,0 +1,296 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+* + * {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+form .btn:not(button) {
+    border: none;
+    padding: 0;
+    background: none;
+    color: black;
+}
+
+form .btn > input {
+    margin-right: 0.5em;
+}
+
+form .card,
+form .tags-input,
+form .card:focus {
+    border: 1px solid #ccc;
+    background: white;
+    padding: 0.2em;
+    font-size: 0.9em;
+    border-radius: 2px;
+}
+
+form select.scheme,
+form select.scheme:focus {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+form .row {
+    border-spacing: 0;
+}
+
+.row {
+    margin-bottom: 0.3em !important;
+}
+
+.form-header {
+    font-weight: bold;
+    margin-bottom: 0.3em !important;
+}
+
+.rule-select {
+    margin: 0 0.8rem;
+    display: flex;
+}
+
+.rule-select > input {
+    margin: 0;
+}
+
+:host(.disabled) > .rule-header {
+    color: grey;
+}
+
+:host(.disabled) .btn-activate {
+    background: green;
+    border-color: green;
+    color: white;
+}
+
+.rule-header {
+    border-top: 1px solid #cfcfcf;
+    line-height: 1.3;
+    display: flex;
+    vertical-align: middle;
+    align-items: center;
+}
+
+:host(.disabled:not(.editing)) > .rule-header {
+    background: #f7f7f7;
+}
+
+:host(.selected:not(.editing)) > .rule-header {
+    background: #e0e9f7;
+}
+
+:host(.saved:not(.editing)) > .rule-header {
+    border-left: 2px solid green;
+}
+
+:host(.error) > .rule-header {
+    border-left: 2px solid red;
+}
+
+:host(.new:not(.editing)) > .rule-header {
+    border-left: 2px solid orange;
+}
+
+.rule-header-title {
+    flex-grow: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.rule-header > .information {
+    text-align: right;
+    vertical-align: middle;
+}
+
+.rule-header > .information > .badge {
+    white-space: nowrap;
+    overflow: -moz-hidden-unscrollable;
+    text-overflow: ellipsis;
+}
+
+:host(.editing) .rule-header {
+    border-bottom: 1px solid #f5f5f5;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+}
+
+:host(:not(.editing)) .rule-header .edit-label {
+    display: none;
+}
+
+:host(:not(.editing)) .rule-header {
+    padding: 0.1em 0;
+}
+
+:host(.editing) .rule-header > div:first-child > div {
+    max-height: 10em;
+    overflow-y: auto;
+}
+
+:host([new]) .btn-done,
+:host(:not([new])) .btn-create,
+:host(:not(.editing)) .btn-done,
+:host(.editing) .information {
+    display: none;
+}
+
+.btn-delete {
+    float: right;
+}
+
+.rule-input-buttons {
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+}
+
+.rule-input {
+    padding-top: 0.3em;
+}
+
+:host(:not(.editing)) .title,
+:host(:not(.editing)) .description {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 48em;
+}
+
+:host(:not(.editing)) [class$="-wrap"] {
+    display: flex;
+    align-items: baseline;
+}
+
+:host(:not(.editing)) .description,
+:host(:not(.editing)) .tag-wrap {
+    display: none;
+}
+
+.rule-header div[class$="-wrap"] > .badge {
+    padding: 0;
+}
+
+.rule-header .title[contenteditable],
+.rule-header .description[contenteditable],
+.rule-header .tag[contenteditable] {
+    -moz-user-select: text;
+    cursor: auto;
+    color: #4b4b4b;
+}
+
+.rule-header .title[contenteditable]:hover,
+.rule-header .description[contenteditable]:hover,
+.rule-header .rule-header .tag[contenteditable]:hover,
+.rule-header .title[contenteditable]:focus,
+.rule-header .description[contenteditable]:focus,
+.rule-header .tag[contenteditable]:focus {
+    color: black;
+}
+
+.header-info-wrap {
+    display: flex;
+    align-items: center;
+    text-align: end;
+}
+
+.col-trim-parameters {
+    display: flex;
+}
+
+.col-trim-parameters > :first-child {
+    flex: 1;
+}
+
+.more-types {
+    margin: 0 !important;
+}
+
+.redirectUrl {
+    padding: 0.4em !important;
+    box-sizing: border-box;
+}
+
+.tags-input {
+    margin-bottom: 0.3em !important;
+}
+
+@media (min-width: 35em) {
+    .rule-header-buttons {
+        min-width: 10em;
+        text-align: center;
+    }
+
+    :host(:not(.editing)) .title:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .form-group-pattern {
+        display: flex;
+        margin: 0;
+        flex-flow: row wrap;
+    }
+
+    .form-group-pattern > div {
+        margin-right: 1em;
+        flex-grow: 1;
+    }
+
+    .form-group-pattern > div:first-child {
+        flex-grow: 0;
+    }
+
+    .form-wrap {
+        display: flex;
+        align-items: center;
+    }
+
+    .form-wrap > div:first-child {
+        flex-grow: 1;
+    }
+
+    .form-wrap .any-wrap {
+        min-width: 6em;
+        white-space: nowrap;
+        display: flex;
+    }
+
+    .url-wrap:not(.d-none) + div {
+        margin-top: 1.3em !important;
+    }
+}
+
+@media (max-width: 35em) {
+    :host(.editing) > .rule-header div[class$="-wrap"] {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        margin-bottom: 0.6em !important;
+    }
+
+    :host(.editing) .header-info-wrap {
+        display: none !important;
+    }
+
+    .rule-header {
+        line-height: 1.5;
+        flex-direction: column;
+        align-items: initial;
+    }
+
+    .header-info-wrap {
+        justify-content: space-between;
+    }
+
+    :host(.selected) > .rule-header {
+        background: #f8f7ff;
+    }
+
+    .rule-input {
+        padding: 0;
+    }
+}
