@@ -16,14 +16,15 @@ function setTabFromHash() {
 
 function changeTab(tab) {
     const tabInfo = tab.split("#");
-    const tabSelector = document.querySelector(".tab-selector[data-tab=" + tabInfo[0] + "]");
+    const tabSelector = document.querySelector(".tab-selector[href='#tab-" + tabInfo[0] + "']");
     if (!tabSelector || tabSelector.classList.contains("active")) {
         return;
     }
-    document.getElementById("tabs").querySelector(".active").classList.remove("active");
+    document.querySelectorAll(".tab-selector.active").forEach((selector) => selector.classList.remove("active"));
     tabSelector.classList.add("active");
-    document.querySelector(".tab-pane.active").classList.remove("active");
-    document.getElementById(tabSelector.dataset.tab + "Tab").classList.add("active");
+
+    document.querySelectorAll(".tab-pane.active").forEach((tab) => tab.classList.remove("active"));
+    document.getElementById("tab-" + tabInfo[0]).classList.add("active");
 
     document.title = browser.i18n.getMessage(tabSelector.dataset.tabTitle);
 

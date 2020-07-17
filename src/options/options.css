@@ -16,12 +16,12 @@ body {
     color: var(--text-color);
 }
 
-#rulesTab * + * {
+#tab-rules * + * {
     margin-top: 0;
     margin-bottom: 0;
 }
 
-#settingsTab h3 {
+#tab-settings h3 {
     margin: 0;
 }
 
@@ -29,7 +29,7 @@ body {
     margin: 0;
 }
 
-#settingsTab .btn {
+#tab-settings .btn {
     padding: 0.6em;
 }
 

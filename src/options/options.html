@@ -19,31 +19,31 @@
         <div class="c">
             <div id="tabs" class="row">
                 <div class="col">
-                    <a href="#tab-rules" data-tab="rules" class="tab-selector active" data-tab-title="options_title">
+                    <a href="#tab-rules" class="tab-selector active" data-tab-title="options_title">
                         <img src="/icons/ionicons/android-list.svg" width="24" />
                         <span data-i18n="rules"></span>
                     </a>
                 </div>
                 <div class="col">
-                    <a href="#tab-settings" data-tab="settings" class="tab-selector" data-tab-title="settings_title">
+                    <a href="#tab-settings" class="tab-selector" data-tab-title="settings_title">
                         <img src="/icons/ionicons/android-options.svg" width="24" />
                         <span data-i18n="settings"></span>
                     </a>
                 </div>
                 <div class="col">
-                    <a href="#tab-manual" data-tab="manual" class="tab-selector" data-tab-title="manual_title">
+                    <a href="#tab-manual" class="tab-selector" data-tab-title="manual_title">
                         <img src="/icons/ionicons/help.svg" width="24" />
                         <span data-i18n="manual"></span>
                     </a>
                 </div>
                 <div class="col">
-                    <a href="#tab-about" data-tab="about" class="tab-selector" data-tab-title="about_title">
+                    <a href="#tab-about" class="tab-selector" data-tab-title="about_title">
                         <img src="/icons/ionicons/android-bookmark.svg" width="24" />
                         <span data-i18n="about"></span>
                     </a>
                 </div>
             </div>
-            <div id="rulesTab" class="tab-pane active">
+            <div id="tab-rules" class="tab-pane active">
                 <rule-list id="filter" icon="/icons/icon-filter.svg" text="filter_rules" class="d-none"></rule-list>
                 <rule-list
                     id="redirect"
@@ -105,7 +105,7 @@
                     </button>
                 </div>
             </div>
-            <div id="settingsTab" class="tab-pane">
+            <div id="tab-settings" class="tab-pane">
                 <h3 data-i18n="export_rules"></h3>
                 <p data-i18n="export_description"></p>
                 <a id="exportRules" class="btn btn-dark" data-i18n="export"></a>
@@ -127,13 +127,13 @@
                 <p data-i18n="restore_description"></p>
                 <button id="reset" class="btn btn-dark" data-i18n="restore"></button>
             </div>
-            <div id="manualTab" class="tab-pane">
+            <div id="tab-manual" class="tab-pane">
                 <div id="contents" class="toc">
                     <label data-i18n="contents"></label>
                 </div>
                 <div id="manual" class="manual-content"></div>
             </div>
-            <div id="aboutTab" class="tab-pane">
+            <div id="tab-about" class="tab-pane">
                 <h4 id="version"></h4>
                 <hr />
                 <a href="https://addons.mozilla.org/addon/requestcontrol"><strong data-i18n="home_page"></strong> </a>
