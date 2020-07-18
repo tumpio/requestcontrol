@@ -6,13 +6,8 @@ import { testRules } from "./rule-tester.js";
 import { uuid } from "../util/uuid.js";
 import { Toc } from "../util/toc.js";
 import { exportObject, importFile } from "../util/import-export.js";
-import { translateTemplates } from "../util/i18n.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
-    await fetchTypes();
-
-    translateTemplates();
-
     const { rules } = await browser.storage.local.get("rules");
 
     if (rules) {
@@ -246,46 +241,6 @@ function updateToolbar() {
     document.querySelectorAll(".btn-selected-action").forEach((button) => {
         button.disabled = !isSelected;
     });
-}
-
-async function fetchTypes() {
-    const response = await fetch("./types.json", {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        mode: "same-origin",
-    });
-    const types = await response.json();
-    const template = document.getElementById("rule-input");
-    const typesContainer = template.content.querySelector(".btn-group-types");
-    const sorted = [];
-
-    Object.entries(types).forEach(([type, index]) => {
-        sorted[index] = type;
-    });
-
-    const moreButton = typesContainer.lastElementChild;
-    typesContainer.append(...sorted.map((type, index) => newTypeModel(index, type)), moreButton);
-}
-
-function newTypeModel(index, value) {
-    const model = document.getElementById("typeButton").content.cloneNode(true);
-    const label = model.querySelector("label");
-    const input = model.querySelector("input");
-    const span = model.querySelector("span");
-
-    input.setAttribute("data-index", index);
-    input.setAttribute("value", value);
-    span.setAttribute("data-i18n", value);
-
-    if (index === 0) {
-        label.classList.add("active");
-        input.checked = true;
-    } else if (index > 4) {
-        label.classList.add("d-none");
-        input.classList.add("extra-type");
-    }
-    return label;
 }
 
 async function fetchLocalisedManual() {

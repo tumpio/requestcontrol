@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="options.css" />
         <script src="../util/tab.js"></script>
         <script src="../util/modal.js"></script>
+        <script src="type-input.js"></script>
         <script type="module" src="../util/i18n.js"></script>
         <script type="module" src="rule-list.js"></script>
         <script type="module" src="options.js"></script>
@@ -376,6 +377,26 @@
                     <div class="row">
                         <div class="form-wrap">
                             <div id="types" class="btn-group-types">
+                                <input is="type-input" value="main_frame" index="0"></input>
+                                <input is="type-input" value="sub_frame" index="1"></input>
+                                <input is="type-input" value="script" index="2"></input>
+                                <input is="type-input" value="stylesheet" index="3"></input>
+                                <input is="type-input" value="image" index="4"></input>
+                                <input is="type-input" value="font" index="5"></input>
+                                <input is="type-input" value="media" index="6"></input>
+                                <input is="type-input" value="object" index="7"></input>
+                                <input is="type-input" value="object_subrequest" index="8"></input>
+                                <input is="type-input" value="imageset" index="9"></input>
+                                <input is="type-input" value="beacon" index="10"></input>
+                                <input is="type-input" value="ping" index="11"></input>
+                                <input is="type-input" value="speculative" index="12"></input>
+                                <input is="type-input" value="websocket" index="13"></input>
+                                <input is="type-input" value="xmlhttprequest" index="14"></input>
+                                <input is="type-input" value="web_manifest" index="15"></input>
+                                <input is="type-input" value="csp_report" index="16"></input>
+                                <input is="type-input" value="xml_dtd" index="17"></input>
+                                <input is="type-input" value="xslt" index="18"></input>
+                                <input is="type-input" value="other" index="19"></input>
                                 <label class="btn">
                                     <input id="more-types" class="v-hidden" type="checkbox" autocomplete="off" />
                                     <span class="text" data-i18n="show_more_true"></span>
@@ -514,12 +535,6 @@
                     </label>
                 </div>
             </div>
-        </template>
-        <template id="typeButton">
-            <label class="btn">
-                <input class="type" type="checkbox" autocomplete="off" />
-                <span></span>
-            </label>
         </template>
         <template id="rule-list">
             <link rel="stylesheet" href="/lib/lit/lit.css" />

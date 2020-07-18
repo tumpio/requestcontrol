@@ -28,4 +28,5 @@ export function translateTemplates() {
 
 document.addEventListener("DOMContentLoaded", function () {
     translateDocument(document);
+    translateTemplates();
 });
