@@ -5,7 +5,6 @@
 import { createRule, createMatchPatterns, isTLDHostPattern } from "../main/api.js";
 import { uuid } from "../util/uuid.js";
 import { onToggleButtonChange, setButtonChecked, setButtonDisabled, toggleHidden } from "../util/ui-helpers.js";
-import { TagsInput } from "../util/tags-input/src/tags-input.js";
 
 export function newRuleInput(
     rule = {
@@ -57,11 +56,11 @@ class RuleInput extends HTMLElement {
         this.attachShadow({ mode: "open" }).appendChild(template.content.cloneNode(true));
         const root = this.shadowRoot;
 
-        this.hostsTagsInput = new TagsInput(root.getElementById("host"));
-        this.pathsTagsInput = new TagsInput(root.getElementById("path"));
-        this.tldsTagsInput = new TagsInput(root.getElementById("tlds"));
-        this.includesTagsInput = new TagsInput(root.getElementById("includes"));
-        this.excludesTagsInput = new TagsInput(root.getElementById("excludes"));
+        this.hostsTagsInput = root.getElementById("host");
+        this.pathsTagsInput = root.getElementById("path");
+        this.tldsTagsInput = root.getElementById("tlds");
+        this.includesTagsInput = root.getElementById("includes");
+        this.excludesTagsInput = root.getElementById("excludes");
 
         root.getElementById("title").addEventListener("keydown", this.onEnterKey.bind(this));
         root.getElementById("title").addEventListener("blur", this.onSetTitle.bind(this));
@@ -154,11 +153,11 @@ class RuleInput extends HTMLElement {
 
     validateTLDPattern() {
         const isTldsPattern =
-            !this.shadowRoot.getElementById("any-url").checked && this.hostsTagsInput.value.some(isTLDHostPattern);
+            !this.shadowRoot.getElementById("any-url").checked && this.hostsTagsInput.tags.some(isTLDHostPattern);
         toggleHidden(!isTldsPattern, this.shadowRoot.getElementById("tlds-form"));
         this.tldsTagsInput.disabled = !isTldsPattern;
         if (isTldsPattern) {
-            if (this.tldsTagsInput.value.length === 0) {
+            if (this.tldsTagsInput.tags.length === 0) {
                 this.shadowRoot.getElementById("collapse-tlds").classList.add("text-danger");
                 this.shadowRoot.getElementById("collapse-tlds").parentNode.classList.add("has-error");
                 toggleHidden(!isTldsPattern, this.shadowRoot.getElementById("tlds-area"));
@@ -426,7 +425,7 @@ class RuleInput extends HTMLElement {
     }
 
     onSetTLDs() {
-        const numberOfTlds = this.tldsTagsInput.value.length;
+        const numberOfTlds = this.tldsTagsInput.tags.length;
         const error = numberOfTlds === 0;
         this.shadowRoot.querySelector("#collapse-tlds > .badge").textContent = numberOfTlds;
         this.shadowRoot.getElementById("collapse-tlds").classList.toggle("text-danger", error);
@@ -558,24 +557,24 @@ class RuleInput extends HTMLElement {
 
     updateInputs() {
         this.shadowRoot.getElementById("scheme").value = this.rule.pattern.scheme || "*";
-        this.hostsTagsInput.value = this.rule.pattern.host;
-        this.pathsTagsInput.value = this.rule.pattern.path;
+        this.hostsTagsInput.tags = this.rule.pattern.host;
+        this.pathsTagsInput.tags = this.rule.pattern.path;
 
         if (this.rule.action) {
             setButtonChecked(this.shadowRoot.querySelector(".action[value=" + this.rule.action + "]"), true);
         }
 
         if (this.rule.pattern.topLevelDomains) {
-            this.tldsTagsInput.value = this.rule.pattern.topLevelDomains;
+            this.tldsTagsInput.tags = this.rule.pattern.topLevelDomains;
             this.onSetTLDs();
         }
 
         if (this.rule.pattern.includes) {
-            this.includesTagsInput.value = this.rule.pattern.includes;
+            this.includesTagsInput.tags = this.rule.pattern.includes;
         }
 
         if (this.rule.pattern.excludes) {
-            this.excludesTagsInput.value = this.rule.pattern.excludes;
+            this.excludesTagsInput.tags = this.rule.pattern.excludes;
         }
 
         if (this.rule.pattern.origin) {
@@ -603,16 +602,16 @@ class RuleInput extends HTMLElement {
             this.rule.pattern.allUrls = true;
         } else {
             this.rule.pattern.scheme = this.shadowRoot.getElementById("scheme").value;
-            this.rule.pattern.host = this.hostsTagsInput.value;
-            this.rule.pattern.path = this.pathsTagsInput.value;
+            this.rule.pattern.host = this.hostsTagsInput.tags;
+            this.rule.pattern.path = this.pathsTagsInput.tags;
             if (this.rule.pattern.host.some(isTLDHostPattern)) {
-                this.rule.pattern.topLevelDomains = this.tldsTagsInput.value;
+                this.rule.pattern.topLevelDomains = this.tldsTagsInput.tags;
             }
             delete this.rule.pattern.allUrls;
         }
 
-        const includes = this.includesTagsInput.value;
-        const excludes = this.excludesTagsInput.value;
+        const includes = this.includesTagsInput.tags;
+        const excludes = this.excludesTagsInput.tags;
         const origin = this.shadowRoot.querySelector(".origin-matcher:checked");
 
         if (includes.length > 0) {
@@ -717,7 +716,7 @@ class FilterRuleInput extends BaseRedirectRuleInput {
         const actions = document.getElementById("actions-filter");
         this.shadowRoot.getElementById("form").appendChild(actions.content.cloneNode(true));
 
-        this.paramsTagsInput = new TagsInput(this.shadowRoot.getElementById("input-params"));
+        this.paramsTagsInput = this.shadowRoot.getElementById("input-params");
         this.shadowRoot.getElementById("trim-all-params").addEventListener("change", this.onToggleTrimAll.bind(this));
         this.shadowRoot.getElementById("invert-trim").addEventListener("change", onToggleButtonChange);
         this.shadowRoot.getElementById("filter-redirection").addEventListener("change", this.onToggleFilter.bind(this));
@@ -745,7 +744,7 @@ class FilterRuleInput extends BaseRedirectRuleInput {
         setButtonChecked(this.shadowRoot.getElementById("skip-same-domain"), this.rule.skipOnSameDomain);
         setButtonDisabled(this.shadowRoot.getElementById("skip-same-domain"), this.rule.skipRedirectionFilter);
         if (this.rule.paramsFilter && Array.isArray(this.rule.paramsFilter.values)) {
-            this.paramsTagsInput.value = this.rule.paramsFilter.values;
+            this.paramsTagsInput.tags = this.rule.paramsFilter.values;
             if (this.rule.paramsFilter.invert) {
                 setButtonChecked(this.shadowRoot.getElementById("invert-trim"), true);
             }
@@ -759,7 +758,7 @@ class FilterRuleInput extends BaseRedirectRuleInput {
     updateRule() {
         super.updateRule();
         this.rule.paramsFilter = {};
-        this.rule.paramsFilter.values = this.paramsTagsInput.value;
+        this.rule.paramsFilter.values = this.paramsTagsInput.tags;
         if (this.rule.paramsFilter.values.length > 0) {
             if (this.shadowRoot.getElementById("invert-trim").checked) {
                 this.rule.paramsFilter.invert = true;

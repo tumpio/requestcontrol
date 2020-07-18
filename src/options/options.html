@@ -7,12 +7,13 @@
         <link rel="stylesheet" href="/lib/lit/lit.css" />
         <link rel="stylesheet" href="common.css" />
         <link rel="stylesheet" href="options.css" />
-        <script src="../util/tab.js"></script>
-        <script src="../util/modal.js"></script>
-        <script src="type-input.js"></script>
-        <script type="module" src="../util/i18n.js"></script>
-        <script type="module" src="rule-list.js"></script>
-        <script type="module" src="options.js"></script>
+        <script defer src="../util/tab.js"></script>
+        <script defer src="../util/modal.js"></script>
+        <script defer type="module" src="../util/i18n.js"></script>
+        <script defer src="type-input.js"></script>
+        <script defer type="module" src="../util/tags-input/src/tags-input.js"></script>
+        <script defer type="module" src="rule-list.js"></script>
+        <script defer type="module" src="options.js"></script>
         <title data-i18n="options_title"></title>
     </head>
 
@@ -246,6 +247,7 @@
                                         <small data-i18n="host"></small>
                                         <input
                                             id="host"
+                                            is="tags-input"
                                             type="text"
                                             data-i18n-placeholder="host_placeholder"
                                             spellcheck="false"
@@ -257,6 +259,7 @@
                                         <small data-i18n="path"></small>
                                         <input
                                             id="path"
+                                            is="tags-input"
                                             type="text"
                                             data-i18n-placeholder="path_placeholder"
                                             spellcheck="false"
@@ -272,6 +275,7 @@
                                     <div id="tlds-area" class="d-none">
                                         <input
                                             id="tlds"
+                                            is="tags-input"
                                             type="text"
                                             class="d-none"
                                             disabled="disabled"
@@ -302,6 +306,7 @@
                             <small data-i18n="includes"></small>
                             <input
                                 id="includes"
+                                is="tags-input"
                                 type="text"
                                 spellcheck="false"
                                 autocomplete="off"
@@ -311,6 +316,7 @@
                             <small data-i18n="excludes"></small>
                             <input
                                 id="excludes"
+                                is="tags-input"
                                 type="text"
                                 spellcheck="false"
                                 autocomplete="off"
@@ -504,6 +510,7 @@
                         <div id="trim-parameters" class="col-trim-parameters">
                             <input
                                 id="input-params"
+                                is="tags-input"
                                 type="text"
                                 data-editable-tags="true"
                                 data-separator=""
