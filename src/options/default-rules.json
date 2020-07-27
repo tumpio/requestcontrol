@@ -539,24 +539,14 @@
       ],
       "excludes": [
         "http://*.fbcdn.net/static_map.php?*",
-        "http://*.imgix.net/",
-        "http://external-preview.redd.it/*",
         "http://maps.googleapis.com/maps/*",
-        "http://wiki.ubuntu.com/*action=AttachFile",
         "https://*.fbcdn.net/static_map.php?*",
-        "https://*.imgix.net/",
         "https://duckduckgo.com/mapkit/?*",
         "https://external-content.duckduckgo.com/*",
         "http://geo*.ggpht.com/cbk?*",
-        "https://external-preview.redd.it/*",
         "https://geo*.ggpht.com/cbk?*",
-        "http://preview.redd.it/*",
         "https://maps.googleapis.com/maps/*",
-        "https://preview.redd.it/*",
-        "http://styles.redditmedia.com/*",
-        "https://styles.redditmedia.com/*",
         "http://www.google.com/maps/vt?*",
-        "https://wiki.ubuntu.com/*action=AttachFile",
         "https://www.google.com/maps/vt?*",
         "https://www.google.com/recaptcha/api2/payload*",
         "https://web.whatsapp.com/"
@@ -713,7 +703,8 @@
     "active": true,
     "title": "Restore YouTube seekbar previews",
     "description": "The general filter rule breaks the preview shown upon hovering over the seekbar. This rule restores them at the cost of sending unknown metadata to YouTube servers. Disabling this rule will not break YouTube's other functions.",
-    "tag": "whitelist-youtube"
+    "tag": "whitelist-youtube",
+    "log": true
   },
   {
     "uuid": "bebe6410-8d55-46d5-9003-6c0d92e7526a",
@@ -733,7 +724,8 @@
     "active": true,
     "title": "Restore YouTube video previews",
     "description": "YouTube should show several frames of a video when hovering a thumbnail with the cursor. This rule restores that functionality%2C but sends extra metada to Google's servers. Disabling this rule will not break YouTube's other functions.",
-    "tag": "whitelist-youtube"
+    "tag": "whitelist-youtube",
+    "log": true
   },
   {
     "uuid": "26b61cb2-b847-40c1-bd89-c31327434643",
@@ -755,9 +747,10 @@
     ],
     "action": "whitelist",
     "active": true,
-    "title": "Custom banners and transcription sites",
-    "description": "Sites dedicated to typesetting, transcription, or custom banners have legitimate reasons to use PHP requests with no common pattern.",
-    "tag": "whitelist-fonts"
+    "title": "Custom online typesetting",
+    "description": "Sites providing custom typesetting in image format. (Image server and web server MUST have the same domain.)",
+    "tag": "whitelist-fonts",
+    "log": true
   },
   {
     "uuid": "6d25126a-dd1d-4e63-874c-fe0592e9bec1",
@@ -798,5 +791,69 @@
       ],
       "invert": true
     }
+  },
+  {
+    "uuid": "0ce012d9-8492-40eb-ae75-f7c48b4f97d3",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "/avatar.php?*",
+        "/userkarma.php?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "User avatars and karma at community-driven sites",
+    "log": true,
+    "description": "e.g. any wiki powered by WikiDot."
+  },
+  {
+    "uuid": "91561207-76db-4850-85cb-5e34dedafa90",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "wiki.ubuntu.com"
+      ],
+      "path": [
+        "*action=AttachFile*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Embedded images in MoinMoin based wikis and similar.",
+    "log": true,
+    "description": "Notably used on wiki.ubuntu.com."
+  },
+  {
+    "uuid": "42c98357-aba0-4e8a-9df2-739c885cfde8",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.imgix.net",
+        "external-preview.redd.it",
+        "preview.redd.it",
+        "styles.redditmedia.com"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Image providers",
+    "description": "Sites that provide images for other web pages. Trimming URL parameters from these sites will make most sites render them incorrectly%2C or more often not render them at all. Also includes Reddit images by necessity. (Whitelisted from ALL domains)",
+    "log": true
   }
 ]
