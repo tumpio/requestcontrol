@@ -83,19 +83,16 @@
     "active": true
   },
   {
-    "title": "Remove UTM query parameters",
+    "title": "Remove UTM and Facebook query parameters",
     "uuid": "5276a290-b21a-4deb-a86e-aa54c3ff1bcc",
     "description": "Replicates Neat URL extension. Removes common tracking query parameters from all requests to all websites. Recommended to use whitelist filters when necessary, instead of disabling this rule.",
     "tag": "filter-multiple",
     "pattern": {
-      "allUrls": true,
-      "excludes": [
-        "http://navigator-bs.gmx.com/*",
-        "https://navigator-bs.gmx.com/*"
-      ]
+      "allUrls": true
     },
     "types": [
-      "main_frame"
+      "main_frame",
+      "sub_frame"
     ],
     "action": "filter",
     "active": true,
@@ -191,33 +188,6 @@
     ],
     "action": "filter",
     "active": true
-  },
-  {
-    "title": "Remove FBCLID query parameters",
-    "uuid": "07be1337-4d49-475b-9062-8b191099621b",
-    "description": "Remove fbclid query parameters from requests. Facebook click identifier query parameters are commonly used as a method to analyze the origin of traffic.",
-    "tag": "filter-facebook",
-    "pattern": {
-      "scheme": "*",
-      "host": [
-        "*"
-      ],
-      "path": [
-        "*fbclid*"
-      ]
-    },
-    "types": [
-      "main_frame",
-      "sub_frame"
-    ],
-    "action": "filter",
-    "active": true,
-    "paramsFilter": {
-      "values": [
-        "fbclid"
-      ]
-    },
-    "skipRedirectionFilter": true
   },
   {
     "uuid": "6c24db22-32ed-48fb-bbbd-9e84fb432002",
@@ -539,16 +509,15 @@
       ],
       "excludes": [
         "http://*.fbcdn.net/static_map.php?*",
+        "http://*/ap_resize/ap_resize.php?*",
         "http://maps.googleapis.com/maps/*",
         "https://*.fbcdn.net/static_map.php?*",
-        "https://duckduckgo.com/mapkit/?*",
-        "https://external-content.duckduckgo.com/*",
+        "https://*/ap_resize/ap_resize.php?*",
         "http://geo*.ggpht.com/cbk?*",
         "https://geo*.ggpht.com/cbk?*",
         "https://maps.googleapis.com/maps/*",
         "http://www.google.com/maps/vt?*",
         "https://www.google.com/maps/vt?*",
-        "https://www.google.com/recaptcha/api2/payload*",
         "https://web.whatsapp.com/"
       ],
       "allUrls": true
@@ -563,10 +532,24 @@
     ],
     "paramsFilter": {
       "values": [
+        "*expires",
+        "*file",
         "*key",
+        "*key-pair-id",
+        "*lang",
+        "*language",
+        "*path",
+        "*policy",
+        "*signature",
+        "*style",
+        "*styles",
         "*token",
+        "_nc_cat",
         "_nc_ht",
+        "_nc_oc",
         "_nc_ohc",
+        "_nc_sid",
+        "_nc_tp",
         "assembler",
         "asset",
         "authority",
@@ -574,8 +557,10 @@
         "bbox",
         "blob*",
         "c",
+        "cacheid",
         "cid",
         "container",
+        "contentid",
         "crop",
         "csblobid",
         "fid",
@@ -590,12 +575,10 @@
         "h",
         "height",
         "hid",
+        "i10c",
         "id",
-        "image_path",
-        "imagepath",
         "img_id",
         "imgid",
-        "key",
         "layer",
         "layers",
         "name",
@@ -603,27 +586,24 @@
         "oh",
         "output",
         "parentid",
-        "preferredfile",
+        "preview",
         "q",
         "request",
         "satellite",
         "scale",
         "scheme",
         "service",
+        "sig",
         "size",
         "srs",
-        "style",
         "text",
         "tile*",
         "title",
-        "token",
         "type",
-        "url",
-        "userid",
         "uuid",
+        "version",
         "w",
         "width",
-        "wpcaptchaid",
         "x",
         "y",
         "z",
@@ -670,8 +650,8 @@
       "image"
     ],
     "action": "filter",
-    "active": true,
-    "description": "Google Street View doesn't need that much data to render streets",
+    "active": false,
+    "description": "(Disabled by default because it depends on other protections: Google Street View works correctly in Firefox 79, but refuses to load any image in Firefox 68.11.0esr)",
     "paramsFilter": {
       "values": [
         "output",
@@ -690,9 +670,11 @@
     "pattern": {
       "scheme": "*",
       "host": [
+        "i.ytimg.com",
         "i9.ytimg.com"
       ],
       "path": [
+        "/an_webp/*/*default_6s.webp*",
         "/sb/*/storyboard*"
       ]
     },
@@ -701,29 +683,8 @@
     ],
     "action": "whitelist",
     "active": true,
-    "title": "Restore YouTube seekbar previews",
-    "description": "The general filter rule breaks the preview shown upon hovering over the seekbar. This rule restores them at the cost of sending unknown metadata to YouTube servers. Disabling this rule will not break YouTube's other functions.",
-    "tag": "whitelist-youtube",
-    "log": true
-  },
-  {
-    "uuid": "bebe6410-8d55-46d5-9003-6c0d92e7526a",
-    "pattern": {
-      "scheme": "*",
-      "host": [
-        "i.ytimg.com"
-      ],
-      "path": [
-        "/an_webp/*/*default_6s.webp*"
-      ]
-    },
-    "types": [
-      "image"
-    ],
-    "action": "whitelist",
-    "active": true,
-    "title": "Restore YouTube video previews",
-    "description": "YouTube should show several frames of a video when hovering a thumbnail with the cursor. This rule restores that functionality%2C but sends extra metada to Google's servers. Disabling this rule will not break YouTube's other functions.",
+    "title": "Restore YouTube previews",
+    "description": "The general filter rule breaks the preview shown upon hovering over the seekbar or a thumbnail. This rule restores them at the cost of sending unknown metadata to YouTube servers. Disabling this rule will not break YouTube's other functions.",
     "tag": "whitelist-youtube",
     "log": true
   },
@@ -732,6 +693,7 @@
     "pattern": {
       "scheme": "*",
       "host": [
+        "external-content.duckduckgo.com",
         "img.dafont.com",
         "render.fontstruct.com",
         "render01.fontshop.com",
@@ -747,8 +709,8 @@
     ],
     "action": "whitelist",
     "active": true,
-    "title": "Custom online typesetting",
-    "description": "Sites providing custom typesetting in image format. (Image server and web server MUST have the same domain.)",
+    "title": "Image-dependent sites",
+    "description": "Some sites, like typesetting shops, are heavily dependent on images. (Image and web document MUST share domain.) DuckDuckgo's external preview server is exceptionally included because of its efforts against user tracking and search bubbling.",
     "tag": "whitelist-fonts",
     "log": true
   },
@@ -790,7 +752,8 @@
         "zoom"
       ],
       "invert": true
-    }
+    },
+    "tag": "filter-google"
   },
   {
     "uuid": "0ce012d9-8492-40eb-ae75-f7c48b4f97d3",
@@ -801,6 +764,9 @@
       ],
       "path": [
         "/avatar.php?*",
+        "/avatar/*",
+        "/user_avatar/*",
+        "/user_cover/*",
         "/userkarma.php?*"
       ]
     },
@@ -821,7 +787,7 @@
         "wiki.ubuntu.com"
       ],
       "path": [
-        "*action=AttachFile*"
+        "*action=AttachFile&do=get&target=*"
       ]
     },
     "types": [
@@ -840,8 +806,7 @@
       "host": [
         "*.imgix.net",
         "external-preview.redd.it",
-        "preview.redd.it",
-        "styles.redditmedia.com"
+        "preview.redd.it"
       ],
       "path": [
         "*"
@@ -853,7 +818,165 @@
     "action": "whitelist",
     "active": true,
     "title": "Image providers",
-    "description": "Sites that provide images for other web pages. Trimming URL parameters from these sites will make most sites render them incorrectly%2C or more often not render them at all. Also includes Reddit images by necessity. (Whitelisted from ALL domains)",
+    "description": "Sites that provide images for other web pages. Trimming URL parameters from these sites will make most sites render them incorrectly, or more often than not render them at all. Also includes Reddit external previews by necessity. (Whitelisted from ALL domains)",
+    "log": true,
+    "tag": "whitelist-general"
+  },
+  {
+    "uuid": "da3107bd-8fc1-4829-b4c4-6303af4af5fd",
+    "pattern": {
+      "scheme": "https",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*-captchaImage&antiCache=*",
+        "/w/index.php?title=*&wpCaptchaId=*"
+      ],
+      "origin": "same-domain"
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Homebrewed CAPTCHAs for new account registration",
+    "tag": "whitelist-captcha",
+    "log": true,
+    "description": "Some web portals generate their own captchas for account registration"
+  },
+  {
+    "uuid": "acd28edd-d436-4987-b004-7fbb5a946c28",
+    "pattern": {
+      "scheme": "https",
+      "host": [
+        "www.google.com"
+      ],
+      "path": [
+        "/recaptcha/api2/payload*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Google's reCAPTCHA",
+    "tag": "whitelist-google",
     "log": true
+  },
+  {
+    "uuid": "07f60a40-9293-406e-aba9-3926bdb0ef2c",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*/ap_resize/ap_resize.php?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "Skip image downsampler",
+    "description": "This filter retrieves the original pictures from the original domains. Disabling this filter will restore the downsampled images.",
+    "tag": "filter-resizer"
+  },
+  {
+    "uuid": "a6b8a3a1-5bba-46b1-81a5-8594e3e8b0a1",
+    "pattern": {
+      "scheme": "https",
+      "host": [
+        "home.navigator-bs.gmx.com",
+        "navigator-bs.gmx.com",
+        "trackbar.navigator-bs.gmx.com"
+      ],
+      "path": [
+        "/?sid=*",
+        "/addressbook?sid=*",
+        "/ciss?sid=*",
+        "/cloud?sid=*",
+        "/home/show?sid=*",
+        "/home?sid=*",
+        "/mail?sid=*",
+        "/navigator/home/fallback?sid=*",
+        "/navigator/jump/to/lps?sid=*",
+        "/ooeditor?sid=*",
+        "/organizer?sid=*",
+        "/remindlogout?sid=*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Unbreak GMX Webclient",
+    "description": "GMX Webclient uses the URL parameter `sid` to load different pages. This trips a general-purpose referrer remover.",
+    "tag": "whitelist-gmx",
+    "log": true
+  },
+  {
+    "uuid": "34ac811a-d7e0-42fb-b509-5a9495c476ee",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "styles.redditmedia.com"
+      ],
+      "path": [
+        "*/styles/bannerBackgroundImage_*",
+        "*/styles/communityIcon_*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-reddit",
+    "skipRedirectionFilter": true,
+    "trimAllParams": true
+  },
+  {
+    "uuid": "de12ff52-0cc2-468b-8dc9-6d3e56ca3389",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "duckduckgo.com"
+      ],
+      "path": [
+        "/mapkit/?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "DuckDuckGo map provider",
+    "tag": "whitelist-duckduckgo",
+    "log": true
+  },
+  {
+    "uuid": "95758173-ff22-4863-a743-d09a068cca91",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "cdn.embedly.com"
+      ],
+      "path": [
+        "/widgets/media.html?src=*"
+      ]
+    },
+    "types": [
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-embedly"
   }
 ]
