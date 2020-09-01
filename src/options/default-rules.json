@@ -2,7 +2,7 @@
   {
     "uuid": "3baa759b-9afc-41ef-b770-c60e1d9383d2",
     "description": "Filter rule to skip and prevent redirection tracking on multiple hosts.",
-    "tag": "filter-multiple",
+    "tag": "filter-redirect-2",
     "pattern": {
       "scheme": "*",
       "host": [
@@ -11,9 +11,14 @@
         "out.reddit.com",
         "steamcommunity.com"
       ],
-      "path": ["*url=*"]
+      "path": [
+        "*url=*"
+      ]
     },
-    "types": ["main_frame"],
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
     "action": "filter",
     "active": true
   },
@@ -21,7 +26,7 @@
     "title": "Stop Google search link tracking",
     "uuid": "60f46cfa-b906-4a2d-ab66-8f26dc35e97f",
     "description": "This filter rule prevents Google from obtaining the URL of clicked search link via URL redirection. The tracking request done in background is classified as a Sub Document type. This rule provides an example of using the top-level domains pattern.",
-    "tag": "filter-google",
+    "tag": "filter-redirect-google",
     "pattern": {
       "scheme": "*",
       "host": ["*.google.*"],
@@ -53,24 +58,9 @@
     "active": true
   },
   {
-    "title": "Skip outgoing page confirmation on DeviantArt",
-    "uuid": "bc145190-0b68-4ff4-84d3-321e131cd253",
-    "tag": "filter-deviantArt",
-    "pattern": {
-      "scheme": "*",
-      "host": ["*.deviantart.com"],
-      "path": ["*outgoing?*"]
-    },
-    "types": [
-      "main_frame"
-    ],
-    "action": "filter",
-    "active": true
-  },
-  {
     "title": "Skip Mozilla's outgoing link redirection service",
     "uuid": "3c4d6fa0-e2fb-4079-b3f0-e453ebe289ae",
-    "tag": "filter-mozilla",
+    "tag": "filter-redirect-mozilla",
     "pattern": {
       "scheme": "*",
       "host": ["outgoing.prod.mozaws.net"],
@@ -86,7 +76,7 @@
     "title": "Remove UTM and Facebook query parameters",
     "uuid": "5276a290-b21a-4deb-a86e-aa54c3ff1bcc",
     "description": "Replicates Neat URL extension. Removes common tracking query parameters from all requests to all websites. Recommended to use whitelist filters when necessary, instead of disabling this rule.",
-    "tag": "filter-multiple",
+    "tag": "filter-utm",
     "pattern": {
       "allUrls": true
     },
@@ -125,6 +115,7 @@
         "hmb_medium",
         "hmb_source",
         "icid",
+        "igshid",
         "mbid",
         "mkt_tok",
         "ncid",
@@ -148,6 +139,7 @@
         "utm_*",
         "vero_conv",
         "vero_id",
+        "wprov",
         "ws_ab_test",
         "yclid"
       ]
@@ -172,15 +164,22 @@
     "description": "The Beacon API is often used for logging user activity and sending analytics data to the server."
   },
   {
-    "title": "Stop Facebook's outgoing link redirection service tracking",
     "uuid": "07be1337-ceec-4a93-a49e-67e051124a7f",
-    "description": "This filter rule prevents Facebook from obtaining the URL of clicked search link via URL redirection.",
-    "tag": "filter-facebook",
+    "tag": "filter-redirect-3",
     "pattern": {
       "scheme": "*",
-      "host": "l.facebook.*",
-      "topLevelDomains": [ "com", "net" ],
-      "path": "l.php?u=*"
+      "host": [
+        "l.facebook.*",
+        "l.instagram.*"
+      ],
+      "topLevelDomains": [
+        "com",
+        "net"
+      ],
+      "path": [
+        "?u=*",
+        "l.php?u=*"
+      ]
     },
     "types": [
       "main_frame",
@@ -188,23 +187,6 @@
     ],
     "action": "filter",
     "active": true
-  },
-  {
-    "uuid": "6c24db22-32ed-48fb-bbbd-9e84fb432002",
-    "pattern": {
-      "scheme": "*",
-      "host": [
-        "deref-gmx.com"
-      ],
-      "path": [
-        "*/dereferrer/*"
-      ]
-    },
-    "types": ["main_frame"],
-    "action": "filter",
-    "active": true,
-    "redirectUrl": "",
-    "tag": "filter-gmx"
   },
   {
     "uuid": "c7ca4ba4-1a16-4b98-b645-62d22ae582ee",
@@ -230,16 +212,22 @@
     "pattern": {
       "scheme": "*",
       "host": [
-        "t.umblr.com"
+        "*"
       ],
       "path": [
+        "*/dereferrer/*",
+        "*/outgoing?*",
+        "*redir/redirect?*",
+        "away.php?to=*",
         "redirect?*"
       ]
     },
     "types": ["main_frame"],
     "action": "filter",
     "active": true,
-    "tag": "filter-tumblr"
+    "tag": "filter-redirect-1",
+    "title": "Skip external dereferrers and redirector",
+    "description": "This filter is applied globally. Avoid any false positives."
   },
   {
     "uuid": "92a96b21-9076-43c2-b030-167bf420e733",
@@ -258,6 +246,10 @@
     "tag": "filter-facebook",
     "paramsFilter": {
       "values": [
+        "__tn__",
+        "extid",
+        "flite",
+        "fref",
         "ref",
         "referral_code",
         "rid",
@@ -265,22 +257,6 @@
       ]
     },
     "skipRedirectionFilter": true
-  },
-  {
-    "uuid": "6777c741-8818-49d0-b536-ae3471520825",
-    "pattern": {
-      "scheme": "*",
-      "host": [
-        "www.linkedin.com"
-      ],
-      "path": [
-        "*redir/redirect?*"
-      ]
-    },
-    "types": ["main_frame"],
-    "action": "filter",
-    "active": true,
-    "tag": "filter-linkedin"
   },
   {
     "uuid": "1fa1d22e-7694-46f0-9da6-fa6536433406",
@@ -299,7 +275,7 @@
     ],
     "action": "filter",
     "active": true,
-    "tag": "filter-google",
+    "tag": "filter-youtube",
     "paramsFilter": {
       "values": [
         "feature",
@@ -337,12 +313,15 @@
       "values": [
         "clientContext",
         "field-keywords",
+        "i",
         "ie",
+        "k",
         "language",
         "location",
         "mgh",
         "node",
         "openid.*",
+        "rh",
         "url"
       ],
       "invert": true
@@ -438,13 +417,13 @@
         "*"
       ]
     },
-    "types": [
-      "main_frame"
-    ],
     "action": "redirect",
     "active": true,
     "redirectUrl": "https://www.youtube.com/watch?v={pathname:1}{search/^\\?/&}{hash}",
-    "tag": "redirect-google"
+    "tag": "redirect-youtube",
+    "types": [
+      "main_frame"
+    ]
   },
   {
     "uuid": "816c76d6-ad2e-4f7c-94be-e2436c93fe34",
@@ -477,7 +456,7 @@
     }
   },
   {
-    "title": "Block Youtube mouselogger",
+    "title": "Block Youtube mouselogger and watchtime logger",
     "uuid": "23f612f1-d903-4715-99a5-5559035400e5",
     "pattern": {
       "scheme": "*",
@@ -485,19 +464,21 @@
         "*.youtube.com"
       ],
       "path": [
+        "api/stats/watchtime*",
         "youtubei/v1/log_event*"
       ]
     },
     "types": [
+      "image",
       "xmlhttprequest"
     ],
     "action": "block",
     "active": false,
     "description": "May cause issues after the end of the video if logged in. Disabled by default.",
-    "tag": "filter-google"
+    "tag": "block-youtube"
   },
   {
-    "title": "Filter tracking parameters in images",
+    "title": "1st filter for tracking parameters in images",
     "uuid": "6468e7a9-440d-4727-a09e-c1a5cc386948",
     "pattern": {
       "scheme": "*",
@@ -508,17 +489,17 @@
         "*"
       ],
       "excludes": [
-        "http://*.fbcdn.net/static_map.php?*",
-        "http://*/ap_resize/ap_resize.php?*",
-        "http://maps.googleapis.com/maps/*",
-        "https://*.fbcdn.net/static_map.php?*",
-        "https://*/ap_resize/ap_resize.php?*",
-        "http://geo*.ggpht.com/cbk?*",
-        "https://geo*.ggpht.com/cbk?*",
-        "https://maps.googleapis.com/maps/*",
-        "http://www.google.com/maps/vt?*",
-        "https://www.google.com/maps/vt?*",
-        "https://web.whatsapp.com/"
+        "*.fbcdn.net/static_map.php?*",
+        "*.maps.api.here.com/maptile/2.1/maptile/*",
+        "*.maps.cit.api.here.com/maptile/2.1/maptile/*",
+        "*/ap_resize/ap_resize.php?*",
+        "*/image_gallery?*",
+        "*/safe_image.php?*",
+        "geo*.ggpht.com/cbk?*",
+        "https://web.whatsapp.com/",
+        "maps.googleapis.com/maps/*",
+        "www.google.com/maps/vt?*",
+        "www.youtube.com/api/stats/watchtime*"
       ],
       "allUrls": true
     },
@@ -526,7 +507,7 @@
     "active": true,
     "description": "Inspired by GIF Tracking Protection webextension",
     "skipRedirectionFilter": true,
-    "tag": "filter-img",
+    "tag": "filter-images-1",
     "types": [
       "image"
     ],
@@ -570,15 +551,11 @@
         "format",
         "fragment",
         "frame",
-        "group_id",
-        "groupid",
         "h",
         "height",
         "hid",
         "i10c",
         "id",
-        "img_id",
-        "imgid",
         "layer",
         "layers",
         "name",
@@ -588,19 +565,23 @@
         "parentid",
         "preview",
         "q",
+        "quality",
         "request",
         "satellite",
         "scale",
         "scheme",
         "service",
         "sig",
+        "sign",
         "size",
         "srs",
+        "ssl",
         "text",
         "tile*",
         "title",
+        "token-hash",
+        "token-time",
         "type",
-        "uuid",
         "version",
         "w",
         "width",
@@ -630,7 +611,13 @@
     "active": true,
     "title": "WhatsApp Web images",
     "tag": "filter-whatsapp",
-    "description": "User avatars in WhatsApp Web need an extra rule to filter URL parameters"
+    "description": "User avatars in WhatsApp Web need an extra rule to filter URL parameters",
+    "skipRedirectionFilter": true,
+    "paramsFilter": {
+      "values": [
+        "n"
+      ]
+    }
   },
   {
     "uuid": "9455395a-68a5-4ada-b40a-1ce4ce805c8f",
@@ -651,7 +638,7 @@
     ],
     "action": "filter",
     "active": false,
-    "description": "(Disabled by default because it depends on other protections: Google Street View works correctly in Firefox 79, but refuses to load any image in Firefox 68.11.0esr)",
+    "description": "(Disabled by default because it depends on other protections: when this filter is on, Google Street View works correctly in Firefox 79, but refuses to load any image in Firefox 68.11.0esr)",
     "paramsFilter": {
       "values": [
         "output",
@@ -663,7 +650,7 @@
       "invert": true
     },
     "title": "Anonymize Google Street View",
-    "tag": "filter-google"
+    "tag": "filter-google-street-samedomain"
   },
   {
     "uuid": "802e0c21-922e-4501-a652-da805caedb01",
@@ -695,12 +682,14 @@
       "host": [
         "external-content.duckduckgo.com",
         "img.dafont.com",
+        "outlook.office.com",
         "render.fontstruct.com",
         "render01.fontshop.com",
+        "www.osapublishing.org",
         "www.signbank.org"
       ],
       "path": [
-        "*"
+        "*?*"
       ],
       "origin": "same-domain"
     },
@@ -711,7 +700,7 @@
     "active": true,
     "title": "Image-dependent sites",
     "description": "Some sites, like typesetting shops, are heavily dependent on images. (Image and web document MUST share domain.) DuckDuckgo's external preview server is exceptionally included because of its efforts against user tracking and search bubbling.",
-    "tag": "whitelist-fonts",
+    "tag": "whitelist-images-samedomain",
     "log": true
   },
   {
@@ -753,7 +742,7 @@
       ],
       "invert": true
     },
-    "tag": "filter-google"
+    "tag": "filter-google-street-crossdomain"
   },
   {
     "uuid": "0ce012d9-8492-40eb-ae75-f7c48b4f97d3",
@@ -765,6 +754,7 @@
       "path": [
         "/avatar.php?*",
         "/avatar/*",
+        "/avatars/*",
         "/user_avatar/*",
         "/user_cover/*",
         "/userkarma.php?*"
@@ -777,18 +767,20 @@
     "active": true,
     "title": "User avatars and karma at community-driven sites",
     "log": true,
-    "description": "e.g. any wiki powered by WikiDot."
+    "description": "e.g. any wiki powered by WikiDot.",
+    "tag": "whitelist-avatars"
   },
   {
     "uuid": "91561207-76db-4850-85cb-5e34dedafa90",
     "pattern": {
       "scheme": "*",
       "host": [
-        "wiki.ubuntu.com"
+        "*"
       ],
       "path": [
         "*action=AttachFile&do=get&target=*"
-      ]
+      ],
+      "origin": "same-domain"
     },
     "types": [
       "image"
@@ -797,7 +789,8 @@
     "active": true,
     "title": "Embedded images in MoinMoin based wikis and similar.",
     "log": true,
-    "description": "Notably used on wiki.ubuntu.com."
+    "description": "Notably used on wiki.ubuntu.com.",
+    "tag": "whitelist-moinmoin"
   },
   {
     "uuid": "42c98357-aba0-4e8a-9df2-739c885cfde8",
@@ -805,11 +798,15 @@
       "scheme": "*",
       "host": [
         "*.imgix.net",
+        "badges.altmetric.com",
         "external-preview.redd.it",
+        "imagebank.osa.org",
+        "media.gettyimages.com",
+        "media.istockphoto.com",
         "preview.redd.it"
       ],
       "path": [
-        "*"
+        "*?*"
       ]
     },
     "types": [
@@ -818,9 +815,9 @@
     "action": "whitelist",
     "active": true,
     "title": "Image providers",
-    "description": "Sites that provide images for other web pages. Trimming URL parameters from these sites will make most sites render them incorrectly, or more often than not render them at all. Also includes Reddit external previews by necessity. (Whitelisted from ALL domains)",
+    "description": "Includes sites whose sole function is providing images for other web pages, and sites with a dedicated server for serving images. (Whitelisted from ALL domains)",
     "log": true,
-    "tag": "whitelist-general"
+    "tag": "whitelist-images-crossdomain"
   },
   {
     "uuid": "da3107bd-8fc1-4829-b4c4-6303af4af5fd",
@@ -831,6 +828,7 @@
       ],
       "path": [
         "*-captchaImage&antiCache=*",
+        "*captcha/api2/payload*",
         "/w/index.php?title=*&wpCaptchaId=*"
       ],
       "origin": "same-domain"
@@ -840,30 +838,10 @@
     ],
     "action": "whitelist",
     "active": true,
-    "title": "Homebrewed CAPTCHAs for new account registration",
+    "title": "CAPTCHAs",
     "tag": "whitelist-captcha",
     "log": true,
-    "description": "Some web portals generate their own captchas for account registration"
-  },
-  {
-    "uuid": "acd28edd-d436-4987-b004-7fbb5a946c28",
-    "pattern": {
-      "scheme": "https",
-      "host": [
-        "www.google.com"
-      ],
-      "path": [
-        "/recaptcha/api2/payload*"
-      ]
-    },
-    "types": [
-      "image"
-    ],
-    "action": "whitelist",
-    "active": true,
-    "title": "Google's reCAPTCHA",
-    "tag": "whitelist-google",
-    "log": true
+    "description": "This filter includes reCAPTCHA and other CAPTCHA systems"
   },
   {
     "uuid": "07f60a40-9293-406e-aba9-3926bdb0ef2c",
@@ -873,7 +851,8 @@
         "*"
       ],
       "path": [
-        "*/ap_resize/ap_resize.php?*"
+        "*/ap_resize/ap_resize.php?*",
+        "*safe_image.php?*"
       ]
     },
     "types": [
@@ -978,5 +957,174 @@
     "action": "filter",
     "active": true,
     "tag": "filter-embedly"
+  },
+  {
+    "uuid": "311886d6-bf8b-4112-aea3-9539cc40c318",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "maps.googleapis.com"
+      ],
+      "path": [
+        "/maps/api/staticmap?*&signature=*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Signed, static Google Maps",
+    "description": "Removing any parameter in these requests will make it fail.",
+    "log": true,
+    "tag": "whitelist-google-maps"
+  },
+  {
+    "uuid": "e1602933-69a7-4901-9259-42b5551101d0",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.maps.api.here.com",
+        "*.maps.cit.api.here.com"
+      ],
+      "path": [
+        "/maptile/2.1/maptile/*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "HERE maps API 2.5.4",
+    "tag": "filter-here",
+    "paramsFilter": {
+      "values": [
+        "app_code",
+        "app_id",
+        "lg",
+        "token"
+      ],
+      "invert": true
+    },
+    "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "66f8aed7-3826-4bfb-83ba-9a1030d54456",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*/image_gallery?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "2nd filter for tracking parameters in images",
+    "paramsFilter": {
+      "values": [
+        "download",
+        "group_id",
+        "groupid",
+        "image_path",
+        "img_id",
+        "imgid",
+        "t",
+        "uuid",
+        "version"
+      ],
+      "invert": true
+    },
+    "tag": "filter-images-2"
+  },
+  {
+    "uuid": "b6218979-e414-47d6-a652-227875564dfc",
+    "pattern": {
+      "scheme": "https",
+      "host": [
+        "media-exp1.licdn.com"
+      ],
+      "path": [
+        "dms/image/*/article-cover_image-shrink_*",
+        "dms/image/*/company-background_*",
+        "dms/image/*/company-logo_*",
+        "dms/image/*/profile-displayphoto-shrink_*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "tag": "whitelist-linkedin",
+    "title": "Restore logos, headers and avatars at LinkedIn",
+    "log": true
+  },
+  {
+    "uuid": "d5f1deb0-f7b4-4c45-9a7e-6ea04a051e51",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "fb.me"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "redirect",
+    "active": true,
+    "tag": "redirect-facebook",
+    "redirectUrl": "https://www.facebook.com/{pathname:1}"
+  },
+  {
+    "uuid": "bd61a299-f45e-4dee-a16c-be91ae8f937f",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "t.ssl.ak.dynamic.tiles.virtualearth.net",
+        "t.ssl.ak.tiles.virtualearth.net"
+      ],
+      "path": [
+        "comp/ch/*?mkt=*",
+        "tiles/*?g=*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Bing map and street view provider",
+    "tag": "whitelist-bing",
+    "log": true
+  },
+  {
+    "uuid": "5c27a1dc-3446-472d-9e26-e001b5a32e51",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "s2.googleusercontent.com"
+      ],
+      "path": [
+        "s2/favicons?domain_url=*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Favicons at YouTube",
+    "tag": "whitelist-youtube-2",
+    "log": true
   }
 ]
