@@ -158,5 +158,24 @@
       ]
     },
     "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "3a560339-2f03-4ab1-b6e3-db1edb01a875",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.awstrack.me"
+      ],
+      "path": [
+        "/L0/*"
+      ]
+    },
+    "action": "redirect",
+    "active": true,
+    "title": "AWS SES (awstrack.me)",
+    "description": "Strip destination from AWS SES links (awstrack.me), often found in newsletter emails.",
+    "tag": "filter-aws-ses",
+    "trimAllParams": true,
+    "redirectUrl": "[href={pathname/\\/L0\\//$'|decodeURIComponent}]"
   }
 ]
