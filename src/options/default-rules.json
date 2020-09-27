@@ -98,6 +98,9 @@
         "action_type_map",
         "algo_expid",
         "algo_pvid",
+        "at_campaign",
+        "at_custom*",
+        "at_medium",
         "btsid",
         "fb_action_ids",
         "fb_action_types",
@@ -121,6 +124,8 @@
         "ncid",
         "nr_email_referer",
         "ref_",
+        "referer",
+        "referrer",
         "sc_campaign",
         "sc_channel",
         "sc_content",
@@ -128,6 +133,7 @@
         "sc_geo",
         "sc_medium",
         "sc_outcome",
+        "share",
         "sid",
         "spJobID",
         "spMailingID",
@@ -139,8 +145,8 @@
         "utm_*",
         "vero_conv",
         "vero_id",
-        "wprov",
         "ws_ab_test",
+        "xtor",
         "yclid"
       ]
     }
@@ -218,6 +224,7 @@
         "*/dereferrer/*",
         "*/outgoing?*",
         "*redir/redirect?*",
+        "/deref/*",
         "away.php?to=*",
         "redirect?*"
       ]
@@ -234,6 +241,7 @@
     "pattern": {
       "scheme": "*",
       "host": [
+        "m.facebook.com",
         "www.facebook.com"
       ],
       "path": [
@@ -246,12 +254,14 @@
     "tag": "filter-facebook",
     "paramsFilter": {
       "values": [
-        "__tn__",
+        "_*",
         "extid",
         "flite",
         "fref",
+        "mt_nav",
         "ref",
         "referral_code",
+        "refsrc",
         "rid",
         "rt"
       ]
@@ -280,7 +290,8 @@
       "values": [
         "feature",
         "gclid",
-        "kw"
+        "kw",
+        "sp"
       ]
     },
     "skipRedirectionFilter": true,
@@ -342,7 +353,8 @@
     },
     "types": [
       "main_frame",
-      "sub_frame"
+      "sub_frame",
+      "image"
     ],
     "action": "filter",
     "active": true,
@@ -350,15 +362,19 @@
     "paramsFilter": {
       "values": [
         "cvid",
+        "ehk",
         "form",
+        "lg",
         "pq",
         "qs",
+        "ru",
         "sc",
         "sk",
         "sp"
       ]
     },
-    "description": "Imported from Neat URL webextension."
+    "description": "Based on Neat URL webextension.",
+    "skipRedirectionFilter": true
   },
   {
     "uuid": "0b0d8660-3c95-40ba-8c53-d72328a6cf00",
@@ -398,12 +414,14 @@
         "el",
         "gws_rd",
         "sel",
+        "source",
+        "usp",
         "ved"
       ]
     },
-    "title": "Remove query parameters from Google links",
+    "title": "Remove query parameters from Google links and other tracking parameters",
     "tag": "filter-google",
-    "description": "Imported from Neat URL webextension.",
+    "description": "Based on Neat URL webextension.",
     "skipRedirectionFilter": true
   },
   {
@@ -489,86 +507,74 @@
         "*"
       ],
       "excludes": [
-        "*.fbcdn.net/static_map.php?*",
-        "*.maps.api.here.com/maptile/2.1/maptile/*",
-        "*.maps.cit.api.here.com/maptile/2.1/maptile/*",
-        "*/ap_resize/ap_resize.php?*",
-        "*/image_gallery?*",
-        "*/safe_image.php?*",
-        "geo*.ggpht.com/cbk?*",
-        "https://web.whatsapp.com/",
-        "maps.googleapis.com/maps/*",
-        "www.google.com/maps/vt?*",
-        "www.youtube.com/api/stats/watchtime*"
-      ],
-      "allUrls": true
+        ".maps.api.here.com/maptile/2.1/maptile/",
+        "/:\\/\\/[a-z0-9]+\\.bing\\.com\\//",
+        "/:\\/\\/[a-z]{3,4}[0123]?\\.(google|googleapis|ggpht)\\.com\\/(maps\\/vt|cbk|kh)\\?/",
+        "/\\/(Satellite|BlobServer|StaticBS)(\\/[^\\/\\?]+)?\\?/",
+        "/\\/(ap_resize\\/ap_resize|imageproxy|safe_image)(.php)?\\?/",
+        "/\\/(i|fetch|image_gallery|thumb)(\\.php)?\\?/",
+        "/\\?.*\\&(_nc_[a-z]{1,3}|oh|oe)=./",
+        "://c.disquscdn.com/get?url=",
+        "://web.whatsapp.com/pp",
+        "://www.youtube.com/api/stats/watchtime"
+      ]
     },
     "action": "filter",
     "active": true,
-    "description": "Inspired by GIF Tracking Protection webextension",
-    "skipRedirectionFilter": true,
+    "description": "Inspired by GIF Tracking Protection webextension. Any excluded pattern should be part of another filter rule.",
     "tag": "filter-images-1",
     "types": [
       "image"
     ],
     "paramsFilter": {
       "values": [
+        "*color",
         "*expires",
         "*file",
         "*key",
         "*key-pair-id",
         "*lang",
         "*language",
-        "*path",
         "*policy",
         "*signature",
         "*style",
         "*styles",
         "*token",
-        "_nc_cat",
-        "_nc_ht",
-        "_nc_oc",
-        "_nc_ohc",
-        "_nc_sid",
-        "_nc_tp",
-        "assembler",
-        "asset",
-        "authority",
         "auto",
         "bbox",
-        "blob*",
-        "c",
+        "bboxsr",
+        "bg",
+        "blanktile",
+        "branch",
         "cacheid",
-        "cid",
-        "container",
         "contentid",
         "crop",
         "csblobid",
-        "fid",
+        "dpi",
+        "f",
+        "fg",
         "field",
+        "fill",
         "fit",
         "font",
         "format",
-        "fragment",
-        "frame",
-        "h",
         "height",
-        "hid",
         "i10c",
-        "id",
+        "image",
+        "imagesr",
+        "inputformat",
+        "latex",
         "layer",
         "layers",
-        "name",
-        "oe",
-        "oh",
+        "line",
         "output",
-        "parentid",
         "preview",
+        "provider",
         "q",
         "quality",
         "request",
-        "satellite",
-        "scale",
+        "resize",
+        "scale*",
         "scheme",
         "service",
         "sig",
@@ -581,9 +587,9 @@
         "title",
         "token-hash",
         "token-time",
+        "transparent",
         "type",
         "version",
-        "w",
         "width",
         "x",
         "y",
@@ -591,7 +597,8 @@
         "zoom"
       ],
       "invert": true
-    }
+    },
+    "skipRedirectionFilter": true
   },
   {
     "uuid": "297fb0c7-d052-4031-9947-fc7a9b7690af",
@@ -612,45 +619,11 @@
     "title": "WhatsApp Web images",
     "tag": "filter-whatsapp",
     "description": "User avatars in WhatsApp Web need an extra rule to filter URL parameters",
-    "skipRedirectionFilter": true,
     "paramsFilter": {
       "values": [
         "n"
       ]
     }
-  },
-  {
-    "uuid": "9455395a-68a5-4ada-b40a-1ce4ce805c8f",
-    "pattern": {
-      "scheme": "*",
-      "host": [
-        "geo0.ggpht.com",
-        "geo1.ggpht.com",
-        "geo2.ggpht.com",
-        "geo3.ggpht.com"
-      ],
-      "path": [
-        "/cbk?*"
-      ]
-    },
-    "types": [
-      "image"
-    ],
-    "action": "filter",
-    "active": false,
-    "description": "(Disabled by default because it depends on other protections: when this filter is on, Google Street View works correctly in Firefox 79, but refuses to load any image in Firefox 68.11.0esr)",
-    "paramsFilter": {
-      "values": [
-        "output",
-        "panoid",
-        "x",
-        "y",
-        "zoom"
-      ],
-      "invert": true
-    },
-    "title": "Anonymize Google Street View",
-    "tag": "filter-google-street-samedomain"
   },
   {
     "uuid": "802e0c21-922e-4501-a652-da805caedb01",
@@ -681,6 +654,7 @@
       "scheme": "*",
       "host": [
         "external-content.duckduckgo.com",
+        "gatherer.wizards.com",
         "img.dafont.com",
         "outlook.office.com",
         "render.fontstruct.com",
@@ -708,41 +682,54 @@
     "pattern": {
       "scheme": "*",
       "host": [
-        "maps.googleapis.com"
+        "*.ggpht.com",
+        "*.google.com",
+        "*.googleapis.com"
       ],
       "path": [
-        "*"
-      ],
-      "excludes": [
-        "*//maps.googleapis.com/maps/api/js/StaticMapService.GetMapImage?*"
+        "cbk?*",
+        "kh?*",
+        "maps/vt?*"
       ]
     },
     "types": [
       "image"
     ],
     "action": "filter",
-    "active": true,
-    "title": "Anonymize pictures from Google Maps and Google Street View in 3rd-party sites",
+    "active": false,
+    "title": "Anonymize pictures from Google Maps and Google Street View",
     "paramsFilter": {
       "values": [
+        "cb_client",
+        "center",
+        "deg",
         "fov",
         "heading",
+        "hl",
         "key",
         "location",
         "maptype",
         "markers",
-        "pano",
+        "output",
+        "panoid",
         "pb",
         "pitch",
         "radius",
         "signature",
         "size",
         "source",
+        "thumb",
+        "thumbfov",
+        "v",
+        "x",
+        "y",
+        "z",
         "zoom"
       ],
       "invert": true
     },
-    "tag": "filter-google-street-crossdomain"
+    "tag": "filter-google-maps",
+    "description": "May cause problems in some browsers like Firefox ESR 68. Disabled by default."
   },
   {
     "uuid": "0ce012d9-8492-40eb-ae75-f7c48b4f97d3",
@@ -752,9 +739,11 @@
         "*"
       ],
       "path": [
+        "*download/file.php?avatar=*",
         "/avatar.php?*",
         "/avatar/*",
         "/avatars/*",
+        "/data/avatars/*",
         "/user_avatar/*",
         "/user_cover/*",
         "/userkarma.php?*"
@@ -767,7 +756,7 @@
     "active": true,
     "title": "User avatars and karma at community-driven sites",
     "log": true,
-    "description": "e.g. any wiki powered by WikiDot.",
+    "description": "e.g. phpBB forums, WikiDot wikis.",
     "tag": "whitelist-avatars"
   },
   {
@@ -798,11 +787,13 @@
       "scheme": "*",
       "host": [
         "*.imgix.net",
+        "badge.dimensions.ai",
         "badges.altmetric.com",
         "external-preview.redd.it",
         "imagebank.osa.org",
         "media.gettyimages.com",
         "media.istockphoto.com",
+        "pbs.twimg.com",
         "preview.redd.it"
       ],
       "path": [
@@ -851,8 +842,10 @@
         "*"
       ],
       "path": [
-        "*/ap_resize/ap_resize.php?*",
-        "*safe_image.php?*"
+        "*"
+      ],
+      "includes": [
+        "/\\/(ap_resize\\/ap_resize|imageproxy|safe_image)(.php)?\\?/"
       ]
     },
     "types": [
@@ -869,23 +862,14 @@
     "pattern": {
       "scheme": "https",
       "host": [
+        "*.sharepoint.com",
         "home.navigator-bs.gmx.com",
         "navigator-bs.gmx.com",
         "trackbar.navigator-bs.gmx.com"
       ],
       "path": [
-        "/?sid=*",
-        "/addressbook?sid=*",
-        "/ciss?sid=*",
-        "/cloud?sid=*",
-        "/home/show?sid=*",
-        "/home?sid=*",
-        "/mail?sid=*",
-        "/navigator/home/fallback?sid=*",
-        "/navigator/jump/to/lps?sid=*",
-        "/ooeditor?sid=*",
-        "/organizer?sid=*",
-        "/remindlogout?sid=*"
+        "*share=*",
+        "*sid=*"
       ]
     },
     "types": [
@@ -895,8 +879,8 @@
     "action": "whitelist",
     "active": true,
     "title": "Unbreak GMX Webclient",
-    "description": "GMX Webclient uses the URL parameter `sid` to load different pages. This trips a general-purpose referrer remover.",
-    "tag": "whitelist-gmx",
+    "description": "These sites use the URL parameters `sid` and `share` to load different pages. This trips a general-purpose referrer remover.",
+    "tag": "whitelist-utm",
     "log": true
   },
   {
@@ -928,7 +912,7 @@
         "duckduckgo.com"
       ],
       "path": [
-        "/mapkit/?*"
+        "mapkit/?*"
       ]
     },
     "types": [
@@ -963,9 +947,11 @@
     "pattern": {
       "scheme": "*",
       "host": [
+        "maps.google.com",
         "maps.googleapis.com"
       ],
       "path": [
+        "/maps/api/js/StaticMapService.GetMapImage*",
         "/maps/api/staticmap?*&signature=*"
       ]
     },
@@ -974,8 +960,8 @@
     ],
     "action": "whitelist",
     "active": true,
-    "title": "Signed, static Google Maps",
-    "description": "Removing any parameter in these requests will make it fail.",
+    "title": "Static Google Maps",
+    "description": "Removing any parameter in these requests (signed maps, and base image for some embedded maps) will make it fail.",
     "log": true,
     "tag": "whitelist-google-maps"
   },
@@ -1017,7 +1003,10 @@
         "*"
       ],
       "path": [
-        "*/image_gallery?*"
+        "*"
+      ],
+      "includes": [
+        "/\\/(i|fetch|image_gallery|thumb)(\\.php)?\\?/"
       ]
     },
     "types": [
@@ -1028,19 +1017,24 @@
     "title": "2nd filter for tracking parameters in images",
     "paramsFilter": {
       "values": [
+        "crop",
         "download",
+        "filedataid",
         "group_id",
         "groupid",
+        "i",
         "image_path",
         "img_id",
         "imgid",
         "t",
         "uuid",
-        "version"
+        "version",
+        "w"
       ],
       "invert": true
     },
-    "tag": "filter-images-2"
+    "tag": "filter-images-2",
+    "description": "Undocument image-selection PHP scripts, based in numeric IDs."
   },
   {
     "uuid": "b6218979-e414-47d6-a652-227875564dfc",
@@ -1053,7 +1047,10 @@
         "dms/image/*/article-cover_image-shrink_*",
         "dms/image/*/company-background_*",
         "dms/image/*/company-logo_*",
-        "dms/image/*/profile-displayphoto-shrink_*"
+        "dms/image/*/learning-public-crop_*",
+        "dms/image/*/profile-displaybackgroundimage-shrink_*",
+        "dms/image/*/profile-displayphoto-shrink_*",
+        "dms/image/*/videocover_*"
       ]
     },
     "types": [
@@ -1090,6 +1087,10 @@
     "pattern": {
       "scheme": "*",
       "host": [
+        "ecn.t0.tiles.virtualearth.net",
+        "ecn.t1.tiles.virtualearth.net",
+        "ecn.t2.tiles.virtualearth.net",
+        "ecn.t3.tiles.virtualearth.net",
         "t.ssl.ak.dynamic.tiles.virtualearth.net",
         "t.ssl.ak.tiles.virtualearth.net"
       ],
@@ -1104,7 +1105,7 @@
     "action": "whitelist",
     "active": true,
     "title": "Bing map and street view provider",
-    "tag": "whitelist-bing",
+    "tag": "whitelist-bing-maps",
     "log": true
   },
   {
@@ -1126,5 +1127,167 @@
     "title": "Favicons at YouTube",
     "tag": "whitelist-youtube-2",
     "log": true
+  },
+  {
+    "uuid": "71bc39c3-0a9e-44ef-8309-bcdb99377491",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ],
+      "includes": [
+        "/\\/(Satellite|BlobServer|StaticBS)(\\/[^\\/\\?]+)?\\?/"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "3rd filter for tracking parameters in images",
+    "skipRedirectionFilter": true,
+    "paramsFilter": {
+      "values": [
+        "assembler",
+        "asset",
+        "authority",
+        "blob*",
+        "c",
+        "cid",
+        "container",
+        "fragment",
+        "key",
+        "maxage",
+        "satellite",
+        "scheme",
+        "ssbinary"
+      ],
+      "invert": true
+    },
+    "description": "Oracle's Site-Satellite and Apache's BlobServer system",
+    "tag": "filter-images-3"
+  },
+  {
+    "uuid": "938aebe5-c98a-46fb-9e38-6b9bd42d687e",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ],
+      "excludes": [
+        "safe_image.php*"
+      ],
+      "includes": [
+        "/\\?.*\\&(_nc_[a-z]{1,3}|oh|oe)=./"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "4th filter for tracking parameters in images",
+    "skipRedirectionFilter": true,
+    "tag": "filter-images-4",
+    "paramsFilter": {
+      "values": [
+        "_nc_cat",
+        "_nc_ht",
+        "_nc_oc",
+        "_nc_ohc",
+        "oe",
+        "oh"
+      ],
+      "invert": true
+    },
+    "description": "For Facebook's style signed URLs filters (used in Facebook, WhatsApp and Instagram)."
+  },
+  {
+    "uuid": "9a0a3b89-7fd4-4838-a5d2-a1e39da8006b",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.fna.fbcdn.net"
+      ],
+      "path": [
+        "static_map.php?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Facebook map thumbnail provider",
+    "tag": "whitelist-facebook-maps",
+    "log": true
+  },
+  {
+    "uuid": "e1262258-f5c2-4c2d-baa0-4a0e9ffcef3d",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "vec01.maps.yandex.net",
+        "vec02.maps.yandex.net",
+        "vec03.maps.yandex.net",
+        "vec04.maps.yandex.net"
+      ],
+      "path": [
+        "/tiles?l=map&*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Yandex maps",
+    "log": true,
+    "tag": "whitelist-yandex"
+  },
+  {
+    "uuid": "953324d7-0aff-48c0-96fc-b4b746befa7e",
+    "pattern": {
+      "scheme": "https",
+      "host": [
+        "www.linkedin.com"
+      ],
+      "path": [
+        "/checkpoint/rp/request-password-reset-submit-redir-email-pin?*"
+      ]
+    },
+    "types": [
+      "main_frame"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Restore password reset at LinkedIn",
+    "tag": "whitelist-linkedin-password-reset",
+    "log": true
+  },
+  {
+    "uuid": "e3dd89aa-6fd3-41ae-945f-3617fc03902d",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "c.disquscdn.com"
+      ],
+      "path": [
+        "get?url=*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "Skip Disqus image retriever",
+    "tag": "filter-disqus"
   }
 ]
