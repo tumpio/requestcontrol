@@ -791,6 +791,7 @@
         "badges.altmetric.com",
         "external-preview.redd.it",
         "imagebank.osa.org",
+        "media-exp1.licdn.com",
         "media.gettyimages.com",
         "media.istockphoto.com",
         "pbs.twimg.com",
@@ -1035,32 +1036,6 @@
     },
     "tag": "filter-images-2",
     "description": "Undocument image-selection PHP scripts, based in numeric IDs."
-  },
-  {
-    "uuid": "b6218979-e414-47d6-a652-227875564dfc",
-    "pattern": {
-      "scheme": "https",
-      "host": [
-        "media-exp1.licdn.com"
-      ],
-      "path": [
-        "dms/image/*/article-cover_image-shrink_*",
-        "dms/image/*/company-background_*",
-        "dms/image/*/company-logo_*",
-        "dms/image/*/learning-public-crop_*",
-        "dms/image/*/profile-displaybackgroundimage-shrink_*",
-        "dms/image/*/profile-displayphoto-shrink_*",
-        "dms/image/*/videocover_*"
-      ]
-    },
-    "types": [
-      "image"
-    ],
-    "action": "whitelist",
-    "active": true,
-    "tag": "whitelist-linkedin",
-    "title": "Restore logos, headers and avatars at LinkedIn",
-    "log": true
   },
   {
     "uuid": "d5f1deb0-f7b4-4c45-9a7e-6ea04a051e51",
