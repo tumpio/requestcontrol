@@ -124,6 +124,7 @@
         "ncid",
         "nr_email_referer",
         "ref_",
+        "ref_src",
         "referer",
         "referrer",
         "sc_campaign",
@@ -140,6 +141,7 @@
         "spReportId",
         "spUserID",
         "sr_share",
+        "trackingId",
         "trk",
         "trkCampaign",
         "utm_*",
@@ -176,7 +178,8 @@
       "scheme": "*",
       "host": [
         "l.facebook.*",
-        "l.instagram.*"
+        "l.instagram.*",
+        "lm.facebook.*"
       ],
       "topLevelDomains": [
         "com",
@@ -511,7 +514,7 @@
         "/:\\/\\/[a-z0-9]+\\.bing\\.com\\//",
         "/:\\/\\/[a-z]{3,4}[0123]?\\.(google|googleapis|ggpht)\\.com\\/(maps\\/vt|cbk|kh)\\?/",
         "/\\/(Satellite|BlobServer|StaticBS)(\\/[^\\/\\?]+)?\\?/",
-        "/\\/(ap_resize\\/ap_resize|imageproxy|safe_image)(.php)?\\?/",
+        "/\\/(ap_resize\\/ap_resize|image|imageproxy|safe_image)(.php)?\\?/",
         "/\\/(i|fetch|image_gallery|thumb)(\\.php)?\\?/",
         "/\\?.*\\&(_nc_[a-z]{1,3}|oh|oe)=./",
         "://c.disquscdn.com/get?url=",
@@ -704,6 +707,7 @@
         "center",
         "deg",
         "fov",
+        "h",
         "heading",
         "hl",
         "key",
@@ -721,8 +725,10 @@
         "thumb",
         "thumbfov",
         "v",
+        "w",
         "x",
         "y",
+        "yaw",
         "z",
         "zoom"
       ],
@@ -846,7 +852,7 @@
         "*"
       ],
       "includes": [
-        "/\\/(ap_resize\\/ap_resize|imageproxy|safe_image)(.php)?\\?/"
+        "/\\/(ap_resize\\/ap_resize|image|imageproxy|safe_image)(.php)?\\?/"
       ]
     },
     "types": [
@@ -1264,5 +1270,36 @@
     "active": true,
     "title": "Skip Disqus image retriever",
     "tag": "filter-disqus"
+  },
+  {
+    "uuid": "d78b46f3-6c04-43a8-a907-83c161138e61",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "www.linkedin.com"
+      ],
+      "path": [
+        "*"
+      ],
+      "excludes": [
+        "/\\/checkpoint\\/challenge\\//",
+        "/\\/search\\/\\?/"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "redirectUrl": "",
+    "tag": "filter-linkedin",
+    "skipRedirectionFilter": true,
+    "paramsFilter": {
+      "values": [
+        "sessionRedirect"
+      ],
+      "invert": true
+    }
   }
 ]
