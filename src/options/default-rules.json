@@ -7,7 +7,6 @@
       "scheme": "*",
       "host": [
         "*.tradedoubler.com",
-        "disq.us",
         "out.reddit.com",
         "steamcommunity.com"
       ],
@@ -123,8 +122,7 @@
         "mkt_tok",
         "ncid",
         "nr_email_referer",
-        "ref_",
-        "ref_src",
+        "ref_*",
         "referer",
         "referrer",
         "sc_campaign",
@@ -266,7 +264,8 @@
         "referral_code",
         "refsrc",
         "rid",
-        "rt"
+        "rt",
+        "sfnsn"
       ]
     },
     "skipRedirectionFilter": true
@@ -514,8 +513,8 @@
         "/:\\/\\/[a-z0-9]+\\.bing\\.com\\//",
         "/:\\/\\/[a-z]{3,4}[0123]?\\.(google|googleapis|ggpht)\\.com\\/(maps\\/vt|cbk|kh)\\?/",
         "/\\/(Satellite|BlobServer|StaticBS)(\\/[^\\/\\?]+)?\\?/",
-        "/\\/(ap_resize\\/ap_resize|image|imageproxy|safe_image)(.php)?\\?/",
-        "/\\/(i|fetch|image_gallery|thumb)(\\.php)?\\?/",
+        "/\\/(ap_resize\\/ap_resize|image|imageproxy|resizer\\/resizer|safe_image)(.php)?\\?/",
+        "/\\/(i|fetch|image_gallery|thumb)(\\.php|\\/)?\\?/",
         "/\\?.*\\&(_nc_[a-z]{1,3}|oh|oe)=./",
         "://c.disquscdn.com/get?url=",
         "://web.whatsapp.com/pp",
@@ -561,6 +560,7 @@
         "fit",
         "font",
         "format",
+        "h",
         "height",
         "i10c",
         "image",
@@ -577,6 +577,7 @@
         "quality",
         "request",
         "resize",
+        "rule",
         "scale*",
         "scheme",
         "service",
@@ -593,6 +594,7 @@
         "transparent",
         "type",
         "version",
+        "w",
         "width",
         "x",
         "y",
@@ -796,6 +798,7 @@
         "badge.dimensions.ai",
         "badges.altmetric.com",
         "external-preview.redd.it",
+        "i.mycdn.me",
         "imagebank.osa.org",
         "media-exp1.licdn.com",
         "media.gettyimages.com",
@@ -826,6 +829,10 @@
       ],
       "path": [
         "*-captchaImage&antiCache=*",
+        "*action=formmakerwdcaptcha&*",
+        "*action=formmakerwdmathcaptcha&*",
+        "*action=nopriv_formmakerwdcaptcha&*",
+        "*action=nopriv_formmakerwdmathcaptcha&*",
         "*captcha/api2/payload*",
         "/w/index.php?title=*&wpCaptchaId=*"
       ],
@@ -852,7 +859,7 @@
         "*"
       ],
       "includes": [
-        "/\\/(ap_resize\\/ap_resize|image|imageproxy|safe_image)(.php)?\\?/"
+        "/\\/(ap_resize\\/ap_resize|image|imageproxy|resizer\\/resizer|safe_image)(.php)?\\?/"
       ]
     },
     "types": [
@@ -872,7 +879,8 @@
         "*.sharepoint.com",
         "home.navigator-bs.gmx.com",
         "navigator-bs.gmx.com",
-        "trackbar.navigator-bs.gmx.com"
+        "trackbar.navigator-bs.gmx.com",
+        "www.signbank.org"
       ],
       "path": [
         "*share=*",
@@ -885,7 +893,7 @@
     ],
     "action": "whitelist",
     "active": true,
-    "title": "Unbreak GMX Webclient",
+    "title": "Exceptions to `sid` and `share` parameters",
     "description": "These sites use the URL parameters `sid` and `share` to load different pages. This trips a general-purpose referrer remover.",
     "tag": "whitelist-utm",
     "log": true
@@ -1013,7 +1021,7 @@
         "*"
       ],
       "includes": [
-        "/\\/(i|fetch|image_gallery|thumb)(\\.php)?\\?/"
+        "/\\/(i|fetch|image_gallery|thumb)(\\.php|\\/)?\\?/"
       ]
     },
     "types": [
@@ -1282,8 +1290,11 @@
         "*"
       ],
       "excludes": [
+        "/\\/checkpoint\\/challengeIframe\\//",
         "/\\/checkpoint\\/challenge\\//",
-        "/\\/search\\/\\?/"
+        "/\\/jobs\\/\\?/",
+        "/\\/search\\/\\?/",
+        "/\\/uas\\/logout\\?/"
       ]
     },
     "types": [
@@ -1294,12 +1305,33 @@
     "active": true,
     "redirectUrl": "",
     "tag": "filter-linkedin",
-    "skipRedirectionFilter": true,
     "paramsFilter": {
       "values": [
-        "sessionRedirect"
+        "url"
       ],
       "invert": true
     }
+  },
+  {
+    "uuid": "e3384047-a2b2-433e-a52c-f46eea48305f",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "disq.us"
+      ],
+      "path": [
+        "url?url=*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "redirect",
+    "active": true,
+    "title": "Skip Disqus redirector",
+    "redirectUrl": "{search/\\?url=([^&]*)&.*/$1|decodeURIComponent|/:[A-Za-z0-9-]*$/}",
+    "tag": "redirect-disqus",
+    "description": "A suffix after the destination URL causes the usual approach to fail"
   }
 ]
