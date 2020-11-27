@@ -324,16 +324,23 @@
     "skipRedirectionFilter": true,
     "paramsFilter": {
       "values": [
+        "arb",
+        "cartInitiateId",
+        "claimToken",
         "clientContext",
         "field-keywords",
         "i",
         "ie",
+        "isToBeGiftWrappedBefore",
         "k",
         "language",
         "location",
         "mgh",
         "node",
         "openid.*",
+        "partialCheckoutCart",
+        "proceedToCheckout",
+        "proceedToRetailCheckout",
         "rh",
         "url"
       ],
@@ -834,7 +841,9 @@
         "*action=nopriv_formmakerwdcaptcha&*",
         "*action=nopriv_formmakerwdmathcaptcha&*",
         "*captcha/api2/payload*",
-        "/w/index.php?title=*&wpCaptchaId=*"
+        "*recaptcha/enterprise/payload*",
+        "/w/index.php?title=*&wpCaptchaId=*",
+        "https://opfcaptcha-prod.s3.amazonaws.com/*"
       ],
       "origin": "same-domain"
     },
@@ -1290,8 +1299,7 @@
         "*"
       ],
       "excludes": [
-        "/\\/checkpoint\\/challengeIframe\\//",
-        "/\\/checkpoint\\/challenge\\//",
+        "/\\/checkpoint\\//",
         "/\\/jobs\\/\\?/",
         "/\\/search\\/\\?/",
         "/\\/uas\\/logout\\?/"
