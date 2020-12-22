@@ -193,9 +193,6 @@
   "create_new_rule": {
     "message": "Crear nueva regla"
   },
-  "restore_default_rules": {
-    "message": "Restaurar reglas predeterminadas"
-  },
   "new_rule": {
     "message": "Nueva regla"
   },
@@ -351,15 +348,6 @@
   },
   "import_description": {
     "message": "Importa reglas a un fichero local."
-  },
-  "restore_defaults": {
-    "message": "Restaurar predeterminadas"
-  },
-  "restore_description": {
-    "message": "Restaura las reglas predeterminadas."
-  },
-  "restore": {
-    "message": "Restaurar"
   },
   "contents": {
     "message": "Contenidos"

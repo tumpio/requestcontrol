@@ -33,6 +33,10 @@ class RuleList extends HTMLElement {
         return this.list.childElementCount;
     }
 
+    get isEmpty() {
+        return this.list.childElementCount === 0;
+    }
+
     newRule() {
         const input = newRuleInput();
         this.list.append(input);

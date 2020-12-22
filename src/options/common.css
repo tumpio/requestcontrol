@@ -49,6 +49,17 @@ code {
     color: rgb(12, 12, 13);
 }
 
+.btn.text {
+    background: none;
+    display: inline;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    color: var(--primary-color);
+    font: inherit;
+    vertical-align: inherit;
+}
+
 .btn:disabled,
 a.disabled {
     opacity: 0.6;

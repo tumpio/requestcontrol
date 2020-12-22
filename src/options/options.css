@@ -16,7 +16,7 @@ body {
     color: var(--text-color);
 }
 
-#tab-rules * + * {
+.toolbar * + * {
     margin-top: 0;
     margin-bottom: 0;
 }
@@ -40,6 +40,15 @@ body {
 
 #changelogModal h6 {
     margin: 0;
+}
+
+.no-rules {
+    border: 2px dashed darkgray;
+    text-align: center;
+    padding: 3em;
+    border-radius: 3px;
+    background: #fff;
+    color: #999;
 }
 
 .tab-pane:not(.active) {

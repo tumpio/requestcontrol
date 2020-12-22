@@ -221,10 +221,6 @@
         "message": "创建新规则",
         "hash": "dacd328b27e73d373cebd13c7b0f7e1c"
     },
-    "restore_default_rules": {
-        "message": "恢复默认规则",
-        "hash": "fa90375fa00b7a4f85d1113b24be7745"
-    },
     "new_rule": {
         "message": "新建规则",
         "hash": "ae6aafa16c5645e6f1c1e19aa39fd081"
@@ -466,18 +462,6 @@
     "import_description": {
         "message": "从本地文件导入规则。",
         "hash": "688c01363a5a0de646e5e7b5393f41f9"
-    },
-    "restore_defaults": {
-        "message": "恢复默认",
-        "hash": "ac0d3384ca3e7242470b5c2ec3375cfc"
-    },
-    "restore_description": {
-        "message": "恢复默认的规则。",
-        "hash": "14a22951c87450cc34a08c1021984624"
-    },
-    "restore": {
-        "message": "恢复",
-        "hash": "707b6981da281cf82be0349cdb34737b"
     },
     "contents": {
         "message": "内容",
