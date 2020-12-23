@@ -102,7 +102,7 @@ License
 .. _ionicons: http://ionicons.com/
 .. _tldts: https://github.com/remusao/tldts
 
-.. |BuildStatus| image:: https://travis-ci.org/tumpio/requestcontrol.svg?branch=master
-   :target: https://travis-ci.org/tumpio/requestcontrol
+.. |BuildStatus| image:: https://github.com/tumpio/requestcontrol/workflows/Build/badge.svg?event=push&branch=master
+   :target: https://github.com/tumpio/requestcontrol/actions
 .. |codecov| image:: https://codecov.io/gh/tumpio/requestcontrol/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/tumpio/requestcontrol

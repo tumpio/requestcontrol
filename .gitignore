@@ -1,5 +1,5 @@
 .vscode/
-.releases/
+web-ext-artifacts/
 manual.html
 node_modules
 .nyc_output/

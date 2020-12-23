@@ -284,8 +284,10 @@ async function fetchLocalisedManual() {
     const text = await response.text();
     const manual = document.getElementById("manual");
     const contents = document.getElementById("contents");
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, "text/html");
 
-    manual.insertAdjacentHTML("afterbegin", text);
+    manual.append(...doc.body.children);
 
     // generate table of contents
     const toc = new Toc(manual).render();
@@ -304,7 +306,7 @@ async function fetchLocalisedManual() {
 }
 
 async function fetchChangelog() {
-    const response = await fetch("/CHANGELOG", {
+    const response = await fetch("/CHANGELOG.md", {
         headers: {
             "Content-Type": "text/plain",
         },
@@ -315,8 +317,15 @@ async function fetchChangelog() {
     const body = modal.querySelector(".modal-body");
 
     let ul = document.createElement("ul");
+    let start = false;
 
     for (let line of content.split("\n")) {
+        if (!start) {
+            if (line.startsWith("##")) {
+                start = true;
+            }
+            continue;
+        }
         if (line.startsWith("-")) {
             const li = document.createElement("li");
             const text = line.split(/(#\d+|@\w+)/);
@@ -352,7 +361,7 @@ async function fetchChangelog() {
             ul.appendChild(li);
         } else {
             const h = document.createElement("h6");
-            h.textContent = line;
+            h.textContent = line.substring(2);
             body.appendChild(h);
             ul = document.createElement("ul");
             body.appendChild(ul);
