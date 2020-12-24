@@ -3,16 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { createMatchPatterns, createRule, ALL_URLS } from "./main/api.js";
-import { getNotifier } from "./notifier.js";
+import * as notifier from "./util/notifier.js";
 import { RequestController } from "./main/control.js";
-import * as records from "./records.js";
+import * as records from "./util/records.js";
 
 const listeners = [];
 const controller = new RequestController(notify, updateTab);
-let notifier;
 
 browser.storage.local.get().then(async (options) => {
-    notifier = await getNotifier();
     init(options);
     browser.storage.onChanged.addListener(onChanged);
 });
@@ -22,7 +20,7 @@ function init(options) {
         browser.tabs.onRemoved.removeListener(records.removeTabRecords);
         browser.runtime.onMessage.removeListener(records.getTabRecords);
         browser.webNavigation.onCommitted.removeListener(onNavigation);
-        notifier.disabledState(records.all());
+        notifier.disabledState(records.keys());
         records.clear();
         controller.requests.clear();
     } else {
@@ -64,7 +62,7 @@ function addListeners(rules) {
             browser.webRequest.onBeforeRequest.addListener(listener, filter);
             listeners.push(listener);
         } catch {
-            notifier.error(null, browser.i18n.getMessage("error_invalid_rule"));
+            notifier.error(null);
         }
     }
     browser.webRequest.onBeforeRequest.addListener(controlListener, { urls: [ALL_URLS] }, ["blocking"]);
@@ -89,7 +87,7 @@ function notify(rule, request, target = null) {
         timestamp: request.timeStamp,
         rule: rule,
     });
-    notifier.notify(request.tabId, rule, count);
+    notifier.notify(request.tabId, rule.constructor.icon, count);
 }
 
 function onNavigation(details) {
@@ -101,7 +99,7 @@ function onNavigation(details) {
 
     if (keep.length) {
         records.setTabRecords(details.tabId, keep);
-        notifier.notify(details.tabId, keep[keep.length - 1].rule, keep.length);
+        notifier.notify(details.tabId, keep[keep.length - 1].rule.constructor.icon, keep.length);
     } else {
         records.removeTabRecords(details.tabId);
         notifier.clear(details.tabId);

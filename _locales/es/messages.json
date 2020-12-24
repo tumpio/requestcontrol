@@ -423,9 +423,6 @@
   "blocked": {
     "message": "Bloqueada"
   },
-  "error_invalid_url": {
-    "message": "No se pudo redirigir a un nuevo objetivo: URL objetivo no válida"
-  },
   "invalid_target_url": {
     "message": "URL objetivo no válida: "
   },

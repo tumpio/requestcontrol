@@ -84,7 +84,6 @@
       "import",
       "node",
       "promise",
-      "standard",
       "no-unsanitized"
     ],
     "rules": {

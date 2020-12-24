@@ -558,10 +558,6 @@
         "message": "已拦截",
         "hash": "aee65dae595f72841c1307238d2a4cea"
     },
-    "error_invalid_url": {
-        "message": "重定向到新目标失败：无效的目标 URL",
-        "hash": "15d0ae1fc4c165b0323dfdfc4114cbf3"
-    },
     "invalid_target_url": {
         "message": "无效的目标 URL：",
         "hash": "8de3370065eafbe3c5cd9aed857293cd"

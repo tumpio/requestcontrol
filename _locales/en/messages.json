@@ -21,15 +21,6 @@
   "title_whitelist": {
     "message": "Whitelisted: "
   },
-  "main_title_with_state": {
-    "message": "Request Control ($STATE$)",
-    "placeholders": {
-      "state": {
-        "content": "$1",
-        "example": "Disabled"
-      }
-    }
-  },
   "rule_title_filter": {
     "message": "Filter: $HOST$",
     "placeholders": {
@@ -523,9 +514,6 @@
   },
   "upgraded_to_secure": {
     "message": "Upgraded to secure"
-  },
-  "error_invalid_url": {
-    "message": "Failed to redirect to new target: Invalid target URL"
   },
   "error_invalid_rule": {
     "message": "Error invalid rule"
