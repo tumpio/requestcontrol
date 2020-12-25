@@ -47,7 +47,7 @@ export function newRuleInput(
     return input;
 }
 
-const isMobile = window.matchMedia("(max-width: 35em)");
+const isMobile = window.matchMedia("(max-width: 35em)").matches;
 
 class RuleInput extends HTMLElement {
     constructor() {
