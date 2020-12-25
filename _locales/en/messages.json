@@ -414,8 +414,19 @@
   "test_selected": {
     "message": "Test selected"
   },
-  "selected_rules": {
-    "message": "Selected rules"
+  "zero_selected_rules": {
+    "message": "0 selected rules"
+  },
+  "one_selected_rule": {
+    "message": "1 selected rule"
+  },
+  "multiple_selected_rules": {
+    "message": "$COUNT$ selected rules",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
   },
   "export_rules": {
     "message": "Export rules"

@@ -271,6 +271,21 @@ function updateToolbar() {
     document.querySelectorAll(".btn-selected-action").forEach((button) => {
         button.disabled = !isSelected;
     });
+    const selectedButton = document.getElementById("selectedRules");
+    selectedButton.disabled = !isSelected;
+    selectedButton.textContent = getSelectedRulesText(count);
+}
+
+function getSelectedRulesText(count) {
+    let text;
+    if (count === 0) {
+        text = browser.i18n.getMessage("zero_selected_rules");
+    } else if (count === 1) {
+        text = browser.i18n.getMessage("one_selected_rule");
+    } else  {
+        text = browser.i18n.getMessage("multiple_selected_rules", count);
+    }
+    return text;
 }
 
 async function fetchLocalisedManual() {

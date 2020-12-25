@@ -269,6 +269,7 @@ body {
     }
 
     rule-list {
+        display: block;
         margin-bottom: 1.3em !important;
     }
 
@@ -280,6 +281,14 @@ body {
 
     #tabs > .col {
         margin: 0;
+    }
+
+    .tab-selector {
+        padding: 1em;
+    }
+
+    .tab-selector:hover {
+        opacity: 1;
     }
 
     .tab-selector:not(.active) > span {
@@ -301,10 +310,6 @@ body {
 @media (max-width: 42em) {
     #selectedRules {
         z-index: -1;
-    }
-
-    #selectedRules .total-selected-count {
-        margin: 0 0.5em;
     }
 
     .mobile-toolbar {
