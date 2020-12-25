@@ -1,0 +1,21 @@
+[
+    {
+        "uuid": "c7ca4ba4-1a16-4b98-b645-62d22ae582ee",
+        "pattern": {
+            "scheme": "*",
+            "host": [
+                "duckduckgo.com"
+            ],
+            "path": [
+                "l/?*"
+            ]
+        },
+        "types": [
+            "main_frame",
+            "sub_frame"
+        ],
+        "action": "filter",
+        "active": true,
+        "tag": "filter-duckduckgo"
+    }
+]

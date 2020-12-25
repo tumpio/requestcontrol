@@ -1,0 +1,560 @@
+[
+  {
+    "title": "1st filter for tracking parameters in images",
+    "description": "Inspired by GIF Tracking Protection webextension. Any excluded pattern should be part of another filter rule.",
+    "tag": "filter-images-1",
+    "uuid": "6468e7a9-440d-4727-a09e-c1a5cc386948",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ],
+      "excludes": [
+        ".maps.api.here.com/maptile/2.1/maptile/",
+        "/:\\/\\/[a-z0-9]+\\.bing\\.com\\//",
+        "/:\\/\\/[a-z]{3,4}[0123]?\\.(google|googleapis|ggpht)\\.com\\/(maps\\/vt|cbk|kh)\\?/",
+        "/\\/(Satellite|BlobServer|StaticBS)(\\/[^\\/\\?]+)?\\?/",
+        "/\\/(ap_resize\\/ap_resize|image|imageproxy|resizer\\/resizer|safe_image)(.php)?\\?/",
+        "/\\/(i|fetch|image_gallery|thumb)(\\.php|\\/)?\\?/",
+        "/\\?.*\\&(_nc_[a-z]{1,3}|oh|oe)=./",
+        "://c.disquscdn.com/get?url=",
+        "://web.whatsapp.com/pp",
+        "://www.youtube.com/api/stats/watchtime"
+      ]
+    },
+    "action": "filter",
+    "active": true,
+    "types": [
+      "image"
+    ],
+    "paramsFilter": {
+      "values": [
+        "*color",
+        "*expires",
+        "*file",
+        "*key",
+        "*key-pair-id",
+        "*lang",
+        "*language",
+        "*policy",
+        "*signature",
+        "*style",
+        "*styles",
+        "*token",
+        "auto",
+        "bbox",
+        "bboxsr",
+        "bg",
+        "blanktile",
+        "branch",
+        "cacheid",
+        "contentid",
+        "crop",
+        "csblobid",
+        "dpi",
+        "f",
+        "fg",
+        "field",
+        "fill",
+        "fit",
+        "font",
+        "format",
+        "h",
+        "height",
+        "i10c",
+        "image",
+        "imagesr",
+        "inputformat",
+        "latex",
+        "layer",
+        "layers",
+        "line",
+        "output",
+        "preview",
+        "provider",
+        "q",
+        "quality",
+        "request",
+        "resize",
+        "rule",
+        "scale*",
+        "scheme",
+        "service",
+        "sig",
+        "sign",
+        "size",
+        "srs",
+        "ssl",
+        "text",
+        "tile*",
+        "title",
+        "token-hash",
+        "token-time",
+        "transparent",
+        "type",
+        "version",
+        "w",
+        "width",
+        "x",
+        "y",
+        "z",
+        "zoom"
+      ],
+      "invert": true
+    },
+    "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "66f8aed7-3826-4bfb-83ba-9a1030d54456",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ],
+      "includes": [
+        "/\\/(i|fetch|image_gallery|thumb)(\\.php|\\/)?\\?/"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "2nd filter for tracking parameters in images",
+    "paramsFilter": {
+      "values": [
+        "crop",
+        "download",
+        "filedataid",
+        "group_id",
+        "groupid",
+        "i",
+        "image_path",
+        "img_id",
+        "imgid",
+        "t",
+        "uuid",
+        "version",
+        "w"
+      ],
+      "invert": true
+    },
+    "tag": "filter-images-2",
+    "description": "Undocument image-selection PHP scripts, based in numeric IDs."
+  },
+  {
+    "uuid": "71bc39c3-0a9e-44ef-8309-bcdb99377491",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ],
+      "includes": [
+        "/\\/(Satellite|BlobServer|StaticBS)(\\/[^\\/\\?]+)?\\?/"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "3rd filter for tracking parameters in images",
+    "skipRedirectionFilter": true,
+    "paramsFilter": {
+      "values": [
+        "assembler",
+        "asset",
+        "authority",
+        "blob*",
+        "c",
+        "cid",
+        "container",
+        "fragment",
+        "key",
+        "maxage",
+        "satellite",
+        "scheme",
+        "ssbinary"
+      ],
+      "invert": true
+    },
+    "description": "Oracle's Site-Satellite and Apache's BlobServer system",
+    "tag": "filter-images-3"
+  },
+  {
+    "uuid": "938aebe5-c98a-46fb-9e38-6b9bd42d687e",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ],
+      "excludes": [
+        "safe_image.php*"
+      ],
+      "includes": [
+        "/\\?.*\\&(_nc_[a-z]{1,3}|oh|oe)=./"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "4th filter for tracking parameters in images",
+    "skipRedirectionFilter": true,
+    "tag": "filter-images-4",
+    "paramsFilter": {
+      "values": [
+        "_nc_cat",
+        "_nc_ht",
+        "_nc_oc",
+        "_nc_ohc",
+        "oe",
+        "oh"
+      ],
+      "invert": true
+    },
+    "description": "For Facebook's style signed URLs filters (used in Facebook, WhatsApp and Instagram)."
+  },
+  {
+    "uuid": "297fb0c7-d052-4031-9947-fc7a9b7690af",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "web.whatsapp.com"
+      ],
+      "path": [
+        "/pp?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "WhatsApp Web images",
+    "tag": "filter-whatsapp",
+    "description": "User avatars in WhatsApp Web need an extra rule to filter URL parameters",
+    "paramsFilter": {
+      "values": [
+        "n"
+      ]
+    }
+  },
+  {
+    "uuid": "34ac811a-d7e0-42fb-b509-5a9495c476ee",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "styles.redditmedia.com"
+      ],
+      "path": [
+        "*/styles/bannerBackgroundImage_*",
+        "*/styles/communityIcon_*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-reddit",
+    "skipRedirectionFilter": true,
+    "trimAllParams": true
+  },
+  {
+    "uuid": "802e0c21-922e-4501-a652-da805caedb01",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "i.ytimg.com",
+        "i9.ytimg.com"
+      ],
+      "path": [
+        "/an_webp/*/*default_6s.webp*",
+        "/sb/*/storyboard*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Restore YouTube previews",
+    "description": "The general filter rule breaks the preview shown upon hovering over the seekbar or a thumbnail. This rule restores them at the cost of sending unknown metadata to YouTube servers. Disabling this rule will not break YouTube's other functions.",
+    "tag": "whitelist-youtube"
+  },
+  {
+    "uuid": "26b61cb2-b847-40c1-bd89-c31327434643",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "external-content.duckduckgo.com",
+        "gatherer.wizards.com",
+        "img.dafont.com",
+        "outlook.office.com",
+        "render.fontstruct.com",
+        "render01.fontshop.com",
+        "www.osapublishing.org",
+        "www.signbank.org"
+      ],
+      "path": [
+        "*?*"
+      ],
+      "origin": "same-domain"
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Image-dependent sites",
+    "description": "Some sites, like typesetting shops, are heavily dependent on images. (Image and web document MUST share domain.) DuckDuckgo's external preview server is exceptionally included because of its efforts against user tracking and search bubbling.",
+    "tag": "whitelist-images-samedomain"
+  },
+  {
+    "uuid": "0ce012d9-8492-40eb-ae75-f7c48b4f97d3",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*download/file.php?avatar=*",
+        "/avatar.php?*",
+        "/avatar/*",
+        "/avatars/*",
+        "/data/avatars/*",
+        "/user_avatar/*",
+        "/user_cover/*",
+        "/userkarma.php?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "User avatars and karma at community-driven sites",
+    "description": "e.g. phpBB forums, WikiDot wikis.",
+    "tag": "whitelist-avatars"
+  },
+  {
+    "uuid": "91561207-76db-4850-85cb-5e34dedafa90",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*action=AttachFile&do=get&target=*"
+      ],
+      "origin": "same-domain"
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Embedded images in MoinMoin based wikis and similar.",
+    "description": "Notably used on wiki.ubuntu.com.",
+    "tag": "whitelist-moinmoin"
+  },
+  {
+    "uuid": "42c98357-aba0-4e8a-9df2-739c885cfde8",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.imgix.net",
+        "badge.dimensions.ai",
+        "badges.altmetric.com",
+        "external-preview.redd.it",
+        "i.mycdn.me",
+        "imagebank.osa.org",
+        "media-exp1.licdn.com",
+        "media.gettyimages.com",
+        "media.istockphoto.com",
+        "pbs.twimg.com",
+        "preview.redd.it"
+      ],
+      "path": [
+        "*?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Image providers",
+    "description": "Includes sites whose sole function is providing images for other web pages, and sites with a dedicated server for serving images. (Whitelisted from ALL domains)",
+    "tag": "whitelist-images-crossdomain"
+  },
+  {
+    "uuid": "da3107bd-8fc1-4829-b4c4-6303af4af5fd",
+    "pattern": {
+      "scheme": "https",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*-captchaImage&antiCache=*",
+        "*action=formmakerwdcaptcha&*",
+        "*action=formmakerwdmathcaptcha&*",
+        "*action=nopriv_formmakerwdcaptcha&*",
+        "*action=nopriv_formmakerwdmathcaptcha&*",
+        "*captcha/api2/payload*",
+        "*recaptcha/enterprise/payload*",
+        "/w/index.php?title=*&wpCaptchaId=*",
+        "https://opfcaptcha-prod.s3.amazonaws.com/*"
+      ],
+      "origin": "same-domain"
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "CAPTCHAs",
+    "tag": "whitelist-captcha",
+    "description": "This filter includes reCAPTCHA and other CAPTCHA systems"
+  },
+  {
+    "uuid": "de12ff52-0cc2-468b-8dc9-6d3e56ca3389",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "duckduckgo.com"
+      ],
+      "path": [
+        "mapkit/?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "DuckDuckGo map provider",
+    "tag": "whitelist-duckduckgo"
+  },
+  {
+    "uuid": "311886d6-bf8b-4112-aea3-9539cc40c318",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "maps.google.com",
+        "maps.googleapis.com"
+      ],
+      "path": [
+        "/maps/api/js/StaticMapService.GetMapImage*",
+        "/maps/api/staticmap?*&signature=*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Static Google Maps",
+    "description": "Removing any parameter in these requests (signed maps, and base image for some embedded maps) will make it fail.",
+    "tag": "whitelist-google-maps"
+  },
+  {
+    "uuid": "bd61a299-f45e-4dee-a16c-be91ae8f937f",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "ecn.t0.tiles.virtualearth.net",
+        "ecn.t1.tiles.virtualearth.net",
+        "ecn.t2.tiles.virtualearth.net",
+        "ecn.t3.tiles.virtualearth.net",
+        "t.ssl.ak.dynamic.tiles.virtualearth.net",
+        "t.ssl.ak.tiles.virtualearth.net"
+      ],
+      "path": [
+        "comp/ch/*?mkt=*",
+        "tiles/*?g=*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Bing map and street view provider",
+    "tag": "whitelist-bing-maps"
+  },
+  {
+    "uuid": "5c27a1dc-3446-472d-9e26-e001b5a32e51",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "s2.googleusercontent.com"
+      ],
+      "path": [
+        "s2/favicons?domain_url=*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Favicons at YouTube",
+    "tag": "whitelist-youtube-2"
+  },
+  {
+    "uuid": "9a0a3b89-7fd4-4838-a5d2-a1e39da8006b",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.fna.fbcdn.net"
+      ],
+      "path": [
+        "static_map.php?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Facebook map thumbnail provider",
+    "tag": "whitelist-facebook-maps"
+  },
+  {
+    "uuid": "e1262258-f5c2-4c2d-baa0-4a0e9ffcef3d",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "vec01.maps.yandex.net",
+        "vec02.maps.yandex.net",
+        "vec03.maps.yandex.net",
+        "vec04.maps.yandex.net"
+      ],
+      "path": [
+        "/tiles?l=map&*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Yandex maps",
+    "tag": "whitelist-yandex"
+  }
+]

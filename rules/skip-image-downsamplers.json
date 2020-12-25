@@ -1,0 +1,23 @@
+{
+    "uuid": "07f60a40-9293-406e-aba9-3926bdb0ef2c",
+    "pattern": {
+        "scheme": "*",
+        "host": [
+            "*"
+        ],
+        "path": [
+            "*"
+        ],
+        "includes": [
+            "/\\/(ap_resize\\/ap_resize|image|imageproxy|resizer\\/resizer|safe_image)(.php)?\\?/"
+        ]
+    },
+    "types": [
+        "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "Skip image downsampler",
+    "description": "This filter retrieves the original pictures from the original domains. Disabling this filter will restore the downsampled images.",
+    "tag": "filter-resizer"
+}

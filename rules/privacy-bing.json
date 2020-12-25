@@ -1,0 +1,39 @@
+[
+    {
+        "title": "Remove query parameters from Bing",
+        "description": "Removes possible tracking query parameters used by Bing",
+        "uuid": "f53e0a5e-d658-4da5-9b12-143e24c4e1ba",
+        "pattern": {
+            "scheme": "*",
+            "host": [
+                "*.bing.com"
+            ],
+            "path": [
+                "*"
+            ]
+        },
+        "types": [
+            "main_frame",
+            "sub_frame",
+            "image"
+        ],
+        "action": "filter",
+        "active": true,
+        "tag": "filter-bing",
+        "paramsFilter": {
+            "values": [
+                "cvid",
+                "ehk",
+                "form",
+                "lg",
+                "pq",
+                "qs",
+                "ru",
+                "sc",
+                "sk",
+                "sp"
+            ]
+        },
+        "skipRedirectionFilter": true
+    }
+]

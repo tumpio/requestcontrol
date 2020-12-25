@@ -1,0 +1,83 @@
+[
+    {
+        "uuid": "07be1337-ceec-4a93-a49e-67e051124a7f",
+        "tag": "filter-facebook",
+        "pattern": {
+            "scheme": "*",
+            "host": [
+                "l.facebook.*",
+                "l.instagram.*",
+                "lm.facebook.*"
+            ],
+            "topLevelDomains": [
+                "com",
+                "net"
+            ],
+            "path": [
+                "?u=*",
+                "l.php?u=*"
+            ]
+        },
+        "types": [
+            "main_frame",
+            "sub_frame"
+        ],
+        "action": "filter",
+        "active": true
+    },
+    {
+        "uuid": "92a96b21-9076-43c2-b030-167bf420e733",
+        "pattern": {
+            "scheme": "*",
+            "host": [
+                "m.facebook.com",
+                "www.facebook.com"
+            ],
+            "path": [
+                "*"
+            ]
+        },
+        "types": [
+            "main_frame"
+        ],
+        "action": "filter",
+        "active": true,
+        "tag": "filter-facebook",
+        "paramsFilter": {
+            "values": [
+                "_*",
+                "extid",
+                "flite",
+                "fref",
+                "mt_nav",
+                "ref",
+                "referral_code",
+                "refsrc",
+                "rid",
+                "rt",
+                "sfnsn"
+            ]
+        },
+        "skipRedirectionFilter": true
+    },
+    {
+        "uuid": "d5f1deb0-f7b4-4c45-9a7e-6ea04a051e51",
+        "pattern": {
+            "scheme": "*",
+            "host": [
+                "fb.me"
+            ],
+            "path": [
+                "*"
+            ]
+        },
+        "types": [
+            "main_frame",
+            "sub_frame"
+        ],
+        "action": "redirect",
+        "active": true,
+        "tag": "redirect-facebook",
+        "redirectUrl": "https://www.facebook.com/{pathname:1}"
+    }
+]

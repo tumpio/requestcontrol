@@ -1,0 +1,72 @@
+[
+  {
+    "uuid": "1fa1d22e-7694-46f0-9da6-fa6536433406",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.youtube.com"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-youtube",
+    "paramsFilter": {
+      "values": [
+        "feature",
+        "gclid",
+        "kw",
+        "sp"
+      ]
+    },
+    "skipRedirectionFilter": true,
+    "description": "Imported from Neat URL webextension."
+  },
+  {
+    "title": "Block Youtube mouselogger and watchtime logger",
+    "uuid": "23f612f1-d903-4715-99a5-5559035400e5",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.youtube.com"
+      ],
+      "path": [
+        "api/stats/watchtime*",
+        "youtubei/v1/log_event*"
+      ]
+    },
+    "types": [
+      "image",
+      "xmlhttprequest"
+    ],
+    "action": "block",
+    "active": false,
+    "description": "May cause issues after the end of the video if logged in. Disabled by default.",
+    "tag": "block-youtube"
+  },
+  {
+    "uuid": "4ead820a-429f-4e7c-a7ca-7241305bcedb",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "youtu.be"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "action": "redirect",
+    "active": true,
+    "redirectUrl": "https://www.youtube.com/watch?v={pathname:1}{search/^\\?/&}{hash}",
+    "tag": "redirect-youtube",
+    "types": [
+      "main_frame"
+    ]
+  }
+]

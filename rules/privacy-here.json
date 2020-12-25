@@ -1,0 +1,32 @@
+[
+    {
+        "uuid": "e1602933-69a7-4901-9259-42b5551101d0",
+        "pattern": {
+            "scheme": "*",
+            "host": [
+                "*.maps.api.here.com",
+                "*.maps.cit.api.here.com"
+            ],
+            "path": [
+                "/maptile/2.1/maptile/*"
+            ]
+        },
+        "types": [
+            "image"
+        ],
+        "action": "filter",
+        "active": true,
+        "title": "HERE maps API 2.5.4",
+        "tag": "filter-here",
+        "paramsFilter": {
+            "values": [
+                "app_code",
+                "app_id",
+                "lg",
+                "token"
+            ],
+            "invert": true
+        },
+        "skipRedirectionFilter": true
+    }
+]

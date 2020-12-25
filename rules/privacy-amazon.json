@@ -1,0 +1,108 @@
+[
+    {
+        "title": "Remove Amazon query parameters",
+        "description": "Removes all non-whitelisted query parameters on both Amazon store and Prime Video.",
+        "tag": "filter-amazon",
+        "uuid": "6dc06a86-2356-4521-a0c5-08372846df15",
+        "pattern": {
+            "scheme": "*",
+            "host": [
+                "*.amazon.*",
+                "*.primevideo.*"
+            ],
+            "path": [
+                "*"
+            ],
+            "topLevelDomains": [
+                "ae",
+                "ca",
+                "cn",
+                "co.jp",
+                "co.uk",
+                "com",
+                "com.au",
+                "com.br",
+                "com.mx",
+                "com.tr",
+                "de",
+                "es",
+                "fr",
+                "in",
+                "it",
+                "nl",
+                "sg"
+            ]
+        },
+        "types": [
+            "main_frame"
+        ],
+        "action": "filter",
+        "active": true,
+        "skipRedirectionFilter": true,
+        "paramsFilter": {
+            "values": [
+                "arb",
+                "cartInitiateId",
+                "claimToken",
+                "clientContext",
+                "field-keywords",
+                "i",
+                "ie",
+                "isToBeGiftWrappedBefore",
+                "k",
+                "language",
+                "location",
+                "mgh",
+                "node",
+                "openid.*",
+                "partialCheckoutCart",
+                "proceedToCheckout",
+                "proceedToRetailCheckout",
+                "rh",
+                "url"
+            ],
+            "invert": true
+        }
+    },
+    {
+        "title": "Skip Amazon Picasso redirect",
+        "description": "Skip Picasso redirect used on occasion by Amazon to track purchases",
+        "tag": "redirect-amazon",
+        "uuid": "816c76d6-ad2e-4f7c-94be-e2436c93fe34",
+        "pattern": {
+            "scheme": "*",
+            "host": [
+                "*.amazon.*"
+            ],
+            "path": [
+                "*/picassoRedirect.html/*"
+            ],
+            "topLevelDomains": [
+                "ae",
+                "ca",
+                "cn",
+                "co.jp",
+                "co.uk",
+                "com",
+                "com.au",
+                "com.br",
+                "com.mx",
+                "com.tr",
+                "de",
+                "es",
+                "fr",
+                "in",
+                "it",
+                "nl",
+                "sg"
+            ]
+        },
+        "types": [
+            "main_frame",
+            "sub_frame"
+        ],
+        "action": "redirect",
+        "active": true,
+        "redirectUrl": "https://{hostname}{search/.*url=(.*)/$1|decodeURIComponent}&alpha"
+    }
+]

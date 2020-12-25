@@ -1,0 +1,33 @@
+[
+    {
+        "uuid": "d78b46f3-6c04-43a8-a907-83c161138e61",
+        "pattern": {
+            "scheme": "*",
+            "host": [
+                "www.linkedin.com"
+            ],
+            "path": [
+                "*"
+            ],
+            "excludes": [
+                "/\\/checkpoint\\//",
+                "/\\/jobs\\/\\?/",
+                "/\\/search\\/\\?/",
+                "/\\/uas\\/logout\\?/"
+            ]
+        },
+        "types": [
+            "main_frame",
+            "sub_frame"
+        ],
+        "action": "filter",
+        "active": true,
+        "tag": "filter-linkedin",
+        "paramsFilter": {
+            "values": [
+                "url"
+            ],
+            "invert": true
+        }
+    }
+]

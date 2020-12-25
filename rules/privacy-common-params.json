@@ -1,0 +1,127 @@
+[
+    {
+        "title": "Remove common tracking query parameters",
+        "description": "Replicates Neat URL extension. Removes common tracking query parameters from all requests to websites.",
+        "uuid": "5276a290-b21a-4deb-a86e-aa54c3ff1bcc",
+        "tag": "filter-common",
+        "pattern": {
+            "allUrls": true
+        },
+        "types": [
+            "main_frame",
+            "sub_frame"
+        ],
+        "action": "filter",
+        "active": true,
+        "skipRedirectionFilter": true,
+        "paramsFilter": {
+            "values": [
+                "CNDID",
+                "_hsenc",
+                "_hsmi",
+                "_openstat",
+                "action_object_map",
+                "action_ref_map",
+                "action_type_map",
+                "algo_expid",
+                "algo_pvid",
+                "at_campaign",
+                "at_custom*",
+                "at_medium",
+                "btsid",
+                "fb_action_ids",
+                "fb_action_types",
+                "fb_ref",
+                "fb_source",
+                "fbclid",
+                "ga_campaign",
+                "ga_content",
+                "ga_medium",
+                "ga_place",
+                "ga_source",
+                "ga_term",
+                "gs_l",
+                "hmb_campaign",
+                "hmb_medium",
+                "hmb_source",
+                "icid",
+                "igshid",
+                "mbid",
+                "mkt_tok",
+                "ncid",
+                "nr_email_referer",
+                "ref_*",
+                "referer",
+                "referrer",
+                "sc_campaign",
+                "sc_channel",
+                "sc_content",
+                "sc_country",
+                "sc_geo",
+                "sc_medium",
+                "sc_outcome",
+                "share",
+                "sid",
+                "spJobID",
+                "spMailingID",
+                "spReportId",
+                "spUserID",
+                "sr_share",
+                "trackingId",
+                "trk",
+                "trkCampaign",
+                "utm_*",
+                "vero_conv",
+                "vero_id",
+                "ws_ab_test",
+                "xtor",
+                "yclid"
+            ]
+        }
+    },
+    {
+        "uuid": "a6b8a3a1-5bba-46b1-81a5-8594e3e8b0a1",
+        "pattern": {
+            "scheme": "https",
+            "host": [
+                "*.sharepoint.com",
+                "home.navigator-bs.gmx.com",
+                "navigator-bs.gmx.com",
+                "trackbar.navigator-bs.gmx.com",
+                "www.signbank.org"
+            ],
+            "path": [
+                "*share=*",
+                "*sid=*"
+            ]
+        },
+        "types": [
+            "main_frame",
+            "sub_frame"
+        ],
+        "action": "whitelist",
+        "active": true,
+        "title": "Exceptions to `sid` and `share` parameters",
+        "description": "These sites use the URL parameters `sid` and `share` to load different pages. This trips a general-purpose referrer remover.",
+        "tag": "whitelist-utm"
+    },
+    {
+        "uuid": "953324d7-0aff-48c0-96fc-b4b746befa7e",
+        "pattern": {
+            "scheme": "https",
+            "host": [
+                "www.linkedin.com"
+            ],
+            "path": [
+                "/checkpoint/rp/request-password-reset-submit-redir-email-pin?*"
+            ]
+        },
+        "types": [
+            "main_frame"
+        ],
+        "action": "whitelist",
+        "active": true,
+        "title": "Restore password reset at LinkedIn",
+        "tag": "whitelist-linkedin-password-reset"
+    }
+]
