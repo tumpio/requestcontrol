@@ -2,7 +2,7 @@
     "name": "__MSG_extensionName__",
     "description": "__MSG_extensionDescription__",
     "default_locale": "en",
-    "version": "1.15.5",
+    "version": "1.16.0a",
     "manifest_version": 2,
     "icons": {
         "48": "icons/icon.svg",
@@ -11,7 +11,7 @@
     "browser_specific_settings": {
         "gecko": {
             "id": "{1b1e6108-2d88-4f0f-a338-01f9dbcccd6f}",
-            "strict_min_version": "60.0a01"
+            "strict_min_version": "79.0a01"
         }
     },
     "permissions": [

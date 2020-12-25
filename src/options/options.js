@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (rules) {
         createRuleInputs(rules);
     } else {
-        loadDefaultRules();
+        toggleEmpty();
     }
 
     const query = new URLSearchParams(location.search);
@@ -22,12 +22,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     fetchLocalisedManual();
+    setLoadDefaultsButton();
 
     document.getElementById("addNewRule").addEventListener("click", function () {
         document.getElementById("new").newRule();
+        toggleEmpty();
     });
 
-    document.getElementById("reset").addEventListener("click", loadDefaultRules);
+    document.getElementById("addDefault").addEventListener("click", loadDefaultRules);
 
     document.getElementById("exportRules").addEventListener("click", async function () {
         const fileName = browser.i18n.getMessage("export-file-name");
@@ -55,6 +57,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         document.querySelectorAll("rule-list").forEach((list) => list.removeSelected());
         updateToolbar();
+        toggleEmpty();
     });
 
     document.getElementById("testSelectedRules").addEventListener("click", function () {
@@ -134,6 +137,7 @@ document.addEventListener("rule-deleted", async function (e) {
         await browser.storage.local.set({ rules: rules.filter((rule) => rule.uuid !== deleted) });
     }
     updateToolbar();
+    toggleEmpty();
 });
 
 document.addEventListener("rule-selected", updateToolbar);
@@ -155,7 +159,6 @@ function displayErrorMessage(error) {
 }
 
 async function loadDefaultRules() {
-    await browser.storage.local.remove("rules");
     const response = await fetch("./default-rules.json", {
         headers: {
             "Content-Type": "application/json",
@@ -230,6 +233,33 @@ function updateLists() {
         list.updateHeader();
         list.toggle();
     });
+    toggleEmpty();
+}
+
+function toggleEmpty() {
+    const lists = document.querySelectorAll("rule-list");
+    document.querySelector(".no-rules-block").classList.toggle(
+        "d-none",
+        Array.from(lists).some((list) => list.size !== 0)
+    );
+}
+
+function setLoadDefaultsButton() {
+    const p = document.querySelector(".create-or-default");
+    const textNode = p.firstChild;
+    const marker = "/";
+
+    const startMark = textNode.textContent.indexOf(marker);
+    const markNode = textNode.splitText(startMark);
+    const endMark = markNode.textContent.indexOf(marker, 1);
+    markNode.splitText(endMark + 1);
+
+    let link = document.createElement("button");
+    link.textContent = markNode.textContent.substring(1, markNode.textContent.length - 1);
+    link.className = "btn text";
+    link.addEventListener("click", loadDefaultRules);
+
+    p.replaceChild(link, markNode);
 }
 
 function updateToolbar() {
@@ -241,6 +271,21 @@ function updateToolbar() {
     document.querySelectorAll(".btn-selected-action").forEach((button) => {
         button.disabled = !isSelected;
     });
+    const selectedButton = document.getElementById("selectedRules");
+    selectedButton.disabled = !isSelected;
+    selectedButton.textContent = getSelectedRulesText(count);
+}
+
+function getSelectedRulesText(count) {
+    let text;
+    if (count === 0) {
+        text = browser.i18n.getMessage("zero_selected_rules");
+    } else if (count === 1) {
+        text = browser.i18n.getMessage("one_selected_rule");
+    } else  {
+        text = browser.i18n.getMessage("multiple_selected_rules", count);
+    }
+    return text;
 }
 
 async function fetchLocalisedManual() {
@@ -254,8 +299,10 @@ async function fetchLocalisedManual() {
     const text = await response.text();
     const manual = document.getElementById("manual");
     const contents = document.getElementById("contents");
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, "text/html");
 
-    manual.insertAdjacentHTML("afterbegin", text);
+    manual.append(...doc.body.children);
 
     // generate table of contents
     const toc = new Toc(manual).render();
@@ -274,7 +321,7 @@ async function fetchLocalisedManual() {
 }
 
 async function fetchChangelog() {
-    const response = await fetch("/CHANGELOG", {
+    const response = await fetch("/CHANGELOG.md", {
         headers: {
             "Content-Type": "text/plain",
         },
@@ -285,8 +332,15 @@ async function fetchChangelog() {
     const body = modal.querySelector(".modal-body");
 
     let ul = document.createElement("ul");
+    let start = false;
 
     for (let line of content.split("\n")) {
+        if (!start) {
+            if (line.startsWith("##")) {
+                start = true;
+            }
+            continue;
+        }
         if (line.startsWith("-")) {
             const li = document.createElement("li");
             const text = line.split(/(#\d+|@\w+)/);
@@ -322,7 +376,7 @@ async function fetchChangelog() {
             ul.appendChild(li);
         } else {
             const h = document.createElement("h6");
-            h.textContent = line;
+            h.textContent = line.substring(2);
             body.appendChild(h);
             ul = document.createElement("ul");
             body.appendChild(ul);

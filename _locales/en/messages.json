@@ -21,15 +21,6 @@
   "title_whitelist": {
     "message": "Whitelisted: "
   },
-  "main_title_with_state": {
-    "message": "Request Control ($STATE$)",
-    "placeholders": {
-      "state": {
-        "content": "$1",
-        "example": "Disabled"
-      }
-    }
-  },
   "rule_title_filter": {
     "message": "Filter: $HOST$",
     "placeholders": {
@@ -227,9 +218,6 @@
   "create_new_rule": {
     "message": "Create rule"
   },
-  "restore_default_rules": {
-    "message": "Restore Default Rules"
-  },
   "new_rule": {
     "message": "New rule"
   },
@@ -426,8 +414,19 @@
   "test_selected": {
     "message": "Test selected"
   },
-  "selected_rules": {
-    "message": "Selected rules"
+  "zero_selected_rules": {
+    "message": "0 selected rules"
+  },
+  "one_selected_rule": {
+    "message": "1 selected rule"
+  },
+  "multiple_selected_rules": {
+    "message": "$COUNT$ selected rules",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
   },
   "export_rules": {
     "message": "Export rules"
@@ -444,14 +443,14 @@
   "import_description": {
     "message": "Import rules from a local file."
   },
-  "restore_defaults": {
-    "message": "Restore defaults"
+  "add_default_rules": {
+    "message": "Add default rules"
   },
-  "restore_description": {
-    "message": "Restore default rules."
+  "add_default_description": {
+    "message": "Add a set of default rules."
   },
-  "restore": {
-    "message": "Restore"
+  "add": {
+    "message": "Add"
   },
   "contents": {
     "message": "Contents"
@@ -527,9 +526,6 @@
   "upgraded_to_secure": {
     "message": "Upgraded to secure"
   },
-  "error_invalid_url": {
-    "message": "Failed to redirect to new target: Invalid target URL"
-  },
   "error_invalid_rule": {
     "message": "Error invalid rule"
   },
@@ -574,5 +570,12 @@
   },
   "third_party_domain": {
     "message": "Third party domain"
+  },
+  "no_rules": {
+    "message": "No rules"
+  },
+  "create_or_default": {
+    "message": "Create your first rule or /load a default set of rules/ to increase privacy",
+    "description": "Mark text in between two '/' to act as button to load default rules when clicked"
   }
 }

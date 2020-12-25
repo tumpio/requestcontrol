@@ -1,0 +1,38 @@
+name: Release
+on:
+  push:
+    tags: 1.*
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt-get -y install pandoc
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm run lint-build
+      
+      - uses: ffurrer2/extract-release-notes@v1
+        id: extract_notes
+      
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: web-ext-artifacts/*.zip
+          body: ${{ steps.extract_notes.outputs.release_notes }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - run: npm run deploy
+        env:
+          WEB_EXT_CHANNEL: listed
+          WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
+          WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}

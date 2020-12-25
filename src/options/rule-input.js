@@ -47,7 +47,7 @@ export function newRuleInput(
     return input;
 }
 
-const getIsMobile = (() => browser.runtime.getBrowserInfo().then((info) => info.name === "Fennec"))();
+const isMobile = window.matchMedia("(max-width: 35em)");
 
 class RuleInput extends HTMLElement {
     constructor() {
@@ -87,13 +87,11 @@ class RuleInput extends HTMLElement {
             .querySelectorAll(".toggle-edit")
             .forEach((edit) => edit.addEventListener("click", this.toggleEdit.bind(this)));
 
-        getIsMobile.then((isMobile) => {
-            if (isMobile) {
-                this.shadowRoot.getElementById("header").addEventListener("click", this.onHeaderClick.bind(this));
-            } else {
-                this.shadowRoot.getElementById("title").addEventListener("click", this.onHeaderTitleClick.bind(this));
-            }
-        });
+        if (isMobile) {
+            this.shadowRoot.getElementById("header").addEventListener("click", this.onHeaderClick.bind(this));
+        } else {
+            this.shadowRoot.getElementById("title").addEventListener("click", this.onHeaderTitleClick.bind(this));
+        }
     }
 
     focus() {

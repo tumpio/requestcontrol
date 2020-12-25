@@ -18,8 +18,8 @@ export function has(tabId) {
     return records.has(tabId);
 }
 
-export function all() {
-    return records;
+export function keys() {
+    return records.keys();
 }
 
 export function clear() {

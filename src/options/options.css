@@ -16,7 +16,7 @@ body {
     color: var(--text-color);
 }
 
-#tab-rules * + * {
+.toolbar * + * {
     margin-top: 0;
     margin-bottom: 0;
 }
@@ -40,6 +40,15 @@ body {
 
 #changelogModal h6 {
     margin: 0;
+}
+
+.no-rules {
+    border: 2px dashed darkgray;
+    text-align: center;
+    padding: 3em;
+    border-radius: 3px;
+    background: #fff;
+    color: #999;
 }
 
 .tab-pane:not(.active) {
@@ -260,6 +269,7 @@ body {
     }
 
     rule-list {
+        display: block;
         margin-bottom: 1.3em !important;
     }
 
@@ -271,6 +281,14 @@ body {
 
     #tabs > .col {
         margin: 0;
+    }
+
+    .tab-selector {
+        padding: 1em;
+    }
+
+    .tab-selector:hover {
+        opacity: 1;
     }
 
     .tab-selector:not(.active) > span {
@@ -292,10 +310,6 @@ body {
 @media (max-width: 42em) {
     #selectedRules {
         z-index: -1;
-    }
-
-    #selectedRules .total-selected-count {
-        margin: 0 0.5em;
     }
 
     .mobile-toolbar {
