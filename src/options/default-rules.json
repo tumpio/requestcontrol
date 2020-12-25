@@ -2,13 +2,22 @@
   {
     "uuid": "3baa759b-9afc-41ef-b770-c60e1d9383d2",
     "description": "Filter rule to skip and prevent redirection tracking on multiple hosts.",
-    "tag": "filter-multiple",
+    "tag": "filter-redirect-2",
     "pattern": {
       "scheme": "*",
-      "host": ["*.tradedoubler.com", "out.reddit.com", "steamcommunity.com"],
-      "path": "*url=*"
+      "host": [
+        "*.tradedoubler.com",
+        "out.reddit.com",
+        "steamcommunity.com"
+      ],
+      "path": [
+        "*url=*"
+      ]
     },
-    "types": ["main_frame"],
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
     "action": "filter",
     "active": true
   },
@@ -16,10 +25,10 @@
     "title": "Stop Google search link tracking",
     "uuid": "60f46cfa-b906-4a2d-ab66-8f26dc35e97f",
     "description": "This filter rule prevents Google from obtaining the URL of clicked search link via URL redirection. The tracking request done in background is classified as a Sub Document type. This rule provides an example of using the top-level domains pattern.",
-    "tag": "filter-google",
+    "tag": "filter-redirect-google",
     "pattern": {
       "scheme": "*",
-      "host": "*.google.*",
+      "host": ["*.google.*"],
       "topLevelDomains": [
         "com", "ad", "ae", "com.af", "com.ag", "com.ai", "al", "am", "co.ao", "com.ar", "as", "at", "com.au", "az",
         "ba", "com.bd", "be", "bf", "bg", "com.bh", "bi", "bj", "com.bn", "com.bo", "com.br", "bs", "bt", "co.bw", "by",
@@ -36,7 +45,11 @@
         "com.tw", "co.tz", "com.ua", "co.ug", "co.uk", "com.uy", "co.uz", "com.vc", "co.ve", "vg", "co.vi", "com.vn",
         "vu", "ws", "rs", "co.za", "co.zm", "co.zw", "cat"
       ],
-      "path": "url?*"
+      "path": ["url?*"],
+      "excludes": [
+        "accounts.google.*",
+        "consent.google.*"
+      ]
     },
     "types": ["main_frame", "sub_frame"],
     "action": "filter",
@@ -44,28 +57,13 @@
     "active": true
   },
   {
-    "title": "Skip outgoing page confirmation on DeviantArt",
-    "uuid": "bc145190-0b68-4ff4-84d3-321e131cd253",
-    "tag": "filter-deviantArt",
-    "pattern": {
-      "scheme": "*",
-      "host": "*.deviantart.com",
-      "path": "*outgoing?*"
-    },
-    "types": [
-      "main_frame"
-    ],
-    "action": "filter",
-    "active": true
-  },
-  {
     "title": "Skip Mozilla's outgoing link redirection service",
     "uuid": "3c4d6fa0-e2fb-4079-b3f0-e453ebe289ae",
-    "tag": "filter-mozilla",
+    "tag": "filter-redirect-mozilla",
     "pattern": {
       "scheme": "*",
-      "host": "outgoing.prod.mozaws.net",
-      "path": "*"
+      "host": ["outgoing.prod.mozaws.net"],
+      "path": ["*"]
     },
     "types": [
       "main_frame"
@@ -74,35 +72,92 @@
     "active": true
   },
   {
-    "title": "Remove UTM query parameters",
+    "title": "Remove UTM and Facebook query parameters",
     "uuid": "5276a290-b21a-4deb-a86e-aa54c3ff1bcc",
-    "description": "Remove UTM query parameters from requests. UTM query parameters are commonly used as a method to analyze the origin of traffic.",
+    "description": "Replicates Neat URL extension. Removes common tracking query parameters from all requests to all websites. Recommended to use whitelist filters when necessary, instead of disabling this rule.",
     "tag": "filter-utm",
     "pattern": {
-      "scheme": "*",
-      "host": [
-        "*"
-      ],
-      "path": [
-        "*utm_*"
-      ]
+      "allUrls": true
     },
     "types": [
-      "main_frame"
+      "main_frame",
+      "sub_frame"
     ],
     "action": "filter",
     "active": true,
     "skipRedirectionFilter": true,
     "paramsFilter": {
       "values": [
-        "utm_*"
+        "CNDID",
+        "_hsenc",
+        "_hsmi",
+        "_openstat",
+        "action_object_map",
+        "action_ref_map",
+        "action_type_map",
+        "algo_expid",
+        "algo_pvid",
+        "at_campaign",
+        "at_custom*",
+        "at_medium",
+        "btsid",
+        "fb_action_ids",
+        "fb_action_types",
+        "fb_ref",
+        "fb_source",
+        "fbclid",
+        "ga_campaign",
+        "ga_content",
+        "ga_medium",
+        "ga_place",
+        "ga_source",
+        "ga_term",
+        "gs_l",
+        "hmb_campaign",
+        "hmb_medium",
+        "hmb_source",
+        "icid",
+        "igshid",
+        "mbid",
+        "mkt_tok",
+        "ncid",
+        "nr_email_referer",
+        "ref_*",
+        "referer",
+        "referrer",
+        "sc_campaign",
+        "sc_channel",
+        "sc_content",
+        "sc_country",
+        "sc_geo",
+        "sc_medium",
+        "sc_outcome",
+        "share",
+        "sid",
+        "spJobID",
+        "spMailingID",
+        "spReportId",
+        "spUserID",
+        "sr_share",
+        "trackingId",
+        "trk",
+        "trkCampaign",
+        "utm_*",
+        "vero_conv",
+        "vero_id",
+        "ws_ab_test",
+        "xtor",
+        "yclid"
       ]
-  }
+    }
   },
   {
     "title": "Block Beacon and Ping requests",
     "uuid": "32db1f93-f99d-4c45-8485-e5c7beec5a69",
     "pattern": {
+      "scheme": "*",
+      "host": [],
+      "path": [],
       "allUrls": true
     },
     "action": "block",
@@ -115,15 +170,23 @@
     "description": "The Beacon API is often used for logging user activity and sending analytics data to the server."
   },
   {
-    "title": "Stop Facebook's outgoing link redirection service tracking",
     "uuid": "07be1337-ceec-4a93-a49e-67e051124a7f",
-    "description": "This filter rule prevents Facebook from obtaining the URL of clicked search link via URL redirection.",
-    "tag": "filter-facebook",
+    "tag": "filter-redirect-3",
     "pattern": {
       "scheme": "*",
-      "host": "l.facebook.*",
-      "topLevelDomains": [ "com", "net" ],
-      "path": "l.php?u=*"
+      "host": [
+        "l.facebook.*",
+        "l.instagram.*",
+        "lm.facebook.*"
+      ],
+      "topLevelDomains": [
+        "com",
+        "net"
+      ],
+      "path": [
+        "?u=*",
+        "l.php?u=*"
+      ]
     },
     "types": [
       "main_frame",
@@ -133,17 +196,220 @@
     "active": true
   },
   {
-    "title": "Remove FBCLID query parameters",
-    "uuid": "07be1337-4d49-475b-9062-8b191099621b",
-    "description": "Remove fbclid query parameters from requests. Facebook click identifier query parameters are commonly used as a method to analyze the origin of traffic.",
-    "tag": "filter-facebook",
+    "uuid": "c7ca4ba4-1a16-4b98-b645-62d22ae582ee",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "duckduckgo.com"
+      ],
+      "path": [
+        "l/?*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-duckduckgo"
+  },
+  {
+    "uuid": "4a6b8caf-3d0b-4c95-876e-b2cdcde1eb6a",
     "pattern": {
       "scheme": "*",
       "host": [
         "*"
       ],
       "path": [
-        "*fbclid*"
+        "*/dereferrer/*",
+        "*/outgoing?*",
+        "*redir/redirect?*",
+        "/deref/*",
+        "away.php?to=*",
+        "redirect?*"
+      ]
+    },
+    "types": ["main_frame"],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-redirect-1",
+    "title": "Skip external dereferrers and redirector",
+    "description": "This filter is applied globally. Avoid any false positives."
+  },
+  {
+    "uuid": "92a96b21-9076-43c2-b030-167bf420e733",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "m.facebook.com",
+        "www.facebook.com"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": ["main_frame"],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-facebook",
+    "paramsFilter": {
+      "values": [
+        "_*",
+        "extid",
+        "flite",
+        "fref",
+        "mt_nav",
+        "ref",
+        "referral_code",
+        "refsrc",
+        "rid",
+        "rt",
+        "sfnsn"
+      ]
+    },
+    "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "1fa1d22e-7694-46f0-9da6-fa6536433406",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.youtube.com"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-youtube",
+    "paramsFilter": {
+      "values": [
+        "feature",
+        "gclid",
+        "kw",
+        "sp"
+      ]
+    },
+    "skipRedirectionFilter": true,
+    "description": "Imported from Neat URL webextension."
+  },
+  {
+    "uuid": "6dc06a86-2356-4521-a0c5-08372846df15",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.amazon.*",
+        "*.primevideo.*"
+      ],
+      "path": [
+        "*"
+      ],
+      "topLevelDomains": [
+        "ae", "ca", "cn", "co.jp", "co.uk", "com", "com.au", "com.br", "com.mx", "com.tr",
+        "de", "es", "fr", "in", "it", "nl", "sg"
+      ]
+    },
+    "types": [
+      "main_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "Remove Amazon query parameters (on both store and Prime Video)",
+    "skipRedirectionFilter": true,
+    "paramsFilter": {
+      "values": [
+        "arb",
+        "cartInitiateId",
+        "claimToken",
+        "clientContext",
+        "field-keywords",
+        "i",
+        "ie",
+        "isToBeGiftWrappedBefore",
+        "k",
+        "language",
+        "location",
+        "mgh",
+        "node",
+        "openid.*",
+        "partialCheckoutCart",
+        "proceedToCheckout",
+        "proceedToRetailCheckout",
+        "rh",
+        "url"
+      ],
+      "invert": true
+    },
+    "tag": "filter-amazon"
+  },
+  {
+    "title": "Remove query parameters from Bing",
+    "uuid": "f53e0a5e-d658-4da5-9b12-143e24c4e1ba",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.bing.com"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame",
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-bing",
+    "paramsFilter": {
+      "values": [
+        "cvid",
+        "ehk",
+        "form",
+        "lg",
+        "pq",
+        "qs",
+        "ru",
+        "sc",
+        "sk",
+        "sp"
+      ]
+    },
+    "description": "Based on Neat URL webextension.",
+    "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "0b0d8660-3c95-40ba-8c53-d72328a6cf00",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.google.*"
+      ],
+      "path": [
+        "*"
+      ],
+      "topLevelDomains": [
+        "com", "ad", "ae", "com.af", "com.ag", "com.ai", "al", "am", "co.ao", "com.ar", "as", "at", "com.au", "az",
+        "ba", "com.bd", "be", "bf", "bg", "com.bh", "bi", "bj", "com.bn", "com.bo", "com.br", "bs", "bt", "co.bw", "by",
+        "com.bz", "ca", "cd", "cf", "cg", "ch", "ci", "co.ck", "cl", "cm", "cn", "com.co", "co.cr", "com.cu", "cv",
+        "com.cy", "cz", "de", "dj", "dk", "dm", "com.do", "dz", "com.ec", "ee", "com.eg", "es", "com.et", "fi",
+        "com.fj", "fm", "fr", "ga", "ge", "gg", "com.gh", "com.gi", "gl", "gm", "gp", "gr", "com.gt", "gy", "com.hk",
+        "hn", "hr", "ht", "hu", "co.id", "ie", "co.il", "im", "co.in", "iq", "is", "it", "je", "com.jm", "jo", "co.jp",
+        "co.ke", "com.kh", "ki", "kg", "co.kr", "com.kw", "kz", "la", "com.lb", "li", "lk", "co.ls", "lt", "lu", "lv",
+        "com.ly", "co.ma", "md", "me", "mg", "mk", "ml", "com.mm", "mn", "ms", "com.mt", "mu", "mv", "mw", "com.mx",
+        "com.my", "co.mz", "com.na", "com.nf", "com.ng", "com.ni", "ng", "ne", "nl", "no", "com.np", "nr", "nu",
+        "co.nz", "com.om", "com.pa", "com.pe", "com.pg", "com.ph", "com.pk", "pl", "pn", "com.pr", "ps", "pt", "com.py",
+        "com.qa", "ro", "ru", "rw", "com.sa", "com.sb", "sc", "se", "com.sg", "sh", "si", "sk", "com.sl", "sn", "so",
+        "sm", "sr", "st", "com.sv", "td", "tg", "co.th", "com.tj", "tk", "tl", "tm", "tn", "to", "com.tr", "tt",
+        "com.tw", "co.tz", "com.ua", "co.ug", "co.uk", "com.uy", "co.uz", "com.vc", "co.ve", "vg", "co.vi", "com.vn",
+        "vu", "ws", "rs", "co.za", "co.zm", "co.zw", "cat"
       ]
     },
     "types": [
@@ -154,9 +420,926 @@
     "active": true,
     "paramsFilter": {
       "values": [
-        "fbclid"
+        "el",
+        "gws_rd",
+        "sel",
+        "source",
+        "usp",
+        "ved"
       ]
     },
+    "title": "Remove query parameters from Google links and other tracking parameters",
+    "tag": "filter-google",
+    "description": "Based on Neat URL webextension.",
     "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "4ead820a-429f-4e7c-a7ca-7241305bcedb",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "youtu.be"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "action": "redirect",
+    "active": true,
+    "redirectUrl": "https://www.youtube.com/watch?v={pathname:1}{search/^\\?/&}{hash}",
+    "tag": "redirect-youtube",
+    "types": [
+      "main_frame"
+    ]
+  },
+  {
+    "uuid": "816c76d6-ad2e-4f7c-94be-e2436c93fe34",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.amazon.*"
+      ],
+      "path": [
+        "*/picassoRedirect.html/*"
+      ],
+      "topLevelDomains": [
+        "ae", "ca", "cn", "co.jp", "co.uk", "com", "com.au", "com.br", "com.mx", "com.tr",
+        "de", "es", "fr", "in", "it", "nl", "sg"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "redirect",
+    "active": true,
+    "title": "Skip Picasso redirect (used on occasion by Amazon to track probable purchases)",
+    "tag": "redirect-amazon",
+    "redirectUrl": "https://{hostname}{search/.*url=(.*)/$1|decodeURIComponent}&alpha",
+    "paramsFilter": {
+      "values": [
+        "url"
+      ]
+    }
+  },
+  {
+    "title": "Block Youtube mouselogger and watchtime logger",
+    "uuid": "23f612f1-d903-4715-99a5-5559035400e5",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.youtube.com"
+      ],
+      "path": [
+        "api/stats/watchtime*",
+        "youtubei/v1/log_event*"
+      ]
+    },
+    "types": [
+      "image",
+      "xmlhttprequest"
+    ],
+    "action": "block",
+    "active": false,
+    "description": "May cause issues after the end of the video if logged in. Disabled by default.",
+    "tag": "block-youtube"
+  },
+  {
+    "title": "1st filter for tracking parameters in images",
+    "uuid": "6468e7a9-440d-4727-a09e-c1a5cc386948",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ],
+      "excludes": [
+        ".maps.api.here.com/maptile/2.1/maptile/",
+        "/:\\/\\/[a-z0-9]+\\.bing\\.com\\//",
+        "/:\\/\\/[a-z]{3,4}[0123]?\\.(google|googleapis|ggpht)\\.com\\/(maps\\/vt|cbk|kh)\\?/",
+        "/\\/(Satellite|BlobServer|StaticBS)(\\/[^\\/\\?]+)?\\?/",
+        "/\\/(ap_resize\\/ap_resize|image|imageproxy|resizer\\/resizer|safe_image)(.php)?\\?/",
+        "/\\/(i|fetch|image_gallery|thumb)(\\.php|\\/)?\\?/",
+        "/\\?.*\\&(_nc_[a-z]{1,3}|oh|oe)=./",
+        "://c.disquscdn.com/get?url=",
+        "://web.whatsapp.com/pp",
+        "://www.youtube.com/api/stats/watchtime"
+      ]
+    },
+    "action": "filter",
+    "active": true,
+    "description": "Inspired by GIF Tracking Protection webextension. Any excluded pattern should be part of another filter rule.",
+    "tag": "filter-images-1",
+    "types": [
+      "image"
+    ],
+    "paramsFilter": {
+      "values": [
+        "*color",
+        "*expires",
+        "*file",
+        "*key",
+        "*key-pair-id",
+        "*lang",
+        "*language",
+        "*policy",
+        "*signature",
+        "*style",
+        "*styles",
+        "*token",
+        "auto",
+        "bbox",
+        "bboxsr",
+        "bg",
+        "blanktile",
+        "branch",
+        "cacheid",
+        "contentid",
+        "crop",
+        "csblobid",
+        "dpi",
+        "f",
+        "fg",
+        "field",
+        "fill",
+        "fit",
+        "font",
+        "format",
+        "h",
+        "height",
+        "i10c",
+        "image",
+        "imagesr",
+        "inputformat",
+        "latex",
+        "layer",
+        "layers",
+        "line",
+        "output",
+        "preview",
+        "provider",
+        "q",
+        "quality",
+        "request",
+        "resize",
+        "rule",
+        "scale*",
+        "scheme",
+        "service",
+        "sig",
+        "sign",
+        "size",
+        "srs",
+        "ssl",
+        "text",
+        "tile*",
+        "title",
+        "token-hash",
+        "token-time",
+        "transparent",
+        "type",
+        "version",
+        "w",
+        "width",
+        "x",
+        "y",
+        "z",
+        "zoom"
+      ],
+      "invert": true
+    },
+    "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "297fb0c7-d052-4031-9947-fc7a9b7690af",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "web.whatsapp.com"
+      ],
+      "path": [
+        "/pp?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "WhatsApp Web images",
+    "tag": "filter-whatsapp",
+    "description": "User avatars in WhatsApp Web need an extra rule to filter URL parameters",
+    "paramsFilter": {
+      "values": [
+        "n"
+      ]
+    }
+  },
+  {
+    "uuid": "802e0c21-922e-4501-a652-da805caedb01",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "i.ytimg.com",
+        "i9.ytimg.com"
+      ],
+      "path": [
+        "/an_webp/*/*default_6s.webp*",
+        "/sb/*/storyboard*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Restore YouTube previews",
+    "description": "The general filter rule breaks the preview shown upon hovering over the seekbar or a thumbnail. This rule restores them at the cost of sending unknown metadata to YouTube servers. Disabling this rule will not break YouTube's other functions.",
+    "tag": "whitelist-youtube",
+    "log": true
+  },
+  {
+    "uuid": "26b61cb2-b847-40c1-bd89-c31327434643",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "external-content.duckduckgo.com",
+        "gatherer.wizards.com",
+        "img.dafont.com",
+        "outlook.office.com",
+        "render.fontstruct.com",
+        "render01.fontshop.com",
+        "www.osapublishing.org",
+        "www.signbank.org"
+      ],
+      "path": [
+        "*?*"
+      ],
+      "origin": "same-domain"
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Image-dependent sites",
+    "description": "Some sites, like typesetting shops, are heavily dependent on images. (Image and web document MUST share domain.) DuckDuckgo's external preview server is exceptionally included because of its efforts against user tracking and search bubbling.",
+    "tag": "whitelist-images-samedomain",
+    "log": true
+  },
+  {
+    "uuid": "6d25126a-dd1d-4e63-874c-fe0592e9bec1",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.ggpht.com",
+        "*.google.com",
+        "*.googleapis.com"
+      ],
+      "path": [
+        "cbk?*",
+        "kh?*",
+        "maps/vt?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": false,
+    "title": "Anonymize pictures from Google Maps and Google Street View",
+    "paramsFilter": {
+      "values": [
+        "cb_client",
+        "center",
+        "deg",
+        "fov",
+        "h",
+        "heading",
+        "hl",
+        "key",
+        "location",
+        "maptype",
+        "markers",
+        "output",
+        "panoid",
+        "pb",
+        "pitch",
+        "radius",
+        "signature",
+        "size",
+        "source",
+        "thumb",
+        "thumbfov",
+        "v",
+        "w",
+        "x",
+        "y",
+        "yaw",
+        "z",
+        "zoom"
+      ],
+      "invert": true
+    },
+    "tag": "filter-google-maps",
+    "description": "May cause problems in some browsers like Firefox ESR 68. Disabled by default."
+  },
+  {
+    "uuid": "0ce012d9-8492-40eb-ae75-f7c48b4f97d3",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*download/file.php?avatar=*",
+        "/avatar.php?*",
+        "/avatar/*",
+        "/avatars/*",
+        "/data/avatars/*",
+        "/user_avatar/*",
+        "/user_cover/*",
+        "/userkarma.php?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "User avatars and karma at community-driven sites",
+    "log": true,
+    "description": "e.g. phpBB forums, WikiDot wikis.",
+    "tag": "whitelist-avatars"
+  },
+  {
+    "uuid": "91561207-76db-4850-85cb-5e34dedafa90",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*action=AttachFile&do=get&target=*"
+      ],
+      "origin": "same-domain"
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Embedded images in MoinMoin based wikis and similar.",
+    "log": true,
+    "description": "Notably used on wiki.ubuntu.com.",
+    "tag": "whitelist-moinmoin"
+  },
+  {
+    "uuid": "42c98357-aba0-4e8a-9df2-739c885cfde8",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.imgix.net",
+        "badge.dimensions.ai",
+        "badges.altmetric.com",
+        "external-preview.redd.it",
+        "i.mycdn.me",
+        "imagebank.osa.org",
+        "media-exp1.licdn.com",
+        "media.gettyimages.com",
+        "media.istockphoto.com",
+        "pbs.twimg.com",
+        "preview.redd.it"
+      ],
+      "path": [
+        "*?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Image providers",
+    "description": "Includes sites whose sole function is providing images for other web pages, and sites with a dedicated server for serving images. (Whitelisted from ALL domains)",
+    "log": true,
+    "tag": "whitelist-images-crossdomain"
+  },
+  {
+    "uuid": "da3107bd-8fc1-4829-b4c4-6303af4af5fd",
+    "pattern": {
+      "scheme": "https",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*-captchaImage&antiCache=*",
+        "*action=formmakerwdcaptcha&*",
+        "*action=formmakerwdmathcaptcha&*",
+        "*action=nopriv_formmakerwdcaptcha&*",
+        "*action=nopriv_formmakerwdmathcaptcha&*",
+        "*captcha/api2/payload*",
+        "*recaptcha/enterprise/payload*",
+        "/w/index.php?title=*&wpCaptchaId=*",
+        "https://opfcaptcha-prod.s3.amazonaws.com/*"
+      ],
+      "origin": "same-domain"
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "CAPTCHAs",
+    "tag": "whitelist-captcha",
+    "log": true,
+    "description": "This filter includes reCAPTCHA and other CAPTCHA systems"
+  },
+  {
+    "uuid": "07f60a40-9293-406e-aba9-3926bdb0ef2c",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ],
+      "includes": [
+        "/\\/(ap_resize\\/ap_resize|image|imageproxy|resizer\\/resizer|safe_image)(.php)?\\?/"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "Skip image downsampler",
+    "description": "This filter retrieves the original pictures from the original domains. Disabling this filter will restore the downsampled images.",
+    "tag": "filter-resizer"
+  },
+  {
+    "uuid": "a6b8a3a1-5bba-46b1-81a5-8594e3e8b0a1",
+    "pattern": {
+      "scheme": "https",
+      "host": [
+        "*.sharepoint.com",
+        "home.navigator-bs.gmx.com",
+        "navigator-bs.gmx.com",
+        "trackbar.navigator-bs.gmx.com",
+        "www.signbank.org"
+      ],
+      "path": [
+        "*share=*",
+        "*sid=*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Exceptions to `sid` and `share` parameters",
+    "description": "These sites use the URL parameters `sid` and `share` to load different pages. This trips a general-purpose referrer remover.",
+    "tag": "whitelist-utm",
+    "log": true
+  },
+  {
+    "uuid": "34ac811a-d7e0-42fb-b509-5a9495c476ee",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "styles.redditmedia.com"
+      ],
+      "path": [
+        "*/styles/bannerBackgroundImage_*",
+        "*/styles/communityIcon_*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-reddit",
+    "skipRedirectionFilter": true,
+    "trimAllParams": true
+  },
+  {
+    "uuid": "de12ff52-0cc2-468b-8dc9-6d3e56ca3389",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "duckduckgo.com"
+      ],
+      "path": [
+        "mapkit/?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "DuckDuckGo map provider",
+    "tag": "whitelist-duckduckgo",
+    "log": true
+  },
+  {
+    "uuid": "95758173-ff22-4863-a743-d09a068cca91",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "cdn.embedly.com"
+      ],
+      "path": [
+        "/widgets/media.html?src=*"
+      ]
+    },
+    "types": [
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "tag": "filter-embedly"
+  },
+  {
+    "uuid": "311886d6-bf8b-4112-aea3-9539cc40c318",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "maps.google.com",
+        "maps.googleapis.com"
+      ],
+      "path": [
+        "/maps/api/js/StaticMapService.GetMapImage*",
+        "/maps/api/staticmap?*&signature=*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Static Google Maps",
+    "description": "Removing any parameter in these requests (signed maps, and base image for some embedded maps) will make it fail.",
+    "log": true,
+    "tag": "whitelist-google-maps"
+  },
+  {
+    "uuid": "e1602933-69a7-4901-9259-42b5551101d0",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.maps.api.here.com",
+        "*.maps.cit.api.here.com"
+      ],
+      "path": [
+        "/maptile/2.1/maptile/*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "HERE maps API 2.5.4",
+    "tag": "filter-here",
+    "paramsFilter": {
+      "values": [
+        "app_code",
+        "app_id",
+        "lg",
+        "token"
+      ],
+      "invert": true
+    },
+    "skipRedirectionFilter": true
+  },
+  {
+    "uuid": "66f8aed7-3826-4bfb-83ba-9a1030d54456",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ],
+      "includes": [
+        "/\\/(i|fetch|image_gallery|thumb)(\\.php|\\/)?\\?/"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "2nd filter for tracking parameters in images",
+    "paramsFilter": {
+      "values": [
+        "crop",
+        "download",
+        "filedataid",
+        "group_id",
+        "groupid",
+        "i",
+        "image_path",
+        "img_id",
+        "imgid",
+        "t",
+        "uuid",
+        "version",
+        "w"
+      ],
+      "invert": true
+    },
+    "tag": "filter-images-2",
+    "description": "Undocument image-selection PHP scripts, based in numeric IDs."
+  },
+  {
+    "uuid": "d5f1deb0-f7b4-4c45-9a7e-6ea04a051e51",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "fb.me"
+      ],
+      "path": [
+        "*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "redirect",
+    "active": true,
+    "tag": "redirect-facebook",
+    "redirectUrl": "https://www.facebook.com/{pathname:1}"
+  },
+  {
+    "uuid": "bd61a299-f45e-4dee-a16c-be91ae8f937f",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "ecn.t0.tiles.virtualearth.net",
+        "ecn.t1.tiles.virtualearth.net",
+        "ecn.t2.tiles.virtualearth.net",
+        "ecn.t3.tiles.virtualearth.net",
+        "t.ssl.ak.dynamic.tiles.virtualearth.net",
+        "t.ssl.ak.tiles.virtualearth.net"
+      ],
+      "path": [
+        "comp/ch/*?mkt=*",
+        "tiles/*?g=*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Bing map and street view provider",
+    "tag": "whitelist-bing-maps",
+    "log": true
+  },
+  {
+    "uuid": "5c27a1dc-3446-472d-9e26-e001b5a32e51",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "s2.googleusercontent.com"
+      ],
+      "path": [
+        "s2/favicons?domain_url=*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Favicons at YouTube",
+    "tag": "whitelist-youtube-2",
+    "log": true
+  },
+  {
+    "uuid": "71bc39c3-0a9e-44ef-8309-bcdb99377491",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ],
+      "includes": [
+        "/\\/(Satellite|BlobServer|StaticBS)(\\/[^\\/\\?]+)?\\?/"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "3rd filter for tracking parameters in images",
+    "skipRedirectionFilter": true,
+    "paramsFilter": {
+      "values": [
+        "assembler",
+        "asset",
+        "authority",
+        "blob*",
+        "c",
+        "cid",
+        "container",
+        "fragment",
+        "key",
+        "maxage",
+        "satellite",
+        "scheme",
+        "ssbinary"
+      ],
+      "invert": true
+    },
+    "description": "Oracle's Site-Satellite and Apache's BlobServer system",
+    "tag": "filter-images-3"
+  },
+  {
+    "uuid": "938aebe5-c98a-46fb-9e38-6b9bd42d687e",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*"
+      ],
+      "excludes": [
+        "safe_image.php*"
+      ],
+      "includes": [
+        "/\\?.*\\&(_nc_[a-z]{1,3}|oh|oe)=./"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "4th filter for tracking parameters in images",
+    "skipRedirectionFilter": true,
+    "tag": "filter-images-4",
+    "paramsFilter": {
+      "values": [
+        "_nc_cat",
+        "_nc_ht",
+        "_nc_oc",
+        "_nc_ohc",
+        "oe",
+        "oh"
+      ],
+      "invert": true
+    },
+    "description": "For Facebook's style signed URLs filters (used in Facebook, WhatsApp and Instagram)."
+  },
+  {
+    "uuid": "9a0a3b89-7fd4-4838-a5d2-a1e39da8006b",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.fna.fbcdn.net"
+      ],
+      "path": [
+        "static_map.php?*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Facebook map thumbnail provider",
+    "tag": "whitelist-facebook-maps",
+    "log": true
+  },
+  {
+    "uuid": "e1262258-f5c2-4c2d-baa0-4a0e9ffcef3d",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "vec01.maps.yandex.net",
+        "vec02.maps.yandex.net",
+        "vec03.maps.yandex.net",
+        "vec04.maps.yandex.net"
+      ],
+      "path": [
+        "/tiles?l=map&*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Yandex maps",
+    "log": true,
+    "tag": "whitelist-yandex"
+  },
+  {
+    "uuid": "953324d7-0aff-48c0-96fc-b4b746befa7e",
+    "pattern": {
+      "scheme": "https",
+      "host": [
+        "www.linkedin.com"
+      ],
+      "path": [
+        "/checkpoint/rp/request-password-reset-submit-redir-email-pin?*"
+      ]
+    },
+    "types": [
+      "main_frame"
+    ],
+    "action": "whitelist",
+    "active": true,
+    "title": "Restore password reset at LinkedIn",
+    "tag": "whitelist-linkedin-password-reset",
+    "log": true
+  },
+  {
+    "uuid": "e3dd89aa-6fd3-41ae-945f-3617fc03902d",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "c.disquscdn.com"
+      ],
+      "path": [
+        "get?url=*"
+      ]
+    },
+    "types": [
+      "image"
+    ],
+    "action": "filter",
+    "active": true,
+    "title": "Skip Disqus image retriever",
+    "tag": "filter-disqus"
+  },
+  {
+    "uuid": "d78b46f3-6c04-43a8-a907-83c161138e61",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "www.linkedin.com"
+      ],
+      "path": [
+        "*"
+      ],
+      "excludes": [
+        "/\\/checkpoint\\//",
+        "/\\/jobs\\/\\?/",
+        "/\\/search\\/\\?/",
+        "/\\/uas\\/logout\\?/"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "redirectUrl": "",
+    "tag": "filter-linkedin",
+    "paramsFilter": {
+      "values": [
+        "url"
+      ],
+      "invert": true
+    }
+  },
+  {
+    "uuid": "e3384047-a2b2-433e-a52c-f46eea48305f",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "disq.us"
+      ],
+      "path": [
+        "url?url=*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "redirect",
+    "active": true,
+    "title": "Skip Disqus redirector",
+    "redirectUrl": "{search/\\?url=([^&]*)&.*/$1|decodeURIComponent|/:[A-Za-z0-9-]*$/}",
+    "tag": "redirect-disqus",
+    "description": "A suffix after the destination URL causes the usual approach to fail"
   }
 ]
