@@ -159,7 +159,7 @@ function displayErrorMessage(error) {
 }
 
 async function loadDefaultRules() {
-    const response = await fetch("./default-rules.json", {
+    const response = await fetch("/rules/default-privacy.json", {
         headers: {
             "Content-Type": "application/json",
         },
