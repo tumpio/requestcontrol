@@ -348,7 +348,7 @@ class RuleInput extends HTMLElement {
         if (
             e.target.tagName !== "BUTTON" &&
             e.target.tagName !== "INPUT" &&
-            !e.target.hasAttribute("contenteditable")
+            !this.classList.contains("editing")
         ) {
             this.shadowRoot.getElementById("select").click();
         }
