@@ -94,8 +94,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 document.addEventListener("rule-created", async function (e) {
     const rule = e.detail.rule;
 
-    const { rules } = await browser.storage.local.get("rules");
+    let { rules } = await browser.storage.local.get("rules");
 
+    if (!rules) {
+        rules = [];
+    }
     rules.push(rule);
 
     await browser.storage.local.set({ rules });
