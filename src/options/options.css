@@ -75,10 +75,13 @@ body {
 }
 
 .alert {
+    display: flex;
+    align-items: center;
     position: fixed;
-    right: 0.5em;
-    transition: bottom 0.15s ease-out;
-    bottom: -6em;
+    right: 0;
+    margin: 0.5em;
+    transition: top 0.15s ease-out;
+    top: -6em;
     z-index: 100;
     background-color: #d50000;
     color: #fff;
@@ -90,7 +93,13 @@ body {
 }
 
 .alert.show {
-    bottom: 0;
+    top: 0;
+}
+
+.alert .close {
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0 0.3em;
 }
 
 .modal.show {
@@ -214,11 +223,6 @@ body {
     font-size: 1.5em;
     font-weight: bold;
     margin-right: 0.5em;
-}
-
-.alert .close {
-    font-size: 1.5em;
-    margin-left: 0.5em;
 }
 
 .close:hover,
