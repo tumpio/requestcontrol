@@ -109,6 +109,7 @@ class RuleInput extends HTMLElement {
     toggleActive() {
         this.rule.active = !this.rule.active;
         this.updateActiveState();
+        this.updateIfNotEdited();
         this.notifyChangedIfValid();
     }
 
@@ -130,10 +131,7 @@ class RuleInput extends HTMLElement {
         this.querySelector("#tag").setAttribute("contenteditable", editing);
 
         if (editing) {
-            if (this.classList.contains("not-edited")) {
-                this.classList.remove("not-edited");
-                this.updateInputs();
-            }
+            this.updateIfNotEdited();
         } else {
             this.dispatchEvent(
                 new CustomEvent("rule-edit-completed", {
@@ -551,6 +549,13 @@ class RuleInput extends HTMLElement {
     updateActiveState() {
         this.classList.toggle("disabled", !this.rule.active);
         this.querySelector("#activate").textContent = browser.i18n.getMessage("activate_" + !this.rule.active);
+    }
+
+    updateIfNotEdited() {
+        if (this.classList.contains("not-edited")) {
+            this.classList.remove("not-edited");
+            this.updateInputs();
+        }
     }
 
     updateInputs() {
