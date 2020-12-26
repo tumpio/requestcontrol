@@ -4,9 +4,13 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="../util/badges.css" />
+        <link rel="stylesheet" href="../util/tags-input/src/tags-input.css" />
         <link rel="stylesheet" href="/lib/lit/lit.css" />
         <link rel="stylesheet" href="common.css" />
         <link rel="stylesheet" href="options.css" />
+        <link rel="stylesheet" href="rule-list.css" />
+        <link rel="stylesheet" href="rule-input.css" />
         <script defer src="../util/tab.js"></script>
         <script defer src="../util/modal.js"></script>
         <script defer type="module" src="../util/i18n.js"></script>
@@ -185,26 +189,21 @@
             </div>
         </div>
         <template id="rule-input">
-            <link rel="stylesheet" href="/lib/lit/lit.css" />
-            <link rel="stylesheet" href="../util/tags-input/src/tags-input.css" />
-            <link rel="stylesheet" href="../util/badges.css" />
-            <link rel="stylesheet" href="common.css" />
-            <link rel="stylesheet" href="rule-input.css" />
             <div id="header" class="rule-header">
                 <div class="rule-select">
                     <input id="select" type="checkbox" autocomplete="off" />
                 </div>
                 <div class="rule-header-title">
                     <div class="title-wrap">
-                        <small class="badge edit-label" data-i18n="name"></small>
+                        <small class="badge edit-label d-none" data-i18n="name"></small>
                         <label id="title" class="title" data-i18n="new_rule"></label>
                     </div>
-                    <div class="description-wrap">
-                        <small class="badge edit-label" data-i18n="description"></small>
+                    <div class="description-wrap d-none">
+                        <small class="badge edit-label d-none" data-i18n="description"></small>
                         <small id="description" class="description"></small>
                     </div>
-                    <div class="tag-wrap">
-                        <small class="badge edit-label" data-i18n="tag"></small>
+                    <div class="tag-wrap d-none">
+                        <small class="badge edit-label d-none" data-i18n="tag"></small>
                         <button id="add-tag" type="button" class="badge add-tag" data-i18n="add_tag"></button>
                         <small id="tag" class="tag"></small>
                     </div>
@@ -419,40 +418,13 @@
                     </div>
                     <small class="form-header" data-i18n="action"></small>
                     <div class="row">
-                        <div>
-                            <label class="btn">
-                                <input
-                                    class="action"
-                                    value="filter"
-                                    type="radio"
-                                    name="action"
-                                    autocomplete="off"
-                                    required
-                                />
-                                <img class="icon" src="/icons/icon-filter.svg" height="16" />
-                                <span data-i18n="filter"></span>
-                            </label>
-                            <label class="btn">
-                                <input class="action" value="redirect" type="radio" name="action" autocomplete="off" />
-                                <img class="icon" src="/icons/icon-redirect.svg" height="16" />
-                                <span data-i18n="redirect"></span>
-                            </label>
-                            <label class="btn">
-                                <input class="action" value="secure" type="radio" name="action" autocomplete="off" />
-                                <img class="icon" src="/icons/icon-secure.svg" height="16" />
-                                <span data-i18n="secure"></span>
-                            </label>
-                            <label class="btn">
-                                <input class="action" value="block" type="radio" name="action" autocomplete="off" />
-                                <img class="icon" src="/icons/icon-block.svg" height="16" />
-                                <span data-i18n="block"></span>
-                            </label>
-                            <label class="btn">
-                                <input class="action" value="whitelist" type="radio" name="action" autocomplete="off" />
-                                <img class="icon" src="/icons/icon-whitelist.svg" height="16" />
-                                <span data-i18n="whitelist"></span>
-                            </label>
-                        </div>
+                        <select id="action" autocomplete="off" value="">
+                            <option value="filter" data-i18n="filter"></option>
+                            <option value="redirect" data-i18n="redirect"></option>
+                            <option value="secure" data-i18n="secure"></option>
+                            <option value="block" data-i18n="block"></option>
+                            <option value="whitelist" data-i18n="whitelist"></option>
+                        </select>
                     </div>
                 </form>
                 <div class="row rule-input-buttons">
@@ -545,9 +517,6 @@
             </div>
         </template>
         <template id="rule-list">
-            <link rel="stylesheet" href="/lib/lit/lit.css" />
-            <link rel="stylesheet" href="common.css" />
-            <link rel="stylesheet" href="rule-list.css" />
             <div class="container">
                 <div class="header">
                     <input id="select-all" class="select-all" type="checkbox" autocomplete="off" />

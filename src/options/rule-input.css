@@ -2,11 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-* + * {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
 form .btn:not(button) {
     border: none;
     padding: 0;
@@ -56,11 +51,11 @@ form .row {
     margin: 0;
 }
 
-:host(.disabled) > .rule-header {
+.disabled:not(.editing) > .rule-header {
     color: grey;
 }
 
-:host(.disabled) .btn-activate {
+.disabled .btn-activate {
     background: green;
     border-color: green;
     color: white;
@@ -72,13 +67,14 @@ form .row {
     display: flex;
     vertical-align: middle;
     align-items: center;
+    padding: 0.1em 0;
 }
 
-:host(.disabled:not(.editing)) > .rule-header {
+.disabled:not(.editing) > .rule-header {
     background: #f7f7f7;
 }
 
-:host(.selected:not(.editing)) > .rule-header {
+.selected:not(.editing) > .rule-header {
     background: #e0e9f7;
 }
 
@@ -100,30 +96,14 @@ form .row {
     text-overflow: ellipsis;
 }
 
-:host(.editing) .rule-header {
+.editing .rule-header {
     border-bottom: 1px solid #f5f5f5;
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
+    padding: 0.3em 0;
 }
 
-:host(:not(.editing)) .rule-header .edit-label {
-    display: none;
-}
-
-:host(:not(.editing)) .rule-header {
-    padding: 0.1em 0;
-}
-
-:host(.editing) .rule-header > div:first-child > div {
+.editing .rule-header > div:first-child > div {
     max-height: 10em;
     overflow-y: auto;
-}
-
-:host([new]) .btn-done,
-:host(:not([new])) .btn-create,
-:host(:not(.editing)) .btn-done,
-:host(.editing) .information {
-    display: none;
 }
 
 .btn-delete {
@@ -139,8 +119,7 @@ form .row {
     padding-top: 0.3em;
 }
 
-:host(:not(.editing)) .title,
-:host(:not(.editing)) .description {
+.title:not([contenteditable="true"]) {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -148,34 +127,32 @@ form .row {
     max-width: 48em;
 }
 
-:host(:not(.editing)) [class$="-wrap"] {
+.rule-header div[class$="-wrap"] {
     display: flex;
     align-items: baseline;
+    user-select: none;
 }
 
-:host(:not(.editing)) .description,
-:host(:not(.editing)) .tag-wrap {
-    display: none;
+.editing .rule-header div[class$="-wrap"] {
+    display: block;
 }
 
 .rule-header div[class$="-wrap"] > .badge {
     padding: 0;
 }
 
-.rule-header .title[contenteditable],
-.rule-header .description[contenteditable],
-.rule-header .tag[contenteditable] {
-    -moz-user-select: text;
-    cursor: auto;
+.rule-header .title[contenteditable="true"],
+.rule-header .description[contenteditable="true"],
+.rule-header .tag[contenteditable="true"] {
     color: #4b4b4b;
 }
 
-.rule-header .title[contenteditable]:hover,
-.rule-header .description[contenteditable]:hover,
-.rule-header .rule-header .tag[contenteditable]:hover,
-.rule-header .title[contenteditable]:focus,
-.rule-header .description[contenteditable]:focus,
-.rule-header .tag[contenteditable]:focus {
+.rule-header .title[contenteditable="true"]:hover,
+.rule-header .description[contenteditable="true"]:hover,
+.rule-header .tag[contenteditable="true"]:hover,
+.rule-header .title[contenteditable="true"]:focus,
+.rule-header .description[contenteditable="true"]:focus,
+.rule-header .tag[contenteditable="true"]:focus {
     color: black;
 }
 
@@ -212,20 +189,25 @@ form .row {
         text-align: center;
     }
 
-    :host(:not(.editing)) .title:hover {
+    .title:hover {
         text-decoration: underline;
         cursor: pointer;
     }
 
-    :host(.saved:not(.editing)) > .rule-header {
+    .editing .title:hover {
+        text-decoration: initial;
+        cursor: initial;
+    }
+
+    .saved:not(.editing) > .rule-header {
         border-left: 2px solid green;
     }
 
-    :host(.error) > .rule-header {
+    .error > .rule-header {
         border-left: 2px solid red;
     }
 
-    :host(.new:not(.editing)) > .rule-header {
+    .new:not(.editing) > .rule-header {
         border-left: 2px solid orange;
     }
 
@@ -265,14 +247,14 @@ form .row {
 }
 
 @media (max-width: 35em) {
-    :host(.editing) > .rule-header div[class$="-wrap"] {
+    .editing > .rule-header div[class$="-wrap"] {
         display: flex;
         align-items: flex-start;
         flex-direction: column;
         margin-bottom: 0.6em !important;
     }
 
-    :host(.editing) .header-info-wrap,
+    .editing .header-info-wrap,
     .rule-select {
         display: none !important;
     }
@@ -282,20 +264,20 @@ form .row {
         height: 8px;
         border-radius: 50%;
         display: inline-block;
-        margin: 0 .3em;
+        margin: 0 0.3em;
     }
 
-    :host(.saved:not(.editing)) .information::before {
+    .saved:not(.editing) .information::before {
         background: green;
         content: "";
     }
 
-    :host(.error) .information::before {
+    .error .information::before {
         background: red;
         content: "";
     }
 
-    :host(.new:not(.editing)) .information::before {
+    .new:not(.editing) .information::before {
         background: orange;
         content: "";
     }
@@ -310,7 +292,7 @@ form .row {
         justify-content: space-between;
     }
 
-    :host(.selected) > .rule-header {
+    .selected > .rule-header {
         background: #f8f7ff;
     }
 

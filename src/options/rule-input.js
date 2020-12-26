@@ -39,7 +39,7 @@ export function newRuleInput(
         default:
             input = new RuleInput();
     }
-    input.id = rule.uuid;
+    input.id = `rule-${rule.uuid}`;
     input.dataset.uuid = rule.uuid;
     input.rule = rule;
     input.classList.add("not-edited");
@@ -53,55 +53,55 @@ class RuleInput extends HTMLElement {
     constructor() {
         super();
         const template = document.getElementById("rule-input");
-        this.attachShadow({ mode: "open" }).appendChild(template.content.cloneNode(true));
-        const root = this.shadowRoot;
+        this.appendChild(template.content.cloneNode(true));
 
-        this.hostsTagsInput = root.getElementById("host");
-        this.pathsTagsInput = root.getElementById("path");
-        this.tldsTagsInput = root.getElementById("tlds");
-        this.includesTagsInput = root.getElementById("includes");
-        this.excludesTagsInput = root.getElementById("excludes");
+        this.hostsTagsInput = this.querySelector("#host");
+        this.pathsTagsInput = this.querySelector("#path");
+        this.tldsTagsInput = this.querySelector("#tlds");
+        this.includesTagsInput = this.querySelector("#includes");
+        this.excludesTagsInput = this.querySelector("#excludes");
 
-        root.getElementById("title").addEventListener("keydown", this.onEnterKey.bind(this));
-        root.getElementById("title").addEventListener("blur", this.onSetTitle.bind(this));
-        root.getElementById("description").addEventListener("keydown", this.onEnterKey.bind(this));
-        root.getElementById("description").addEventListener("blur", this.onSetDescription.bind(this));
-        root.getElementById("tag").addEventListener("keydown", this.onEnterKey.bind(this));
-        root.getElementById("tag").addEventListener("blur", this.onSetTag.bind(this));
-        root.getElementById("add-tag").addEventListener("click", this.onAddTag.bind(this));
-        root.getElementById("select").addEventListener("change", this.onSelect.bind(this));
-        root.getElementById("activate").addEventListener("click", this.toggleActive.bind(this));
-        root.getElementById("host").addEventListener("change", this.validateTLDPattern.bind(this));
-        root.getElementById("any-url").addEventListener("change", this.onSelectAnyUrl.bind(this));
-        root.getElementById("collapse-matchers").addEventListener("click", this.toggleMatchers.bind(this));
-        root.getElementById("types").addEventListener("change", onToggleButtonChange, false);
-        root.getElementById("types").addEventListener("change", this.sortTypes.bind(this), false);
-        root.getElementById("more-types").addEventListener("change", this.onShowMoreTypes.bind(this), false);
-        root.getElementById("any-type").addEventListener("change", this.onSelectAnyType.bind(this));
-        root.getElementById("collapse-tlds").addEventListener("click", this.toggleTLDs.bind(this));
-        root.getElementById("tlds").addEventListener("change", this.onSetTLDs.bind(this));
-        root.getElementById("form").addEventListener("change", this.onChange.bind(this));
-        root.getElementById("delete").addEventListener("click", this.onDelete.bind(this));
-        root.getElementById("create").addEventListener("click", this.onCreate.bind(this));
-        this.shadowRoot
-            .querySelectorAll(".toggle-edit")
-            .forEach((edit) => edit.addEventListener("click", this.toggleEdit.bind(this)));
+        this.querySelector("#title").addEventListener("keydown", this.onEnterKey.bind(this));
+        this.querySelector("#title").addEventListener("blur", this.onSetTitle.bind(this));
+        this.querySelector("#description").addEventListener("keydown", this.onEnterKey.bind(this));
+        this.querySelector("#description").addEventListener("blur", this.onSetDescription.bind(this));
+        this.querySelector("#tag").addEventListener("keydown", this.onEnterKey.bind(this));
+        this.querySelector("#tag").addEventListener("blur", this.onSetTag.bind(this));
+        this.querySelector("#add-tag").addEventListener("click", this.onAddTag.bind(this));
+        this.querySelector("#select").addEventListener("change", this.onSelect.bind(this));
+        this.querySelector("#activate").addEventListener("click", this.toggleActive.bind(this));
+        this.querySelector("#host").addEventListener("change", this.validateTLDPattern.bind(this));
+        this.querySelector("#any-url").addEventListener("change", this.onSelectAnyUrl.bind(this));
+        this.querySelector("#collapse-matchers").addEventListener("click", this.toggleMatchers.bind(this));
+        this.querySelector("#types").addEventListener("change", onToggleButtonChange, false);
+        this.querySelector("#types").addEventListener("change", this.sortTypes.bind(this), false);
+        this.querySelector("#more-types").addEventListener("change", this.onShowMoreTypes.bind(this), false);
+        this.querySelector("#any-type").addEventListener("change", this.onSelectAnyType.bind(this));
+        this.querySelector("#collapse-tlds").addEventListener("click", this.toggleTLDs.bind(this));
+        this.querySelector("#tlds").addEventListener("change", this.onSetTLDs.bind(this));
+        this.querySelector("#form").addEventListener("change", this.onChange.bind(this));
+        this.querySelector("#delete").addEventListener("click", this.onDelete.bind(this));
+        this.querySelector("#create").addEventListener("click", this.onCreate.bind(this));
+        this.querySelectorAll(".toggle-edit").forEach((edit) =>
+            edit.addEventListener("click", this.toggleEdit.bind(this))
+        );
 
         if (isMobile) {
-            this.shadowRoot.getElementById("header").addEventListener("click", this.onHeaderClick.bind(this));
+            this.querySelector("#header").addEventListener("click", this.onHeaderClick.bind(this));
         } else {
-            this.shadowRoot.getElementById("title").addEventListener("click", this.onHeaderTitleClick.bind(this));
+            this.querySelector("#title").addEventListener("click", this.onHeaderTitleClick.bind(this));
         }
     }
 
     focus() {
-        this.shadowRoot.getElementById("host").focus();
+        this.querySelector("#host").focus();
     }
 
     toggleSaved() {
         const input = this;
         input.classList.add("saved");
-        setTimeout(function () {
+        clearTimeout(this.savedTimeout);
+        this.savedTimeout = setTimeout(function () {
             input.classList.remove("saved");
         }, 5000);
     }
@@ -109,23 +109,32 @@ class RuleInput extends HTMLElement {
     toggleActive() {
         this.rule.active = !this.rule.active;
         this.updateActiveState();
-        this.notifyChanged();
+        this.notifyChangedIfValid();
     }
 
     toggleEdit() {
-        toggleHidden(this.shadowRoot.getElementById("input-area"));
-        if (this.classList.toggle("editing")) {
-            this.shadowRoot.getElementById("title").setAttribute("contenteditable", true);
-            this.shadowRoot.getElementById("description").setAttribute("contenteditable", true);
-            this.shadowRoot.getElementById("tag").setAttribute("contenteditable", true);
+        let editing = this.classList.toggle("editing");
+        let isNew = this.hasAttribute("new");
+        toggleHidden(
+            !editing,
+            ...this.querySelectorAll(".edit-label"),
+            this.querySelector("#input-area"),
+            this.querySelector(".description-wrap"),
+            this.querySelector(".tag-wrap")
+        );
+        toggleHidden(editing, this.querySelector(".information"));
+        toggleHidden(isNew, this.querySelector(".btn-done"));
+        toggleHidden(!isNew, this.querySelector(".btn-create"));
+        this.querySelector("#title").setAttribute("contenteditable", editing);
+        this.querySelector("#description").setAttribute("contenteditable", editing);
+        this.querySelector("#tag").setAttribute("contenteditable", editing);
+
+        if (editing) {
             if (this.classList.contains("not-edited")) {
                 this.classList.remove("not-edited");
                 this.updateInputs();
             }
         } else {
-            this.shadowRoot.getElementById("title").removeAttribute("contenteditable");
-            this.shadowRoot.getElementById("description").removeAttribute("contenteditable");
-            this.shadowRoot.getElementById("tag").removeAttribute("contenteditable");
             this.dispatchEvent(
                 new CustomEvent("rule-edit-completed", {
                     bubbles: true,
@@ -140,25 +149,25 @@ class RuleInput extends HTMLElement {
     }
 
     toggleMatchers() {
-        toggleHidden(this.shadowRoot.getElementById("matchers"));
-        this.shadowRoot.getElementById("collapse-matchers").classList.toggle("collapsed");
+        toggleHidden(this.querySelector("#matchers"));
+        this.querySelector("#collapse-matchers").classList.toggle("collapsed");
     }
 
     toggleTLDs() {
-        toggleHidden(this.shadowRoot.getElementById("tlds-area"));
-        this.shadowRoot.getElementById("collapse-tlds").classList.toggle("collapsed");
+        toggleHidden(this.querySelector("#tlds-area"));
+        this.querySelector("#collapse-tlds").classList.toggle("collapsed");
     }
 
     validateTLDPattern() {
         const isTldsPattern =
-            !this.shadowRoot.getElementById("any-url").checked && this.hostsTagsInput.tags.some(isTLDHostPattern);
-        toggleHidden(!isTldsPattern, this.shadowRoot.getElementById("tlds-form"));
+            !this.querySelector("#any-url").checked && this.hostsTagsInput.tags.some(isTLDHostPattern);
+        toggleHidden(!isTldsPattern, this.querySelector("#tlds-form"));
         this.tldsTagsInput.disabled = !isTldsPattern;
         if (isTldsPattern) {
             if (this.tldsTagsInput.tags.length === 0) {
-                this.shadowRoot.getElementById("collapse-tlds").classList.add("text-danger");
-                this.shadowRoot.getElementById("collapse-tlds").parentNode.classList.add("has-error");
-                toggleHidden(!isTldsPattern, this.shadowRoot.getElementById("tlds-area"));
+                this.querySelector("#collapse-tlds").classList.add("text-danger");
+                this.querySelector("#collapse-tlds").parentNode.classList.add("has-error");
+                toggleHidden(!isTldsPattern, this.querySelector("#tlds-area"));
             }
         }
     }
@@ -216,7 +225,6 @@ class RuleInput extends HTMLElement {
             delete this.rule.name;
         }
         this.notifyChanged();
-        this.updateHeader();
     }
 
     get description() {
@@ -246,16 +254,15 @@ class RuleInput extends HTMLElement {
             delete this.rule.description;
         }
         this.notifyChanged();
-        this.updateHeader();
     }
 
     set selected(isSelected) {
         this.classList.toggle("selected", isSelected);
-        this.shadowRoot.getElementById("select").checked = isSelected;
+        this.querySelector("#select").checked = isSelected;
     }
 
     get selected() {
-        return this.shadowRoot.getElementById("select").checked;
+        return this.querySelector("#select").checked;
     }
 
     get tag() {
@@ -281,7 +288,6 @@ class RuleInput extends HTMLElement {
             delete this.rule.tag;
         }
         this.notifyChanged();
-        this.updateHeader();
     }
 
     onCreate() {
@@ -304,7 +310,7 @@ class RuleInput extends HTMLElement {
         this.updateRule();
         this.updateHeader();
 
-        if (e.target.classList.contains("action")) {
+        if (e.target.id === "action") {
             this.onActionChange();
         } else {
             this.notifyChangedIfValid();
@@ -345,12 +351,8 @@ class RuleInput extends HTMLElement {
     }
 
     onHeaderClick(e) {
-        if (
-            e.target.tagName !== "BUTTON" &&
-            e.target.tagName !== "INPUT" &&
-            !this.classList.contains("editing")
-        ) {
-            this.shadowRoot.getElementById("select").click();
+        if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT" && !this.classList.contains("editing")) {
+            this.querySelector("#select").click();
         }
     }
 
@@ -358,7 +360,7 @@ class RuleInput extends HTMLElement {
         if (
             e.target.tagName !== "BUTTON" &&
             e.target.tagName !== "INPUT" &&
-            !e.target.hasAttribute("contenteditable")
+            e.target.getAttribute("contenteditable") !== "true"
         ) {
             this.toggleEdit();
         }
@@ -380,7 +382,7 @@ class RuleInput extends HTMLElement {
 
     onAddTag(e) {
         toggleHidden(e.target);
-        this.shadowRoot.getElementById("tag").focus();
+        this.querySelector("#tag").focus();
     }
 
     onSetTag(e) {
@@ -389,8 +391,8 @@ class RuleInput extends HTMLElement {
 
     onShowMoreTypes(e) {
         e.stopPropagation();
-        const extraTypes = this.shadowRoot.querySelectorAll(".extra-type:not(:checked)");
-        const moreButton = this.shadowRoot.getElementById("more-types");
+        const extraTypes = this.querySelectorAll(".extra-type:not(:checked)");
+        const moreButton = this.querySelector("#more-types");
         moreButton.parentNode.querySelector(".text").textContent = browser.i18n.getMessage(
             "show_more_" + !moreButton.checked
         );
@@ -404,8 +406,8 @@ class RuleInput extends HTMLElement {
     }
 
     setAnyUrl(enabled) {
-        setButtonChecked(this.shadowRoot.getElementById("any-url"), enabled);
-        toggleHidden(enabled, this.shadowRoot.getElementById("url-area"));
+        setButtonChecked(this.querySelector("#any-url"), enabled);
+        toggleHidden(enabled, this.querySelector("#url-area"));
         this.validateTLDPattern();
         this.hostsTagsInput.disabled = enabled;
     }
@@ -415,19 +417,19 @@ class RuleInput extends HTMLElement {
     }
 
     setAnyType(bool) {
-        setButtonChecked(this.shadowRoot.getElementById("any-type"), bool);
-        toggleHidden(bool, this.shadowRoot.getElementById("types"));
+        setButtonChecked(this.querySelector("#any-type"), bool);
+        toggleHidden(bool, this.querySelector("#types"));
         if (bool) {
-            this.shadowRoot.querySelectorAll(".type:checked").forEach((type) => setButtonChecked(type, false));
+            this.querySelectorAll(".type:checked").forEach((type) => setButtonChecked(type, false));
         }
     }
 
     onSetTLDs() {
         const numberOfTlds = this.tldsTagsInput.tags.length;
         const error = numberOfTlds === 0;
-        this.shadowRoot.querySelector("#collapse-tlds > .badge").textContent = numberOfTlds;
-        this.shadowRoot.getElementById("collapse-tlds").classList.toggle("text-danger", error);
-        this.shadowRoot.getElementById("collapse-tlds").parentNode.classList.toggle("has-error", error);
+        this.querySelector("#collapse-tlds > .badge").textContent = numberOfTlds;
+        this.querySelector("#collapse-tlds").classList.toggle("text-danger", error);
+        this.querySelector("#collapse-tlds").parentNode.classList.toggle("has-error", error);
     }
 
     onSelect(e) {
@@ -474,7 +476,7 @@ class RuleInput extends HTMLElement {
     }
 
     isValid() {
-        if (!this.shadowRoot.getElementById("form").checkValidity()) {
+        if (!this.querySelector("#form").checkValidity()) {
             return false;
         }
         try {
@@ -488,17 +490,17 @@ class RuleInput extends HTMLElement {
 
     reportValidity() {
         this.classList.toggle("error", !this.isValid());
-        this.shadowRoot.getElementById("form").reportValidity();
+        this.querySelector("#form").reportValidity();
     }
 
     setType(value, bool) {
-        const type = this.shadowRoot.querySelector(".type[value=" + value + "]");
+        const type = this.querySelector(".type[value=" + value + "]");
         setButtonChecked(type, bool);
         toggleHidden(false, type.parentNode);
     }
 
     sortTypes() {
-        const list = this.shadowRoot.getElementById("types");
+        const list = this.querySelector("#types");
         let sorting = true;
         let i, types, swap;
         while (sorting) {
@@ -524,42 +526,40 @@ class RuleInput extends HTMLElement {
 
     updateHeader() {
         this.setAttribute("data-type", this.rule.action);
-        this.shadowRoot.getElementById("title").textContent = this.title;
-        this.shadowRoot.getElementById("title").title = this.description;
-        this.shadowRoot.getElementById("description").textContent = this.description;
-        this.shadowRoot.getElementById("tag").textContent = this.tag;
-        this.shadowRoot.getElementById("tag-badge").textContent = this.tag;
-        this.shadowRoot.getElementById("patterns-badge").textContent = browser.i18n.getMessage("count_patterns", [
+        this.querySelector("#title").textContent = this.title;
+        this.querySelector("#title").title = this.description;
+        this.querySelector("#description").textContent = this.description;
+        this.querySelector("#tag").textContent = this.tag;
+        this.querySelector("#tag-badge").textContent = this.tag;
+        this.querySelector("#patterns-badge").textContent = browser.i18n.getMessage("count_patterns", [
             createMatchPatterns(this.rule.pattern).length,
         ]);
         if (!this.rule.types) {
-            this.shadowRoot.getElementById("types-badge").textContent = browser.i18n.getMessage("any");
+            this.querySelector("#types-badge").textContent = browser.i18n.getMessage("any");
         } else if (this.rule.types.length === 1) {
-            this.shadowRoot.getElementById("types-badge").textContent = browser.i18n.getMessage(this.rule.types[0]);
+            this.querySelector("#types-badge").textContent = browser.i18n.getMessage(this.rule.types[0]);
         } else {
-            this.shadowRoot.getElementById("types-badge").textContent = browser.i18n.getMessage("count_types", [
+            this.querySelector("#types-badge").textContent = browser.i18n.getMessage("count_types", [
                 this.rule.types.length,
             ]);
         }
-        toggleHidden(this.tag.length === 0, this.shadowRoot.getElementById("tag-badge").parentNode);
-        toggleHidden(this.tag.length > 0, this.shadowRoot.getElementById("add-tag"));
+        toggleHidden(this.tag.length === 0, this.querySelector("#tag-badge").parentNode);
+        toggleHidden(this.tag.length > 0, this.querySelector("#add-tag"));
         this.updateActiveState();
     }
 
     updateActiveState() {
         this.classList.toggle("disabled", !this.rule.active);
-        this.shadowRoot.getElementById("activate").textContent = browser.i18n.getMessage(
-            "activate_" + !this.rule.active
-        );
+        this.querySelector("#activate").textContent = browser.i18n.getMessage("activate_" + !this.rule.active);
     }
 
     updateInputs() {
-        this.shadowRoot.getElementById("scheme").value = this.rule.pattern.scheme || "*";
+        this.querySelector("#scheme").value = this.rule.pattern.scheme || "*";
         this.hostsTagsInput.tags = this.rule.pattern.host;
         this.pathsTagsInput.tags = this.rule.pattern.path;
 
         if (this.rule.action) {
-            setButtonChecked(this.shadowRoot.querySelector(".action[value=" + this.rule.action + "]"), true);
+            this.querySelector("#action").value = this.rule.action;
         }
 
         if (this.rule.pattern.topLevelDomains) {
@@ -576,10 +576,7 @@ class RuleInput extends HTMLElement {
         }
 
         if (this.rule.pattern.origin) {
-            setButtonChecked(
-                this.shadowRoot.querySelector(".origin-matcher[value=" + this.rule.pattern.origin + "]"),
-                true
-            );
+            setButtonChecked(this.querySelector(".origin-matcher[value=" + this.rule.pattern.origin + "]"), true);
         }
 
         if (!this.rule.types || this.rule.types.length === 0) {
@@ -596,10 +593,10 @@ class RuleInput extends HTMLElement {
     }
 
     updateRule() {
-        if (this.shadowRoot.getElementById("any-url").checked) {
+        if (this.querySelector("#any-url").checked) {
             this.rule.pattern.allUrls = true;
         } else {
-            this.rule.pattern.scheme = this.shadowRoot.getElementById("scheme").value;
+            this.rule.pattern.scheme = this.querySelector("#scheme").value;
             this.rule.pattern.host = this.hostsTagsInput.tags;
             this.rule.pattern.path = this.pathsTagsInput.tags;
             if (this.rule.pattern.host.some(isTLDHostPattern)) {
@@ -610,7 +607,7 @@ class RuleInput extends HTMLElement {
 
         const includes = this.includesTagsInput.tags;
         const excludes = this.excludesTagsInput.tags;
-        const origin = this.shadowRoot.querySelector(".origin-matcher:checked");
+        const origin = this.querySelector(".origin-matcher:checked");
 
         if (includes.length > 0) {
             this.rule.pattern.includes = includes;
@@ -630,15 +627,15 @@ class RuleInput extends HTMLElement {
             delete this.rule.pattern.origin;
         }
 
-        this.rule.types = Array.from(this.shadowRoot.querySelectorAll(".type:checked"), (type) => type.value);
+        this.rule.types = Array.from(this.querySelectorAll(".type:checked"), (type) => type.value);
 
-        if (this.rule.types.length === 0 || this.shadowRoot.getElementById("any-type").checked) {
+        if (this.rule.types.length === 0 || this.querySelector("#any-type").checked) {
             delete this.rule.types;
         }
 
-        const action = this.shadowRoot.querySelector(".action:checked");
+        const action = this.querySelector("#action").value;
         if (action) {
-            this.rule.action = action.value;
+            this.rule.action = action;
         }
     }
 }
@@ -648,8 +645,8 @@ class BlockRuleInput extends RuleInput {}
 class SecureRuleInput extends RuleInput {
     constructor() {
         super();
-        this.shadowRoot.getElementById("scheme").disabled = true;
-        this.shadowRoot.getElementById("any-url").disabled = true;
+        this.querySelector("#scheme").disabled = true;
+        this.querySelector("#any-url").disabled = true;
     }
 
     set rule(rule) {
@@ -663,8 +660,8 @@ class SecureRuleInput extends RuleInput {
     }
 
     onActionChange() {
-        this.shadowRoot.getElementById("scheme").disabled = false;
-        this.shadowRoot.getElementById("any-url").disabled = false;
+        this.querySelector("#scheme").disabled = false;
+        this.querySelector("#any-url").disabled = false;
         super.onActionChange();
     }
 }
@@ -673,18 +670,18 @@ class WhitelistRuleInput extends RuleInput {
     constructor() {
         super();
         const actions = document.getElementById("actions-whitelist");
-        this.shadowRoot.getElementById("form").appendChild(actions.content.cloneNode(true));
-        this.shadowRoot.getElementById("log-whitelist").addEventListener("change", onToggleButtonChange);
+        this.querySelector("#form").appendChild(actions.content.cloneNode(true));
+        this.querySelector("#log-whitelist").addEventListener("change", onToggleButtonChange);
     }
 
     updateInputs() {
         super.updateInputs();
-        setButtonChecked(this.shadowRoot.getElementById("log-whitelist"), this.rule.log === true);
+        setButtonChecked(this.querySelector("#log-whitelist"), this.rule.log === true);
     }
 
     updateRule() {
         super.updateRule();
-        if (this.shadowRoot.getElementById("log-whitelist").checked) {
+        if (this.querySelector("#log-whitelist").checked) {
             this.rule.log = true;
         } else {
             delete this.rule.log;
@@ -695,12 +692,12 @@ class WhitelistRuleInput extends RuleInput {
 class BaseRedirectRuleInput extends RuleInput {
     updateInputs() {
         super.updateInputs();
-        setButtonChecked(this.shadowRoot.getElementById("redirect-document"), this.rule.redirectDocument);
+        setButtonChecked(this.querySelector("#redirect-document"), this.rule.redirectDocument);
     }
 
     updateRule() {
         super.updateRule();
-        if (this.shadowRoot.getElementById("redirect-document").checked) {
+        if (this.querySelector("#redirect-document").checked) {
             this.rule.redirectDocument = true;
         } else {
             delete this.rule.redirectDocument;
@@ -712,44 +709,44 @@ class FilterRuleInput extends BaseRedirectRuleInput {
     constructor() {
         super();
         const actions = document.getElementById("actions-filter");
-        this.shadowRoot.getElementById("form").appendChild(actions.content.cloneNode(true));
+        this.querySelector("#form").appendChild(actions.content.cloneNode(true));
 
-        this.paramsTagsInput = this.shadowRoot.getElementById("input-params");
-        this.shadowRoot.getElementById("trim-all-params").addEventListener("change", this.onToggleTrimAll.bind(this));
-        this.shadowRoot.getElementById("invert-trim").addEventListener("change", onToggleButtonChange);
-        this.shadowRoot.getElementById("filter-redirection").addEventListener("change", this.onToggleFilter.bind(this));
-        this.shadowRoot.getElementById("skip-same-domain").addEventListener("change", onToggleButtonChange);
-        this.shadowRoot.getElementById("redirect-document").addEventListener("change", onToggleButtonChange);
+        this.paramsTagsInput = this.querySelector("#input-params");
+        this.querySelector("#trim-all-params").addEventListener("change", this.onToggleTrimAll.bind(this));
+        this.querySelector("#invert-trim").addEventListener("change", onToggleButtonChange);
+        this.querySelector("#filter-redirection").addEventListener("change", this.onToggleFilter.bind(this));
+        this.querySelector("#skip-same-domain").addEventListener("change", onToggleButtonChange);
+        this.querySelector("#redirect-document").addEventListener("change", onToggleButtonChange);
     }
 
     onToggleTrimAll(e) {
         setButtonChecked(e.target, e.target.checked);
-        toggleHidden(e.target.checked, this.shadowRoot.getElementById("trim-parameters"));
+        toggleHidden(e.target.checked, this.querySelector("#trim-parameters"));
     }
 
     onToggleFilter(e) {
         const checked = e.target.checked;
         setButtonChecked(e.target, checked);
-        setButtonDisabled(this.shadowRoot.getElementById("skip-same-domain"), !checked);
+        setButtonDisabled(this.querySelector("#skip-same-domain"), !checked);
         if (!checked) {
-            setButtonChecked(this.shadowRoot.getElementById("skip-same-domain"), false);
+            setButtonChecked(this.querySelector("#skip-same-domain"), false);
         }
     }
 
     updateInputs() {
         super.updateInputs();
-        setButtonChecked(this.shadowRoot.getElementById("filter-redirection"), !this.rule.skipRedirectionFilter);
-        setButtonChecked(this.shadowRoot.getElementById("skip-same-domain"), this.rule.skipOnSameDomain);
-        setButtonDisabled(this.shadowRoot.getElementById("skip-same-domain"), this.rule.skipRedirectionFilter);
+        setButtonChecked(this.querySelector("#filter-redirection"), !this.rule.skipRedirectionFilter);
+        setButtonChecked(this.querySelector("#skip-same-domain"), this.rule.skipOnSameDomain);
+        setButtonDisabled(this.querySelector("#skip-same-domain"), this.rule.skipRedirectionFilter);
         if (this.rule.paramsFilter && Array.isArray(this.rule.paramsFilter.values)) {
             this.paramsTagsInput.tags = this.rule.paramsFilter.values;
             if (this.rule.paramsFilter.invert) {
-                setButtonChecked(this.shadowRoot.getElementById("invert-trim"), true);
+                setButtonChecked(this.querySelector("#invert-trim"), true);
             }
         }
         if (this.rule.trimAllParams) {
-            setButtonChecked(this.shadowRoot.getElementById("trim-all-params"), true);
-            toggleHidden(true, this.shadowRoot.getElementById("trim-parameters"));
+            setButtonChecked(this.querySelector("#trim-all-params"), true);
+            toggleHidden(true, this.querySelector("#trim-parameters"));
         }
     }
 
@@ -758,7 +755,7 @@ class FilterRuleInput extends BaseRedirectRuleInput {
         this.rule.paramsFilter = {};
         this.rule.paramsFilter.values = this.paramsTagsInput.tags;
         if (this.rule.paramsFilter.values.length > 0) {
-            if (this.shadowRoot.getElementById("invert-trim").checked) {
+            if (this.querySelector("#invert-trim").checked) {
                 this.rule.paramsFilter.invert = true;
             } else {
                 delete this.rule.paramsFilter.invert;
@@ -766,17 +763,17 @@ class FilterRuleInput extends BaseRedirectRuleInput {
         } else {
             delete this.rule.paramsFilter;
         }
-        if (this.shadowRoot.getElementById("filter-redirection").checked) {
+        if (this.querySelector("#filter-redirection").checked) {
             delete this.rule.skipRedirectionFilter;
         } else {
             this.rule.skipRedirectionFilter = true;
         }
-        if (this.shadowRoot.getElementById("skip-same-domain").checked) {
+        if (this.querySelector("#skip-same-domain").checked) {
             this.rule.skipOnSameDomain = true;
         } else {
             delete this.rule.skipOnSameDomain;
         }
-        if (this.shadowRoot.getElementById("trim-all-params").checked) {
+        if (this.querySelector("#trim-all-params").checked) {
             this.rule.trimAllParams = true;
         } else {
             delete this.rule.trimAllParams;
@@ -788,9 +785,9 @@ class RedirectRuleInput extends BaseRedirectRuleInput {
     constructor() {
         super();
         const actions = document.getElementById("actions-redirect");
-        this.shadowRoot.getElementById("form").appendChild(actions.content.cloneNode(true));
+        this.querySelector("#form").appendChild(actions.content.cloneNode(true));
 
-        this.shadowRoot.getElementById("redirect-document").addEventListener("change", onToggleButtonChange);
+        this.querySelector("#redirect-document").addEventListener("change", onToggleButtonChange);
     }
 
     get defaultTitle() {
@@ -806,12 +803,12 @@ class RedirectRuleInput extends BaseRedirectRuleInput {
 
     updateInputs() {
         super.updateInputs();
-        this.shadowRoot.getElementById("redirect-url").value = this.rule.redirectUrl || "";
+        this.querySelector("#redirect-url").value = this.rule.redirectUrl || "";
     }
 
     updateRule() {
         super.updateRule();
-        this.rule.redirectUrl = this.shadowRoot.getElementById("redirect-url").value;
+        this.rule.redirectUrl = this.querySelector("#redirect-url").value;
     }
 }
 

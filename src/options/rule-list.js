@@ -8,21 +8,21 @@ class RuleList extends HTMLElement {
     constructor() {
         super();
         const template = document.getElementById("rule-list");
-        this.attachShadow({ mode: "open" }).appendChild(template.content.cloneNode(true));
+        this.appendChild(template.content.cloneNode(true));
 
-        this.list = this.shadowRoot.getElementById("list");
-        this.shadowRoot.getElementById("icon").src = this.getAttribute("icon");
-        this.shadowRoot.getElementById("title").textContent = browser.i18n.getMessage(this.getAttribute("text"));
-        this.shadowRoot.getElementById("collapse").addEventListener("click", () => this.collapse());
-        this.shadowRoot.getElementById("select-all").addEventListener("change", (e) => this.onSelectAll(e));
+        this.list = this.querySelector("#list");
+        this.querySelector("#icon").src = this.getAttribute("icon");
+        this.querySelector("#title").textContent = browser.i18n.getMessage(this.getAttribute("text"));
+        this.querySelector("#collapse").addEventListener("click", () => this.collapse());
+        this.querySelector("#select-all").addEventListener("change", (e) => this.onSelectAll(e));
 
-        this.shadowRoot.addEventListener("rule-selected", () => this.updateHeader());
-        this.shadowRoot.addEventListener("rule-deleted", (e) => this.onDelete(e));
-        this.shadowRoot.addEventListener("rule-edit-completed", (e) => this.onEditComplete(e));
-        this.shadowRoot.addEventListener("rule-action-changed", (e) => this.onActionChange(e));
-        this.shadowRoot.addEventListener("rule-created", (e) => this.onCreate(e));
-        this.shadowRoot.addEventListener("rule-changed", (e) => this.onchange(e));
-        this.shadowRoot.addEventListener("rule-invalid", (e) => this.onInvalid(e));
+        this.addEventListener("rule-selected", () => this.updateHeader());
+        this.addEventListener("rule-deleted", (e) => this.onDelete(e));
+        this.addEventListener("rule-edit-completed", (e) => this.onEditComplete(e));
+        this.addEventListener("rule-action-changed", (e) => this.onActionChange(e));
+        this.addEventListener("rule-created", (e) => this.onCreate(e));
+        this.addEventListener("rule-changed", (e) => this.onchange(e));
+        this.addEventListener("rule-invalid", (e) => this.onInvalid(e));
     }
 
     get selected() {
@@ -73,7 +73,7 @@ class RuleList extends HTMLElement {
 
     addFrom(input) {
         this.add(input.rule);
-        const newInput = this.shadowRoot.getElementById(input.rule.uuid);
+        const newInput = this.querySelector(`#rule-${input.rule.uuid}`);
         newInput.selected = input.selected;
         newInput.toggleSaved();
         this.updateHeader();
@@ -85,7 +85,7 @@ class RuleList extends HTMLElement {
     }
 
     collapse() {
-        this.shadowRoot.getElementById("collapse").classList.toggle("collapsed");
+        this.querySelector("#collapse").classList.toggle("collapsed");
         this.list.classList.toggle("collapsed");
     }
 
@@ -102,7 +102,7 @@ class RuleList extends HTMLElement {
     }
 
     edit(uuid) {
-        const rule = this.shadowRoot.getElementById(uuid);
+        const rule = this.querySelector(`#rule-${uuid}`);
         if (rule) {
             rule.toggleEdit();
             rule.scrollIntoView();
@@ -111,7 +111,7 @@ class RuleList extends HTMLElement {
 
     mark(rules, className) {
         rules.forEach((rule) => {
-            const input = this.shadowRoot.getElementById(rule.uuid);
+            const input = this.querySelector(`#rule-${rule.uuid}`);
             if (input) {
                 input.classList.add(className);
             }
@@ -119,12 +119,12 @@ class RuleList extends HTMLElement {
     }
 
     updateHeader() {
-        const checkbox = this.shadowRoot.getElementById("select-all");
+        const checkbox = this.querySelector("#select-all");
 
         if (!this.list.querySelector(".selected")) {
             checkbox.checked = false;
             checkbox.indeterminate = false;
-        } else if (!this.list.querySelector(":not(.selected)")) {
+        } else if (!this.list.querySelector(":scope > :not(.selected)")) {
             checkbox.checked = true;
             checkbox.indeterminate = false;
         } else {
@@ -136,7 +136,7 @@ class RuleList extends HTMLElement {
 
     updateSelectedText() {
         const count = this.list.querySelectorAll(".selected").length;
-        const selectedText = this.shadowRoot.getElementById("selected-text");
+        const selectedText = this.querySelector("#selected-text");
         selectedText.classList.toggle("d-none", count === 0);
         selectedText.textContent = browser.i18n.getMessage("selected_rules_count", [count, this.size]);
     }

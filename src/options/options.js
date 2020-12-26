@@ -85,6 +85,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.querySelector(".mobile-toolbar").addEventListener("click", function () {
         this.classList.remove("show");
     });
+
+    document
+        .querySelectorAll("rule-list")
+        .forEach((list) => list.addEventListener("rule-edit-completed", onRuleEditCompleted));
 });
 
 document.addEventListener("rule-created", async function (e) {
@@ -122,14 +126,6 @@ document.addEventListener("rule-changed", async function (e) {
     input.toggleSaved();
 });
 
-document.addEventListener("rule-edit-completed", function (e) {
-    const action = e.detail.action;
-    const input = e.detail.input;
-    if (action !== e.target.id) {
-        document.getElementById(action).addFrom(input);
-    }
-});
-
 document.addEventListener("rule-deleted", async function (e) {
     const deleted = e.detail.uuid;
     const { rules } = await browser.storage.local.get("rules");
@@ -141,6 +137,14 @@ document.addEventListener("rule-deleted", async function (e) {
 });
 
 document.addEventListener("rule-selected", updateToolbar);
+
+function onRuleEditCompleted(e) {
+    const action = e.detail.action;
+    const input = e.detail.input;
+    if (action !== this.id) {
+        document.getElementById(action).addFrom(input);
+    }
+}
 
 function createRuleInputs(rules) {
     rules.forEach((rule) => document.getElementById(rule.action).add(rule));
@@ -282,7 +286,7 @@ function getSelectedRulesText(count) {
         text = browser.i18n.getMessage("zero_selected_rules");
     } else if (count === 1) {
         text = browser.i18n.getMessage("one_selected_rule");
-    } else  {
+    } else {
         text = browser.i18n.getMessage("multiple_selected_rules", count);
     }
     return text;
