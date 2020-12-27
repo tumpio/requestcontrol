@@ -13,6 +13,10 @@
             "path": [
                 "*"
             ],
+            "excludes": [
+              "://www.amazon.*/ap/cnep*",
+              "://www.amazon.*/gp/*"
+            ],
             "topLevelDomains": [
                 "ae",
                 "ca",
@@ -30,6 +34,8 @@
                 "in",
                 "it",
                 "nl",
+                "sa",
+                "se",
                 "sg"
             ]
         },
@@ -41,13 +47,17 @@
         "skipRedirectionFilter": true,
         "paramsFilter": {
             "values": [
+                "_encoding",
                 "arb",
                 "cartInitiateId",
                 "claimToken",
                 "clientContext",
+                "field-brandtextbin",
                 "field-keywords",
+                "fromAnywhere",
                 "i",
                 "ie",
+                "intercept",
                 "isToBeGiftWrappedBefore",
                 "k",
                 "language",
@@ -55,6 +65,7 @@
                 "mgh",
                 "node",
                 "openid.*",
+                "pageId",
                 "partialCheckoutCart",
                 "proceedToCheckout",
                 "proceedToRetailCheckout",
@@ -94,6 +105,8 @@
                 "in",
                 "it",
                 "nl",
+                "sa",
+                "se",
                 "sg"
             ]
         },
@@ -104,5 +117,47 @@
         "action": "redirect",
         "active": true,
         "redirectUrl": "https://{hostname}{search/.*url=(.*)/$1|decodeURIComponent}&alpha"
+    },
+    {
+        "uuid": "2f1f11df-0c77-46c2-bc5d-7f8f9f5074cb",
+        "pattern": {
+            "scheme": "https",
+            "host": [
+                "*.amazon.*"
+            ],
+            "path": [
+                "*uedata*"
+            ],
+            "topLevelDomains": [
+                "ae",
+                "ca",
+                "cn",
+                "co.jp",
+                "co.uk",
+                "com",
+                "com.au",
+                "com.br",
+                "com.mx",
+                "com.tr",
+                "de",
+                "es",
+                "fr",
+                "in",
+                "it",
+                "nl",
+                "sa",
+                "se",
+                "sg"
+            ]
+        },
+        "types": [
+            "image"
+        ],
+        "action": "whitelist",
+        "active": true,
+        "title": "Amazon tracking pixels",
+        "description": "Whitelisted on uBlock Origin as well. Blocking them may cause login to fail.",
+        "tag": "whitelist-amazon",
+        "log": true
     }
 ]
