@@ -148,7 +148,7 @@
       "invert": true
     },
     "tag": "filter-images-2",
-    "description": "Undocument image-selection PHP scripts, based in numeric IDs."
+    "description": "Undocumented image-selection PHP scripts, based in numeric IDs."
   },
   {
     "uuid": "71bc39c3-0a9e-44ef-8309-bcdb99377491",
@@ -228,7 +228,7 @@
       ],
       "invert": true
     },
-    "description": "For Facebook's style signed URLs filters (used in Facebook, WhatsApp and Instagram)."
+    "description": "For Facebook-style signed URLs filters (used in Facebook, WhatsApp and Instagram)."
   },
   {
     "uuid": "297fb0c7-d052-4031-9947-fc7a9b7690af",
@@ -295,7 +295,7 @@
     "action": "whitelist",
     "active": true,
     "title": "Restore YouTube previews",
-    "description": "The general filter rule breaks the preview shown upon hovering over the seekbar or a thumbnail. This rule restores them at the cost of sending unknown metadata to YouTube servers. Disabling this rule will not break YouTube's other functions.",
+    "description": "The general filter rule breaks the previews shown upon hovering over the seekbar or a thumbnail. This rule restores them at the cost of sending unknown metadata to YouTube servers. Disabling this rule will not break YouTube's other functions.",
     "tag": "whitelist-youtube"
   },
   {

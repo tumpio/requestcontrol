@@ -73,10 +73,10 @@ Build extension
 External Libraries
 ~~~~~~~~~~~~~~~~~~
 
-Request Control uses following external libraries,
+Request Control uses the following external libraries:
 
 -  `lit`_ is licensed under the MIT license.
--  `tags-input`_ and it's fork by `@pirxpilot`_ are licensed under the MIT license.
+-  `tags-input`_ and its fork by `@pirxpilot`_ are licensed under the MIT license.
 -  `ionicons`_ is licensed under the MIT license.
 -  `tldts`_ is licensed under the MIT license.
 
