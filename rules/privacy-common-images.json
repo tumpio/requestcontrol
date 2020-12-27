@@ -32,6 +32,7 @@
     ],
     "paramsFilter": {
       "values": [
+        "*accesskeyid",
         "*color",
         "*expires",
         "*file",
@@ -72,6 +73,7 @@
         "layer",
         "layers",
         "line",
+        "mod",
         "output",
         "preview",
         "provider",
