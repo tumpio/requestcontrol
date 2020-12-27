@@ -6,6 +6,7 @@ import { testRules } from "./rule-tester.js";
 import { uuid } from "../util/uuid.js";
 import { Toc } from "../util/toc.js";
 import { exportObject, importFile } from "../util/import-export.js";
+import { OPTION_SHOW_COUNTER, OPTION_CHANGE_ICON as OPTION_CHANGE_ICON } from "./constants.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
     const { rules } = await browser.storage.local.get("rules");
@@ -39,6 +40,27 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     document.getElementById("importRules").addEventListener("change", function (e) {
         importFile(e.target.files[0]).then(importRules).catch(displayErrorMessage);
+    });
+
+    const optionShowCounter = document.getElementById("optionShowCounter");
+    const optionChangeIcon = document.getElementById("optionChangeIcon");
+
+    browser.storage.local
+        .get({
+            [OPTION_SHOW_COUNTER]: true,
+            [OPTION_CHANGE_ICON]: true,
+        })
+        .then((options) => {
+            optionShowCounter.checked = options[OPTION_SHOW_COUNTER];
+            optionChangeIcon.checked = options[OPTION_CHANGE_ICON];
+        });
+
+    optionShowCounter.addEventListener("change", function () {
+        browser.storage.local.set({ [OPTION_SHOW_COUNTER]: this.checked });
+    });
+
+    optionChangeIcon.addEventListener("change", function () {
+        browser.storage.local.set({ [OPTION_CHANGE_ICON]: this.checked });
     });
 
     document.getElementById("exportSelectedRules").addEventListener("click", async function () {

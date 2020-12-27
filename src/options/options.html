@@ -113,15 +113,15 @@
                 </div>
             </div>
             <div id="tab-settings" class="tab-pane">
-                <h3 data-i18n="add_default_rules"></h3>
-                <p data-i18n="add_default_description"></p>
+                <h4 data-i18n="add_predefined_rules"></h4>
+                <p data-i18n="add_predefined_description"></p>
                 <button id="addDefault" class="btn btn-dark" data-i18n="add"></button>
                 <hr />
-                <h3 data-i18n="export_rules"></h3>
+                <h4 data-i18n="export_rules"></h4>
                 <p data-i18n="export_description"></p>
                 <a id="exportRules" class="btn btn-dark" data-i18n="export"></a>
                 <hr />
-                <h3 data-i18n="import_rules"></h3>
+                <h4 data-i18n="import_rules"></h4>
                 <p data-i18n="import_description"></p>
                 <label class="btn btn-dark" for="importRules">
                     <input
@@ -132,6 +132,24 @@
                         autocomplete="off"
                     />
                     <span data-i18n="browse_file"></span>
+                </label>
+                <hr />
+                <h4 data-i18n="toolbar_icon"></h4>
+                <label class="option-checkbox">
+                    <input
+                        id="optionShowCounter"
+                        type="checkbox"
+                        checked="checked"
+                        autocomplete="off"/>
+                        <span data-i18n="option_show_request_counter"></span>
+                </label>
+                <label class="option-checkbox">
+                    <input
+                        id="optionChangeIcon"
+                        type="checkbox"
+                        checked="checked"
+                        autocomplete="off"/>
+                        <span data-i18n="option_change_toolbar_icon"></span>
                 </label>
             </div>
             <div id="tab-manual" class="tab-pane">

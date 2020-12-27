@@ -7,54 +7,54 @@ rule-list * + * {
     margin-bottom: 0;
 }
 
-.list {
+rule-list .list {
     list-style: none;
     padding: 0;
     margin: 0;
     overflow: hidden;
 }
 
-.list.collapsed {
+rule-list .list.collapsed {
     height: 0;
 }
 
-.list > * {
+rule-list .list > * {
     position: relative;
     margin: 0;
 }
 
-.header:not(.d-none) {
+rule-list .header:not(.d-none) {
     display: flex;
     align-items: center;
     padding: 0.2em 0;
     font-size: 0.9em;
 }
 
-.header > * {
+rule-list .header > * {
     margin-right: 0.5em;
 }
 
-.header > * + * {
+rule-list .header > * + * {
     margin-top: 0.2em;
     margin-bottom: 0.2em;
 }
 
-.select-all {
+rule-list .select-all {
     margin: 0 0.8rem;
     display: flex;
 }
 
-.header > .collapse-button {
+rule-list .header > .collapse-button {
     margin-left: auto;
     margin-right: 1em;
 }
 
-.header > .collapse-button:before {
+rule-list .header > .collapse-button:before {
     vertical-align: middle;
 }
 
 @media (max-width: 35em) {
-    .select-all {
+    rule-list .select-all {
         display: none;
     }
 }

@@ -142,3 +142,15 @@ pre {
 .collapse-button.plus.collapsed:before {
     content: "-";
 }
+
+.option-checkbox {
+    display: flex;
+}
+
+.option-checkbox > input {
+    margin-right: 0.6em;
+}
+
+.option-checkbox > span {
+    margin: 0;
+}

@@ -9,18 +9,17 @@ import * as records from "./util/records.js";
 
 const listeners = [];
 const controller = new RequestController(notify, updateTab);
+const storageKeys = ["rules", "disabled"];
 
-browser.storage.local.get().then(async (options) => {
-    init(options);
-    browser.storage.onChanged.addListener(onChanged);
-});
+browser.storage.local.get(storageKeys).then(init);
+browser.storage.onChanged.addListener(onOptionsChanged);
 
 function init(options) {
     if (options.disabled) {
         browser.tabs.onRemoved.removeListener(records.removeTabRecords);
         browser.runtime.onMessage.removeListener(records.getTabRecords);
         browser.webNavigation.onCommitted.removeListener(onNavigation);
-        notifier.disabledState(records.keys());
+        notifier.disabledState();
         records.clear();
         controller.requests.clear();
     } else {
@@ -33,12 +32,15 @@ function init(options) {
     browser.webRequest.handlerBehaviorChanged();
 }
 
-function onChanged() {
+function onOptionsChanged(changes) {
+    if (storageKeys.every((key) => !(key in changes))) {
+        return;
+    }
     while (listeners.length) {
         browser.webRequest.onBeforeRequest.removeListener(listeners.pop());
     }
     browser.webRequest.onBeforeRequest.removeListener(controlListener);
-    browser.storage.local.get().then(init);
+    browser.storage.local.get(storageKeys).then(init);
 }
 
 function addListeners(rules) {
@@ -62,7 +64,7 @@ function addListeners(rules) {
             browser.webRequest.onBeforeRequest.addListener(listener, filter);
             listeners.push(listener);
         } catch {
-            notifier.error(null);
+            notifier.error();
         }
     }
     browser.webRequest.onBeforeRequest.addListener(controlListener, { urls: [ALL_URLS] }, ["blocking"]);

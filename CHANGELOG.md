@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Add option to remove toolbar icon counter. #129
 
 ## [1.15.5] - Jul. 7, 2020
 - Fix rule creation after 1.15.3. #131

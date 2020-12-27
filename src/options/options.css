@@ -5,7 +5,7 @@
 :root {
     --font: "Open Sans", sans-serif;
     --primary-color: #3b67a0;
-    --light: #b1b1b1;
+    --light: lightgrey;
     --background: rgb(249, 249, 250);
     --text-color: rgb(0, 0, 0);
 }
@@ -31,6 +31,10 @@ body {
 
 #tab-settings .btn {
     padding: 0.6em;
+}
+
+#tab-settings h4 {
+    margin: 0.5em 0;
 }
 
 #tabs {

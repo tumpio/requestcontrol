@@ -443,11 +443,11 @@
   "import_description": {
     "message": "Import rules from a local file."
   },
-  "add_default_rules": {
-    "message": "Add default rules"
+  "add_predefined_rules": {
+    "message": "Add predefined rules"
   },
-  "add_default_description": {
-    "message": "Add a set of default rules."
+  "add_predefined_description": {
+    "message": "Add predefined rule sets."
   },
   "add": {
     "message": "Add"
@@ -577,5 +577,14 @@
   "create_or_default": {
     "message": "Create your first rule or /load a default set of rules/ to increase privacy",
     "description": "Mark text in between two '/' to act as button to load default rules when clicked"
+  },
+  "toolbar_icon": {
+    "message": "Toolbar icon"
+  },
+  "option_show_request_counter": {
+    "message": "Show request counter on toolbar icon"
+  },
+  "option_change_toolbar_icon": {
+    "message": "Change toolbar icon on rule action"
   }
 }
