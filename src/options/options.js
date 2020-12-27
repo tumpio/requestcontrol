@@ -267,10 +267,9 @@ function updateLists() {
 
 function toggleEmpty() {
     const lists = document.querySelectorAll("rule-list");
-    document.querySelector(".no-rules-block").classList.toggle(
-        "d-none",
-        Array.from(lists).some((list) => list.size !== 0)
-    );
+    const isEmpty = Array.from(lists).every((list) => list.isEmpty);
+    document.querySelector(".no-rules-block").classList.toggle("d-none", !isEmpty);
+    document.getElementById("exportRules").disabled = isEmpty;
 }
 
 function setLoadDefaultsButton() {
