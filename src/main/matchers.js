@@ -17,7 +17,7 @@ export class RequestMatcher {
     }
 
     test(request) {
-        for (let extension of this.extensions) {
+        for (const extension of this.extensions) {
             if (!extension.test(request)) {
                 return false;
             }
@@ -37,10 +37,6 @@ export class IncludeMatcher {
 }
 
 export class ExcludeMatcher extends IncludeMatcher {
-    constructor(values) {
-        super(values);
-    }
-
     test(request) {
         return !super.test(request);
     }
@@ -56,8 +52,8 @@ export class DomainMatcher {
             // top-level document
             return true;
         }
-        let origin = libTld.getDomain(originUrl);
-        let outgoing = libTld.getDomain(targetUrl);
+        const origin = libTld.getDomain(originUrl);
+        const outgoing = libTld.getDomain(targetUrl);
         if (outgoing === null) {
             // expect request to be from same domain
             return true;
@@ -76,8 +72,8 @@ export class OriginMatcher {
             // top-level document
             return true;
         }
-        let origin = new UrlParser(originUrl).origin;
-        let outgoing = new UrlParser(targetUrl).origin;
+        const { origin } = new UrlParser(originUrl);
+        const outgoing = new UrlParser(targetUrl).origin;
         return origin === outgoing;
     }
 }
@@ -95,10 +91,10 @@ export class ThirdPartyOriginMatcher {
 }
 
 export function createRequestMatcher(rule) {
-    let matchers = [];
+    const matchers = [];
     if (rule.pattern) {
         if (rule.pattern.includes) {
-            for (let value of rule.pattern.includes) {
+            for (const value of rule.pattern.includes) {
                 matchers.push(new IncludeMatcher([value]));
             }
         }
@@ -117,6 +113,5 @@ export function createRequestMatcher(rule) {
             matchers.push(ThirdPartyOriginMatcher);
         }
     }
-    return matchers.length > 0 ?
-        new RequestMatcher(matchers) : BaseMatchExtender;
+    return matchers.length > 0 ? new RequestMatcher(matchers) : BaseMatchExtender;
 }

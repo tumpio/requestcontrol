@@ -21,12 +21,12 @@ export function translateDocument(documentNode) {
 }
 
 export function translateTemplates() {
-    for (let template of document.getElementsByTagName("template")) {
+    for (const template of document.getElementsByTagName("template")) {
         translateDocument(template.content);
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
     translateDocument(document);
     translateTemplates();
 });

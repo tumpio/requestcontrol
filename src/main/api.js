@@ -9,18 +9,17 @@ import { FilterRule } from "./rules/filter.js";
 import { RedirectRule } from "./rules/redirect.js";
 import { SecureRule } from "./rules/secure.js";
 
-export const ALL_URLS = "*://*/*";  // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
+export const ALL_URLS = "*://*/*"; // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
 
 export function createRule(data) {
-    let extraMatchers = createRequestMatcher(data);
+    const extraMatchers = createRequestMatcher(data);
 
     switch (data.action) {
         case "whitelist":
             if (data.log) {
                 return new LoggedWhitelistRule(data, extraMatchers);
-            } else {
-                return new WhitelistRule(data, extraMatchers);
             }
+            return new WhitelistRule(data, extraMatchers);
         case "block":
             return new BlockRule(data, extraMatchers);
         case "redirect":
@@ -35,9 +34,10 @@ export function createRule(data) {
 }
 
 function prefixPath(path) {
-    if (path.startsWith(("/")))
+    if (path.startsWith("/")) {
         return path;
-    return "/" + path;
+    }
+    return `/${path}`;
 }
 
 /**
@@ -46,8 +46,8 @@ function prefixPath(path) {
  * @returns {*} array of match patterns
  */
 export function createMatchPatterns(pattern) {
-    let urls = [];
-    let hosts = Array.isArray(pattern.host) ? pattern.host : [pattern.host];
+    const urls = [];
+    const hosts = Array.isArray(pattern.host) ? pattern.host : [pattern.host];
     let paths = Array.isArray(pattern.path) ? pattern.path : [pattern.path];
 
     if (pattern.allUrls) {
@@ -61,14 +61,14 @@ export function createMatchPatterns(pattern) {
     for (let host of hosts) {
         if (isTLDHostPattern(host)) {
             host = host.slice(0, -1);
-            for (let TLD of pattern.topLevelDomains) {
-                for (let path of paths) {
-                    urls.push(pattern.scheme + "://" + host + TLD + prefixPath(path));
+            for (const TLD of pattern.topLevelDomains) {
+                for (const path of paths) {
+                    urls.push(`${pattern.scheme}://${host}${TLD}${prefixPath(path)}`);
                 }
             }
         } else {
-            for (let path of paths) {
-                urls.push(pattern.scheme + "://" + host + prefixPath(path));
+            for (const path of paths) {
+                urls.push(`${pattern.scheme}://${host}${prefixPath(path)}`);
             }
         }
     }
@@ -84,13 +84,13 @@ export function createMatchPatterns(pattern) {
  * @returns {RegExp}
  */
 export function createRegexpPattern(values, insensitive = true, containing = false) {
-    let regexpChars = /[.+^${}()|[\]\\]/g; // excluding "*" and "?" wildcard chars
-    let regexpParam = /^\/(.*)\/$/;
-    let flags = insensitive ? "i" : "";
+    const regexpChars = /[.+^${}()|[\]\\]/g; // excluding "*" and "?" wildcard chars
+    const regexpParam = /^\/(.*)\/$/;
+    const flags = insensitive ? "i" : "";
 
     let pattern = "";
-    for (let param of values) {
-        let testRegexp = param.match(regexpParam);
+    for (const param of values) {
+        const testRegexp = param.match(regexpParam);
         pattern += "|";
         pattern += containing ? "" : "^";
         if (testRegexp && isValidRegExp(testRegexp[1])) {
@@ -104,7 +104,7 @@ export function createRegexpPattern(values, insensitive = true, containing = fal
 }
 
 export function isTLDHostPattern(host) {
-    let hostTLDWildcardPattern = /^(.+)\.\*$/;
+    const hostTLDWildcardPattern = /^(.+)\.\*$/;
     return hostTLDWildcardPattern.test(host);
 }
 

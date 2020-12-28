@@ -2,11 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", async () => {
     const { disabled } = await browser.storage.local.get("disabled");
 
     updateDisabled(disabled === true);
-
 
     for (const copyButton of document.getElementsByClassName("copyButton")) {
         copyButton.addEventListener("click", copyText);
@@ -71,8 +70,8 @@ function showDetails(details) {
     } else {
         document.getElementById("targetBlock").classList.add("hidden");
     }
-    document.getElementById("editLink").href =
-        browser.runtime.getURL("src/options/options.html") + `?edit=${details.rule.uuid}`;
+    const optionsUrl = browser.runtime.getURL("src/options/options.html");
+    document.getElementById("editLink").href = `${optionsUrl}?edit=${details.rule.uuid}`;
 }
 
 function openOptionsPage() {
@@ -105,25 +104,11 @@ function editRule(e) {
 
 function timestamp(ms) {
     const d = new Date(ms);
-    return (
-        padDigit(d.getHours(), 2) +
-        ":" +
-        padDigit(d.getMinutes(), 2) +
-        ":" +
-        padDigit(d.getSeconds(), 2) +
-        "." +
-        padDigit(d.getMilliseconds(), 3)
-    );
-}
-
-function padDigit(digit, padSize) {
-    const str = digit.toString();
-    const pad = padSize - str.length;
-    if (pad > 0) {
-        return "0".repeat(pad) + str;
-    } else {
-        return str;
-    }
+    const hh = d.getHours().toString().padStart(2, "0");
+    const mm = d.getMinutes().toString().padStart(2, "0");
+    const ss = d.getSeconds().toString().padStart(2, "0");
+    const s = d.getMilliseconds().toString().padStart(3, "0");
+    return `${hh}:${mm}:${ss}.${s}`;
 }
 
 function copyText(e) {

@@ -17,10 +17,39 @@ RedirectRule.priority = -4;
 FilterRule.priority = -4;
 
 Object.defineProperty(ControlRule.prototype, "priority", {
-    get: function () {
+    get() {
         return this.constructor.priority;
     },
 });
+
+export class CompositeRule {
+    constructor(ruleA, ruleB) {
+        if (ruleA instanceof RedirectRule) {
+            this.rules = [ruleA, ruleB];
+        } else {
+            this.rules = [ruleB, ruleA];
+        }
+        this.priority = ruleA.priority;
+    }
+
+    add(rule) {
+        if (rule instanceof RedirectRule) {
+            this.rules.unshift(rule);
+        } else {
+            this.rules.push(rule);
+        }
+    }
+
+    resolve(request) {
+        for (const rule of this.rules) {
+            const resolve = rule.resolve(request);
+            if (resolve !== null) {
+                return resolve;
+            }
+        }
+        return null;
+    }
+}
 
 export class RequestController {
     constructor(notify, updateTab) {
@@ -34,7 +63,7 @@ export class RequestController {
             return false;
         }
 
-        let current = this.requests.get(request.requestId);
+        const current = this.requests.get(request.requestId);
 
         if (typeof current === "undefined" || rule.priority > current.priority) {
             this.requests.set(request.requestId, rule);
@@ -61,37 +90,8 @@ export class RequestController {
         if (!this.requests.has(request.requestId)) {
             return null;
         }
-        let rule = this.requests.get(request.requestId);
+        const rule = this.requests.get(request.requestId);
         this.requests.delete(request.requestId);
         return rule.resolve(request);
-    }
-}
-
-export class CompositeRule {
-    constructor(ruleA, ruleB) {
-        if (ruleA instanceof RedirectRule) {
-            this.rules = [ruleA, ruleB];
-        } else {
-            this.rules = [ruleB, ruleA];
-        }
-        this.priority = ruleA.priority;
-    }
-
-    add(rule) {
-        if (rule instanceof RedirectRule) {
-            this.rules.unshift(rule);
-        } else {
-            this.rules.push(rule);
-        }
-    }
-
-    resolve(request) {
-        for (let rule of this.rules) {
-            let resolve = rule.resolve(request);
-            if (resolve !== null) {
-                return resolve;
-            }
-        }
-        return null;
     }
 }

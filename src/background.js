@@ -47,18 +47,18 @@ function addListeners(rules) {
     if (!rules) {
         return;
     }
-    for (let data of rules) {
+    for (const data of rules) {
         if (!data.active) {
             continue;
         }
         try {
-            let rule = createRule(data);
-            let urls = createMatchPatterns(data.pattern);
-            let filter = {
-                urls: urls,
+            const rule = createRule(data);
+            const urls = createMatchPatterns(data.pattern);
+            const filter = {
+                urls,
                 types: data.types,
             };
-            let listener = (request) => {
+            const listener = (request) => {
                 controller.mark(request, rule);
             };
             browser.webRequest.onBeforeRequest.addListener(listener, filter);
@@ -76,18 +76,18 @@ function controlListener(request) {
 
 function updateTab(tabId, url) {
     return browser.tabs.update(tabId, {
-        url: url,
+        url,
     });
 }
 
 function notify(rule, request, target = null) {
-    let count = records.add(request.tabId, {
+    const count = records.add(request.tabId, {
         action: rule.constructor.action,
         type: request.type,
         url: request.url,
-        target: target,
+        target,
         timestamp: request.timeStamp,
-        rule: rule,
+        rule,
     });
     notifier.notify(request.tabId, rule.constructor.icon, count);
 }
@@ -96,8 +96,8 @@ function onNavigation(details) {
     if (details.frameId !== 0 || !records.has(details.tabId)) {
         return;
     }
-    let isServerRedirect = details.transitionQualifiers.includes("server_redirect");
-    let keep = records.getLastRedirectRecords(details.tabId, details.url, isServerRedirect);
+    const isServerRedirect = details.transitionQualifiers.includes("server_redirect");
+    const keep = records.getLastRedirectRecords(details.tabId, details.url, isServerRedirect);
 
     if (keep.length) {
         records.setTabRecords(details.tabId, keep);

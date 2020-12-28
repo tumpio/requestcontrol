@@ -16,12 +16,10 @@ export function setButtonDisabled(button, disabled) {
     button.parentNode.classList.toggle("disabled", disabled === true);
 }
 
-export function toggleHidden(hidden) {
-    let hiddenClass = "d-none";
+export function toggleHidden(hidden, ...elements) {
+    const hiddenClass = "d-none";
     if (typeof hidden === "boolean") {
-        for (let i = 1; i < arguments.length; i++) {
-            arguments[i].classList.toggle(hiddenClass, hidden);
-        }
+        elements.forEach((element) => element.classList.toggle(hiddenClass, hidden));
     } else if (hidden) {
         hidden.classList.toggle(hiddenClass);
     }

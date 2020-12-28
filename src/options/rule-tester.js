@@ -13,27 +13,27 @@ import { SecureRule } from "../main/rules/secure.js";
 export function testRules(testUrl, rulePatterns) {
     try {
         new URL(testUrl);
-    } catch (e) {
+    } catch {
         return browser.i18n.getMessage("invalid_test_url");
     }
-    let controller = new RequestController();
-    let request = { requestId: 0, url: testUrl };
+    const controller = new RequestController();
+    const request = { requestId: 0, url: testUrl };
 
     try {
-        for (let rulePattern of rulePatterns) {
-            let rule = createRule(rulePattern);
-            let matchPatterns = createMatchPatterns(rulePattern.pattern);
-            for (let matchPattern of matchPatterns) {
+        for (const rulePattern of rulePatterns) {
+            const rule = createRule(rulePattern);
+            const matchPatterns = createMatchPatterns(rulePattern.pattern);
+            for (const matchPattern of matchPatterns) {
                 if (matchPatternToRegExp(matchPattern).test(request.url)) {
                     controller.mark(request, rule);
                     break;
                 }
             }
         }
-    } catch (e) {
+    } catch {
         return browser.i18n.getMessage("error_invalid_rule");
     }
-    let rule = controller.requests.get(request.requestId);
+    const rule = controller.requests.get(request.requestId);
 
     if (!rule) {
         return browser.i18n.getMessage("no_match");
@@ -54,7 +54,7 @@ function testRule(rule, testUrl) {
             redirectUrl = rule.apply(testUrl);
             try {
                 new URL(redirectUrl);
-            } catch (e) {
+            } catch {
                 return browser.i18n.getMessage("invalid_target_url") + redirectUrl;
             }
             if (redirectUrl === testUrl) {
@@ -63,7 +63,7 @@ function testRule(rule, testUrl) {
             return redirectUrl;
         case CompositeRule:
             redirectUrl = rule.rules.reduce((url, r) => {
-                let change = r.apply(url);
+                const change = r.apply(url);
                 if (change !== null) {
                     return change;
                 }
@@ -71,7 +71,7 @@ function testRule(rule, testUrl) {
             }, testUrl);
             try {
                 new URL(redirectUrl);
-            } catch (e) {
+            } catch {
                 return browser.i18n.getMessage("invalid_target_url") + redirectUrl;
             }
             if (redirectUrl === testUrl) {
@@ -104,12 +104,13 @@ function matchPatternToRegExp(pattern) {
     const matchPatternRegExp = new RegExp(`^${schemeSegment}://${hostSegment}/${pathSegment}$`);
     const regexpChars = /[.+^$?{}()|[\]\\]/g; // excluding "*"
 
-    let match = matchPatternRegExp.exec(pattern);
+    const match = matchPatternRegExp.exec(pattern);
     if (!match) {
         throw new TypeError(`"${pattern}" is not a valid MatchPattern`);
     }
 
-    let [, scheme, host, path] = match;
+    const [, scheme, , path] = match;
+    let host = match[2];
     if (!host) {
         throw new TypeError(`"${pattern}" does not have a valid host`);
     }

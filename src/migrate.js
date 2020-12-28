@@ -4,19 +4,16 @@
 
 function handleInstalled(details) {
     if (details.reason === "update") {
-
         if (!details.previousVersion) {
             details.previousVersion = "1.13";
         }
 
-        let versions = details.previousVersion.split(".");
+        const versions = details.previousVersion.split(".");
 
         // migrate from < 1.14
-        if (Number(versions[0]) < 1 ||
-            (Number(versions[0]) === 1 && Number(versions[1]) < 14)) {
-
-            browser.storage.local.get("rules").then(options => {
-                for (let rule of options.rules) {
+        if (Number(versions[0]) < 1 || (Number(versions[0]) === 1 && Number(versions[1]) < 14)) {
+            browser.storage.local.get("rules").then((options) => {
+                for (const rule of options.rules) {
                     if (rule.uuid === "60f46cfa-b906-4a2d-ab66-8f26dc35e97f") {
                         rule.redirectDocument = true;
                     }

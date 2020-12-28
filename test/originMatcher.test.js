@@ -1,7 +1,7 @@
 import * as RequestControl from "../src/main/api";
 import { RequestController } from "../src/main/control";
 
-let controller = () => new RequestController();
+const controller = () => new RequestController();
 let sameDomainRule;
 let sameOriginRule;
 let thirdPartyDomainRule;
@@ -35,22 +35,22 @@ beforeEach(() => {
 });
 
 test("Same domain - match", () => {
-    let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
+    const url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
     expect(controller().mark({
         originUrl: "http://foo.com/",
-        url: url
+        url
     }, sameDomainRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "https://foo.com:8000/path.index",
-        url: url
+        url
     }, sameDomainRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "https://user@foo.com:8000/path.index",
-        url: url
+        url
     }, sameDomainRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "https://user:pass@foo.com:8000/path.index",
-        url: url
+        url
     }, sameDomainRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
@@ -70,22 +70,22 @@ test("Same domain - match", () => {
 });
 
 test("Same domain - no match", () => {
-    let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
+    const url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
     expect(controller().mark({
         originUrl: "http://foo.bar.com/",
-        url: url
+        url
     }, sameDomainRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "https://foo2.com:8000/path.index",
-        url: url
+        url
     }, sameDomainRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "https://user@ab.foo2.com:8000/path.index",
-        url: url
+        url
     }, sameDomainRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "https://user:pass@foo.com.au:8000/path.index",
-        url: url
+        url
     }, sameDomainRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
@@ -98,22 +98,22 @@ test("Same domain - no match", () => {
 });
 
 test("Third Party Domain - match", () => {
-    let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
+    const url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
     expect(controller().mark({
         originUrl: "http://foo.bar.com/",
-        url: url
+        url
     }, thirdPartyDomainRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "https://foo2.com:8000/path.index",
-        url: url
+        url
     }, thirdPartyDomainRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "https://user@ab.foo2.com:8000/path.index",
-        url: url
+        url
     }, thirdPartyDomainRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "https://user:pass@foo.com.au:8000/path.index",
-        url: url
+        url
     }, thirdPartyDomainRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
@@ -127,22 +127,22 @@ test("Third Party Domain - match", () => {
 
 
 test("Third Party Domain - no match", () => {
-    let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
+    const url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
     expect(controller().mark({
         originUrl: "http://foo.com/",
-        url: url
+        url
     }, thirdPartyDomainRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "https://foo.com:8000/path.index",
-        url: url
+        url
     }, thirdPartyDomainRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "https://user@foo.com:8000/path.index",
-        url: url
+        url
     }, thirdPartyDomainRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "https://user:pass@foo.com:8000/path.index",
-        url: url
+        url
     }, thirdPartyDomainRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
@@ -162,22 +162,22 @@ test("Third Party Domain - no match", () => {
 });
 
 test("Same origin - match", () => {
-    let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
+    const url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
     expect(controller().mark({
         originUrl: "http://foo.com/",
-        url: url
+        url
     }, sameOriginRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "http://foo.com/path.index",
-        url: url
+        url
     }, sameOriginRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "http://user@foo.com/path.index",
-        url: url
+        url
     }, sameOriginRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "http://user:pass@foo.com/path.index#hash",
-        url: url
+        url
     }, sameOriginRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
@@ -193,22 +193,22 @@ test("Same origin - match", () => {
 });
 
 test("Same origin - no match", () => {
-    let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
+    const url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
     expect(controller().mark({
         originUrl: "http://foo.bar.com/",
-        url: url
+        url
     }, sameOriginRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "https://foo.com/path.index",
-        url: url
+        url
     }, sameOriginRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "http://user@foo.com:8000/path.index",
-        url: url
+        url
     }, sameOriginRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "http://user:pass@ab.foo.com/path.index",
-        url: url
+        url
     }, sameOriginRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
@@ -222,22 +222,22 @@ test("Same origin - no match", () => {
 
 
 test("Third party origin - match", () => {
-    let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
+    const url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
     expect(controller().mark({
         originUrl: "https://foo.com/",
-        url: url
+        url
     }, thirdPartyOriginRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "http://foo.com:8080/path.index",
-        url: url
+        url
     }, thirdPartyOriginRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "https://user@foo.com/path.index",
-        url: url
+        url
     }, thirdPartyOriginRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "http://user:pass@foo.com:8080/path.index#hash",
-        url: url
+        url
     }, thirdPartyOriginRule)).toBeTruthy();
     expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",
@@ -254,22 +254,22 @@ test("Third party origin - match", () => {
 });
 
 test("Third party origin - no match", () => {
-    let url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
+    const url = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2F";
     expect(controller().mark({
         originUrl: "http://foo.com/",
-        url: url
+        url
     }, thirdPartyOriginRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "http://foo.com/path.index",
-        url: url
+        url
     }, thirdPartyOriginRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "http://user@foo.com/path.index",
-        url: url
+        url
     }, thirdPartyOriginRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "http://user:pass@foo.com/path.index",
-        url: url
+        url
     }, thirdPartyOriginRule)).toBeFalsy();
     expect(controller().mark({
         originUrl: "https://192.0.0.1:8080/path.index",

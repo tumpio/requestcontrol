@@ -6,9 +6,9 @@ import { testRules } from "./rule-tester.js";
 import { uuid } from "../util/uuid.js";
 import { Toc } from "../util/toc.js";
 import { exportObject, importFile } from "../util/import-export.js";
-import { OPTION_SHOW_COUNTER, OPTION_CHANGE_ICON as OPTION_CHANGE_ICON } from "./constants.js";
+import { OPTION_SHOW_COUNTER, OPTION_CHANGE_ICON } from "./constants.js";
 
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", async () => {
     const { rules } = await browser.storage.local.get("rules");
 
     if (rules) {
@@ -25,20 +25,20 @@ document.addEventListener("DOMContentLoaded", async function () {
     fetchLocalisedManual();
     setLoadDefaultsButton();
 
-    document.getElementById("addNewRule").addEventListener("click", function () {
+    document.getElementById("addNewRule").addEventListener("click", () => {
         document.getElementById("new").newRule();
         toggleEmpty();
     });
 
     document.getElementById("addDefault").addEventListener("click", loadDefaultRules);
 
-    document.getElementById("exportRules").addEventListener("click", async function () {
+    document.getElementById("exportRules").addEventListener("click", async () => {
         const fileName = browser.i18n.getMessage("export-file-name");
         const { rules } = await browser.storage.local.get("rules");
         exportObject(fileName, rules);
     });
 
-    document.getElementById("importRules").addEventListener("change", function (e) {
+    document.getElementById("importRules").addEventListener("change", (e) => {
         importFile(e.target.files[0]).then(importRules).catch(displayErrorMessage);
     });
 
@@ -63,13 +63,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         browser.storage.local.set({ [OPTION_CHANGE_ICON]: this.checked });
     });
 
-    document.getElementById("exportSelectedRules").addEventListener("click", async function () {
+    document.getElementById("exportSelectedRules").addEventListener("click", async () => {
         const fileName = browser.i18n.getMessage("export-file-name");
         const selected = getSelectedRules();
         exportObject(fileName, selected);
     });
 
-    document.getElementById("removeSelectedRules").addEventListener("click", async function () {
+    document.getElementById("removeSelectedRules").addEventListener("click", async () => {
         const selected = getSelectedRules().map((rule) => rule.uuid);
         const { rules } = await browser.storage.local.get("rules");
 
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         toggleEmpty();
     });
 
-    document.getElementById("testSelectedRules").addEventListener("click", function () {
+    document.getElementById("testSelectedRules").addEventListener("click", () => {
         document.getElementById("ruleTesterModal").classList.add("show");
         const testUrl = document.getElementById("test-url");
 
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     document.getElementById("changelog").addEventListener("click", fetchChangelog, { once: true });
 
-    document.getElementById("selectedRules").addEventListener("click", function () {
+    document.getElementById("selectedRules").addEventListener("click", () => {
         document.querySelector(".mobile-toolbar").classList.toggle("show");
     });
 
@@ -113,8 +113,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         .forEach((list) => list.addEventListener("rule-edit-completed", onRuleEditCompleted));
 });
 
-document.addEventListener("rule-created", async function (e) {
-    const rule = e.detail.rule;
+document.addEventListener("rule-created", async (e) => {
+    const { rule } = e.detail;
 
     let { rules } = await browser.storage.local.get("rules");
 
@@ -128,9 +128,8 @@ document.addEventListener("rule-created", async function (e) {
     document.getElementById(rule.action).addCreated(rule);
 });
 
-document.addEventListener("rule-changed", async function (e) {
-    const input = e.detail.input;
-    const rule = e.detail.rule;
+document.addEventListener("rule-changed", async (e) => {
+    const { input, rule } = e.detail;
 
     let { rules } = await browser.storage.local.get("rules");
 
@@ -151,7 +150,7 @@ document.addEventListener("rule-changed", async function (e) {
     input.toggleSaved();
 });
 
-document.addEventListener("rule-deleted", async function (e) {
+document.addEventListener("rule-deleted", async (e) => {
     const deleted = e.detail.uuid;
     const { rules } = await browser.storage.local.get("rules");
     if (rules) {
@@ -164,8 +163,7 @@ document.addEventListener("rule-deleted", async function (e) {
 document.addEventListener("rule-selected", updateToolbar);
 
 function onRuleEditCompleted(e) {
-    const action = e.detail.action;
-    const input = e.detail.input;
+    const { action, input } = e.detail;
     if (action !== this.id) {
         document.getElementById(action).addFrom(input);
     }
@@ -227,7 +225,7 @@ function mergeRules(rules, imported) {
     const newRules = [];
     const mergedRules = [];
     const importedRules = Array.isArray(imported) ? imported : [imported];
-    for (let rule of importedRules) {
+    for (const rule of importedRules) {
         if (!rule.hasOwnProperty("uuid")) {
             rule.uuid = uuid();
             rules.push(rule);
@@ -282,7 +280,7 @@ function setLoadDefaultsButton() {
     const endMark = markNode.textContent.indexOf(marker, 1);
     markNode.splitText(endMark + 1);
 
-    let link = document.createElement("button");
+    const link = document.createElement("button");
     link.textContent = markNode.textContent.substring(1, markNode.textContent.length - 1);
     link.className = "btn text";
     link.addEventListener("click", loadDefaultRules);
@@ -362,7 +360,7 @@ async function fetchChangelog() {
     let ul = document.createElement("ul");
     let start = false;
 
-    for (let line of content.split("\n")) {
+    for (const line of content.split("\n")) {
         if (!start) {
             if (line.startsWith("##")) {
                 start = true;
@@ -377,13 +375,13 @@ async function fetchChangelog() {
                 if (text[i].startsWith("#")) {
                     const link = document.createElement("a");
                     link.textContent = text[i];
-                    link.href = "https://github.com/tumpio/requestcontrol/issues/" + text[i].substring(1);
+                    link.href = `https://github.com/tumpio/requestcontrol/issues/${text[i].substring(1)}`;
                     link.target = "_blank";
                     li.append(link);
                 } else if (text[i].startsWith("@")) {
                     const link = document.createElement("a");
                     link.textContent = text[i];
-                    link.href = "https://github.com/" + text[i].substring(1);
+                    link.href = `https://github.com/${text[i].substring(1)}`;
                     link.target = "_blank";
                     li.append(link);
                 } else {

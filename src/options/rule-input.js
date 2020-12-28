@@ -6,47 +6,6 @@ import { createRule, createMatchPatterns, isTLDHostPattern } from "../main/api.j
 import { uuid } from "../util/uuid.js";
 import { onToggleButtonChange, setButtonChecked, setButtonDisabled, toggleHidden } from "../util/ui-helpers.js";
 
-export function newRuleInput(
-    rule = {
-        uuid: uuid(),
-        pattern: {
-            scheme: "*",
-            host: "",
-            path: "",
-        },
-        types: ["main_frame"],
-        action: "",
-        active: true,
-    }
-) {
-    let input;
-    switch (rule.action) {
-        case "filter":
-            input = new FilterRuleInput();
-            break;
-        case "block":
-            input = new BlockRuleInput();
-            break;
-        case "redirect":
-            input = new RedirectRuleInput();
-            break;
-        case "whitelist":
-            input = new WhitelistRuleInput();
-            break;
-        case "secure":
-            input = new SecureRuleInput();
-            break;
-        default:
-            input = new RuleInput();
-    }
-    input.id = `rule-${rule.uuid}`;
-    input.dataset.uuid = rule.uuid;
-    input.rule = rule;
-    input.classList.add("not-edited");
-    input.spellcheck = false;
-    return input;
-}
-
 const isMobile = window.matchMedia("(max-width: 35em)").matches;
 
 class RuleInput extends HTMLElement {
@@ -101,7 +60,7 @@ class RuleInput extends HTMLElement {
         const input = this;
         input.classList.add("saved");
         clearTimeout(this.savedTimeout);
-        this.savedTimeout = setTimeout(function () {
+        this.savedTimeout = setTimeout(() => {
             input.classList.remove("saved");
         }, 5000);
     }
@@ -114,8 +73,8 @@ class RuleInput extends HTMLElement {
     }
 
     toggleEdit() {
-        let editing = this.classList.toggle("editing");
-        let isNew = this.hasAttribute("new");
+        const editing = this.classList.toggle("editing");
+        const isNew = this.hasAttribute("new");
         toggleHidden(
             !editing,
             ...this.querySelectorAll(".edit-label"),
@@ -392,7 +351,7 @@ class RuleInput extends HTMLElement {
         const extraTypes = this.querySelectorAll(".extra-type:not(:checked)");
         const moreButton = this.querySelector("#more-types");
         moreButton.parentNode.querySelector(".text").textContent = browser.i18n.getMessage(
-            "show_more_" + !moreButton.checked
+            `show_more_${!moreButton.checked}`
         );
         for (const type of extraTypes) {
             toggleHidden(!moreButton.checked, type.parentNode);
@@ -492,7 +451,7 @@ class RuleInput extends HTMLElement {
     }
 
     setType(value, bool) {
-        const type = this.querySelector(".type[value=" + value + "]");
+        const type = this.querySelector(`.type[value=${value}]`);
         setButtonChecked(type, bool);
         toggleHidden(false, type.parentNode);
     }
@@ -506,7 +465,9 @@ class RuleInput extends HTMLElement {
             types = list.getElementsByClassName("type");
             for (i = 0; i < types.length - 1; i++) {
                 swap = false;
-                if (types[i].checked) continue;
+                if (types[i].checked) {
+                    continue;
+                }
                 if (types[i + 1].checked) {
                     swap = true;
                     break;
@@ -548,7 +509,7 @@ class RuleInput extends HTMLElement {
 
     updateActiveState() {
         this.classList.toggle("disabled", !this.rule.active);
-        this.querySelector("#activate").textContent = browser.i18n.getMessage("activate_" + !this.rule.active);
+        this.querySelector("#activate").textContent = browser.i18n.getMessage(`activate_${!this.rule.active}`);
     }
 
     updateIfNotEdited() {
@@ -581,7 +542,7 @@ class RuleInput extends HTMLElement {
         }
 
         if (this.rule.pattern.origin) {
-            setButtonChecked(this.querySelector(".origin-matcher[value=" + this.rule.pattern.origin + "]"), true);
+            setButtonChecked(this.querySelector(`.origin-matcher[value=${this.rule.pattern.origin}]`), true);
         }
 
         if (!this.rule.types || this.rule.types.length === 0) {
@@ -730,7 +691,7 @@ class FilterRuleInput extends BaseRedirectRuleInput {
     }
 
     onToggleFilter(e) {
-        const checked = e.target.checked;
+        const { checked } = e.target;
         setButtonChecked(e.target, checked);
         setButtonDisabled(this.querySelector("#skip-same-domain"), !checked);
         if (!checked) {
@@ -835,3 +796,44 @@ customElements.define("secure-rule-input", SecureRuleInput);
 customElements.define("block-rule-input", BlockRuleInput);
 customElements.define("whitelist-rule-input", WhitelistRuleInput);
 customElements.define("new-rule-input", RuleInput);
+
+export function newRuleInput(
+    rule = {
+        uuid: uuid(),
+        pattern: {
+            scheme: "*",
+            host: "",
+            path: "",
+        },
+        types: ["main_frame"],
+        action: "",
+        active: true,
+    }
+) {
+    let input;
+    switch (rule.action) {
+        case "filter":
+            input = new FilterRuleInput();
+            break;
+        case "block":
+            input = new BlockRuleInput();
+            break;
+        case "redirect":
+            input = new RedirectRuleInput();
+            break;
+        case "whitelist":
+            input = new WhitelistRuleInput();
+            break;
+        case "secure":
+            input = new SecureRuleInput();
+            break;
+        default:
+            input = new RuleInput();
+    }
+    input.id = `rule-${rule.uuid}`;
+    input.dataset.uuid = rule.uuid;
+    input.rule = rule;
+    input.classList.add("not-edited");
+    input.spellcheck = false;
+    return input;
+}

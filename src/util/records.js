@@ -1,6 +1,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 const records = new Map();
 
@@ -27,12 +27,14 @@ export function clear() {
 }
 
 export function getTabRecords() {
-    return browser.tabs.query({
-        currentWindow: true,
-        active: true
-    }).then(tabs => {
-        return records.get(tabs[0].id);
-    });
+    return browser.tabs
+        .query({
+            currentWindow: true,
+            active: true,
+        })
+        .then((tabs) => {
+            return records.get(tabs[0].id);
+        });
 }
 
 export function setTabRecords(tabId, tabRecords) {
@@ -43,14 +45,9 @@ export function removeTabRecords(tabId) {
     records.delete(tabId);
 }
 
-export function getLastRedirectRecords(
-    tabId,
-    url,
-    isServerRedirect = false,
-    limit = 5
-) {
-    let tabRecords = records.get(tabId);
-    let lastRecord = getLastRedirectRecord(tabRecords, url, isServerRedirect, limit);
+export function getLastRedirectRecords(tabId, url, isServerRedirect = false, limit = 5) {
+    const tabRecords = records.get(tabId);
+    const lastRecord = getLastRedirectRecord(tabRecords, url, isServerRedirect, limit);
 
     if (!lastRecord) {
         return [];
@@ -61,9 +58,8 @@ export function getLastRedirectRecords(
 function getLastRedirectRecord(records, url, isServerRedirect, limit) {
     let i = 0;
     while (i < limit && records.length > 0) {
-        let record = records.pop();
-        if (record.target === url ||
-            isServerRedirect && record.target) {
+        const record = records.pop();
+        if (record.target === url || (isServerRedirect && record.target)) {
             return record;
         }
         i++;
@@ -73,10 +69,10 @@ function getLastRedirectRecord(records, url, isServerRedirect, limit) {
 
 function getLinkedRedirectRecords(record, records, limit) {
     let lastRecord = record;
-    let linked = [lastRecord];
+    const linked = [lastRecord];
     let i = 0;
     while (i < limit && records.length > 0) {
-        let record = records.pop();
+        const record = records.pop();
         if (record.target && record.target === lastRecord.url) {
             linked.unshift(record);
             lastRecord = record;

@@ -10,7 +10,7 @@ beforeEach(() => {
 });
 
 test("Include match extender - match", () => {
-    let rule = RequestControl.createRule({
+    const rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             includes: ["cl?ck", "/a=[0-9]+/", "FOO"]
@@ -20,7 +20,7 @@ test("Include match extender - match", () => {
 });
 
 test("Include match extender - no match", () => {
-    let rule = RequestControl.createRule({
+    const rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             includes: ["clock", "/a=[a-z]+/"]
@@ -30,7 +30,7 @@ test("Include match extender - no match", () => {
 });
 
 test("Exclude match extender - match", () => {
-    let rule = RequestControl.createRule({
+    const rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             excludes: ["cl?ck", "/a=\\d+/"]
@@ -40,7 +40,7 @@ test("Exclude match extender - match", () => {
 });
 
 test("Exclude match extender - no match", () => {
-    let rule = RequestControl.createRule({
+    const rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             excludes: ["clock", "/a=[a-z]+/"]
@@ -50,7 +50,7 @@ test("Exclude match extender - no match", () => {
 });
 
 test("Combined include, exclude - match include", () => {
-    let rule = RequestControl.createRule({
+    const rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             includes: ["click"],
@@ -61,7 +61,7 @@ test("Combined include, exclude - match include", () => {
 });
 
 test("Combined include, exclude - no match", () => {
-    let rule = RequestControl.createRule({
+    const rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             includes: ["clock"],
@@ -72,7 +72,7 @@ test("Combined include, exclude - no match", () => {
 });
 
 test("Combined include, exclude - match both", () => {
-    let rule = RequestControl.createRule({
+    const rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             includes: ["click"],
@@ -83,7 +83,7 @@ test("Combined include, exclude - match both", () => {
 });
 
 test("Invalid regexp - treated as literal string", () => {
-    let rule = RequestControl.createRule({
+    const rule = RequestControl.createRule({
         action: "filter",
         pattern: {
             excludes: ["/click\\/"]

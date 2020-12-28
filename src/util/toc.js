@@ -11,16 +11,16 @@
 
 export function Toc(documentNode) {
     this.tree = new TocBlock("H2");
-    let headers = documentNode.querySelectorAll("h2, h3, h4, h5, h6");
+    const headers = documentNode.querySelectorAll("h2, h3, h4, h5, h6");
     let lastBlock = this.tree;
 
-    for (let header of headers) {
-        let tocNode = new TocItem(header);
+    for (const header of headers) {
+        const tocNode = new TocItem(header);
         while (tocNode.level < lastBlock.level && lastBlock !== this.tree) {
             lastBlock = lastBlock.parent;
         }
         if (tocNode.level > lastBlock.level) {
-            let tocBlock = new TocBlock(tocNode.level, lastBlock);
+            const tocBlock = new TocBlock(tocNode.level, lastBlock);
             lastBlock.appendChild(tocBlock);
             lastBlock = tocBlock;
         }
@@ -29,7 +29,7 @@ export function Toc(documentNode) {
 }
 
 Toc.prototype.render = function () {
-    let toc = this.tree.render();
+    const toc = this.tree.render();
     toc.addEventListener("click", collapseTocBlock);
     toc.classList.remove("collapse");
     return toc;
@@ -48,7 +48,7 @@ function TocBlock(level, parent) {
 function TocItem(header) {
     TocNode.call(this, header.tagName);
     this.text = header.textContent;
-    this.href = "#" + header.id;
+    this.href = `#${header.id}`;
 }
 TocBlock.prototype = Object.create(TocNode.prototype);
 TocBlock.prototype.constructor = TocBlock;
@@ -59,16 +59,16 @@ TocBlock.prototype.appendChild = function (child) {
     this.children.push(child);
 };
 TocBlock.prototype.render = function () {
-    let block = document.createElement("ul");
-    for (let item of this.children) {
+    const block = document.createElement("ul");
+    for (const item of this.children) {
         block.appendChild(item.render());
     }
     block.classList.add("collapse");
     return block;
 };
 TocItem.prototype.render = function () {
-    let item = document.createElement("li");
-    let link = document.createElement("a");
+    const item = document.createElement("li");
+    const link = document.createElement("a");
     link.textContent = this.text;
     link.href = this.href;
     item.appendChild(link);
@@ -77,10 +77,10 @@ TocItem.prototype.render = function () {
 
 function collapseTocBlock(e) {
     if (e.target.tagName === "A") {
-        let li = e.target.parentNode;
-        let others = li.parentNode.querySelectorAll("li + ul:not(.collapse)");
+        const li = e.target.parentNode;
+        const others = li.parentNode.querySelectorAll("li + ul:not(.collapse)");
 
-        for (let other of others) {
+        for (const other of others) {
             other.classList.add("collapse");
         }
 

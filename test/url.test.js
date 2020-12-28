@@ -1,15 +1,15 @@
 import {UrlParser, QueryParser} from "../src/main/url.js";
 
 test("href - get", () => {
-    let url = "https://domain.com";
+    const url = "https://domain.com";
     expect(new UrlParser(url).href).toBe(url);
 });
 
 
 test("href - set", () => {
-    let url = "https://foo.com";
-    let url2 = "http://domain.com";
-    let parser = new UrlParser(url);
+    const url = "https://foo.com";
+    const url2 = "http://domain.com";
+    const parser = new UrlParser(url);
     parser.href = url2;
     expect(parser.href).toBe(url2);
 });
@@ -22,17 +22,17 @@ test("protocol - get", () => {
 });
 
 test("protocol - set", () => {
-    let url = "https://domain.com";
-    let url2 = "http://domain.com";
-    let parser = new UrlParser(url);
+    const url = "https://domain.com";
+    const url2 = "http://domain.com";
+    const parser = new UrlParser(url);
     parser.protocol = "http";
     expect(parser.href).toBe(url2);
 });
 
 test("protocol - set with colon", () => {
-    let url = "https://domain.com";
-    let url2 = "data://domain.com";
-    let parser = new UrlParser(url);
+    const url = "https://domain.com";
+    const url2 = "data://domain.com";
+    const parser = new UrlParser(url);
     parser.protocol = "data:";
     expect(parser.href).toBe(url2);
 });
@@ -46,13 +46,13 @@ test("username - get", () => {
 });
 
 test("username - set", () => {
-    let parser = new UrlParser("https://domain.com");
+    const parser = new UrlParser("https://domain.com");
     parser.username = "user";
     expect(parser.href).toBe("https://user@domain.com");
 });
 
 test("username - set with password", () => {
-    let parser = new UrlParser("https://user:pass@domain.com");
+    const parser = new UrlParser("https://user:pass@domain.com");
     parser.username = "other";
     expect(parser.href).toBe("https://other:pass@domain.com");
 });
@@ -67,19 +67,19 @@ test("password - get", () => {
 });
 
 test("password - set", () => {
-    let parser = new UrlParser("https://domain.com");
+    const parser = new UrlParser("https://domain.com");
     parser.password = "pass";
     expect(parser.href).toBe("https://domain.com");
 });
 
 test("password - set same with user", () => {
-    let parser = new UrlParser("https://user@domain.com");
+    const parser = new UrlParser("https://user@domain.com");
     parser.password = "pass";
     expect(parser.href).toBe("https://user:pass@domain.com");
 });
 
 test("password - set new with user", () => {
-    let parser = new UrlParser("https://user:pass@domain.com");
+    const parser = new UrlParser("https://user:pass@domain.com");
     parser.password = "other";
     expect(parser.href).toBe("https://user:other@domain.com");
 });
@@ -177,25 +177,25 @@ test("origin - get", () => {
 });
 
 test("hostname - set", () => {
-    let parser = new UrlParser("https://domain.com");
+    const parser = new UrlParser("https://domain.com");
     parser.hostname = "other.com";
     expect(parser.href).toBe("https://other.com");
 });
 
 test("hostname - set full", () => {
-    let parser = new UrlParser("https://user:pass@domain.com:8080/path?query#hash");
+    const parser = new UrlParser("https://user:pass@domain.com:8080/path?query#hash");
     parser.hostname = "other.com";
     expect(parser.href).toBe("https://user:pass@other.com:8080/path?query#hash");
 });
 
 test("host - set", () => {
-    let parser = new UrlParser("https://domain.com");
+    const parser = new UrlParser("https://domain.com");
     parser.host = "other.com";
     expect(parser.href).toBe("https://other.com");
 });
 
 test("host - set with port", () => {
-    let parser = new UrlParser("https://user:pass@domain.com:8080/path?query#hash");
+    const parser = new UrlParser("https://user:pass@domain.com:8080/path?query#hash");
     parser.host = "other.com:1234";
     expect(parser.href).toBe("https://user:pass@other.com:1234/path?query#hash");
 });
@@ -209,13 +209,13 @@ test("port - get", () => {
 });
 
 test("port - set", () => {
-    let parser = new UrlParser("https://domain.com");
+    const parser = new UrlParser("https://domain.com");
     parser.port = "1234";
     expect(parser.href).toBe("https://domain.com:1234");
 });
 
 test("port - set with colon", () => {
-    let parser = new UrlParser("https://domain.com:8080/path");
+    const parser = new UrlParser("https://domain.com:8080/path");
     parser.port = ":1234";
     expect(parser.href).toBe("https://domain.com:1234/path");
 });
@@ -231,19 +231,19 @@ test("path - get", () => {
 });
 
 test("path - set same", () => {
-    let parser = new UrlParser("https://domain.com");
+    const parser = new UrlParser("https://domain.com");
     parser.pathname = "path";
     expect(parser.href).toBe("https://domain.com/path");
 });
 
 test("path - set new", () => {
-    let parser = new UrlParser("https://domain.com/foo");
+    const parser = new UrlParser("https://domain.com/foo");
     parser.pathname = "bar";
     expect(parser.href).toBe("https://domain.com/bar");
 });
 
 test("path - set with slash", () => {
-    let parser = new UrlParser("https://domain.com:8080/foo/bar.href?query#hash");
+    const parser = new UrlParser("https://domain.com:8080/foo/bar.href?query#hash");
     parser.pathname = "/index.href";
     expect(parser.href).toBe("https://domain.com:8080/index.href?query#hash");
 });
@@ -257,19 +257,19 @@ test("search - get", () => {
 });
 
 test("search - set", () => {
-    let parser = new UrlParser("https://domain.com/foo");
+    const parser = new UrlParser("https://domain.com/foo");
     parser.search = "bar";
     expect(parser.href).toBe("https://domain.com/foo?bar");
 });
 
 test("search - set with question mark", () => {
-    let parser = new UrlParser("https://domain.com/foo?query#hash");
+    const parser = new UrlParser("https://domain.com/foo?query#hash");
     parser.search = "?bar";
     expect(parser.href).toBe("https://domain.com/foo?bar#hash");
 });
 
 test("search - set empty", () => {
-    let parser = new UrlParser("https://domain.com/foo?query=bar&foo#hash");
+    const parser = new UrlParser("https://domain.com/foo?query=bar&foo#hash");
     parser.search = "";
     expect(parser.href).toBe("https://domain.com/foo#hash");
 });
@@ -284,19 +284,19 @@ test("hash - get", () => {
 
 
 test("hash - set", () => {
-    let parser = new UrlParser("https://domain.com/foo");
+    const parser = new UrlParser("https://domain.com/foo");
     parser.hash = "bar";
     expect(parser.href).toBe("https://domain.com/foo#bar");
 });
 
 test("hash - set with hash", () => {
-    let parser = new UrlParser("https://domain.com/foo?query#hash");
+    const parser = new UrlParser("https://domain.com/foo?query#hash");
     parser.hash = "#bar";
     expect(parser.href).toBe("https://domain.com/foo?query#bar");
 });
 
 test("hash - set empty", () => {
-    let parser = new UrlParser("https://domain.com/foo?query#hash");
+    const parser = new UrlParser("https://domain.com/foo?query#hash");
     parser.hash = "";
     expect(parser.href).toBe("https://domain.com/foo?query");
 });
@@ -315,55 +315,55 @@ test("query parser - get", () => {
 });
 
 test("query parser - set when no query", () => {
-    let parser = new QueryParser("https://domain.com/foo#hash");
+    const parser = new QueryParser("https://domain.com/foo#hash");
     parser.set("foo", "foo");
     expect(parser.href).toBe("https://domain.com/foo?foo=foo#hash");
 });
 
 test("query parser - set when empty query", () => {
-    let parser = new QueryParser("https://domain.com/foo?#hash");
+    const parser = new QueryParser("https://domain.com/foo?#hash");
     parser.set("foo", "foo");
     expect(parser.href).toBe("https://domain.com/foo?foo=foo#hash");
 });
 
 test("query parser - set when no value", () => {
-    let parser = new QueryParser("https://domain.com/foo?foo#hash");
+    const parser = new QueryParser("https://domain.com/foo?foo#hash");
     parser.set("foo", "foo");
     expect(parser.href).toBe("https://domain.com/foo?foo=foo#hash");
 });
 
 test("query parser - set when empty value", () => {
-    let parser = new QueryParser("https://domain.com/foo?foo=#hash");
+    const parser = new QueryParser("https://domain.com/foo?foo=#hash");
     parser.set("foo", "foo");
     expect(parser.href).toBe("https://domain.com/foo?foo=foo#hash");
 });
 
 test("query parser - set when value", () => {
-    let parser = new QueryParser("https://domain.com/foo?foo=bar#hash");
+    const parser = new QueryParser("https://domain.com/foo?foo=bar#hash");
     parser.set("foo", "foo");
     expect(parser.href).toBe("https://domain.com/foo?foo=foo#hash");
 });
 
 test("query parser - set when has query parameter same begin", () => {
-    let parser = new QueryParser("https://domain.com/foo?fooo=bar#hash");
+    const parser = new QueryParser("https://domain.com/foo?fooo=bar#hash");
     parser.set("foo", "foo");
     expect(parser.href).toBe("https://domain.com/foo?fooo=bar&foo=foo#hash");
 });
 
 test("query parser - set when has query parameter same end", () => {
-    let parser = new QueryParser("https://domain.com/foo?afoo=bar#hash");
+    const parser = new QueryParser("https://domain.com/foo?afoo=bar#hash");
     parser.set("foo", "foo");
     expect(parser.href).toBe("https://domain.com/foo?afoo=bar&foo=foo#hash");
 });
 
 test("query parser - set when has multiple query parameters", () => {
-    let parser = new QueryParser("https://domain.com/foo?afoo=1&afoo=2#hash");
+    const parser = new QueryParser("https://domain.com/foo?afoo=1&afoo=2#hash");
     parser.set("foo", "foo");
     expect(parser.href).toBe("https://domain.com/foo?afoo=1&afoo=2&foo=foo#hash");
 });
 
 test("query parser - set when has multiple query parameters with value equals key", () => {
-    let parser = new QueryParser("https://domain.com/foo?afoo=1&afoo=afoo#hash");
+    const parser = new QueryParser("https://domain.com/foo?afoo=1&afoo=afoo#hash");
     parser.set("foo", "foo");
     expect(parser.href).toBe("https://domain.com/foo?afoo=1&afoo=afoo&foo=foo#hash");
 });

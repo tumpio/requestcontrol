@@ -77,15 +77,15 @@ function setIconWithBadgeText(tabId, icon, text, colors) {
 
 function setIcon(tabId = null, icon = DEFAULT_ICON) {
     browser.browserAction.setIcon({
-        tabId: tabId,
+        tabId,
         path: icon,
     });
 }
 
 function setBadgeText(tabId = null, text = null, colors = { badge: "#eef", badgeText: "#0c0c0d" }) {
     browser.browserAction.setBadgeText({
-        tabId: tabId,
-        text: text,
+        tabId,
+        text,
     });
     browser.browserAction.setBadgeBackgroundColor({ color: colors.badge });
     browser.browserAction.setBadgeTextColor({ color: colors.badgeText });

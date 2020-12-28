@@ -8,25 +8,28 @@ import { DomainMatcher } from "../matchers.js";
 import { parseInlineUrl, trimQueryParameters, UrlParser } from "../url.js";
 
 export class FilterRule extends BaseRedirectRule {
-    constructor({
-        uuid,
-        tag,
-        paramsFilter = null,
-        trimAllParams = false,
-        skipRedirectionFilter = false,
-        skipOnSameDomain = false,
-        redirectDocument = false
-    } = {}, matcher) {
+    constructor(
+        {
+            uuid,
+            tag,
+            paramsFilter = null,
+            trimAllParams = false,
+            skipRedirectionFilter = false,
+            skipOnSameDomain = false,
+            redirectDocument = false,
+        } = {},
+        matcher
+    ) {
         super({ uuid, tag, redirectDocument }, matcher);
-        this.queryParamsPattern = (paramsFilter) ? createRegexpPattern(paramsFilter.values) : null;
-        this.invertQueryTrimming = (paramsFilter) ? paramsFilter.invert : false;
+        this.queryParamsPattern = paramsFilter ? createRegexpPattern(paramsFilter.values) : null;
+        this.invertQueryTrimming = paramsFilter ? paramsFilter.invert : false;
         this.removeQueryString = trimAllParams;
         this.skipInlineUrlParsing = skipRedirectionFilter;
         this.skipOnSameDomain = skipOnSameDomain;
     }
 
     apply(url) {
-        let trimmedUrl = this.filterQueryParameters(url);
+        const trimmedUrl = this.filterQueryParameters(url);
         if (this.skipInlineUrlParsing) {
             return trimmedUrl;
         }
@@ -35,7 +38,7 @@ export class FilterRule extends BaseRedirectRule {
 
     filterQueryParameters(url) {
         if (this.removeQueryString) {
-            let parser = new UrlParser(url);
+            const parser = new UrlParser(url);
             parser.search = "";
             return parser.href;
         }
@@ -43,9 +46,8 @@ export class FilterRule extends BaseRedirectRule {
     }
 
     filterInlineUrl(url) {
-        let inlineUrl = parseInlineUrl(url);
-        if (inlineUrl == null
-            || this.skipOnSameDomain && DomainMatcher.testUrls(url, inlineUrl)) {
+        const inlineUrl = parseInlineUrl(url);
+        if (inlineUrl == null || (this.skipOnSameDomain && DomainMatcher.testUrls(url, inlineUrl))) {
             return url;
         }
         return inlineUrl;

@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".alert .close").forEach((close) => {
         close.addEventListener("click", function () {
             this.parentNode.classList.remove("show");
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 window.addEventListener(
     "keydown",
-    function (event) {
+    (event) => {
         if (event.key === "Escape") {
             closeOpenModal();
         }

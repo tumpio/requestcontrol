@@ -50,14 +50,14 @@ class RuleList extends HTMLElement {
 
     add(rule) {
         const ruleInput = newRuleInput(rule);
-        const title = ruleInput.title;
+        const { title } = ruleInput;
 
         if (this.size === 0 || this.list.lastElementChild.title.localeCompare(title) < 0) {
             this.list.append(ruleInput);
             return;
         }
 
-        for (let next of this.list.childNodes) {
+        for (const next of this.list.childNodes) {
             if (next.title.localeCompare(title) >= 0) {
                 next.before(ruleInput);
                 break;
@@ -142,7 +142,7 @@ class RuleList extends HTMLElement {
     }
 
     onSelectAll(e) {
-        const checked = e.target.checked;
+        const { checked } = e.target;
         this.list.childNodes.forEach((rule) => {
             rule.selected = checked;
         });
@@ -168,7 +168,7 @@ class RuleList extends HTMLElement {
     }
 
     onEditComplete(e) {
-        const action = e.detail.action;
+        const { action } = e.detail;
         if (action !== this.id) {
             e.target.remove();
             this.updateHeader();
@@ -183,7 +183,7 @@ class RuleList extends HTMLElement {
     }
 
     onActionChange(e) {
-        const input = e.detail.input;
+        const { input } = e.detail;
         const newInput = newRuleInput(input.rule);
 
         if (this.id === "new") {
@@ -197,7 +197,7 @@ class RuleList extends HTMLElement {
     }
 
     onInvalid(e) {
-        const input = e.detail.input;
+        const { input } = e.detail;
         if (this.id !== "new") {
             input.reportValidity();
         }
