@@ -20,11 +20,11 @@ class RuleInput extends HTMLElement {
         this.includesTagsInput = this.querySelector("#includes");
         this.excludesTagsInput = this.querySelector("#excludes");
 
-        this.querySelector("#title").addEventListener("keydown", this.onEnterKey.bind(this));
+        this.querySelector("#title").addEventListener("keydown", this.onKeyDown.bind(this));
         this.querySelector("#title").addEventListener("blur", this.onSetTitle.bind(this));
-        this.querySelector("#description").addEventListener("keydown", this.onEnterKey.bind(this));
+        this.querySelector("#description").addEventListener("keydown", this.onKeyDown.bind(this));
         this.querySelector("#description").addEventListener("blur", this.onSetDescription.bind(this));
-        this.querySelector("#tag").addEventListener("keydown", this.onEnterKey.bind(this));
+        this.querySelector("#tag").addEventListener("keydown", this.onKeyDown.bind(this));
         this.querySelector("#tag").addEventListener("blur", this.onSetTag.bind(this));
         this.querySelector("#add-tag").addEventListener("click", this.onAddTag.bind(this));
         this.querySelector("#select").addEventListener("change", this.onSelect.bind(this));
@@ -298,9 +298,8 @@ class RuleInput extends HTMLElement {
         );
     }
 
-    onEnterKey(e) {
-        if (e.keyCode === 13) {
-            // Enter
+    onKeyDown(e) {
+        if (e.key === "Enter") {
             e.target.blur();
             e.preventDefault();
             return false;
