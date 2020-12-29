@@ -36,7 +36,7 @@ function onOptionsChanged(changes) {
     if (storageKeys.every((key) => !(key in changes))) {
         return;
     }
-    while (listeners.length) {
+    while (listeners.length > 0) {
         browser.webRequest.onBeforeRequest.removeListener(listeners.pop());
     }
     browser.webRequest.onBeforeRequest.removeListener(controlListener);
@@ -99,7 +99,7 @@ function onNavigation(details) {
     const isServerRedirect = details.transitionQualifiers.includes("server_redirect");
     const keep = records.getLastRedirectRecords(details.tabId, details.url, isServerRedirect);
 
-    if (keep.length) {
+    if (keep.length > 0) {
         records.setTabRecords(details.tabId, keep);
         notifier.notify(details.tabId, keep[keep.length - 1].rule.constructor.icon, keep.length);
     } else {

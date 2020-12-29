@@ -120,12 +120,10 @@ class RuleInput extends HTMLElement {
             !this.querySelector("#any-url").checked && this.hostsTagsInput.tags.some(isTLDHostPattern);
         toggleHidden(!isTldsPattern, this.querySelector("#tlds-form"));
         this.tldsTagsInput.disabled = !isTldsPattern;
-        if (isTldsPattern) {
-            if (this.tldsTagsInput.tags.length === 0) {
-                this.querySelector("#collapse-tlds").classList.add("text-danger");
-                this.querySelector("#collapse-tlds").parentNode.classList.add("has-error");
-                toggleHidden(!isTldsPattern, this.querySelector("#tlds-area"));
-            }
+        if (isTldsPattern && this.tldsTagsInput.tags.length === 0) {
+            this.querySelector("#collapse-tlds").classList.add("text-danger");
+            this.querySelector("#collapse-tlds").parentNode.classList.add("has-error");
+            toggleHidden(!isTldsPattern, this.querySelector("#tlds-area"));
         }
     }
 
@@ -188,12 +186,7 @@ class RuleInput extends HTMLElement {
         if (this._cdescription) {
             return this._cdescription;
         }
-        let description;
-        if (this.rule.description) {
-            description = decodeURIComponent(this.rule.description);
-        } else {
-            description = this.defaultDescription;
-        }
+        const description = this.rule.description ? decodeURIComponent(this.rule.description) : this.defaultDescription;
         this._cdescription = description;
         return description;
     }
@@ -226,12 +219,7 @@ class RuleInput extends HTMLElement {
         if (this._ctag) {
             return this._ctag;
         }
-        let tag;
-        if (this.rule.tag) {
-            tag = decodeURIComponent(this.rule.tag);
-        } else {
-            tag = "";
-        }
+        const tag = this.rule.tag ? decodeURIComponent(this.rule.tag) : "";
         this._ctag = tag;
         return tag;
     }
@@ -483,7 +471,7 @@ class RuleInput extends HTMLElement {
     }
 
     updateHeader() {
-        this.setAttribute("data-type", this.rule.action);
+        this.dataset.type = this.rule.action;
         this.querySelector("#title").textContent = this.title;
         this.querySelector("#title").title = this.description;
         this.querySelector("#description").textContent = this.description;

@@ -70,11 +70,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     document.getElementById("removeSelectedRules").addEventListener("click", async () => {
-        const selected = getSelectedRules().map((rule) => rule.uuid);
+        const selected = new Set(getSelectedRules().map((rule) => rule.uuid));
         const { rules } = await browser.storage.local.get("rules");
 
         if (rules) {
-            await browser.storage.local.set({ rules: rules.filter((rule) => !selected.includes(rule.uuid)) });
+            await browser.storage.local.set({ rules: rules.filter((rule) => !selected.has(rule.uuid)) });
         }
 
         document.querySelectorAll("rule-list").forEach((list) => list.removeSelected());
@@ -285,7 +285,7 @@ function setLoadDefaultsButton() {
     link.className = "btn text";
     link.addEventListener("click", loadDefaultRules);
 
-    p.replaceChild(link, markNode);
+    markNode.replaceWith(link);
 }
 
 function updateToolbar() {

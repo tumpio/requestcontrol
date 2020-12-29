@@ -7,8 +7,8 @@ export function uuid() {
 
     const r = crypto.getRandomValues(new Uint8Array(16));
 
-    r[6] = (r[6] & 0x0f) | 0x40;
-    r[8] = (r[8] & 0x3f) | 0x80;
+    r[6] = (r[6] & 0x0F) | 0x40;
+    r[8] = (r[8] & 0x3F) | 0x80;
 
     const h = (...n) => n.map((i) => hex[r[i]]).join("");
 

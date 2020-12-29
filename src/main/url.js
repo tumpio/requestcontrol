@@ -190,7 +190,7 @@ export class QueryParser extends UrlParser {
             start === -1 ||
             (start > 0 && this.query.charAt(start - 1) !== "?" && this.query.charAt(start - 1) !== "&")
         ) {
-            return undefined;
+            return;
         }
         return start;
     }
@@ -198,11 +198,11 @@ export class QueryParser extends UrlParser {
     getKeyEnd(key) {
         const start = this.getKeyStart(key);
         if (typeof start === "undefined") {
-            return undefined;
+            return;
         }
         const end = key.length + 1;
-        if (end < this.query.length && "#&?=".indexOf(this.query.charAt(end)) === -1) {
-            return undefined;
+        if (end < this.query.length && !"#&?=".includes(this.query.charAt(end))) {
+            return;
         }
         return end;
     }
@@ -220,7 +220,7 @@ export class QueryParser extends UrlParser {
     getValueStartEnd(key) {
         let start = this.getKeyStart(key);
         if (typeof start === "undefined" || this.query.charAt(start + key.length) !== "=") {
-            return undefined;
+            return;
         }
         start += key.length + 1;
         return { start, end: this.getValueEnd(start) };

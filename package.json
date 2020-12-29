@@ -12,12 +12,12 @@
     "start": "web-ext run -i=$npm_package_config_ignore --bc --url about:debugging#addons",
     "test": "jest",
     "coverage": "codecov",
-    "lint": "eslint src/ rules/*.json _locales/*/*.json --ignore-pattern lib/tldts/*.js && web-ext lint -i=$npm_package_config_ignore -w",
+    "lint": "eslint src/ rules/*.json _locales/*/*.json && web-ext lint -i=$npm_package_config_ignore -w",
     "lint-build": "addons-linter --warnings-as-errors web-ext-artifacts/request_control-$(node -p \"require('./manifest.json').version\").zip",
-    "build-tldts": "cp -v node_modules/tldts-experimental/dist/index.esm.min.js lib/tldts/",
-    "build-lit": "cp -v node_modules/@ajusa/lit/src/lit.css lib/lit/",
+    "copy-tldts": "cp -v node_modules/tldts-experimental/dist/index.esm.min.js lib/tldts/",
+    "copy-lit": "cp -v node_modules/@ajusa/lit/src/lit.css lib/lit/",
     "build-manual": "find ./_locales/ -iname \"manual.wiki\" -type f -exec sh -c 'pandoc \"$0\" --from=mediawiki --to=html --output \"${0%.wiki}.html\"' {} \\;",
-    "postinstall": "npm run build-tldts && npm run build-lit",
+    "postinstall": "npm run copy-tldts && npm run copy-lit",
     "prebuild": "npm run build-manual",
     "build": "web-ext build -i=$npm_package_config_ignore --overwrite-dest --verbose",
     "deploy": "web-ext sign --verbose"
@@ -41,6 +41,7 @@
     "eslint-plugin-no-unsanitized": "^3.1.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-unicorn": "^25.0.0",
     "jest": "^26.6.3",
     "web-ext": "^5.4.1"
   },
@@ -71,6 +72,7 @@
     "extends": [
       "eslint:recommended",
       "problems",
+      "plugin:unicorn/recommended",
       "plugin:json/recommended"
     ],
     "env": {
@@ -107,7 +109,18 @@
         "error",
         "always"
       ],
-      "no-prototype-builtins": "off"
+      "no-prototype-builtins": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/no-null": "off",
+      "unicorn/prefer-query-selector": "off",
+      "unicorn/prefer-string-slice": "off",
+      "unicorn/prefer-dom-node-append": "off",
+      "unicorn/catch-error-name": "off",
+      "unicorn/no-array-callback-reference": "off",
+      "unicorn/no-object-as-default-parameter": "off",
+      "unicorn/no-array-reduce": "off",
+      "unicorn/prefer-ternary": "off",
+      "unicorn/prefer-spread": "off"
     }
   }
 }

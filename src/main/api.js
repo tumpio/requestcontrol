@@ -84,7 +84,7 @@ export function createMatchPatterns(pattern) {
  * @returns {RegExp}
  */
 export function createRegexpPattern(values, insensitive = true, containing = false) {
-    const regexpChars = /[.+^${}()|[\]\\]/g; // excluding "*" and "?" wildcard chars
+    const regexpChars = /[$()+.[\\\]^{|}]/g; // excluding "*" and "?" wildcard chars
     const regexpParam = /^\/(.*)\/$/;
     const flags = insensitive ? "i" : "";
 

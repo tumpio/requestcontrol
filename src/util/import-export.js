@@ -31,17 +31,17 @@ export function exportObject(name, object, mimeType = "application/json", replac
 export function importFile(file) {
     const reader = new FileReader();
     return new Promise((resolve, reject) => {
-        reader.onload = function (e) {
+        reader.addEventListener("load", (e) => {
             try {
                 const json = JSON.parse(e.target.result);
                 resolve(json);
             } catch (ex) {
                 reject(ex);
             }
-        };
-        reader.onerror = function () {
+        });
+        reader.addEventListener("error", () => {
             reject(new Error("FileReader error"));
-        };
+        });
         reader.readAsText(file);
     });
 }

@@ -102,7 +102,7 @@ function matchPatternToRegExp(pattern) {
     const hostSegment = "(\\*|(?:\\*\\.)?(?:[^/*]+))?";
     const pathSegment = "(.*)";
     const matchPatternRegExp = new RegExp(`^${schemeSegment}://${hostSegment}/${pathSegment}$`);
-    const regexpChars = /[.+^$?{}()|[\]\\]/g; // excluding "*"
+    const regexpChars = /[$()+.?[\\\]^{|}]/g; // excluding "*"
 
     const match = matchPatternRegExp.exec(pattern);
     if (!match) {

@@ -156,14 +156,14 @@ class ExtractStringManipulation {
      */
     static extractSubstring(str, offset, length) {
         let substr;
-        const i = offset === ":" ? 0 : parseInt(offset.substring(1));
+        const i = offset === ":" ? 0 : Number.parseInt(offset.substring(1));
         if (i < 0) {
             substr = str.slice(i);
         } else {
             substr = str.substring(i);
         }
         if (length) {
-            const l = length === ":" ? 0 : parseInt(length.substring(1));
+            const l = length === ":" ? 0 : Number.parseInt(length.substring(1));
             if (l < 0) {
                 substr = substr.substring(0, substr.length + l);
             } else {
@@ -240,15 +240,13 @@ function parseRedirectInstructions(redirectUrl) {
                 }
 
                 for (const name of URL_PARAMETERS) {
-                    if (redirectUrl.startsWith(name, i + 1)) {
-                        if (redirectUrl.charAt(i + name.length + 1) === "=") {
-                            instruction = {
-                                offset: i,
-                                name,
-                                valueStart: i + name.length + 2,
-                            };
-                            i = instruction.valueStart;
-                        }
+                    if (redirectUrl.startsWith(name, i + 1) && redirectUrl.charAt(i + name.length + 1) === "=") {
+                        instruction = {
+                            offset: i,
+                            name,
+                            valueStart: i + name.length + 2,
+                        };
+                        i = instruction.valueStart;
                     }
                 }
             }
@@ -304,7 +302,7 @@ function parseRedirectParameters(redirectUrl) {
 
             // Look up parameter name
             for (const name of URL_PARAMETERS) {
-                if (redirectUrl.startsWith(name, i + 1) && redirectUrl.charAt(i + name.length + 1).match(/[}/:|]/)) {
+                if (redirectUrl.startsWith(name, i + 1) && redirectUrl.charAt(i + name.length + 1).match(/[/:|}]/)) {
                     parameter = {
                         offset: i,
                         ruleStart: i + name.length + 1,
