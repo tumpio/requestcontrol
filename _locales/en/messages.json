@@ -586,5 +586,8 @@
   },
   "option_change_toolbar_icon": {
     "message": "Change toolbar icon on rule action"
+  },
+  "any_tld": {
+    "message": "Any TLD"
   }
 }

@@ -2,13 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { getDomain } from "../../lib/tldts/index.esm.min.js";
-
-const tldtsOptions = {
-    extractHostname: false,
-    validateHostname: false,
-    detectIp: false,
-};
+import { getDomain, parse } from "../../lib/tldts/index.esm.min.js";
 
 export const libTld = {
     getDomain(url) {
@@ -16,7 +10,17 @@ export const libTld = {
         if (isIp(hostname)) {
             return hostname;
         }
-        return getDomain(hostname, tldtsOptions);
+        return getDomain(hostname, {
+            extractHostname: false,
+            validateHostname: false,
+            detectIp: false,
+        });
+    },
+    parse(url) {
+        return parse(url, {
+            validateHostname: false,
+            mixedInputs: false,
+        });
     },
 };
 

@@ -218,8 +218,12 @@ form .row {
     }
 
     .form-group-pattern > div {
-        margin-right: 1em;
         flex-grow: 1;
+    }
+
+    #tlds-form,
+    .form-group-pattern > div {
+        margin-right: 1em;
     }
 
     .form-group-pattern > div:first-child {
@@ -228,7 +232,7 @@ form .row {
 
     .form-wrap {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
     }
 
     .form-wrap > div:first-child {
@@ -242,7 +246,7 @@ form .row {
     }
 
     .url-wrap:not(.d-none) + div {
-        margin-top: 1.3em !important;
+        margin-top: 2em !important;
     }
 }
 

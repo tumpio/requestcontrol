@@ -59,10 +59,6 @@ export class RequestController {
     }
 
     mark(request, rule) {
-        if (!rule.match(request)) {
-            return false;
-        }
-
         const current = this.requests.get(request.requestId);
 
         if (typeof current === "undefined" || rule.priority > current.priority) {

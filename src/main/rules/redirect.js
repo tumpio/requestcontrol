@@ -7,8 +7,8 @@ import { QueryParser, URL_PARAMETERS, UrlParser } from "../url.js";
 import { BLOCKING_RESPONSE } from "./block.js";
 
 export class BaseRedirectRule extends ControlRule {
-    constructor({ uuid, tag, redirectDocument = false } = {}, matcher) {
-        super({ uuid, tag }, matcher);
+    constructor({ uuid, tag, redirectDocument = false } = {}) {
+        super({ uuid, tag });
         this.redirectDocument = redirectDocument;
     }
 

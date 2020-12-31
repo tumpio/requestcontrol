@@ -1,6 +1,6 @@
 import { FilterRule } from "../src/main/rules/filter";
 import { parseInlineUrl, trimQueryParameters } from "../src/main/url";
-import { createRegexpPattern } from "../src/main/api";
+import { createRegexpPattern } from "../src/main/util";
 
 test("Filter inline url redirection", () => {
     const request = "http://foo.com/click?p=240631&a=2314955&g=21407340&url=http%3A%2F%2Fbar.com%2Fkodin-elektroniikka%2Fintel-core-i7-8700k-3-7-ghz-12mb-socket-1151-p41787528";

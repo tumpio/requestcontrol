@@ -31,6 +31,7 @@ class RuleInput extends HTMLElement {
         this.querySelector("#activate").addEventListener("click", this.toggleActive.bind(this));
         this.querySelector("#host").addEventListener("change", this.validateTLDPattern.bind(this));
         this.querySelector("#any-url").addEventListener("change", this.onSelectAnyUrl.bind(this));
+        this.querySelector("#any-tld").addEventListener("change", this.onSelectAnyTLD.bind(this));
         this.querySelector("#collapse-matchers").addEventListener("click", this.toggleMatchers.bind(this));
         this.querySelector("#types").addEventListener("change", onToggleButtonChange, false);
         this.querySelector("#types").addEventListener("change", this.sortTypes.bind(this), false);
@@ -356,6 +357,16 @@ class RuleInput extends HTMLElement {
         this.hostsTagsInput.disabled = enabled;
     }
 
+    onSelectAnyTLD(e) {
+        this.setAnyTLD(e.target.checked);
+    }
+
+    setAnyTLD(enabled) {
+        setButtonChecked(this.querySelector("#any-tld"), enabled);
+        toggleHidden(enabled, this.tldsTagsInput.parentNode);
+        this.tldsTagsInput.disabled = enabled;
+    }
+
     onSelectAnyType(e) {
         this.setAnyType(e.target.checked);
     }
@@ -371,7 +382,6 @@ class RuleInput extends HTMLElement {
     onSetTLDs() {
         const numberOfTlds = this.tldsTagsInput.tags.length;
         const error = numberOfTlds === 0;
-        this.querySelector("#collapse-tlds > .badge").textContent = numberOfTlds;
         this.querySelector("#collapse-tlds").classList.toggle("text-danger", error);
         this.querySelector("#collapse-tlds").parentNode.classList.toggle("has-error", error);
     }
@@ -543,6 +553,7 @@ class RuleInput extends HTMLElement {
         }
 
         this.setAnyUrl(this.rule.pattern.hasOwnProperty("allUrls"));
+        this.setAnyTLD(this.rule.pattern.hasOwnProperty("anyTLD"));
     }
 
     updateRule() {
@@ -556,6 +567,11 @@ class RuleInput extends HTMLElement {
                 this.rule.pattern.topLevelDomains = this.tldsTagsInput.tags;
             }
             delete this.rule.pattern.allUrls;
+        }
+        if (this.querySelector("#any-tld").checked) {
+            this.rule.pattern.anyTLD = true;
+        } else {
+            delete this.rule.pattern.anyTLD;
         }
 
         const includes = this.includesTagsInput.tags;

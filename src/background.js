@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { createMatchPatterns, createRule, ALL_URLS } from "./main/api.js";
+import { createRequestFilters, ALL_URLS } from "./main/api.js";
 import * as notifier from "./util/notifier.js";
 import { RequestController } from "./main/control.js";
 import * as records from "./util/records.js";
@@ -27,7 +27,7 @@ function init(options) {
         browser.runtime.onMessage.addListener(records.getTabRecords);
         browser.webNavigation.onCommitted.addListener(onNavigation);
         notifier.enabledState();
-        addListeners(options.rules);
+        addRequestListeners(options.rules);
     }
     browser.webRequest.handlerBehaviorChanged();
 }
@@ -43,31 +43,33 @@ function onOptionsChanged(changes) {
     browser.storage.local.get(storageKeys).then(init);
 }
 
-function addListeners(rules) {
+function addRequestListeners(rules) {
     if (!rules) {
         return;
     }
-    for (const data of rules) {
-        if (!data.active) {
-            continue;
-        }
-        try {
-            const rule = createRule(data);
-            const urls = createMatchPatterns(data.pattern);
-            const filter = {
-                urls,
-                types: data.types,
-            };
-            const listener = (request) => {
-                controller.mark(request, rule);
-            };
-            browser.webRequest.onBeforeRequest.addListener(listener, filter);
-            listeners.push(listener);
-        } catch {
-            notifier.error();
-        }
-    }
+    rules
+        .filter((rule) => rule.active)
+        .forEach((data) => {
+            try {
+                const filters = createRequestFilters(data, ruleListener);
+                for (const { rule, matcher, urls, types } of filters) {
+                    const listener = ruleListener(rule, matcher);
+                    browser.webRequest.onBeforeRequest.addListener(listener, { urls, types });
+                    listeners.push(listener);
+                }
+            } catch {
+                notifier.error();
+            }
+        });
     browser.webRequest.onBeforeRequest.addListener(controlListener, { urls: [ALL_URLS] }, ["blocking"]);
+}
+
+function ruleListener(rule, matcher) {
+    return (request) => {
+        if (matcher.test(request)) {
+            controller.mark(request, rule);
+        }
+    };
 }
 
 function controlListener(request) {

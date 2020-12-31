@@ -2,7 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { createRequestMatcher } from "./matchers.js";
+import {
+    DomainMatcher,
+    IncludeMatcher,
+    ExcludeMatcher,
+    OriginMatcher,
+    ThirdPartyDomainMatcher,
+    ThirdPartyOriginMatcher,
+    RequestMatcher,
+    BaseMatcher,
+    HostnamesWithoutSuffixMatcher,
+} from "./matchers.js";
 import { LoggedWhitelistRule, WhitelistRule } from "./rules/whitelist.js";
 import { BlockRule } from "./rules/block.js";
 import { FilterRule } from "./rules/filter.js";
@@ -11,33 +21,73 @@ import { SecureRule } from "./rules/secure.js";
 
 export const ALL_URLS = "*://*/*"; // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
 
-export function createRule(data) {
-    const extraMatchers = createRequestMatcher(data);
+export function createRequestFilters(data) {
+    if (!data.pattern.allUrls && data.pattern.anyTLD) {
+        return createAnyTldRequestFilters(data);
+    }
 
+    return [
+        {
+            rule: createRule(data),
+            urls: createMatchPatterns(data.pattern),
+            matcher: createRequestMatcher(data),
+            types: data.types,
+        },
+    ];
+}
+
+export function createRequestMatcher(rule, hostnamesWithoutSuffix = []) {
+    const matchers = [];
+
+    if (!rule.pattern) {
+        return BaseMatcher;
+    }
+
+    if (rule.pattern.includes) {
+        for (const value of rule.pattern.includes) {
+            matchers.push(new IncludeMatcher([value]));
+        }
+    }
+
+    if (rule.pattern.excludes) {
+        matchers.push(new ExcludeMatcher(rule.pattern.excludes));
+    }
+
+    if (rule.pattern.origin === "same-domain") {
+        matchers.push(DomainMatcher);
+    } else if (rule.pattern.origin === "same-origin") {
+        matchers.push(OriginMatcher);
+    } else if (rule.pattern.origin === "third-party-domain") {
+        matchers.push(ThirdPartyDomainMatcher);
+    } else if (rule.pattern.origin === "third-party-origin") {
+        matchers.push(ThirdPartyOriginMatcher);
+    }
+
+    if (hostnamesWithoutSuffix.length > 0) {
+        matchers.push(new HostnamesWithoutSuffixMatcher(hostnamesWithoutSuffix));
+    }
+
+    return matchers.length > 0 ? new RequestMatcher(matchers) : BaseMatcher;
+}
+
+export function createRule(data) {
     switch (data.action) {
         case "whitelist":
             if (data.log) {
-                return new LoggedWhitelistRule(data, extraMatchers);
+                return new LoggedWhitelistRule(data);
             }
-            return new WhitelistRule(data, extraMatchers);
+            return new WhitelistRule(data);
         case "block":
-            return new BlockRule(data, extraMatchers);
+            return new BlockRule(data);
         case "redirect":
-            return new RedirectRule(data, extraMatchers);
+            return new RedirectRule(data);
         case "filter":
-            return new FilterRule(data, extraMatchers);
+            return new FilterRule(data);
         case "secure":
-            return new SecureRule(data, extraMatchers);
+            return new SecureRule(data);
         default:
             throw new Error("Unsupported rule action");
     }
-}
-
-function prefixPath(path) {
-    if (path.startsWith("/")) {
-        return path;
-    }
-    return `/${path}`;
 }
 
 /**
@@ -76,31 +126,43 @@ export function createMatchPatterns(pattern) {
     return urls;
 }
 
-/**
- * Construct regexp from list of globs (pattern with wildcards) and regexp pattern strings
- * @param values list of globs or regexp pattern strings
- * @param insensitive if true, set case insensitive flag
- * @param containing if false, add string begin and end .
- * @returns {RegExp}
- */
-export function createRegexpPattern(values, insensitive = true, containing = false) {
-    const regexpChars = /[$()+.[\\\]^{|}]/g; // excluding "*" and "?" wildcard chars
-    const regexpParam = /^\/(.*)\/$/;
-    const flags = insensitive ? "i" : "";
+function createAnyTldRequestFilters(data) {
+    const filters = [];
+    const rule = createRule(data);
+    const hosts = Array.isArray(data.pattern.host) ? data.pattern.host : [data.pattern.host];
 
-    let pattern = "";
-    for (const param of values) {
-        const testRegexp = param.match(regexpParam);
-        pattern += "|";
-        pattern += containing ? "" : "^";
-        if (testRegexp && isValidRegExp(testRegexp[1])) {
-            pattern += testRegexp[1];
-        } else {
-            pattern += param.replace(regexpChars, "\\$&").replace(/\*/g, ".*").replace(/\?/g, ".");
-        }
-        pattern += containing ? "" : "$";
+    const withoutSuffix = [];
+    const withSuffix = [];
+
+    hosts.forEach((host) => (isTLDHostPattern(host) ? withoutSuffix : withSuffix).push(host));
+
+    if (withoutSuffix.length > 0) {
+        filters.push({
+            rule,
+            urls: createMatchPatterns({
+                scheme: data.pattern.scheme,
+                host: "*",
+                path: data.pattern.path,
+            }),
+            matcher: createRequestMatcher(data, withoutSuffix),
+            types: data.types,
+        });
     }
-    return new RegExp(pattern.substring(1), flags);
+
+    if (withSuffix.length > 0) {
+        filters.push({
+            rule,
+            urls: createMatchPatterns({
+                scheme: data.pattern.scheme,
+                host: withSuffix,
+                path: data.pattern.path,
+            }),
+            matcher: createRequestMatcher(data),
+            types: data.types,
+        });
+    }
+
+    return filters;
 }
 
 export function isTLDHostPattern(host) {
@@ -108,11 +170,6 @@ export function isTLDHostPattern(host) {
     return hostTLDWildcardPattern.test(host);
 }
 
-function isValidRegExp(pattern) {
-    try {
-        new RegExp(pattern);
-    } catch {
-        return false;
-    }
-    return true;
+function prefixPath(path) {
+    return path.startsWith("/") ? path : `/${path}`;
 }

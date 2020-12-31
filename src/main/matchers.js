@@ -3,9 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { libTld, UrlParser } from "./url.js";
-import { createRegexpPattern } from "./api.js";
+import { createRegexpPattern } from "./util.js";
 
-export class BaseMatchExtender {
+export class BaseMatcher {
     static test() {
         return true;
     }
@@ -13,16 +13,11 @@ export class BaseMatchExtender {
 
 export class RequestMatcher {
     constructor(matchers) {
-        this.extensions = matchers;
+        this.matchers = matchers;
     }
 
     test(request) {
-        for (const extension of this.extensions) {
-            if (!extension.test(request)) {
-                return false;
-            }
-        }
-        return true;
+        return this.matchers.every((matcher) => matcher.test(request));
     }
 }
 
@@ -90,28 +85,55 @@ export class ThirdPartyOriginMatcher {
     }
 }
 
-export function createRequestMatcher(rule) {
-    const matchers = [];
-    if (rule.pattern) {
-        if (rule.pattern.includes) {
-            for (const value of rule.pattern.includes) {
-                matchers.push(new IncludeMatcher([value]));
-            }
+export class HostnameWithoutSuffixMatcher {
+    constructor(hostname) {
+        const parts = hostname.split(".");
+
+        if (parts.length < 2 || parts.pop() !== "*") {
+            throw "Incorrect TLD wildcard hostname pattern!";
         }
 
-        if (rule.pattern.excludes) {
-            matchers.push(new ExcludeMatcher(rule.pattern.excludes));
+        this.domainWithoutSuffix = parts.pop();
+        this.matchAnySubdomain = parts.length > 0 && parts[0] === "*";
+
+        if (this.matchAnySubdomain) {
+            parts.shift();
         }
 
-        if (rule.pattern.origin === "same-domain") {
-            matchers.push(DomainMatcher);
-        } else if (rule.pattern.origin === "same-origin") {
-            matchers.push(OriginMatcher);
-        } else if (rule.pattern.origin === "third-party-domain") {
-            matchers.push(ThirdPartyDomainMatcher);
-        } else if (rule.pattern.origin === "third-party-origin") {
-            matchers.push(ThirdPartyOriginMatcher);
-        }
+        this.subdomainparts = parts.join(".");
     }
-    return matchers.length > 0 ? new RequestMatcher(matchers) : BaseMatchExtender;
+
+    test(request) {
+        const { domainWithoutSuffix, subdomain } = libTld.parse(request.url);
+        return this.domainWithoutSuffix === domainWithoutSuffix && this.testSubdomain(subdomain);
+    }
+
+    testSubdomain(subdomain) {
+        if (this.subdomainparts === subdomain) {
+            return true;
+        }
+        if (!this.matchAnySubdomain) {
+            return false;
+        }
+        if (this.subdomainparts === "") {
+            return true;
+        }
+        if (subdomain.length < this.subdomainparts.length + 1) {
+            return false;
+        }
+        const leadingDotIndex = subdomain.length - this.subdomainparts.length - 1;
+        return subdomain.endsWith(this.subdomainparts) && subdomain[leadingDotIndex] === ".";
+    }
+}
+
+export class HostnamesWithoutSuffixMatcher {
+    constructor(hostnames) {
+        this.matchers = hostnames.includes("*.*")
+            ? [BaseMatcher]
+            : hostnames.map((hostname) => new HostnameWithoutSuffixMatcher(hostname));
+    }
+
+    test(request) {
+        return this.matchers.some((matcher) => matcher.test(request));
+    }
 }
