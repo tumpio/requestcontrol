@@ -424,7 +424,12 @@
     "message": "Bloqueada"
   },
   "invalid_target_url": {
-    "message": "URL objetivo no válida: "
+    "message": "URL objetivo no válida: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
   },
   "enable_rules": {
     "message": "Habilitar Request Control"

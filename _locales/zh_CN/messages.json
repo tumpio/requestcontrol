@@ -559,7 +559,12 @@
         "hash": "aee65dae595f72841c1307238d2a4cea"
     },
     "invalid_target_url": {
-        "message": "无效的目标 URL：",
+        "message": "无效的目标 URL： $URL$",
+        "placeholders": {
+          "url": {
+            "content": "$1"
+          }
+        },
         "hash": "8de3370065eafbe3c5cd9aed857293cd"
     },
     "enable_rules": {

@@ -530,7 +530,12 @@
     "message": "Error invalid rule"
   },
   "invalid_target_url": {
-    "message": "Invalid target URL: "
+    "message": "Invalid target URL: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
   },
   "enable_rules": {
     "message": "Enable Request Control"
