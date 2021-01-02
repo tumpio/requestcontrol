@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { libTld, UrlParser } from "./url.js";
-import { createRegexpPattern } from "./util.js";
+import { createRegexpPattern } from "../util/regexp.js";
 
 export class BaseMatcher {
     static test() {
