@@ -232,7 +232,7 @@ form .row {
 
     .form-wrap {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
     }
 
     .form-wrap > div:first-child {
@@ -247,6 +247,7 @@ form .row {
 
     .url-wrap:not(.d-none) + div {
         margin-top: 2em !important;
+        align-self: flex-start;
     }
 }
 
