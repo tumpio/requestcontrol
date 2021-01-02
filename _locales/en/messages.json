@@ -352,7 +352,7 @@
     "message": "Use pattern capturing to redirect based on the original request."
   },
   "filter_url_redirection": {
-    "message": "Filter URL Redirection"
+    "message": "Filter URL redirection"
   },
   "trim_all": {
     "message": "Remove all parameters"
@@ -496,8 +496,8 @@
   "description": {
     "message": "Description:"
   },
-  "add_tag": {
-    "message": "Add tag"
+  "set_tag": {
+    "message": "Set tag"
   },
   "tag": {
     "message": "Tag:"
@@ -550,13 +550,13 @@
     "message": "Report a bug / Request a feature / Ask a question"
   },
   "skip_within_same_domain": {
-    "message": "Exclude between same domain"
+    "message": "Ignore on same domain"
   },
-  "redirect_document_on_other_types": {
-    "message": "Redirect document on other types"
+  "redirect_document_with_other_types": {
+    "message": "Redirect document with other types"
   },
-  "extra_url_matchers": {
-    "message": "Extra URL matchers"
+  "extra_matchers": {
+    "message": "Extra matchers"
   },
   "match_by_origin": {
     "message": "Match by origin"

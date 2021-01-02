@@ -522,7 +522,7 @@
         "message": "描述：",
         "hash": "c43fdfc69b45ec90667b0af80c3ed609"
     },
-    "add_tag": {
+    "set_tag": {
         "message": "添加标签",
         "hash": "7d3e0c8f3e92ec16b37a5200e84a7a1a"
     },

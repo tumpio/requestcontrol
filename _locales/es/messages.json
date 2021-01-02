@@ -396,7 +396,7 @@
   "description": {
     "message": "Descripción:"
   },
-  "add_tag": {
+  "set_tag": {
     "message": "Añadir etiqueta"
   },
   "tag": {
