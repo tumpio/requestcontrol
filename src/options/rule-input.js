@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { createRule, createMatchPatterns, isTLDHostPattern } from "../main/api.js";
+import { createRule, isTLDHostPattern, createRequestFilters } from "../main/api.js";
 import { uuid } from "../util/uuid.js";
 import { onToggleButtonChange, setButtonChecked, setButtonDisabled, toggleHidden } from "../util/ui-helpers.js";
 
@@ -490,17 +490,19 @@ class RuleInput extends HTMLElement {
         this.querySelector("#description").textContent = this.description;
         this.querySelector("#tag").textContent = this.tag;
         this.querySelector("#tag-badge").textContent = this.tag;
-        this.querySelector("#patterns-badge").textContent = browser.i18n.getMessage("count_patterns", [
-            createMatchPatterns(this.rule.pattern).length,
-        ]);
+        this.querySelector("#patterns-badge").textContent = browser.i18n.getMessage(
+            "count_patterns",
+            createRequestFilters(this.rule).reduce((acc, curr) => acc + curr.urls.length, 0)
+        );
         if (!this.rule.types) {
             this.querySelector("#types-badge").textContent = browser.i18n.getMessage("any");
         } else if (this.rule.types.length === 1) {
             this.querySelector("#types-badge").textContent = browser.i18n.getMessage(this.rule.types[0]);
         } else {
-            this.querySelector("#types-badge").textContent = browser.i18n.getMessage("count_types", [
-                this.rule.types.length,
-            ]);
+            this.querySelector("#types-badge").textContent = browser.i18n.getMessage(
+                "count_types",
+                this.rule.types.length
+            );
         }
         toggleHidden(this.tag.length === 0, this.querySelector("#tag-badge").parentNode);
         toggleHidden(this.tag.length > 0, this.querySelector("#add-tag"));
