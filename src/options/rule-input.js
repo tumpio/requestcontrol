@@ -332,6 +332,9 @@ class RuleInput extends HTMLElement {
 
     onSetTag(e) {
         this.tag = e.target.textContent;
+        const isEmpty = this.tag === "";
+        toggleHidden(isEmpty, this.querySelector("#tag-badge").parentNode);
+        toggleHidden(!isEmpty, this.querySelector("#add-tag"));
     }
 
     onShowMoreTypes(e) {
