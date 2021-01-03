@@ -3,12 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { createRequestFilters } from "../main/api.js";
-import { RequestController, CompositeRule } from "../main/control.js";
-import { LoggedWhitelistRule, WhitelistRule } from "../main/rules/whitelist.js";
+import { CompositeRule, RequestController } from "../main/control.js";
 import { BlockRule } from "../main/rules/block.js";
-import { RedirectRule } from "../main/rules/redirect.js";
 import { FilterRule } from "../main/rules/filter.js";
+import { RedirectRule } from "../main/rules/redirect.js";
 import { SecureRule } from "../main/rules/secure.js";
+import { LoggedWhitelistRule, WhitelistRule } from "../main/rules/whitelist.js";
 import { matchPatternToRegExp } from "../util/regexp.js";
 
 export function testRules(testUrl, rulePatterns) {

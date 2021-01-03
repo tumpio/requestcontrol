@@ -2,9 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { createRule, isTLDHostPattern, createRequestFilters } from "../main/api.js";
-import { uuid } from "../util/uuid.js";
+import { createRequestFilters, createRule, isTLDHostPattern } from "../main/api.js";
 import { onToggleButtonChange, setButtonChecked, setButtonDisabled, toggleHidden } from "../util/ui-helpers.js";
+import { uuid } from "../util/uuid.js";
 
 const isMobile = window.matchMedia("(max-width: 35em)").matches;
 

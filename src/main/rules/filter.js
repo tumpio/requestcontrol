@@ -3,9 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { createRegexpPattern } from "../../util/regexp.js";
-import { BaseRedirectRule } from "./redirect.js";
 import { DomainMatcher } from "../matchers.js";
 import { parseInlineUrl, trimQueryParameters, UrlParser } from "../url.js";
+import { BaseRedirectRule } from "./redirect.js";
 
 export class FilterRule extends BaseRedirectRule {
     constructor(

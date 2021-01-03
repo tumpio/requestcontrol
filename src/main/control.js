@@ -2,12 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { WhitelistRule, LoggedWhitelistRule } from "./rules/whitelist.js";
-import { BlockRule } from "./rules/block.js";
-import { RedirectRule, BaseRedirectRule } from "./rules/redirect.js";
-import { FilterRule } from "./rules/filter.js";
 import { ControlRule } from "./rules/base.js";
+import { BlockRule } from "./rules/block.js";
+import { FilterRule } from "./rules/filter.js";
+import { BaseRedirectRule, RedirectRule } from "./rules/redirect.js";
 import { SecureRule } from "./rules/secure.js";
+import { LoggedWhitelistRule, WhitelistRule } from "./rules/whitelist.js";
 
 LoggedWhitelistRule.priority = 0;
 WhitelistRule.priority = -1;

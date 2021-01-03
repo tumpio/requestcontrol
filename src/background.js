@@ -2,9 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { createRequestFilters, ALL_URLS } from "./main/api.js";
-import * as notifier from "./util/notifier.js";
+import { ALL_URLS, createRequestFilters } from "./main/api.js";
 import { RequestController } from "./main/control.js";
+import * as notifier from "./util/notifier.js";
 import * as records from "./util/records.js";
 
 const listeners = [];

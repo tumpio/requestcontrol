@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { ControlRule } from "./base.js";
 import { QueryParser, URL_PARAMETERS, UrlParser } from "../url.js";
+import { ControlRule } from "./base.js";
 import { BLOCKING_RESPONSE } from "./block.js";
 
 export class BaseRedirectRule extends ControlRule {

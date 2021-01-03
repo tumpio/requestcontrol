@@ -2,11 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { testRules } from "./rule-tester.js";
-import { uuid } from "../util/uuid.js";
-import { Toc } from "../util/toc.js";
 import { exportObject, importFile } from "../util/import-export.js";
-import { OPTION_SHOW_COUNTER, OPTION_CHANGE_ICON } from "./constants.js";
+import { Toc } from "../util/toc.js";
+import { uuid } from "../util/uuid.js";
+import { OPTION_CHANGE_ICON, OPTION_SHOW_COUNTER } from "./constants.js";
+import { testRules } from "./rule-tester.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const { rules } = await browser.storage.local.get("rules");

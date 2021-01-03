@@ -3,21 +3,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import {
+    BaseMatcher,
     DomainMatcher,
-    IncludeMatcher,
     ExcludeMatcher,
+    HostnamesWithoutSuffixMatcher,
+    IncludeMatcher,
     OriginMatcher,
+    RequestMatcher,
     ThirdPartyDomainMatcher,
     ThirdPartyOriginMatcher,
-    RequestMatcher,
-    BaseMatcher,
-    HostnamesWithoutSuffixMatcher,
 } from "./matchers.js";
-import { LoggedWhitelistRule, WhitelistRule } from "./rules/whitelist.js";
 import { BlockRule } from "./rules/block.js";
 import { FilterRule } from "./rules/filter.js";
 import { RedirectRule } from "./rules/redirect.js";
 import { SecureRule } from "./rules/secure.js";
+import { LoggedWhitelistRule, WhitelistRule } from "./rules/whitelist.js";
 
 export const ALL_URLS = "*://*/*"; // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
 
