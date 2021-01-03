@@ -119,12 +119,17 @@ class RuleInput extends HTMLElement {
     validateTLDPattern() {
         const isTldsPattern =
             !this.querySelector("#any-url").checked && this.hostsTagsInput.tags.some(isTLDHostPattern);
+        const isAnyTld = this.querySelector("#any-tld").checked;
+
         toggleHidden(!isTldsPattern, this.querySelector("#tlds-form"));
-        this.tldsTagsInput.disabled = !isTldsPattern;
-        if (isTldsPattern && this.tldsTagsInput.tags.length === 0) {
+        toggleHidden(isAnyTld, this.tldsTagsInput.parentNode);
+
+        this.tldsTagsInput.disabled = !isTldsPattern || isAnyTld;
+
+        if (isTldsPattern && !isAnyTld && this.tldsTagsInput.tags.length === 0) {
             this.querySelector("#collapse-tlds").classList.add("text-danger");
             this.querySelector("#collapse-tlds").parentNode.classList.add("has-error");
-            toggleHidden(!isTldsPattern, this.querySelector("#tlds-area"));
+            toggleHidden(false, this.querySelector("#tlds-area"));
         }
     }
 
@@ -366,8 +371,7 @@ class RuleInput extends HTMLElement {
 
     setAnyTLD(enabled) {
         setButtonChecked(this.querySelector("#any-tld"), enabled);
-        toggleHidden(enabled, this.tldsTagsInput.parentNode);
-        this.tldsTagsInput.disabled = enabled;
+        this.validateTLDPattern();
     }
 
     onSelectAnyType(e) {
