@@ -94,7 +94,7 @@
   "rule_description_whitelist": {
     "message": "Revoca otras reglas y procesa las peticiones con normalidad."
   },
-  "any_url": {
+  "all_urls": {
     "message": "Cualquier URL"
   },
   "activate_false": {

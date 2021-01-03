@@ -154,7 +154,7 @@ class RuleInput extends HTMLElement {
     get defaultTitle() {
         let hosts = "";
         if (this.rule.pattern.allUrls) {
-            hosts = browser.i18n.getMessage("any_url");
+            hosts = browser.i18n.getMessage("all_urls");
         } else if (Array.isArray(this.rule.pattern.host)) {
             hosts = this.rule.pattern.host
                 .slice(0, 3)
@@ -475,10 +475,7 @@ class RuleInput extends HTMLElement {
         this.querySelector("#tag-badge").textContent = this.tag;
 
         if (this.rule.action) {
-            this.querySelector("#patterns-badge").textContent = browser.i18n.getMessage(
-                "count_patterns",
-                getPatternCount(this.rule)
-            );
+            this.querySelector("#patterns-badge").textContent = getPatternBadgeText(this.rule);
         }
 
         if (!this.rule.types) {
@@ -831,6 +828,12 @@ export function newRuleInput(
     input.classList.add("not-edited");
     input.spellcheck = false;
     return input;
+}
+
+function getPatternBadgeText(rule) {
+    return rule.pattern.allUrls
+        ? browser.i18n.getMessage("all_urls")
+        : browser.i18n.getMessage("count_patterns", getPatternCount(rule));
 }
 
 function getPatternCount(rule) {

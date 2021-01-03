@@ -89,7 +89,7 @@
     "rule_description_whitelist": {
         "message": "忽视其他规则且不做请求处理。"
     },
-    "any_url": {
+    "all_urls": {
         "message": "任何 URL",
         "hash": "c8089e50fca0eddba46f1bc7238d73ee"
     },
