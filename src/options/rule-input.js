@@ -143,19 +143,12 @@ class RuleInput extends HTMLElement {
     }
 
     get title() {
-        if (this._ctitle) {
-            return this._ctitle;
-        }
-        let title;
         if (this.rule.title) {
-            title = decodeURIComponent(this.rule.title);
+            return decodeURIComponent(this.rule.title);
         } else if (this.rule.name) {
-            title = decodeURIComponent(this.rule.name);
-        } else {
-            title = this.defaultTitle;
+            return decodeURIComponent(this.rule.name);
         }
-        this._ctitle = title;
-        return title;
+        return this.defaultTitle;
     }
 
     get defaultTitle() {
@@ -177,7 +170,6 @@ class RuleInput extends HTMLElement {
     }
 
     set title(str) {
-        this._ctitle = null;
         const title = encodeURIComponent(str.trim());
         if (title) {
             this.rule.title = title;
@@ -189,12 +181,7 @@ class RuleInput extends HTMLElement {
     }
 
     get description() {
-        if (this._cdescription) {
-            return this._cdescription;
-        }
-        const description = this.rule.description ? decodeURIComponent(this.rule.description) : this.defaultDescription;
-        this._cdescription = description;
-        return description;
+        return this.rule.description ? decodeURIComponent(this.rule.description) : this.defaultDescription;
     }
 
     get defaultDescription() {
@@ -202,7 +189,6 @@ class RuleInput extends HTMLElement {
     }
 
     set description(str) {
-        this._cdescription = null;
         const description = encodeURIComponent(str.trim());
         if (description) {
             this.rule.description = description;
@@ -222,16 +208,10 @@ class RuleInput extends HTMLElement {
     }
 
     get tag() {
-        if (this._ctag) {
-            return this._ctag;
-        }
-        const tag = this.rule.tag ? decodeURIComponent(this.rule.tag) : "";
-        this._ctag = tag;
-        return tag;
+        return this.rule.tag ? decodeURIComponent(this.rule.tag) : "";
     }
 
     set tag(str) {
-        this._ctag = null;
         const tag = encodeURIComponent(str.trim());
         if (tag) {
             this.rule.tag = tag;
