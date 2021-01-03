@@ -8,19 +8,16 @@ import { parseInlineUrl, trimQueryParameters, UrlParser } from "../url.js";
 import { BaseRedirectRule } from "./redirect.js";
 
 export class FilterRule extends BaseRedirectRule {
-    constructor(
-        {
-            uuid,
-            tag,
-            paramsFilter = null,
-            trimAllParams = false,
-            skipRedirectionFilter = false,
-            skipOnSameDomain = false,
-            redirectDocument = false,
-        } = {},
-        matcher
-    ) {
-        super({ uuid, tag, redirectDocument }, matcher);
+    constructor({
+        uuid,
+        tag,
+        paramsFilter = null,
+        trimAllParams = false,
+        skipRedirectionFilter = false,
+        skipOnSameDomain = false,
+        redirectDocument = false,
+    } = {}) {
+        super({ uuid, tag, redirectDocument });
         this.queryParamsPattern = paramsFilter ? createRegexpPattern(paramsFilter.values) : null;
         this.invertQueryTrimming = paramsFilter ? paramsFilter.invert : false;
         this.removeQueryString = trimAllParams;

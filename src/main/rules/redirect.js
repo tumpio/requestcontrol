@@ -31,8 +31,8 @@ export class BaseRedirectRule extends ControlRule {
 }
 
 export class RedirectRule extends BaseRedirectRule {
-    constructor({ uuid, tag, redirectUrl = "", redirectDocument = false } = {}, matcher) {
-        super({ uuid, tag, redirectDocument }, matcher);
+    constructor({ uuid, tag, redirectUrl = "", redirectDocument = false } = {}) {
+        super({ uuid, tag, redirectDocument });
         const [parsedUrl, instructions] = parseRedirectInstructions(redirectUrl);
         const patterns = parseRedirectParameters(parsedUrl);
         this.instructions = instructions;
