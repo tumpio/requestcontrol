@@ -84,7 +84,7 @@ class RuleInput extends HTMLElement {
             this.querySelector(".tag-wrap")
         );
         toggleHidden(editing, this.querySelector(".information"));
-        toggleHidden(isNew, this.querySelector(".btn-done"));
+        toggleHidden(isNew, this.querySelector(".btn-done"), this.querySelector(".rule-header-buttons"));
         toggleHidden(!isNew, this.querySelector(".btn-create"));
         this.querySelector("#title").setAttribute("contenteditable", editing);
         this.querySelector("#description").setAttribute("contenteditable", editing);
@@ -92,7 +92,7 @@ class RuleInput extends HTMLElement {
 
         if (editing) {
             this.updateIfNotEdited();
-        } else {
+        } else if (this.rule.action) {
             this.dispatchEvent(
                 new CustomEvent("rule-edit-completed", {
                     bubbles: true,
@@ -488,16 +488,19 @@ class RuleInput extends HTMLElement {
     }
 
     updateHeader() {
-        this.dataset.type = this.rule.action;
         this.querySelector("#title").textContent = this.title;
         this.querySelector("#title").title = this.description;
         this.querySelector("#description").textContent = this.description;
         this.querySelector("#tag").textContent = this.tag;
         this.querySelector("#tag-badge").textContent = this.tag;
-        this.querySelector("#patterns-badge").textContent = browser.i18n.getMessage(
-            "count_patterns",
-            createRequestFilters(this.rule).reduce((acc, curr) => acc + curr.urls.length, 0)
-        );
+
+        if (this.rule.action) {
+            this.querySelector("#patterns-badge").textContent = browser.i18n.getMessage(
+                "count_patterns",
+                getPatternCount(this.rule)
+            );
+        }
+
         if (!this.rule.types) {
             this.querySelector("#types-badge").textContent = browser.i18n.getMessage("any");
         } else if (this.rule.types.length === 1) {
@@ -848,4 +851,12 @@ export function newRuleInput(
     input.classList.add("not-edited");
     input.spellcheck = false;
     return input;
+}
+
+function getPatternCount(rule) {
+    try {
+        return createRequestFilters(rule).reduce((acc, curr) => acc + curr.urls.length, 0);
+    } catch {
+        return 0;
+    }
 }
