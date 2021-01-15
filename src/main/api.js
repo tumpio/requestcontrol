@@ -19,7 +19,7 @@ import { RedirectRule } from "./rules/redirect.js";
 import { SecureRule } from "./rules/secure.js";
 import { LoggedWhitelistRule, WhitelistRule } from "./rules/whitelist.js";
 
-export const ALL_URLS = "*://*/*"; // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
+export const ALL_URLS = "<all_urls>";
 
 export function createRequestFilters(data) {
     if (!data || !data.pattern) {
