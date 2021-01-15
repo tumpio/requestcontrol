@@ -22,6 +22,10 @@ import { LoggedWhitelistRule, WhitelistRule } from "./rules/whitelist.js";
 export const ALL_URLS = "*://*/*"; // BUG: https://bugzilla.mozilla.org/show_bug.cgi?id=1557300
 
 export function createRequestFilters(data) {
+    if (!data || !data.pattern) {
+        return [];
+    }
+
     if (!data.pattern.allUrls && data.pattern.anyTLD) {
         return createAnyTldRequestFilters(data);
     }
@@ -30,36 +34,32 @@ export function createRequestFilters(data) {
         {
             rule: createRule(data),
             urls: createMatchPatterns(data.pattern),
-            matcher: createRequestMatcher(data),
+            matcher: createRequestMatcher(data.pattern),
             types: data.types,
         },
     ];
 }
 
-export function createRequestMatcher(rule, hostnamesWithoutSuffix = []) {
+export function createRequestMatcher(pattern, hostnamesWithoutSuffix = []) {
     const matchers = [];
 
-    if (!rule.pattern) {
-        return BaseMatcher;
-    }
-
-    if (rule.pattern.includes) {
-        for (const value of rule.pattern.includes) {
+    if (pattern.includes) {
+        for (const value of pattern.includes) {
             matchers.push(new IncludeMatcher([value]));
         }
     }
 
-    if (rule.pattern.excludes) {
-        matchers.push(new ExcludeMatcher(rule.pattern.excludes));
+    if (pattern.excludes) {
+        matchers.push(new ExcludeMatcher(pattern.excludes));
     }
 
-    if (rule.pattern.origin === "same-domain") {
+    if (pattern.origin === "same-domain") {
         matchers.push(DomainMatcher);
-    } else if (rule.pattern.origin === "same-origin") {
+    } else if (pattern.origin === "same-origin") {
         matchers.push(OriginMatcher);
-    } else if (rule.pattern.origin === "third-party-domain") {
+    } else if (pattern.origin === "third-party-domain") {
         matchers.push(ThirdPartyDomainMatcher);
-    } else if (rule.pattern.origin === "third-party-origin") {
+    } else if (pattern.origin === "third-party-origin") {
         matchers.push(ThirdPartyOriginMatcher);
     }
 
@@ -144,7 +144,7 @@ function createAnyTldRequestFilters(data) {
                 host: "*",
                 path: data.pattern.path,
             }),
-            matcher: createRequestMatcher(data, withoutSuffix),
+            matcher: createRequestMatcher(data.pattern, withoutSuffix),
             types: data.types,
         });
     }
@@ -157,7 +157,7 @@ function createAnyTldRequestFilters(data) {
                 host: withSuffix,
                 path: data.pattern.path,
             }),
-            matcher: createRequestMatcher(data),
+            matcher: createRequestMatcher(data.pattern),
             types: data.types,
         });
     }

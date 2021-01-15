@@ -82,3 +82,7 @@ test("Subdomain wildcard + parts", () => {
     expect(matcher.test({ url: "https://a.b.com" })).toBeFalsy();
     expect(matcher.test({ url: "https://192.168.0.1" })).toBeFalsy();
 });
+
+test("Invalid pattern - throws", () => {
+    expect(() => new HostnameWithoutSuffixMatcher("abc")).toThrow();
+});

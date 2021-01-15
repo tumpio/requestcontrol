@@ -170,4 +170,8 @@ test("Query parameter trimming", () => {
         "http://site.com/?parameter&utm_source&key=value?utm_medium=abc&parameter&utm_term?key=value&utm_medium=abc",
         createRegexpPattern(["/..._.{5,}/"]), false
     )).toBe("http://site.com/?parameter&key=value?parameter&utm_term?key=value");
+    expect(trimQueryParameters(
+        "http://site.com/?",
+        createRegexpPattern(["?"]), true
+    )).toBe("http://site.com/?");
 });
