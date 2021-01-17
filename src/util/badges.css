@@ -13,6 +13,11 @@
     background-color: #3b67a0;
 }
 
+.badge-origin {
+    color: #fff;
+    background-color: #a03b3b;
+}
+
 .badge:not(:empty):not(.d-none) {
     display: inline-block;
     padding: .25em .5em;

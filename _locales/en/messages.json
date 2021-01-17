@@ -571,10 +571,10 @@
     "message": "Same origin"
   },
   "third_party_origin": {
-    "message": "Third party origin"
+    "message": "Third-party origin"
   },
   "third_party_domain": {
-    "message": "Third party domain"
+    "message": "Third-party domain"
   },
   "no_rules": {
     "message": "No rules"

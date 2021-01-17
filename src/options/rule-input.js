@@ -317,9 +317,7 @@ class RuleInput extends HTMLElement {
 
     onSetTag(e) {
         this.tag = e.target.textContent;
-        const isEmpty = this.tag === "";
-        toggleHidden(isEmpty, this.querySelector("#tag-badge").parentNode);
-        toggleHidden(!isEmpty, this.querySelector("#add-tag"));
+        this.updateTag();
     }
 
     onShowMoreTypes(e) {
@@ -472,12 +470,29 @@ class RuleInput extends HTMLElement {
         this.querySelector("#title").title = this.description;
         this.querySelector("#description").textContent = this.description;
         this.querySelector("#tag").textContent = this.tag;
+
+        this.updateTag();
+        this.updatePatternBadge();
+        this.updateTypesBadge();
+        this.updateOriginBadge();
+        this.updateActiveState();
+    }
+
+    updateTag() {
+        const isEmpty = this.tag === "";
+        toggleHidden(isEmpty, this.querySelector("#tag-badge").parentNode);
+        toggleHidden(!isEmpty, this.querySelector("#add-tag"));
         this.querySelector("#tag-badge").textContent = this.tag;
+    }
 
-        if (this.rule.action) {
-            this.querySelector("#patterns-badge").textContent = getPatternBadgeText(this.rule);
-        }
+    updatePatternBadge() {
+        const text = this.rule.pattern.allUrls
+            ? browser.i18n.getMessage("all_urls")
+            : browser.i18n.getMessage("count_patterns", getPatternCount(this.rule));
+        this.querySelector("#patterns-badge").textContent = text;
+    }
 
+    updateTypesBadge() {
         if (!this.rule.types) {
             this.querySelector("#types-badge").textContent = browser.i18n.getMessage("any");
         } else if (this.rule.types.length === 1) {
@@ -488,9 +503,25 @@ class RuleInput extends HTMLElement {
                 this.rule.types.length
             );
         }
-        toggleHidden(this.tag.length === 0, this.querySelector("#tag-badge").parentNode);
-        toggleHidden(this.tag.length > 0, this.querySelector("#add-tag"));
-        this.updateActiveState();
+    }
+
+    updateOriginBadge() {
+        const originBadge = this.querySelector("#origin-badge");
+        switch (this.rule.pattern.origin) {
+            case "same-domain":
+                originBadge.textContent = browser.i18n.getMessage("same_domain");
+                break;
+            case "same-origin":
+                originBadge.textContent = browser.i18n.getMessage("same_origin");
+                break;
+            case "third-party-domain":
+                originBadge.textContent = browser.i18n.getMessage("third_party_domain");
+                break;
+            case "third-party-origin":
+                originBadge.textContent = browser.i18n.getMessage("third_party_origin");
+                break;
+        }
+        toggleHidden(this.rule.pattern.origin === undefined, originBadge.parentNode);
     }
 
     updateActiveState() {
@@ -828,12 +859,6 @@ export function newRuleInput(
     input.classList.add("not-edited");
     input.spellcheck = false;
     return input;
-}
-
-function getPatternBadgeText(rule) {
-    return rule.pattern.allUrls
-        ? browser.i18n.getMessage("all_urls")
-        : browser.i18n.getMessage("count_patterns", getPatternCount(rule));
 }
 
 function getPatternCount(rule) {
