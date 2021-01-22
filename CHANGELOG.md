@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Add option to remove toolbar icon counter. #129
 - Add support for matching hostnames without suffix (TLD wildcard). #126
+- Add private browsing matcher to ignore or only use in private browsing.
 
 ## [1.15.5] - Jul. 7, 2020
 - Fix rule creation after 1.15.3. #131

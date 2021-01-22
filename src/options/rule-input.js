@@ -562,6 +562,10 @@ class RuleInput extends HTMLElement {
             setButtonChecked(this.querySelector(`.origin-matcher[value=${this.rule.pattern.origin}]`), true);
         }
 
+        if (this.rule.pattern.incognito) {
+            this.querySelector("#incognito").value = this.rule.pattern.incognito.toString();
+        }
+
         if (!this.rule.types || this.rule.types.length === 0) {
             this.setAnyType(true);
         } else {
@@ -614,6 +618,14 @@ class RuleInput extends HTMLElement {
             this.rule.pattern.origin = origin.value;
         } else {
             delete this.rule.pattern.origin;
+        }
+
+        const incognito = this.querySelector("#incognito").value;
+
+        if (incognito) {
+            this.rule.pattern.incognito = incognito === "true";
+        } else {
+            delete this.rule.pattern.incognito;
         }
 
         this.rule.types = Array.from(this.querySelectorAll(".type:checked"), (type) => type.value);

@@ -52,9 +52,9 @@ function addRequestListeners(rules) {
         .forEach((data) => {
             try {
                 const filters = createRequestFilters(data, ruleListener);
-                for (const { rule, matcher, urls, types } of filters) {
+                for (const { rule, matcher, urls, types, incognito } of filters) {
                     const listener = ruleListener(rule, matcher);
-                    browser.webRequest.onBeforeRequest.addListener(listener, { urls, types });
+                    browser.webRequest.onBeforeRequest.addListener(listener, { urls, types, incognito });
                     listeners.push(listener);
                 }
             } catch {

@@ -36,6 +36,7 @@ export function createRequestFilters(data) {
             urls: createMatchPatterns(data.pattern),
             matcher: createRequestMatcher(data.pattern),
             types: data.types,
+            incognito: data.pattern.incognito,
         },
     ];
 }
@@ -146,6 +147,7 @@ function createAnyTldRequestFilters(data) {
             }),
             matcher: createRequestMatcher(data.pattern, withoutSuffix),
             types: data.types,
+            incognito: data.pattern.incognito,
         });
     }
 
@@ -159,6 +161,7 @@ function createAnyTldRequestFilters(data) {
             }),
             matcher: createRequestMatcher(data.pattern),
             types: data.types,
+            incognito: data.pattern.incognito,
         });
     }
 

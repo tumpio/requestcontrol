@@ -594,5 +594,17 @@
   },
   "any_tld": {
     "message": "Any TLD"
+  },
+  "private_browsing": {
+    "message": "Private browsing"
+  },
+  "include": {
+    "message": "Include"
+  },
+  "exclude": {
+    "message": "Exclude"
+  },
+  "only": {
+    "message": "Only"
   }
 }
