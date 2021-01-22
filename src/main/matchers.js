@@ -39,7 +39,9 @@ export class ExcludeMatcher extends IncludeMatcher {
 
 export class DomainMatcher {
     static test(request) {
-        return DomainMatcher.testUrls(request.originUrl, request.url);
+        return typeof request.thirdParty === "boolean"
+            ? !request.thirdParty
+            : DomainMatcher.testUrls(request.originUrl, request.url);
     }
 
     static testUrls(originUrl, targetUrl) {
