@@ -524,7 +524,8 @@
     "pattern": {
       "scheme": "*",
       "host": [
-        "*.fna.fbcdn.net"
+        "*.fna.fbcdn.net",
+        "*.xx.fbcdn.net"
       ],
       "path": [
         "static_map.php?*"
