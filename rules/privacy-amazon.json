@@ -14,7 +14,7 @@
                 "*"
             ],
             "excludes": [
-              "://www.amazon.*/ap/cnep*",
+              "://www.amazon.*/ap/*",
               "://www.amazon.*/gp/*"
             ],
             "topLevelDomains": [
