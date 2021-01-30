@@ -104,24 +104,5 @@
         "title": "Exceptions to `sid` and `share` parameters",
         "description": "These sites use the URL parameters `sid` and `share` to load different pages. This trips a general-purpose referrer remover.",
         "tag": "whitelist-utm"
-    },
-    {
-        "uuid": "953324d7-0aff-48c0-96fc-b4b746befa7e",
-        "pattern": {
-            "scheme": "https",
-            "host": [
-                "www.linkedin.com"
-            ],
-            "path": [
-                "/checkpoint/rp/request-password-reset-submit-redir-email-pin?*"
-            ]
-        },
-        "types": [
-            "main_frame"
-        ],
-        "action": "whitelist",
-        "active": true,
-        "title": "Restore password reset at LinkedIn",
-        "tag": "whitelist-linkedin-password-reset"
     }
 ]
