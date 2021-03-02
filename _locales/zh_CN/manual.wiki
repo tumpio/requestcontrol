@@ -2,45 +2,45 @@
 
 == Request Control 规则 ==
 
-Request Control 规则由 [[#匹配模式|匹配模式]]、[[#类型|类型]] 和 [[#动作|动作]] 构成。
+Request Control 规则由[[#匹配模式|匹配模式]]、[[#类型|类型]]和[[#动作|动作]] 构成。
 
 一个请求如果与非禁用规则的匹配模式和类型相匹配，将根据该规则拦截并采取相应动作。
 
 === 匹配模式 ===
 
-匹配模式用来筛选出匹配 [[#方案|方案]]、[[#主机|主机]] 和 [[#路径|路径]]，以及可选的 [[#包括和排除|包括和排除]] 匹配模式的请求。
+匹配模式用来筛选出匹配[[#协议|协议]]、[[#主机|主机]]和[[#路径|路径]]，以及可选的[[#包括和排除|包括和排除]]匹配模式的请求。
 
-==== 方案 ====
+==== 协议 ====
 
-支持的方案是 <code>http</code> 和 <code>https</code>。
+支持的协议为 <code>http</code> 和 <code>https</code>。
 
 {|
 | <code>http</code>
-| 匹配一个 http 方案的请求。
+| 匹配 http 协议的请求。
 |-
 | <code>https</code>
-| 匹配一个 https 方案的请求。
+| 匹配 https 协议的请求。
 |-
 | <code>http/https</code>
-| 匹配 http 和 https 方案的请求。
+| 同时匹配 http 和 https 协议的请求。
 |}
 
 ==== 主机 ====
 
-主机可以通过下列方式匹配一个请求的 URL 的主机（host）。
+主机匹配可以通过下列方式匹配请求的 URL 中的主机（host）。
 
 {|
 | <code>www.example.com</code>
-| 完整匹配一个主机。
+| 匹配完整主机。
 |
 |-
 | <code>*.example.com</code>
-| 匹配指定的主机 以及它的任何子域名。
-| 将会匹配 example.com 的任何子域名 例如： '''www'''.example.com 和 '''good'''.example.com
+| 匹配指定的主机以及它的所有子域名。
+| 将会匹配 example.com 的所有子域名，例如 '''www'''.example.com 和 '''good'''.example.com
 |-
 | <code>www.example.*</code>
-| 匹配指定的主机 配合手动列明的 顶级域名。 （可以配合 （子域名 匹配）
-| 需将所需顶级域名 写入到 顶级域名列表 框（例如 ''com''、 ''org''）。
+| 匹配符合顶级域名列表的指定主机。 （可以配合子域名匹配）
+| 需将所需的顶级域名写入到顶级域名列表框（例如 ''com''、''org''）。
 |-
 | <code>*</code>
 | 匹配任何主机。
@@ -49,273 +49,306 @@ Request Control 规则由 [[#匹配模式|匹配模式]]、[[#类型|类型]] �
 
 ==== 路径 ====
 
-Path may subsequently contain any combination of &quot;*&quot; wildcard and any of the characters that are allowed in URL path. The &quot;*&quot; wildcard matches any portion of path and it may appear more than once.
+路径匹配可以是通配符 &quot;*&quot; 和所有 URL 路径中允许的字符的任意组合。通配符 &quot;*&quot; 能够匹配路径的任意部分，且可以出现多次。
 
-Below is examples for using path in 匹配模式s.
+下面是一些使用路径匹配的示例。
 
 {|
 | <code>*</code>
-| Match any path.
+| 匹配任意路径。
 |-
 | <code>path/a/b/</code>
-| Match exact path &quot;path/a/b/&quot;.
+| 匹配特定路径 &quot;path/a/b/&quot;。
 |-
 | <code>*b*</code>
-| Match path that contains a component &quot;b&quot; somewhere in the middle.
+| 匹配所有包含 &quot;b&quot; 的路径，只要路径中出现就匹配。
 |-
 |
-| Match an empty path.
-|}
-
-==== 包括和排除 ====
-
-A list of 匹配模式s that request URL must or must not contain. Include and exclude 匹配模式 can be defined as a string with support for wildcards &quot;?&quot; and &quot;*&quot; (where &quot;?&quot; matches any single character and &quot;*&quot; matches zero or more characters), or as a regular expression 匹配模式 <code>/regexp/</code>.
-
-Include and exclude 匹配模式 matching is case insensitive as opposed to [[#主机|主机]] and [[#路径|路径]] which are case sensitive.
-
-Below is examples of using includes and excludes 匹配模式s:
-
-{|
-| <code>login</code>
-| Match urls containing &quot;login&quot;.
-|-
-| <code>log?n</code>
-| Matches for example urls containing &quot;login&quot; and &quot;logon&quot;.
-|-
-| <code>a*b</code>
-| Match urls where &quot;a&quot; is followed by &quot;b&quot;
-|-
-| <code>/[?&amp;]a=\d+(&amp;|$)/</code>
-| Match urls containing parameter &quot;a&quot; with digits as value.
+| 匹配空路径。
 |}
 
 === 类型 ===
 
-A type indicates the requested resource. Rule can apply from one to many types, or any type. All the possible types are listed below.
+类型代表请求的资源种类。可以匹配一或多种类型，也可以匹配任意类型。下面列出了所有可能的类型。
 
 {|
-! Type
-! Details
+! 类型
+! 细节
 |-
-| Document
-| Indicates a DOM document at the top-level that is retrieved directly within a browser tab. (main frame)
+| 文档
+| 代表浏览器标签页中的顶级 DOM 文档。（main frame）
 |-
-| Sub document
-| Indicates a DOM document that is retrieved inside another DOM document. (sub frame)
+| 子文档
+| 代表附属于其他文档的 DOM 文档（sub frame）
 |-
-| Stylesheet
-| Indicates a stylesheet (for example, &lt;style&gt; elements).
+| 样式表
+| 代表样式表（.css 文件）。
 |-
-| Script
-| Indicates an executable script (such as JavaScript).
+| 脚本
+| 代表可执行脚本（例如 JavaScript）。
 |-
-| Image
-| Indicates an image (for example, &lt;img&gt; elements).
+| 图像
+| 代表图像（例如 &lt;img&gt; 元素载入的内容）。
 |-
-| Object
-| Indicates a generic object.
+| 对象
+| 代表对象（&lt;object&gt; 和 &lt;embed&gt; 元素的内容）。
 |-
-| Plugin
-| Indicates a request made by a plugin. (object_subrequest)
+| 插件
+| 代表由插件发起的请求。（object_subrequest）
 |-
 | XMLHttpRequest
-| Indicates an XMLHttpRequest.
+| 代表 XMLHttpRequest 请求。
 |-
 | XSLT
-| Indicates a style sheet transformation.
+| 代表可扩展样式表转换语言（英文：Extensible Stylesheet Language Transformations，缩写为 XSLT）文档。
 |-
 | Ping
-| Indicates a ping triggered by a click on an &lt;a&gt; element using the ping attribute. Only in use if browser.send_pings is enabled (default is false).
+| 代表因点击带有 ping 属性的 &lt;a&gt; 元素时发出的请求。只有 about:config 中 browser.send_pings 属性被启用时才会发出（默认为禁用）。
 |-
 | Beacon
-| Indicates a [https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API Beacon] request.
+| 代表信标（[https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API Beacon]）请求。
 |-
 | XML DTD
-| Indicates a DTD loaded by an XML document.
+| 代表被 XML 文档载入的 DTD 文件。
 |-
 | Font
-| Indicates a font loaded via @font-face rule.
+| 代表通过 CSS @font-face 规则引入的字体。
 |-
 | Media
-| Indicates a video or audio load.
+| 代表视频或音频。
 |-
 | WebSocket
-| Indicates a [https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API WebSocket] load.
+| 代表 [https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API WebSocket] 请求。
 |-
 | CSP Report
-| Indicates a [https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP Content Security Policy] report.
+| 代表内容安全策略（[https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP Content Security Policy]）报告。
 |-
 | Imageset
-| Indicates a request to load an &lt;img&gt; (with the srcset attribute) or &lt;picture&gt;.
+| 代表加载带 srcset 属性的 &lt;img&gt; 或 &lt;picture&gt; 元素的内容的请求。
 |-
 | Web Manifest
-| Indicates a request to load a Web manifest.
+| 代表加载 Web manifest 的请求。
 |-
 | Other
-| Indicates a request that is not classified as being any of the above types.
+| 代表未被归类为上述任何类型的请求。
 |}
 
 === 动作 ===
 
-; [[File:/icons/icon-filter.svg|16px]] Filter
-: Filter URL redirection and/or remove URL query parameters.
-; [[File:/icons/icon-block.svg|16px]] Block
-: Cancel requests before they are made.
-; [[File:/icons/icon-redirect.svg|16px]] Redirect
+; [[File:/icons/icon-filter.svg|16px]] 过滤
+: Skip URL redirection and/or remove URL query parameters.
+; [[File:/icons/icon-redirect.svg|16px]] 重定向
 : Redirect requests to manually configured redirect URL.
-; [[File:/icons/icon-whitelist.svg|16px]] Whitelist
+; [[File:/icons/icon-secure.svg|16px]] 加密
+: Upgrade non-secure HTTP requests to secure HTTPS.
+; [[File:/icons/icon-block.svg|16px]] 拦截
+: Cancel requests before they are made.
+; [[File:/icons/icon-whitelist.svg|16px]] 白名单
 : Whitelist and optionally log requests.
+
+== 其他 URL 匹配方式 ==
+
+以下匹配器扩展了 [https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/RequestFilter WebRequest API] 的匹配功能。
+
+==== 包括和排除 ====
+
+通过支持通配符 &quot;?&quot; 和 &quot;*&quot;（其中 &quot;?&quot; 匹配任何单个字符，而 &quot;*&quot; 匹配零或多个字符）的字符串匹配，来过滤匹配的请求。也可通过在匹配模式前后加 &quot;/&quot; 字符来使用正则表达式。
+
+包括和排除不区分大小写，而[[#主机|主机]]和[[#路径|路径]]区分大小写。
+
+以下是使用包括和排除模式匹配的示例：
+
+{|
+| <code>login</code>
+| 匹配所有包括 &quot;login&quot; 的 URL。
+|-
+| <code>log?n</code>
+| 匹配包括例如 &quot;login&quot; 或者 &quot;logon&quot; 等等的 URL。
+|-
+| <code>a*b</code>
+| 匹配先后出现 &quot;a&quot; 和 &quot;b&quot; 的 URL。
+|-
+| <code>/[?&]a=\d+(&|$)/</code>
+| 匹配包含参数 &quot;a&quot; 的 URL，该参数的值为数字。
+|}
+
+=== Match by origin ===
+
+按照跨域情况过滤匹配的规则。
+
+{|
+| Any
+| 匹配任意跨域情况的请求。
+|-
+| Same domain
+| 匹配同域名的请求。
+|-
+| Same origin
+| 匹配同源的请求。按照[https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy 同源策略]判定。
+|-
+| Third party domain
+| 匹配第三方域名的请求。
+|-
+| Third party origin
+| 匹配第三方源的请求。
+|}
 
 == Rule priorities ==
 
-# Whitelist rule
-# Block rule
-# Redirect rule
-# Filter rule
+# 白名单规则
+# 拦截规则
+# 加密规则
+# 重定向规则
+# 过滤规则
 
-Whitelist rules have the highest priority and they revoke all other rules. Next come block rules and they revoke redirect and filter rules. Finally redirect rules will be applied before filter rules. If more than one redirect or filter rule matches a single request they will all be applied one by one.
+== 去除 URL 参数 ==
 
-== Matching all URLs ==
+过滤规则支持去除 URL 参数。可以在要去除的 URL 参数的名称中使用通配符 &quot;*&quot; 和 &quot;?&quot;，或者正则表达式。
 
-The request 匹配模式 can be set to a global 匹配模式 that matches all URLs under the supported schemes (&quot;http&quot; or &quot;https&quot;) by checking the Any URL button.
-
-== Trimming URL parameters ==
-
-Filter rule supports URL query parameter trimming. URL query parameters are commonly used in redirection tracking as a method to analyze the origin of traffic. Trimmed URL parameters are defined either as literal strings with support for &quot;*&quot; and &quot;?&quot; wildcards or using regular expression 匹配模式s.
-
-Below is examples of parameter trimming 匹配模式s.
+下面是去除 URL 参数的示例。
 
 {|
 | <code>utm_source</code>
-| Trim any &quot;utm_source&quot; param
+| 去除 &quot;utm_source&quot; 参数。
 |-
 | <code>utm_*</code>
-| Trim any param starting with &quot;utm_&quot;
+| 去除所有以 &quot;utm_&quot; 开头的参数。
 |-
 | <code>/[0-9]+/</code>
-| Trim any param containing only digits
+| 去除所有参数名称仅由数字构成的参数。
 |}
 
-=== Invert Trim Option ===
+=== 反转要去除的请求参数选项 ===
 
-Keeps only parameters that are defined in trimmed parameters list. All other parameters will be removed.
+仅保留参数列表中所定义的参数，移除所有其他参数。
 
-=== Trim All Option ===
+=== 移除全部请求参数选项 ===
 
-Remove all URL query parameters from filtered request.
+从匹配的请求中移除所有 URL 查询参数。
 
-== 使用匹配模式捕获来重定向 ==
+== 使用模式捕获重定向 ==
 
-Redirect rule supports redirecting requests to a manually configured URL. The redirect URL may be parametrized using parameter expansion and redirect instructions. Parameter expansion allows to access a set of named parameters of the original URL. Redirect instructions can be used to modify the original request by changing the parts of the original URL (e.g. by instructing requests to redirect to a different port).
+重定向规则支持将请求重定向至一个从原始请求 URL 修改而来的 URL。可以使用参数展开来使用和更改目标 URL 的某些组成部分（命名参数）；也可以使用重定向指令，更改目标 URL 的某些组成部分（命名参数），比如只更改原始请求 URL 的端口。
 
-Both methods may be combined. Redirect instructions will be parsed and applied first to the request URL before parameter expansions.
+这两种方法可以结合使用。将首先解析并应用重定向指令，再轮到参数扩展。
 
-Parameter expansion may also be used within a redirect instruction.
+可以在重定向指令中使用参数展开。
 
-=== Parameter expansion ===
+=== 参数展开 ===
 
 <pre>{parameter}</pre>
-Access a named parameter of the original request URL. Available named parameters are listed at the end of this section.
+访问原始请求 URL 中的某个命名参数。本节末尾列出了可用的命名参数。
 
-Parameter expansion supports the following string manipulation formats:
+参数展开支持以下字符串操作语法：
 
-==== 子字符串替换 ====
+==== 替换子字符串 ====
 
 <pre>{parameter/pattern/replacement}</pre>
-Replace a matched substring in the extracted parameter. The 匹配模式 is written in regular expression. A number of special replacement 匹配模式s are supported, including referencing of capture groups which are described below.
+
+将首个匹配 <code>pattern</code> 的子字符串替换为 <code>replacement</code>。
+
+<pre>{parameter//pattern/replacement}</pre>
+
+将所有匹配 <code>pattern</code> 的子字符串替换为 <code>replacement</code>。
+
+匹配模式 <code>pattern</code> 使用正则表达式编写。<code>replacement</code> 中支持使用一些特殊替换，包括引用捕获组（capture group），下面的表格描述了支持的特殊替换。
 
 {|
 | <code>$n</code>
-| Inserts the n-th captured group counting from 1.
+| 插入第 n 个捕获组，从 1 开始计数。
 |-
 | <code>$`</code>
-| Inserts the portion of the string that precedes the matched substring.
+| 插入被匹配到的子字符串之前的部分。
 |-
 | <code>$'</code>
-| Inserts the portion of the string that follows the matched substring.
+| 插入被匹配到的子字符串之后的部分。
 |-
-| <code>$&amp;</code>
-| Inserts the matched substring.
+| <code>$&</code>
+| 插入被匹配到的子字符串。
 |-
 | <code>$$</code>
-| Inserts a &quot;$&quot;.
+| 插入一个 &quot;$&quot; 字符。
 |}
 
-==== 子字符串提取 ====
+==== 提取子字符串 ====
 
 <pre>{parameter:offset:length}</pre>
-Extract a part of the expanded parameter. Offset determines the starting position. It begins from 0 and can be a negative value counting from the end of the string.
 
-==== 解码和编码匹配模式的捕获 ====
+提取扩展参数的一个部分。偏移量 <code>offset</code> 确定起始位置，从 0 开始计数；如果为负值，则从字符串结尾开始算起。
+
+==== 解码和编码 ====
 
 <pre>{parameter|encodingRule}</pre>
-解码或编码匹配模式的捕获。
+
+对匹配模式的展开值进行解码或编码操作。
 
 {|
 | <code>encodeURI</code>
-| 编码捕获为 URI。 It does not encode the following characters: &quot;:&quot;, &quot;/&quot;, &quot;;&quot;, and &quot;?&quot;.
+| 将值编码为 URI。不编码以下字符：&quot;:&quot;、&quot;/&quot;、&quot;;&quot;，和 &quot;?&quot;。
 |-
 | <code>decodeURI</code>
-| Decodes an encoded URI.
+| 将值作为 URI 解码。
 |-
 | <code>encodeURIComponent</code>
-| 编码捕获为一个 URI 的组件。Encodes all special characters reserved for URI.
+| 将值编码为 URI 组件。会编码所有 URI 保留字符。
 |-
 | <code>decodeURIComponent</code>
-| Decodes an encoded URI component.
+| 将值作为 URI 组件解码。
 |-
 | <code>encodeBase64</code>
-| 编码捕获为 Base64 字符串。
+| 将值编码为 Base64 字符串。
 |-
 | <code>decodeBase64</code>
-| Decodes an encoded Base64 string.
+| 将值作为 Base64 字符串解码。
 |}
 
-==== 组合的操纵规则 ====
+==== 合并参数展开操作 ====
 
 <pre>{parameter(manipulation1)|(manipulation2)...|(manipulationN)}</pre>
-All the string manipulation rules can be chained using a &quot;|&quot; pipe character. The output is the result of the manipulations chain.
+可以使用管道符 &quot;|&quot; 链式调用多个字符串操作规则。输出结果是被依次操作过的参数值。
 
 ==== 示例 ====
 
 {|
 | <code>https://{hostname}/new/path</code>
-| Uses the hostname of the original request.
+| 复用原始请求中的主机名。
 |-
 | <code>https://{hostname/([a-z]{2}).*/$1}/new/path</code>
-| Captures a part of the hostname of the original request.
+| 提取原始请求中的主机名的一部分并复用。
 |-
 | <code>https://{hostname::-3|/.co/.com}/new/path</code>
-| Uses the hostname of the original request but manipulate its length by three cutting it from the end and replace &quot;.co&quot; with &quot;.com&quot;.
+| 去除原始请求中的主机名中的最后 3 个字符，再将其中的第一个 &quot;.co&quot; 替换为 &quot;.com&quot，再复用。
 |-
 | <code>{search.url|decodeURIComponent}</code>
-| Capture &quot;url&quot; search parameter and decode it.
+| 捕获原始请求的查询参数中的 &quot;url&quot; 参数，并将其解码，作为重定向目标。
 |}
 
 === 重定向指令 ===
 
 <pre>[parameter=value]</pre>
-Replace a certain part of the original request. The available named parameters are listed at the end of this section.
 
-The value of a redirect instruction can be parametrized using the parameter expansion described above.
+替换原始请求的特定组成部分。本节末尾列出了可用的命名 URL 参数（named URL parameters）。
 
 <pre>[parameter={parameter<manipulations>}]</pre>
+
+可以通过上述参数扩展语法对重定向指令的值进行参数化（parametrize）。
+
 ==== 示例 ====
 
 {|
 | <code>[port=8080]</code>
-| Redirects the original request to a port 8080.
+| 将原始请求的端口重定向至 8080。
 |-
 | <code>[port=8080][hostname=localhost]</code>
-| Redirects the original request to a port 8080 of localhost.
+| 将原始请求的主机重定向至 localhost:8080。
 |-
 | <code>[port=8080][hostname=localhost][hash={pathname}]</code>
-| Redirects the original request to a port 8080 of localhost where hash is the original request's path.
+| 将原始请求的主机重定向至 localhost:8080，并将哈希（hash，<code>#</code>）更改为原始请求的主机名。
 |}
 
 === 命名参数列表 ===
 
-下表列出了支持的参数名称及输出范例。
+下表列出了支持的参数名称以及输出示例。
 
 作为输入的示例地址：
 
@@ -355,9 +388,8 @@ The value of a redirect instruction can be parametrized using the parameter expa
 | <code>https://www.example.com:8080/some/path?query=value#hash</code>
 |}
 
-This manual page is build upon the material of the following MDN wiki documents and is licenced under [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
+此手册页面基于以下 MDN 维基文档中的资料编写，以 [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5] 协议授权。
 
 # [https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns Match patterns] by [https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns$history Mozilla Contributors] is licensed under [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
 # [https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType webRequest.ResourceType] by [https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType$history Mozilla Contributors] is licensed under [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
 # [https://developer.mozilla.org/en-US/docs/Web/API/URL URL] by [https://developer.mozilla.org/en-US/docs/Web/API/URL$history Mozilla Contributors] is licensed under [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
-
