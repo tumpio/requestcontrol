@@ -136,15 +136,15 @@ Request Control 规则由[[#匹配模式|匹配模式]]、[[#类型|类型]]和[
 === 动作 ===
 
 ; [[File:/icons/icon-filter.svg|16px]] 过滤
-: Skip URL redirection and/or remove URL query parameters.
+: 跳过 URL 重定向，并/或移除 URL 查询参数。
 ; [[File:/icons/icon-redirect.svg|16px]] 重定向
-: Redirect requests to manually configured redirect URL.
+: 将请求重定向至手动配置的目标 URL。
 ; [[File:/icons/icon-secure.svg|16px]] 加密
-: Upgrade non-secure HTTP requests to secure HTTPS.
+: 将不安全的 HTTP 请求升级为 HTTPS 请求。
 ; [[File:/icons/icon-block.svg|16px]] 拦截
-: Cancel requests before they are made.
+: 在请求被发出之前取消请求。
 ; [[File:/icons/icon-whitelist.svg|16px]] 白名单
-: Whitelist and optionally log requests.
+: 白名单并可选地在日志中记录请求。
 
 == 其他 URL 匹配方式 ==
 
