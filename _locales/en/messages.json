@@ -272,8 +272,14 @@
   "top_level_domains": {
     "message": "Top-level domains"
   },
+  "include": {
+    "message": "Include"
+  },
   "includes": {
     "message": "Includes"
+  },
+  "exclude": {
+    "message": "Exclude"
   },
   "excludes": {
     "message": "Excludes"
@@ -292,6 +298,9 @@
   },
   "excludes_placeholder": {
     "message": "List of exclude patterns.."
+  },
+  "any_tld": {
+    "message": "Any TLD"
   },
   "types": {
     "message": "Types"
@@ -592,17 +601,8 @@
   "option_change_toolbar_icon": {
     "message": "Change toolbar icon on rule action"
   },
-  "any_tld": {
-    "message": "Any TLD"
-  },
   "private_browsing": {
     "message": "Private browsing"
-  },
-  "include": {
-    "message": "Include"
-  },
-  "exclude": {
-    "message": "Exclude"
   },
   "only": {
     "message": "Only"
