@@ -21,6 +21,7 @@
         "/\\/(i|fetch|image_gallery|thumb|thumbnail)(\\.php|\\/)?\\?/",
         "/\\?.*\\&(_nc_[a-z]{1,3}|oh|oe)=./",
         "://c.disquscdn.com/get?url=",
+        "://streetviewpixels-pa.googleapis.com/v1/tile",
         "://web.whatsapp.com/pp",
         "://www.youtube.com/api/stats/watchtime"
       ]

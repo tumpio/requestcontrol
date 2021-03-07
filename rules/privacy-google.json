@@ -460,7 +460,8 @@
             "path": [
                 "cbk?*",
                 "kh?*",
-                "maps/vt?*"
+                "maps/vt?*",
+                "v1/tile*"
             ]
         },
         "types": [
