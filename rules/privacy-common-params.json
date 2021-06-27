@@ -7,6 +7,7 @@
         "pattern": {
             "allUrls": true,
             "excludes": [
+                "*/ucp.php?mode=logout&sid=*",
                 "https://www.fbsbx.com/captcha/recaptcha/iframe/*"
             ]
         },
