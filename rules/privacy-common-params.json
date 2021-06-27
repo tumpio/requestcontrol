@@ -5,7 +5,10 @@
         "uuid": "5276a290-b21a-4deb-a86e-aa54c3ff1bcc",
         "tag": "filter-common",
         "pattern": {
-            "allUrls": true
+            "allUrls": true,
+            "excludes": [
+                "https://www.fbsbx.com/captcha/recaptcha/iframe/*"
+            ]
         },
         "types": [
             "main_frame",
