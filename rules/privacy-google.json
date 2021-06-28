@@ -718,5 +718,27 @@
         "title": "Skip Google AMP redirector",
         "tag": "filter-google-amp",
         "redirectUrl": "https://{pathname:7}"
-    }
+    },
+    {
+        "uuid": "89d698fb-1e90-4703-ad42-85e6fdf9d1bf",
+        "pattern": {
+            "scheme": "*",
+            "host": [
+                "*.drive.google.com",
+                "*.googlevideo.com"
+            ],
+            "path": [
+                "videoplayback?*sig=*sig=*"
+            ]
+        },
+        "types": [
+            "image",
+            "media"
+        ],
+        "action": "whitelist",
+        "active": true,
+        "title": "Signed Google Video requests",
+        "description": "Removing any parameter from these requests will cause the video not to load. Enabled by default. (This sort of requests is used by Google Drive, and 3rd-party sites like Invidious instances.)",
+        "tag": "whitelist-googlevideo"
+  }
 ]
