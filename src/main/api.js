@@ -54,14 +54,23 @@ export function createRequestMatcher(pattern, hostnamesWithoutSuffix = []) {
         matchers.push(new ExcludeMatcher(pattern.excludes));
     }
 
-    if (pattern.origin === "same-domain") {
-        matchers.push(DomainMatcher);
-    } else if (pattern.origin === "same-origin") {
-        matchers.push(OriginMatcher);
-    } else if (pattern.origin === "third-party-domain") {
-        matchers.push(ThirdPartyDomainMatcher);
-    } else if (pattern.origin === "third-party-origin") {
-        matchers.push(ThirdPartyOriginMatcher);
+    switch (pattern.origin) {
+        case "same-domain": {
+            matchers.push(DomainMatcher);
+            break;
+        }
+        case "same-origin": {
+            matchers.push(OriginMatcher);
+            break;
+        }
+        case "third-party-domain": {
+            matchers.push(ThirdPartyDomainMatcher);
+            break;
+        }
+        case "third-party-origin": {
+            matchers.push(ThirdPartyOriginMatcher);
+            break;
+        }
     }
 
     if (hostnamesWithoutSuffix.length > 0) {

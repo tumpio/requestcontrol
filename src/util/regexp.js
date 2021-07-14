@@ -72,7 +72,7 @@ export function matchPatternToRegExp(pattern) {
     if (host && host === "*") {
         regex += "[^/]+?";
     } else if (host) {
-        if (host.match(/^\*\./)) {
+        if (/^\*\./.test(host)) {
             regex += "[^/]*?";
             host = host.substring(2);
         }

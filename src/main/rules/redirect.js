@@ -302,7 +302,7 @@ function parseRedirectParameters(redirectUrl) {
 
             // Look up parameter name
             for (const name of URL_PARAMETERS) {
-                if (redirectUrl.startsWith(name, i + 1) && redirectUrl.charAt(i + name.length + 1).match(/[/:|}]/)) {
+                if (redirectUrl.startsWith(name, i + 1) && /[/:|}]/.test(redirectUrl.charAt(i + name.length + 1))) {
                     parameter = {
                         offset: i,
                         ruleStart: i + name.length + 1,

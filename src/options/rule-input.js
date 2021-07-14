@@ -58,11 +58,10 @@ class RuleInput extends HTMLElement {
     }
 
     toggleSaved() {
-        const input = this;
-        input.classList.add("saved");
+        this.classList.add("saved");
         clearTimeout(this.savedTimeout);
         this.savedTimeout = setTimeout(() => {
-            input.classList.remove("saved");
+            this.classList.remove("saved");
         }, 5000);
     }
 

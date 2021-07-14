@@ -524,15 +524,15 @@ async function fetchChangelog() {
                     li.append(text[i]);
                 }
             }
-            if (line.match(/fix/i)) {
+            if (/fix/i.test(line)) {
                 li.classList.add("fix");
-            } else if (line.match(/add/i)) {
+            } else if (/add/i.test(line)) {
                 li.classList.add("add");
-            } else if (line.match(/change/i)) {
+            } else if (/change/i.test(line)) {
                 li.classList.add("change");
-            } else if (line.match(/update/i)) {
+            } else if (/update/i.test(line)) {
                 li.classList.add("update");
-            } else if (line.match(/locale/i)) {
+            } else if (/locale/i.test(line)) {
                 li.classList.add("locale");
             }
             ul.appendChild(li);
