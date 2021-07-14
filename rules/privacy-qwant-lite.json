@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Skip Qwant Lite redirect",
+    "description": "Skip Qwant Lite redirect in search results",
+    "uuid": "62b1a6c1-76ea-43c1-9d4d-dde55d5855e9",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "lite.qwant.com"
+      ],
+      "path": [
+        "redirect/*"
+      ]
+    },
+    "types": [
+      "main_frame"
+    ],
+    "action": "redirect",
+    "active": true,
+    "redirectUrl": "{pathname/\\/redirect\\/[A-Za-z0-9]+==\\//|decodeBase64|decodeURIComponent}"
+  }
+]
