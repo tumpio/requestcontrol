@@ -15,10 +15,12 @@
         <script defer src="../util/modal.js"></script>
         <script defer type="module" src="../util/i18n.js"></script>
         <script defer src="type-input.js"></script>
+        <script defer src="loading-dots.js"></script>
+        <script defer src="rule-import-input.js"></script>
         <script defer type="module" src="../util/tags-input/src/tags-input.js"></script>
         <script defer type="module" src="rule-list.js"></script>
         <script defer type="module" src="options.js"></script>
-        <title data-i18n="options_title"></title>
+        <title data-i18n="options_title">Request Control</title>
     </head>
 
     <body>
@@ -26,25 +28,31 @@
             <div id="tabs" class="row">
                 <div class="col">
                     <a href="#tab-rules" class="tab-selector active" data-tab-title="options_title">
-                        <img src="/icons/ionicons/android-list.svg" width="24" />
+                        <img src="/icons/ionicons/list-outline.svg" width="24" />
                         <span data-i18n="rules"></span>
                     </a>
                 </div>
                 <div class="col">
+                    <a href="#tab-imports" class="tab-selector" data-tab-title="imports_title">
+                        <img src="/icons/ionicons/download-outline.svg" width="24" />
+                        <span data-i18n="imports"></span>
+                    </a>
+                </div>
+                <div class="col">
                     <a href="#tab-settings" class="tab-selector" data-tab-title="settings_title">
-                        <img src="/icons/ionicons/android-options.svg" width="24" />
+                        <img src="/icons/ionicons/options-outline.svg" width="24" />
                         <span data-i18n="settings"></span>
                     </a>
                 </div>
                 <div class="col">
                     <a href="#tab-manual" class="tab-selector" data-tab-title="manual_title">
-                        <img src="/icons/ionicons/help.svg" width="24" />
+                        <img src="/icons/ionicons/book-outline.svg" width="24" />
                         <span data-i18n="manual"></span>
                     </a>
                 </div>
                 <div class="col">
                     <a href="#tab-about" class="tab-selector" data-tab-title="about_title">
-                        <img src="/icons/ionicons/android-bookmark.svg" width="24" />
+                        <img src="/icons/ionicons/bookmark-outline.svg" width="24" />
                         <span data-i18n="about"></span>
                     </a>
                 </div>
@@ -68,11 +76,12 @@
                 <rule-list id="new" text="new_rules" class="d-none"></rule-list>
                 <div class="no-rules-block d-none">
                     <div class="no-rules" data-i18n="no_rules"></div>
-                    <p class="create-or-default" data-i18n="create_or_default"></p>
+                    <p class="create-or-import" data-i18n="create_or_import"></p>
+                    <a class="create-or-import-link" href="#tab-imports"></a>
                 </div>
                 <div class="toolbar">
                     <button id="addNewRule" class="btn">
-                        <img src="/icons/ionicons/android-add.svg" width="16" />
+                        <img src="/icons/ionicons/add-outline.svg" width="16" />
                         <span data-i18n="create_new_rule"></span>
                     </button>
                     <div class="mobile-toolbar">
@@ -84,7 +93,7 @@
                             data-toggle="modal"
                             data-target="#ruleTesterModal"
                         >
-                            <img src="/icons/ionicons/shuffle.svg" width="16" />
+                            <img src="/icons/ionicons/shuffle-outline.svg" width="16" />
                             <span data-i18n="test_selected"></span>
                             <span class="badge badge-light selected-count">0</span>
                         </button>
@@ -94,7 +103,7 @@
                             disabled="disabled"
                             autocomplete="off"
                         >
-                            <img src="/icons/ionicons/code-download.svg" width="16" />
+                            <img src="/icons/ionicons/code-download-outline.svg" width="16" />
                             <span data-i18n="export_selected"></span>
                             <span class="badge badge-light selected-count">0</span>
                         </button>
@@ -104,7 +113,7 @@
                             disabled="disabled"
                             autocomplete="off"
                         >
-                            <img src="/icons/ionicons/android-delete.svg" width="16" />
+                            <img src="/icons/ionicons/trash-bin.svg" width="16" />
                             <span data-i18n="remove_selected"></span>
                             <span class="badge badge-light selected-count">0</span>
                         </button>
@@ -112,11 +121,42 @@
                     <button id="selectedRules" class="btn" data-i18n="zero_selected_rules"></button>
                 </div>
             </div>
+            <div id="tab-imports" class="tab-pane">
+                <details open>
+                    <summary data-i18n="common_lists"></summary>
+                    <rule-import-input src="https://tumpio.github.io/requestcontrol/rules/privacy-common-redirectors.json"><span data-i18n="privacy"></span> - <span data-i18n="imports_skip_redirectors"></span></rule-import-input>
+                    <rule-import-input src="https://tumpio.github.io/requestcontrol/rules/privacy-common-params.json"><span data-i18n="privacy"></span> - <span data-i18n="imports_remove_parameters"></span></rule-import-input>
+                    <rule-import-input src="https://tumpio.github.io/requestcontrol/rules/privacy-common-images.json"><span data-i18n="privacy"></span> - <span data-i18n="imports_remove_image_parameters"></span></rule-import-input>
+                    <rule-import-input src="https://tumpio.github.io/requestcontrol/rules/privacy-block-beacon-and-ping.json"><span data-i18n="privacy"></span> - <span data-i18n="imports_block_beacon_and_ping"></span></rule-import-input>
+                    <rule-import-input src="https://tumpio.github.io/requestcontrol/rules/other-skip-image-downsamplers.json"><span data-i18n="other"></span> - <span data-i18n="imports_skip_image_downsamplers"></span></rule-import-input>
+                </details>
+                <details open>
+                    <summary data-i18n="site_specific_lists"></summary>
+                    <rule-import-input src="https://tumpio.github.io/requestcontrol/rules/privacy-amazon.json"><span data-i18n="privacy"></span> - Amazon</rule-import-input>
+                    <rule-import-input src="https://tumpio.github.io/requestcontrol/rules/privacy-bing.json"><span data-i18n="privacy"></span> - Bing</rule-import-input>
+                    <rule-import-input src="https://tumpio.github.io/requestcontrol/rules/privacy-duckduckgo.json"><span data-i18n="privacy"></span> - DuckDuckGo</rule-import-input>
+                    <rule-import-input src="https://tumpio.github.io/requestcontrol/rules/privacy-facebook.json"><span data-i18n="privacy"></span> - Facebook</rule-import-input>
+                    <rule-import-input src="https://tumpio.github.io/requestcontrol/rules/privacy-google.json"><span data-i18n="privacy"></span> - Google</rule-import-input>
+                    <rule-import-input src="https://tumpio.github.io/requestcontrol/rules/privacy-youtube.json"><span data-i18n="privacy"></span> - YouTube</rule-import-input>
+                </details>
+                <details open>
+                    <summary data-i18n="my_lists"></summary>
+                    <div id="my-import-sources"></div>
+                    <form id="import-source-form">
+                        <input id="new-import-source" name="src" required type="url" data-i18n-placeholder="add_url_to_rules" autocomplete="off"></input>
+                        <button class="btn">
+                            <span data-i18n="add"></span>
+                        </button>
+                    </form>
+                </details>
+                <div class="toolbar">
+                    <button id="importSelected" class="btn" disabled autocomplete="off">
+                        <img src="/icons/ionicons/download-outline.svg" width="16" />
+                        <span data-i18n="import_selected"></span>
+                    </button>
+                </div>
+            </div>
             <div id="tab-settings" class="tab-pane">
-                <h4 data-i18n="add_predefined_rules"></h4>
-                <p data-i18n="add_predefined_description"></p>
-                <button id="addDefault" class="btn btn-dark" data-i18n="add"></button>
-                <hr />
                 <h4 data-i18n="export_rules"></h4>
                 <p data-i18n="export_description"></p>
                 <button id="exportRules" class="btn btn-dark" data-i18n="export"></button>
@@ -135,22 +175,26 @@
                 </label>
                 <hr />
                 <h4 data-i18n="toolbar_icon"></h4>
-                <label class="option-checkbox">
-                    <input
-                        id="optionShowCounter"
-                        type="checkbox"
-                        checked="checked"
-                        autocomplete="off"/>
-                        <span data-i18n="option_show_request_counter"></span>
-                </label>
-                <label class="option-checkbox">
-                    <input
-                        id="optionChangeIcon"
-                        type="checkbox"
-                        checked="checked"
-                        autocomplete="off"/>
-                        <span data-i18n="option_change_toolbar_icon"></span>
-                </label>
+                <div>
+                    <label>
+                        <input
+                            id="optionShowCounter"
+                            type="checkbox"
+                            checked="checked"
+                            autocomplete="off"/>
+                            <span data-i18n="option_show_request_counter"></span>
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input
+                            id="optionChangeIcon"
+                            type="checkbox"
+                            checked="checked"
+                            autocomplete="off"/>
+                            <span data-i18n="option_change_toolbar_icon"></span>
+                    </label>
+                </div>
             </div>
             <div id="tab-manual" class="tab-pane">
                 <div id="contents" class="toc">
@@ -469,7 +513,7 @@
                     <button class="btn primary btn-done toggle-edit" data-i18n="done"></button>
                     <button id="create" class="btn primary btn-create" data-i18n="create"></button>
                     <button id="delete" class="btn btn-danger btn-delete">
-                        <img src="/icons/ionicons/android-delete.svg" width="16" />
+                        <img src="/icons/ionicons/trash-bin.svg" width="16" />
                         <span data-i18n="delete"></span>
                     </button>
                 </div>
@@ -564,6 +608,25 @@
                     <a id="collapse" class="collapse-button"></a>
                 </div>
                 <ul id="list" class="list"></ul>
+            </div>
+        </template>
+        <template id="rule-import-input">
+            <link rel="stylesheet" href="/lib/lit/lit.css" />
+            <link rel="stylesheet" href="../util/badges.css" />
+            <link rel="stylesheet" href="common.css" />
+            <link rel="stylesheet" href="rule-import-input.css" />
+            <div>
+                <label>
+                    <input id="select" type="checkbox" autocomplete="off" disabled/>
+                    <slot id="name"></slot>
+                </label>
+                <a id="url" target="_blank" data-i18n-title="view_list"><img src="/icons/ionicons/open-outline.svg" height="20" class="middle"></a>
+                <loading-dots id="loading"></loading-dots>
+                <span id="count" class="badge badge-info"></span>
+                <span id="imported" class="badge badge-success" data-i18n="imported" hidden></span>
+                <button id="remove-imported" class="btn text" data-i18n-title="remove_imported_rules" hidden><img src="/icons/ionicons/backspace-outline.svg" height="20" class="middle"/></button>
+                <img id="error" src="/icons/ionicons/warning-outline.svg" height="20" class="middle" hidden/>
+                <button id="delete" class="btn text" data-i18n-title="delete" hidden><img src="/icons/ionicons/close-circle-outline.svg" height="20" class="middle"/></button>
             </div>
         </template>
     </body>

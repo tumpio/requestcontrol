@@ -23,14 +23,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     fetchLocalisedManual();
-    setLoadDefaultsButton();
+    setCreateOrImportLink();
 
     document.getElementById("addNewRule").addEventListener("click", () => {
         document.getElementById("new").newRule();
         toggleEmpty();
     });
-
-    document.getElementById("addDefault").addEventListener("click", loadDefaultRules);
 
     document.getElementById("exportRules").addEventListener("click", async () => {
         const fileName = browser.i18n.getMessage("export-file-name");
@@ -111,6 +109,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     document
         .querySelectorAll("rule-list")
         .forEach((list) => list.addEventListener("rule-edit-completed", onRuleEditCompleted));
+
+    setupImportsTab();
 });
 
 document.addEventListener("rule-created", async (e) => {
@@ -162,6 +162,156 @@ document.addEventListener("rule-deleted", async (e) => {
 
 document.addEventListener("rule-selected", updateToolbar);
 
+document.addEventListener("rule-import-selected", toggleImportSelectedButton);
+
+document.addEventListener("rule-import-deleted", onImportSourceDeleted);
+
+document.addEventListener("rule-import-remove-imported", onRemoveImportedRules);
+
+async function setupImportsTab() {
+    const { imports } = await browser.storage.local.get("imports");
+
+    if (imports) {
+        Object.entries(imports).forEach(([src, data]) => {
+            if (data.deletable) {
+                createImportInput(src, data);
+            } else {
+                const input = document.querySelector(`rule-import-input[src="${src}"`);
+                if (input) {
+                    input.data = data;
+                }
+            }
+        });
+    }
+
+    document.getElementById("import-source-form").addEventListener("submit", onImportSourceAdded);
+    document.getElementById("new-import-source").addEventListener("input", checkImportSourceValidity);
+    document.getElementById("importSelected").addEventListener("click", importSelected);
+}
+
+async function checkImportSourceValidity() {
+    const { imports } = await browser.storage.local.get("imports");
+    const input = document.getElementById("new-import-source");
+    const duplicate = document.querySelector(`rule-import-input[src="${input.value}"]`);
+
+    if (duplicate || (imports && input.value in imports)) {
+        input.setCustomValidity(browser.i18n.getMessage("duplicate_entry"));
+    } else {
+        input.setCustomValidity("");
+    }
+}
+
+async function onImportSourceAdded(e) {
+    e.preventDefault();
+    const src = this.src.value;
+    let { imports } = await browser.storage.local.get("imports");
+
+    if (!imports) {
+        imports = {};
+    }
+
+    imports[src] = { deletable: true };
+    await browser.storage.local.set({ imports });
+
+    createImportInput(src, imports[src]);
+    this.reset();
+    checkImportSourceValidity();
+}
+
+async function onImportSourceDeleted(e) {
+    const input = e.target;
+    const src = input.getAttribute("src");
+    const { imports } = await browser.storage.local.get("imports");
+
+    if (!imports || !(src in imports)) {
+        return;
+    }
+
+    delete imports[src];
+
+    await browser.storage.local.set({ imports });
+
+    input.remove();
+    checkImportSourceValidity();
+    toggleImportSelectedButton();
+}
+
+async function onRemoveImportedRules(e) {
+    const input = e.target;
+    const { rules } = await browser.storage.local.get("rules");
+
+    if (rules) {
+        const { uuids } = input.data.imported;
+        const newRules = rules.filter(({ uuid }) => !uuids.includes(uuid));
+        await browser.storage.local.set({ rules: newRules });
+        document.querySelectorAll("rule-list").forEach((list) => list.removeAll());
+        createRuleInputs(newRules);
+    }
+    const src = input.getAttribute("src");
+    const { imports } = await browser.storage.local.get("imports");
+
+    if (imports && src in imports) {
+        const { data } = input;
+        delete data.imported;
+        imports[src] = data;
+        browser.storage.local.set({ imports });
+    }
+    input.data = {};
+}
+
+function createImportInput(src, data) {
+    const input = document.createElement("rule-import-input");
+    const inputs = document.getElementById("my-import-sources");
+    input.setAttribute("src", src);
+    input.setAttribute("deletable", true);
+    input.data = data;
+    inputs.append(input);
+}
+
+async function importSelected() {
+    const selected = document.querySelectorAll("rule-import-input[selected]:not([disabled])");
+    let { imports } = await browser.storage.local.get("imports");
+
+    if (!imports) {
+        imports = {};
+    }
+
+    let rulesToImport = [];
+
+    selected.forEach((input) => {
+        const src = input.getAttribute("src");
+        const rules = input.rules.filter((rule) => rule.uuid);
+        const uuids = rules.map((rule) => rule.uuid);
+
+        if (!(src in imports)) {
+            imports[src] = {};
+        }
+
+        imports[src].imported = {
+            uuids,
+            etag: input.etag,
+            digest: input.digest,
+            timestamp: Date.now(),
+        };
+        rulesToImport = rulesToImport.concat(rules);
+    });
+
+    importRules(rulesToImport);
+
+    await browser.storage.local.set({ imports });
+
+    selected.forEach((input) => {
+        const src = input.getAttribute("src");
+        input.data = imports[src];
+    });
+}
+
+function toggleImportSelectedButton() {
+    const selected = document.querySelectorAll("rule-import-input[selected]");
+    const importButton = document.getElementById("importSelected");
+    importButton.disabled = selected.length === 0;
+}
+
 function onRuleEditCompleted(e) {
     const { action, input } = e.detail;
     if (action !== this.id) {
@@ -183,17 +333,6 @@ function displayErrorMessage(error) {
     const message = document.getElementById("errorMessage");
     message.textContent = error;
     message.parentNode.classList.toggle("show", true);
-}
-
-async function loadDefaultRules() {
-    const response = await fetch("/rules/default-privacy.json", {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        mode: "same-origin",
-    });
-    const rules = await response.json();
-    importRules(rules);
 }
 
 async function importRules(imported) {
@@ -270,8 +409,9 @@ function toggleEmpty() {
     document.getElementById("exportRules").disabled = isEmpty;
 }
 
-function setLoadDefaultsButton() {
-    const p = document.querySelector(".create-or-default");
+function setCreateOrImportLink() {
+    const p = document.querySelector(".create-or-import");
+    const link = document.querySelector(".create-or-import-link");
     const textNode = p.firstChild;
     const marker = "/";
 
@@ -280,11 +420,7 @@ function setLoadDefaultsButton() {
     const endMark = markNode.textContent.indexOf(marker, 1);
     markNode.splitText(endMark + 1);
 
-    const link = document.createElement("button");
     link.textContent = markNode.textContent.substring(1, markNode.textContent.length - 1);
-    link.className = "btn text";
-    link.addEventListener("click", loadDefaultRules);
-
     markNode.replaceWith(link);
 }
 

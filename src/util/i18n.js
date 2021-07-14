@@ -26,7 +26,5 @@ export function translateTemplates() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    translateDocument(document);
-    translateTemplates();
-});
+translateDocument(document);
+translateTemplates();

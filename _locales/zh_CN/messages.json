@@ -449,15 +449,6 @@
   "import_description": {
     "message": "从本地文件导入规则。"
   },
-  "add_predefined_rules": {
-    "message": "添加默认规则"
-  },
-  "add_predefined_description": {
-    "message": "添加默认规则集。"
-  },
-  "add": {
-    "message": "Add"
-  },
   "contents": {
     "message": "内容"
   },
@@ -584,10 +575,6 @@
   },
   "no_rules": {
     "message": "无规则"
-  },
-  "create_or_default": {
-    "message": "创建一条规则，或者/加载一组默认规则/以改善隐私保护",
-    "description": "Mark text in between two '/' to act as button to load default rules when clicked"
   },
   "toolbar_icon": {
     "message": "工具栏图标"

@@ -195,13 +195,16 @@
     "message": "Other"
   },
   "options_title": {
-    "message": "Request Control Rules"
+    "message": "Request Control - Rules"
+  },
+  "imports_title": {
+    "message": "Request Control - Imports"
   },
   "settings_title": {
-    "message": "Request Control Settings"
+    "message": "Request Control - Settings"
   },
   "manual_title": {
-    "message": "Request Control Manual"
+    "message": "Request Control - Manual"
   },
   "manual": {
     "message": "Manual"
@@ -222,7 +225,7 @@
     "message": "New rule"
   },
   "count_patterns": {
-    "message": "$COUNT$ patterns",
+    "message": "patterns: $COUNT$",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -231,7 +234,16 @@
     }
   },
   "count_types": {
-    "message": "$COUNT$ types",
+    "message": "types: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
+  "count_rules": {
+    "message": "rules: $COUNT$",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -452,12 +464,6 @@
   "import_description": {
     "message": "Import rules from a local file."
   },
-  "add_predefined_rules": {
-    "message": "Add predefined rules"
-  },
-  "add_predefined_description": {
-    "message": "Add predefined rule sets."
-  },
   "add": {
     "message": "Add"
   },
@@ -588,9 +594,9 @@
   "no_rules": {
     "message": "No rules"
   },
-  "create_or_default": {
-    "message": "Create your first rule or /load a default set of rules/ to increase privacy",
-    "description": "Mark text in between two '/' to act as button to load default rules when clicked"
+  "create_or_import": {
+    "message": "Create your first rule or import rules from /predefined lists/",
+    "description": "Mark the text between two '/' to act as a link that opens the imports tab."
   },
   "toolbar_icon": {
     "message": "Toolbar icon"
@@ -606,5 +612,53 @@
   },
   "only": {
     "message": "Only"
+  },
+  "view_list": {
+    "message": "View list"
+  },
+  "common_lists": {
+    "message": "Common lists"
+  },
+  "site_specific_lists": {
+    "message": "Site specific lists"
+  },
+  "my_lists": {
+    "message": "My lists"
+  },
+  "privacy": {
+    "message": "Privacy"
+  },
+  "add_url_to_rules": {
+    "message": "Add URL to rule list"
+  },
+  "imports": {
+    "message": "Imports"
+  },
+  "import_selected": {
+    "message": "Import selected"
+  },
+  "imported": {
+    "message": "Imported"
+  },
+  "remove_imported_rules": {
+    "message": "Remove imported rules"
+  },
+  "imports_skip_redirectors": {
+    "message": "Skip common URL redirectors and dereferrers"
+  },
+  "imports_remove_parameters": {
+    "message": "Remove tracking URL query parameters"
+  },
+  "imports_remove_image_parameters": {
+    "message": "Remove image tracking URL query parameters"
+  },
+  "imports_block_beacon_and_ping": {
+    "message": "Block beacon and ping requests"
+  },
+  "imports_skip_image_downsamplers": {
+    "message": "Skip image downsamplers"
+  },
+  "duplicate_entry": {
+    "message": "Duplicate entry"
   }
 }

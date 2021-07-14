@@ -199,6 +199,7 @@ form .row {
         cursor: initial;
     }
 
+    .new:not(.editing) > .rule-header,
     .saved:not(.editing) > .rule-header {
         border-left: 2px solid green;
     }
@@ -207,7 +208,7 @@ form .row {
         border-left: 2px solid red;
     }
 
-    .new:not(.editing) > .rule-header {
+    .merged:not(.editing) > .rule-header {
         border-left: 2px solid orange;
     }
 
@@ -272,6 +273,7 @@ form .row {
         margin: 0 0.3em;
     }
 
+    .new:not(.editing) .information::before,
     .saved:not(.editing) .information::before {
         background: green;
         content: "";
@@ -282,7 +284,7 @@ form .row {
         content: "";
     }
 
-    .new:not(.editing) .information::before {
+    .merged:not(.editing) .information::before {
         background: orange;
         content: "";
     }

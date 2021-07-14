@@ -71,7 +71,7 @@ body {
 }
 
 .tab-selector > img {
-    margin-right: 0.3em;
+    margin-right: 0.5em;
 }
 
 .tab-selector > span {
@@ -245,6 +245,11 @@ body {
     width: 100%;
     display: flex;
     align-items: baseline;
+}
+
+#new-import-source {
+    width: 100%;
+    max-width: 32em;
 }
 
 @media (min-height: 400px) {
