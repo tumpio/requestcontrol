@@ -17,7 +17,7 @@
         "action": "filter",
         "active": true,
         "title": "HERE maps API 2.5.4",
-        "tag": "filter-here",
+        "tag": "privacy-here",
         "paramsFilter": {
             "values": [
                 "app_code",

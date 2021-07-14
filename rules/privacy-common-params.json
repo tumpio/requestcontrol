@@ -3,7 +3,7 @@
         "title": "Remove common tracking query parameters",
         "description": "Replicates Neat URL extension. Removes common tracking query parameters from all requests to websites.",
         "uuid": "5276a290-b21a-4deb-a86e-aa54c3ff1bcc",
-        "tag": "filter-common",
+        "tag": "privacy-tracking-params",
         "pattern": {
             "allUrls": true,
             "excludes": [
@@ -107,7 +107,7 @@
         "active": true,
         "title": "Exceptions to `sid` and `share` parameters",
         "description": "These sites use the URL parameters `sid` and `share` to load different pages. This trips a general-purpose referrer remover.",
-        "tag": "whitelist-utm"
+        "tag": "privacy-tracking-params"
     },
     {
         "uuid": "1123f3fd-fde5-4992-af96-c580c0f69186",
@@ -126,7 +126,7 @@
         ],
         "action": "whitelist",
         "active": true,
-        "tag": "whitelist-email",
+        "tag": "privacy-tracking-params",
         "title": "E-mail verification",
         "description": "Most websites send activation links via e-mail to prevent spam. Some of these links are incorrectly filtered."
     }

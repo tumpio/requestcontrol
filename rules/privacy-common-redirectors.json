@@ -2,7 +2,7 @@
     {
         "title": "Skip external dereferrers and redirectors",
         "description": "This filter is applied globally by URL path. As matched globally, it may result in a site not functioning correctly. Disabled by default.",
-        "tag": "filter-common",
+        "tag": "privacy-redirectors",
         "uuid": "4a6b8caf-3d0b-4c95-876e-b2cdcde1eb6a",
         "pattern": {
             "scheme": "*",
@@ -27,7 +27,7 @@
     {
         "uuid": "3baa759b-9afc-41ef-b770-c60e1d9383d2",
         "description": "Filter rule to skip and prevent redirection tracking on multiple hosts.",
-        "tag": "skip-redirectors",
+        "tag": "privacy-redirectors",
         "pattern": {
             "scheme": "*",
             "host": [
@@ -49,7 +49,7 @@
     {
         "title": "Skip Mozilla's outgoing link redirection service",
         "uuid": "3c4d6fa0-e2fb-4079-b3f0-e453ebe289afalsee",
-        "tag": "filter-mozilla",
+        "tag": "privacy-redirectors",
         "pattern": {
             "scheme": "*",
             "host": [
@@ -80,7 +80,7 @@
         "active": true,
         "title": "AWS SES (awstrack.me)",
         "description": "Strip destination from AWS SES links (awstrack.me), often found in newsletter emails.",
-        "tag": "filter-aws-ses",
+        "tag": "privacy-redirectors",
         "trimAllParams": true,
         "redirectUrl": "[href={pathname/\\/L0\\//$'|decodeURIComponent}]"
     },
@@ -100,7 +100,7 @@
         ],
         "action": "filter",
         "active": true,
-        "tag": "filter-embedly"
+        "tag": "privacy-redirectors"
     },
     {
         "uuid": "e3dd89aa-6fd3-41ae-945f-3617fc03902d",
@@ -119,7 +119,7 @@
         "action": "filter",
         "active": true,
         "title": "Skip Disqus image retriever",
-        "tag": "filter-disqus"
+        "tag": "privacy-redirectors"
     },
     {
         "uuid": "e3384047-a2b2-433e-a52c-f46eea48305f",
@@ -140,7 +140,7 @@
         "active": true,
         "title": "Skip Disqus redirector",
         "redirectUrl": "{search/\\?url=([^&]*)&.*/$1|decodeURIComponent|/:[A-Za-z0-9-]*$/}",
-        "tag": "redirect-disqus",
+        "tag": "privacy-redirectors",
         "description": "A suffix after the destination URL causes the usual approach to fail"
     }
 ]

@@ -16,7 +16,7 @@
     ],
     "action": "filter",
     "active": true,
-    "tag": "filter-youtube",
+    "tag": "privacy-youtube",
     "paramsFilter": {
       "values": [
         "feature",
@@ -48,7 +48,7 @@
     "action": "block",
     "active": false,
     "description": "May cause issues after the end of the video if logged in. Disabled by default.",
-    "tag": "block-youtube"
+    "tag": "privacy-youtube"
   },
   {
     "uuid": "4ead820a-429f-4e7c-a7ca-7241305bcedb",
@@ -64,7 +64,7 @@
     "action": "redirect",
     "active": true,
     "redirectUrl": "https://www.youtube.com/watch?v={pathname:1}{search/^\\?/&}{hash}",
-    "tag": "redirect-youtube",
+    "tag": "privacy-youtube",
     "types": [
       "main_frame"
     ]

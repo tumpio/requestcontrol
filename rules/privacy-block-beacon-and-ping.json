@@ -2,7 +2,7 @@
     {
         "title": "Block Beacon and Ping requests",
         "description": "Blocks Beacon and Ping requests. The Beacon API is often used for logging user activity and sending analytics data to the server.",
-        "tag": "block-beacon",
+        "tag": "block-beacon-ping",
         "uuid": "32db1f93-f99d-4c45-8485-e5c7beec5a69",
         "pattern": {
             "allUrls": true

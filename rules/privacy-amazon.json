@@ -2,7 +2,7 @@
     {
         "title": "Remove Amazon query parameters",
         "description": "Removes all non-whitelisted query parameters on both Amazon store and Prime Video.",
-        "tag": "filter-amazon",
+        "tag": "privacy-amazon",
         "uuid": "6dc06a86-2356-4521-a0c5-08372846df15",
         "pattern": {
             "scheme": "*",
@@ -78,7 +78,7 @@
     {
         "title": "Skip Amazon Picasso redirect",
         "description": "Skip Picasso redirect used on occasion by Amazon to track purchases",
-        "tag": "redirect-amazon",
+        "tag": "privacy-amazon",
         "uuid": "816c76d6-ad2e-4f7c-94be-e2436c93fe34",
         "pattern": {
             "scheme": "*",

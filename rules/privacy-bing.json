@@ -19,7 +19,7 @@
         ],
         "action": "filter",
         "active": true,
-        "tag": "filter-bing",
+        "tag": "privacy-bing",
         "paramsFilter": {
             "values": [
                 "cvid",

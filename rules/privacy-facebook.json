@@ -1,7 +1,7 @@
 [
     {
         "uuid": "07be1337-ceec-4a93-a49e-67e051124a7f",
-        "tag": "filter-facebook",
+        "tag": "privacy-facebook",
         "pattern": {
             "scheme": "*",
             "host": [
@@ -42,7 +42,7 @@
         ],
         "action": "filter",
         "active": true,
-        "tag": "filter-facebook",
+        "tag": "privacy-facebook",
         "paramsFilter": {
             "values": [
                 "_*",
@@ -77,7 +77,7 @@
         ],
         "action": "redirect",
         "active": true,
-        "tag": "redirect-facebook",
+        "tag": "privacy-facebook",
         "redirectUrl": "https://www.facebook.com/{pathname:1}"
     }
 ]

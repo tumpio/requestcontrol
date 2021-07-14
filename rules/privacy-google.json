@@ -3,7 +3,7 @@
         "title": "Stop Google search link tracking",
         "uuid": "60f46cfa-b906-4a2d-ab66-8f26dc35e97f",
         "description": "This filter rule prevents Google from obtaining the URL of clicked search link via URL redirection. The tracking request done in background is classified as a Sub Document type.",
-        "tag": "filter-google",
+        "tag": "privacy-google",
         "pattern": {
             "scheme": "*",
             "host": [
@@ -220,7 +220,7 @@
     {
         "title": "Remove query parameters from Google pages",
         "description": "Removes possible tracking query parameters used by Google.",
-        "tag": "filter-google",
+        "tag": "privacy-google",
         "uuid": "0b0d8660-3c95-40ba-8c53-d72328a6cf00",
         "pattern": {
             "scheme": "*",
@@ -448,7 +448,7 @@
     {
         "title": "Anonymize pictures from Google Maps and Google Street View",
         "description": "May cause problems in some browsers like Firefox ESR 68. Disabled by default.",
-        "tag": "filter-google-maps",
+        "tag": "privacy-google",
         "uuid": "6d25126a-dd1d-4e63-874c-fe0592e9bec1",
         "pattern": {
             "scheme": "*",
@@ -716,7 +716,7 @@
         "action": "redirect",
         "active": true,
         "title": "Skip Google AMP redirector",
-        "tag": "filter-google-amp",
+        "tag": "privacy-google",
         "redirectUrl": "https://{pathname:7}"
     },
     {

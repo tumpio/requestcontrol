@@ -2,7 +2,7 @@
   {
     "title": "1st filter for tracking parameters in images",
     "description": "Inspired by GIF Tracking Protection webextension. Any excluded pattern should be part of another filter rule.",
-    "tag": "filter-images-1",
+    "tag": "privacy-images-1",
     "uuid": "6468e7a9-440d-4727-a09e-c1a5cc386948",
     "pattern": {
       "scheme": "*",
@@ -154,7 +154,7 @@
       ],
       "invert": true
     },
-    "tag": "filter-images-2",
+    "tag": "privacy-images-2",
     "description": "Several image selection PHP scripts, based in numeric IDs."
   },
   {
@@ -198,7 +198,7 @@
       "invert": true
     },
     "description": "Oracle's Site-Satellite and Apache's BlobServer system",
-    "tag": "filter-images-3"
+    "tag": "privacy-images-3"
   },
   {
     "uuid": "938aebe5-c98a-46fb-9e38-6b9bd42d687e",
@@ -225,7 +225,7 @@
     "active": true,
     "title": "4th filter for tracking parameters in images",
     "skipRedirectionFilter": true,
-    "tag": "filter-images-4",
+    "tag": "privacy-images-4",
     "paramsFilter": {
       "values": [
         "ccb",
@@ -260,7 +260,7 @@
     "action": "filter",
     "active": true,
     "title": "WhatsApp Web images",
-    "tag": "filter-whatsapp",
+    "tag": "privacy-images-whatsapp",
     "description": "User avatars in WhatsApp Web need an extra rule to filter URL parameters",
     "paramsFilter": {
       "values": [
@@ -285,7 +285,7 @@
     ],
     "action": "filter",
     "active": true,
-    "tag": "filter-reddit",
+    "tag": "privacy-images-reddit",
     "skipRedirectionFilter": true,
     "trimAllParams": true
   },
@@ -309,7 +309,7 @@
     "active": true,
     "title": "Restore YouTube previews",
     "description": "The general filter rule breaks the previews shown upon hovering over the seekbar or a thumbnail. This rule restores them at the cost of sending unknown metadata to YouTube servers. Disabling this rule will not break YouTube's other functions.",
-    "tag": "whitelist-youtube"
+    "tag": "privacy-images"
   },
   {
     "uuid": "26b61cb2-b847-40c1-bd89-c31327434643",
@@ -337,7 +337,7 @@
     "active": true,
     "title": "Image-dependent sites",
     "description": "Some sites, like typesetting shops, are heavily dependent on images. (Image and web document MUST share domain.) DuckDuckgo's external preview server is exceptionally included because of its efforts against user tracking and search bubbling.",
-    "tag": "whitelist-images-samedomain"
+    "tag": "privacy-images"
   },
   {
     "uuid": "0ce012d9-8492-40eb-ae75-f7c48b4f97d3",
@@ -364,7 +364,7 @@
     "active": true,
     "title": "User avatars and karma at community-driven sites",
     "description": "e.g. phpBB forums, WikiDot wikis.",
-    "tag": "whitelist-avatars"
+    "tag": "privacy-images"
   },
   {
     "uuid": "91561207-76db-4850-85cb-5e34dedafa90",
@@ -385,7 +385,7 @@
     "active": true,
     "title": "Embedded images in MoinMoin based wikis and similar.",
     "description": "Notably used on wiki.ubuntu.com.",
-    "tag": "whitelist-moinmoin"
+    "tag": "privacy-images"
   },
   {
     "uuid": "42c98357-aba0-4e8a-9df2-739c885cfde8",
@@ -416,7 +416,7 @@
     "active": true,
     "title": "Image providers",
     "description": "Includes sites whose sole function is providing images for other web pages, and sites with a dedicated server for serving images. (Whitelisted from ALL domains)",
-    "tag": "whitelist-images-crossdomain"
+    "tag": "privacy-images"
   },
   {
     "uuid": "da3107bd-8fc1-4829-b4c4-6303af4af5fd",
@@ -445,7 +445,7 @@
     "action": "whitelist",
     "active": true,
     "title": "CAPTCHAs",
-    "tag": "whitelist-captcha",
+    "tag": "privacy-images",
     "description": "This filter includes reCAPTCHA and other CAPTCHA systems"
   },
   {
@@ -465,7 +465,7 @@
     "action": "whitelist",
     "active": true,
     "title": "DuckDuckGo map provider",
-    "tag": "whitelist-duckduckgo"
+    "tag": "privacy-images"
   },
   {
     "uuid": "311886d6-bf8b-4112-aea3-9539cc40c318",
@@ -487,7 +487,7 @@
     "active": true,
     "title": "Static Google Maps",
     "description": "Removing any parameter in these requests (signed maps, and base image for some embedded maps) will make it fail.",
-    "tag": "whitelist-google-maps"
+    "tag": "privacy-images"
   },
   {
     "uuid": "bd61a299-f45e-4dee-a16c-be91ae8f937f",
@@ -512,7 +512,7 @@
     "action": "whitelist",
     "active": true,
     "title": "Bing map and street view provider",
-    "tag": "whitelist-bing-maps"
+    "tag": "privacy-images"
   },
   {
     "uuid": "5c27a1dc-3446-472d-9e26-e001b5a32e51",
@@ -531,7 +531,7 @@
     "action": "whitelist",
     "active": true,
     "title": "Favicons at YouTube",
-    "tag": "whitelist-youtube-2"
+    "tag": "privacy-images"
   },
   {
     "uuid": "9a0a3b89-7fd4-4838-a5d2-a1e39da8006b",
@@ -551,7 +551,7 @@
     "action": "whitelist",
     "active": true,
     "title": "Facebook map thumbnail provider",
-    "tag": "whitelist-facebook-maps"
+    "tag": "privacy-images"
   },
   {
     "uuid": "e1262258-f5c2-4c2d-baa0-4a0e9ffcef3d",
@@ -573,7 +573,7 @@
     "action": "whitelist",
     "active": true,
     "title": "Yandex maps",
-    "tag": "whitelist-yandex"
+    "tag": "privacy-images"
   },
   {
     "uuid": "105d848c-abe4-4ea4-a9da-8fd00cc760d0",
@@ -592,7 +592,7 @@
     "action": "whitelist",
     "active": true,
     "title": "Internet Archive book reader",
-    "tag": "whitelist-archive",
+    "tag": "privacy-images",
     "description": "Unblocks book scans served from the Internet Archive online book reader",
     "log": true
   },
@@ -635,7 +635,7 @@
       "active": true,
       "title": "Amazon tracking pixels",
       "description": "Whitelisted on uBlock Origin as well. Blocking them may cause login to fail.",
-      "tag": "whitelist-amazon",
+      "tag": "privacy-images",
       "log": true
   }
 ]

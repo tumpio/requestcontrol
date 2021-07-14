@@ -25,7 +25,7 @@
         ],
         "action": "filter",
         "active": true,
-        "tag": "filter-linkedin",
+        "tag": "privacy-linkedin",
         "paramsFilter": {
             "values": [
                 "url"
