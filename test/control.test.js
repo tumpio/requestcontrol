@@ -1,3 +1,5 @@
+import { jest } from "@jest/globals";
+
 import { createRule } from "../src/main/api";
 import { RequestController } from "../src/main/control";
 
@@ -25,17 +27,14 @@ beforeEach(() => {
     filterRule = createRule({ action: "filter" });
     redirectRule = createRule({
         action: "redirect",
-        redirectUrl: "https://redirect.url/"
+        redirectUrl: "https://redirect.url/",
     });
     filterParamsRule = createRule({
-        "action": "filter",
-        "skipRedirectionFilter": true,
-        "paramsFilter": {
-            "values": [
-                "utm_*",
-                "/./"
-            ]
-        }
+        action: "filter",
+        skipRedirectionFilter: true,
+        paramsFilter: {
+            values: ["utm_*", "/./"],
+        },
     });
 });
 
@@ -160,10 +159,13 @@ describe("user is notified", () => {
 
     test("Request redirected - redirect rule overrides filter rule", () => {
         request.url = "http://foo.com/?utm_source=blaa";
-        controller.mark(request, createRule({
-            action: "redirect",
-            redirectUrl: "[hostname=bar.com]"
-        }));
+        controller.mark(
+            request,
+            createRule({
+                action: "redirect",
+                redirectUrl: "[hostname=bar.com]",
+            })
+        );
         controller.mark(request, filterParamsRule);
         const resolve = controller.resolve(request);
         expect(resolve.redirectUrl).toBe("http://bar.com/?utm_source=blaa");
@@ -223,26 +225,25 @@ describe("When multiple rules match a request", () => {
     test("first filter that changes the url gets applied", () => {
         request = { requestId: 0, url: "https://youtube.com/watch?v=OipJYWhMi3k&feature=em-uploademail" };
         controller.mark(request, createRule({ action: "filter" }));
-        controller.mark(request, createRule({
-            "action": "filter",
-            "paramsFilter": {
-                "values": [
-                    "utm_*",
-                    "ref_*"
-                ]
-            }
-        }));
+        controller.mark(
+            request,
+            createRule({
+                action: "filter",
+                paramsFilter: {
+                    values: ["utm_*", "ref_*"],
+                },
+            })
+        );
 
-        controller.mark(request, createRule({
-            "action": "filter",
-            "paramsFilter": {
-                "values": [
-                    "app",
-                    "attribution_link",
-                    "feature"
-                ]
-            }
-        }));
+        controller.mark(
+            request,
+            createRule({
+                action: "filter",
+                paramsFilter: {
+                    values: ["app", "attribution_link", "feature"],
+                },
+            })
+        );
 
         const resolve = controller.resolve(request);
         expect(resolve.redirectUrl).toBe("https://youtube.com/watch?v=OipJYWhMi3k");
@@ -250,69 +251,83 @@ describe("When multiple rules match a request", () => {
     test("no matched filter rule gets applied", () => {
         request = { requestId: 0, url: "https://youtube.com/watch?v=OipJYWhMi3k&feature=em-uploademail" };
         controller.mark(request, createRule({ action: "filter" }));
-        controller.mark(request, createRule({
-            "action": "filter",
-            "paramsFilter": {
-                "values": [
-                    "utm_*",
-                    "ref_*"
-                ]
-            }
-        }));
+        controller.mark(
+            request,
+            createRule({
+                action: "filter",
+                paramsFilter: {
+                    values: ["utm_*", "ref_*"],
+                },
+            })
+        );
 
-        controller.mark(request, createRule({
-            "action": "filter",
-            "paramsFilter": {
-                "values": [
-                    "app",
-                    "attribution_link"
-                ]
-            }
-        }));
+        controller.mark(
+            request,
+            createRule({
+                action: "filter",
+                paramsFilter: {
+                    values: ["app", "attribution_link"],
+                },
+            })
+        );
 
         const resolve = controller.resolve(request);
         expect(resolve).toBeFalsy();
     });
     test("first redirect rule to match gets applied", () => {
         request = { requestId: 0, url: "https://youtube.com/watch?v=OipJYWhMi3k&feature=em-uploademail" };
-        controller.mark(request, createRule({
-            action: "redirect",
-            redirectUrl: "https://redirect.url1/"
-        }));
-        controller.mark(request, createRule({
-            action: "redirect",
-            redirectUrl: "https://redirect.url2/"
-        }));
+        controller.mark(
+            request,
+            createRule({
+                action: "redirect",
+                redirectUrl: "https://redirect.url1/",
+            })
+        );
+        controller.mark(
+            request,
+            createRule({
+                action: "redirect",
+                redirectUrl: "https://redirect.url2/",
+            })
+        );
 
-        controller.mark(request, createRule({
-            "action": "filter"
-        }));
+        controller.mark(
+            request,
+            createRule({
+                action: "filter",
+            })
+        );
 
         const resolve = controller.resolve(request);
         expect(resolve.redirectUrl).toBe("https://redirect.url1/");
     });
     test("redirect rule matches first before any filter rule", () => {
         request = { requestId: 0, url: "https://youtube.com/watch?v=OipJYWhMi3k&feature=em-uploademail" };
-        controller.mark(request, createRule({
-            "action": "filter",
-            "paramsFilter": {
-                "values": [
-                    "v"
-                ]
-            }
-        }));
-        controller.mark(request, createRule({
-            "action": "filter",
-            "paramsFilter": {
-                "values": [
-                    "feature"
-                ]
-            }
-        }));
-        controller.mark(request, createRule({
-            action: "redirect",
-            redirectUrl: "https://redirect.url/"
-        }));
+        controller.mark(
+            request,
+            createRule({
+                action: "filter",
+                paramsFilter: {
+                    values: ["v"],
+                },
+            })
+        );
+        controller.mark(
+            request,
+            createRule({
+                action: "filter",
+                paramsFilter: {
+                    values: ["feature"],
+                },
+            })
+        );
+        controller.mark(
+            request,
+            createRule({
+                action: "redirect",
+                redirectUrl: "https://redirect.url/",
+            })
+        );
 
         const resolve = controller.resolve(request);
         expect(resolve.redirectUrl).toBe("https://redirect.url/");

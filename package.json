@@ -1,6 +1,8 @@
 {
   "name": "requestcontrol",
   "license": "MPL-2.0",
+  "private": true,
+  "type": "module",
   "repository": {
     "type": "git",
     "value": "git+https://github.com/tumpio/requestcontrol.git"
@@ -10,7 +12,7 @@
   },
   "scripts": {
     "start": "web-ext run -i=$npm_package_config_ignore --bc --url about:debugging#addons",
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "coverage": "codecov",
     "lint": "eslint src/ rules/*.json _locales/*/*.json && web-ext lint -i=$npm_package_config_ignore -w",
     "lint-build": "addons-linter --warnings-as-errors web-ext-artifacts/request_control-$(node -p \"require('./manifest.json').version\").zip",
@@ -27,11 +29,7 @@
     "tldts-experimental": "^5.7.38"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.6",
-    "@babel/preset-env": "^7.14.7",
-    "@babel/register": "^7.14.5",
     "addons-linter": "^3.9.0",
-    "babel-jest": "^27.0.6",
     "codecov": "^3.8.2",
     "eslint": "^7.30.0",
     "eslint-config-problems": "^5.0.0",
@@ -46,20 +44,9 @@
     "jest": "^27.0.6",
     "web-ext": "^6.2.0"
   },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "current"
-          }
-        }
-      ]
-    ]
-  },
   "jest": {
     "testEnvironment": "jsdom",
+    "transform": {},
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
     "collectCoverageFrom": [
@@ -80,18 +67,16 @@
     "env": {
       "es6": true,
       "browser": true,
-      "node": true,
       "webextensions": true,
       "jest": true
     },
     "parserOptions": {
       "sourceType": "module",
-      "ecmaVersion": 11
+      "ecmaVersion": 12
     },
     "plugins": [
       "jest",
       "import",
-      "node",
       "promise",
       "no-unsanitized",
       "simple-import-sort"
