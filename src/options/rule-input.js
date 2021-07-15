@@ -147,7 +147,7 @@ class RuleInput extends HTMLElement {
         } else if (this.rule.name) {
             return decodeURIComponent(this.rule.name);
         }
-        return this.defaultTitle;
+        return decodeURIComponent(this.defaultTitle);
     }
 
     get defaultTitle() {
@@ -180,7 +180,9 @@ class RuleInput extends HTMLElement {
     }
 
     get description() {
-        return this.rule.description ? decodeURIComponent(this.rule.description) : this.defaultDescription;
+        return this.rule.description
+            ? decodeURIComponent(this.rule.description)
+            : decodeURIComponent(this.defaultDescription);
     }
 
     get defaultDescription() {
