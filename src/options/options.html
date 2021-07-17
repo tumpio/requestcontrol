@@ -14,6 +14,7 @@
         <script defer src="../util/tab.js"></script>
         <script defer src="../util/modal.js"></script>
         <script defer type="module" src="../util/i18n.js"></script>
+        <script defer type="module" src="alert-popup.js"></script>
         <script defer src="type-input.js"></script>
         <script defer src="loading-dots.js"></script>
         <script defer src="rule-import-input.js"></script>
@@ -228,10 +229,11 @@
         href="/LICENSE">LICENSE</a>.</code></pre>
             </div>
         </div>
-        <div class="alert alert-danger alert-dismissible shadow">
-            <span id="errorMessage"></span>
-            <span class="close">&times;</span>
-        </div>
+        <template id="alert-popup">
+            <link rel="stylesheet" href="alert-popup.css" />
+            <span id="message"></span>
+            <span id="close">&times;</span>
+        </template>
         <div class="modal fade" id="ruleTesterModal">
             <div class="modal-content c">
                 <span class="close">&times;</span>

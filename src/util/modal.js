@@ -3,11 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".alert .close").forEach((close) => {
-        close.addEventListener("click", function () {
-            this.parentNode.classList.remove("show");
-        });
-    });
     document.querySelectorAll("[data-toggle='modal']").forEach((btn) => {
         btn.addEventListener("click", function () {
             document.querySelector(this.dataset.target).classList.add("show");

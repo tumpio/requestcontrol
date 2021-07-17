@@ -5,6 +5,7 @@
 import { exportObject, importFile } from "../util/import-export.js";
 import { Toc } from "../util/toc.js";
 import { uuid } from "../util/uuid.js";
+import { showAlertPopup } from "./alert-popup.js";
 import { OPTION_CHANGE_ICON, OPTION_SHOW_COUNTER } from "./constants.js";
 import { testRules } from "./rule-tester.js";
 
@@ -37,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     document.getElementById("importRules").addEventListener("change", (e) => {
-        importFile(e.target.files[0]).then(importRules).catch(displayErrorMessage);
+        importFile(e.target.files[0]).then(importRules).catch(showAlertPopup);
     });
 
     const optionShowCounter = document.getElementById("optionShowCounter");
@@ -329,12 +330,6 @@ function getSelectedRules() {
     return Array.from(document.querySelectorAll("rule-list")).flatMap((list) => list.selected);
 }
 
-function displayErrorMessage(error) {
-    const message = document.getElementById("errorMessage");
-    message.textContent = error;
-    message.parentNode.classList.toggle("show", true);
-}
-
 async function importRules(imported) {
     let { rules } = await browser.storage.local.get("rules");
 
@@ -356,7 +351,7 @@ async function importRules(imported) {
             list.mark(mergedRules, "merged");
         });
     } catch (ex) {
-        displayErrorMessage(ex);
+        showAlertPopup(ex);
     }
 }
 
