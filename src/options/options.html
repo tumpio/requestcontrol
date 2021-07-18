@@ -12,9 +12,7 @@
         <link rel="stylesheet" href="rule-list.css" />
         <link rel="stylesheet" href="rule-input.css" />
         <script defer src="../util/tab.js"></script>
-        <script defer src="../util/modal.js"></script>
         <script defer type="module" src="../util/i18n.js"></script>
-        <script defer type="module" src="alert-popup.js"></script>
         <script defer src="type-input.js"></script>
         <script defer src="loading-dots.js"></script>
         <script defer src="rule-import-input.js"></script>
@@ -234,24 +232,26 @@
             <span id="message"></span>
             <span id="close">&times;</span>
         </template>
-        <div class="modal fade" id="ruleTesterModal">
-            <div class="modal-content c">
-                <span class="close">&times;</span>
-                <h5 class="modal-title" data-i18n="test_selected_rules"></h5>
-                <input type="text" class="card w-100" id="test-url" data-i18n-placeholder="test_url" />
-                <div class="test-result">
-                    <span>&gt;</span>
-                    <span id="testResult"></span>
+        <template id="modal-dialog">
+            <link rel="stylesheet" href="/lib/lit/lit.css" />
+            <link rel="stylesheet" href="common.css" />
+            <link rel="stylesheet" href="modal-dialog.css" />
+            <div id="body" class="c">
+                <div class="header">
+                    <span id="title"><slot name="title"></slot></span>
+                    <span id="close">&times;</span>
                 </div>
+                <div id="content"><slot name="content"></slot></div>
             </div>
-        </div>
-        <div class="modal fade" id="changelogModal">
-            <div class="modal-content c">
-                <span class="close">&times;</span>
-                <h5 class="modal-title" data-i18n="changelog"></h5>
-                <div class="modal-body"></div>
+        </template>
+        <template id="rule-test-dialog">
+            <link rel="stylesheet" href="rule-tester.css" />
+            <input type="url" class="card w-100" id="test-url" data-i18n-placeholder="test_url" name="test-url"/>
+            <div class="test-result">
+                <span>&gt;</span>
+                <span id="result">&nbsp;</span>
             </div>
-        </div>
+        </template>
         <template id="rule-input">
             <div id="header" class="rule-header">
                 <div class="rule-select">

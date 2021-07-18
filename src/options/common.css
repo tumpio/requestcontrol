@@ -27,14 +27,6 @@ code {
     color: brown;
 }
 
-.card {
-    border-width: 2px;
-}
-
-.card:focus {
-    border-color: #3d7e9a;
-}
-
 .btn {
     display: inline-flex;
     align-items: center;

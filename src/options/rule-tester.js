@@ -10,8 +10,52 @@ import { RedirectRule } from "../main/rules/redirect.js";
 import { SecureRule } from "../main/rules/secure.js";
 import { LoggedWhitelistRule, WhitelistRule } from "../main/rules/whitelist.js";
 import { matchPatternToRegExp } from "../util/regexp.js";
+import ModalDialog from "./modal-dialog.js";
 
-export function testRules(testUrl, rulePatterns) {
+let previousTestUrl;
+
+class RuleTestDialog extends ModalDialog {
+    constructor() {
+        super();
+        this.rules = [];
+        const template = document.getElementById("rule-test-dialog");
+        this.shadowRoot.getElementById("content").append(template.content.cloneNode(true));
+
+        this.shadowRoot.getElementById("test-url").addEventListener("input", (e) => {
+            const result = this.shadowRoot.getElementById("result");
+            result.textContent = testRules(e.target.value, this.rules);
+        });
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        this.shadowRoot.getElementById("title").textContent = browser.i18n.getMessage("test_selected_rules");
+
+        const input = this.shadowRoot.getElementById("test-url");
+
+        if (previousTestUrl) {
+            input.value = previousTestUrl;
+            const result = this.shadowRoot.getElementById("result");
+            result.textContent = testRules(previousTestUrl, this.rules);
+        }
+        input.focus();
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        previousTestUrl = this.shadowRoot.getElementById("test-url").value;
+    }
+}
+
+customElements.define("rule-test-dialog", RuleTestDialog);
+
+export function showRuleTestDialog(rules) {
+    const dialog = document.createElement("rule-test-dialog");
+    dialog.rules = rules;
+    document.body.append(dialog);
+}
+
+function testRules(testUrl, rulePatterns) {
     try {
         new URL(testUrl);
     } catch {

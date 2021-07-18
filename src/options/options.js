@@ -6,8 +6,9 @@ import { exportObject, importFile } from "../util/import-export.js";
 import { Toc } from "../util/toc.js";
 import { uuid } from "../util/uuid.js";
 import { showAlertPopup } from "./alert-popup.js";
+import { showChangelog } from "./changelog-dialog.js";
 import { OPTION_CHANGE_ICON, OPTION_SHOW_COUNTER } from "./constants.js";
-import { testRules } from "./rule-tester.js";
+import { showRuleTestDialog } from "./rule-tester.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const { rules } = await browser.storage.local.get("rules");
@@ -81,23 +82,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         toggleEmpty();
     });
 
-    document.getElementById("testSelectedRules").addEventListener("click", () => {
-        document.getElementById("ruleTesterModal").classList.add("show");
-        const testUrl = document.getElementById("test-url");
-
-        if (testUrl.value) {
-            const tester = onRuleTest.bind(testUrl);
-            tester();
-        }
-    });
-
-    document.getElementById("test-url").addEventListener("input", onRuleTest);
+    document
+        .getElementById("testSelectedRules")
+        .addEventListener("click", () => showRuleTestDialog(getSelectedRules()));
 
     browser.management.getSelf((info) => {
         document.getElementById("version").textContent = browser.i18n.getMessage("version", info.version);
     });
 
-    document.getElementById("changelog").addEventListener("click", fetchChangelog, { once: true });
+    document.getElementById("changelog").addEventListener("click", showChangelog);
 
     document.getElementById("selectedRules").addEventListener("click", () => {
         document.querySelector(".mobile-toolbar").classList.toggle("show");
@@ -383,12 +376,6 @@ function mergeRules(rules, imported) {
     return [newRules, mergedRules];
 }
 
-async function onRuleTest() {
-    const result = document.getElementById("testResult");
-    const selected = getSelectedRules();
-    result.textContent = testRules(this.value, selected);
-}
-
 function updateLists() {
     document.querySelectorAll("rule-list").forEach((list) => {
         list.updateHeader();
@@ -475,68 +462,4 @@ async function fetchLocalisedManual() {
     manual.querySelectorAll("table").forEach((table) => {
         table.className = "table table-striped";
     });
-}
-
-async function fetchChangelog() {
-    const response = await fetch("/CHANGELOG.md", {
-        headers: {
-            "Content-Type": "text/plain",
-        },
-        mode: "same-origin",
-    });
-    const content = await response.text();
-    const modal = document.getElementById("changelogModal");
-    const body = modal.querySelector(".modal-body");
-
-    let ul = document.createElement("ul");
-    let start = false;
-
-    for (const line of content.split("\n")) {
-        if (!start) {
-            if (line.startsWith("##")) {
-                start = true;
-            }
-            continue;
-        }
-        if (line.startsWith("-")) {
-            const li = document.createElement("li");
-            const text = line.split(/(#\d+|@\w+)/);
-            li.textContent = text[0].replace(/^- /, "");
-            for (let i = 1; i < text.length; i++) {
-                if (text[i].startsWith("#")) {
-                    const link = document.createElement("a");
-                    link.textContent = text[i];
-                    link.href = `https://github.com/tumpio/requestcontrol/issues/${text[i].substring(1)}`;
-                    link.target = "_blank";
-                    li.append(link);
-                } else if (text[i].startsWith("@")) {
-                    const link = document.createElement("a");
-                    link.textContent = text[i];
-                    link.href = `https://github.com/${text[i].substring(1)}`;
-                    link.target = "_blank";
-                    li.append(link);
-                } else {
-                    li.append(text[i]);
-                }
-            }
-            if (/fix/i.test(line)) {
-                li.classList.add("fix");
-            } else if (/add/i.test(line)) {
-                li.classList.add("add");
-            } else if (/change/i.test(line)) {
-                li.classList.add("change");
-            } else if (/update/i.test(line)) {
-                li.classList.add("update");
-            } else if (/locale/i.test(line)) {
-                li.classList.add("locale");
-            }
-            ul.appendChild(li);
-        } else {
-            const h = document.createElement("h6");
-            h.textContent = line.substring(2);
-            body.appendChild(h);
-            ul = document.createElement("ul");
-            body.appendChild(ul);
-        }
-    }
 }
