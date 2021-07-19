@@ -169,7 +169,7 @@ class RuleInput extends HTMLElement {
     }
 
     set title(str) {
-        const title = encodeURIComponent(str.trim());
+        const title = str.trim();
         if (title) {
             this.rule.title = title;
         } else {
@@ -190,7 +190,7 @@ class RuleInput extends HTMLElement {
     }
 
     set description(str) {
-        const description = encodeURIComponent(str.trim());
+        const description = str.trim();
         if (description) {
             this.rule.description = description;
         } else {
@@ -213,7 +213,7 @@ class RuleInput extends HTMLElement {
     }
 
     set tag(str) {
-        const tag = encodeURIComponent(str.trim());
+        const tag = str.trim();
         if (tag) {
             this.rule.tag = tag;
         } else {
@@ -793,14 +793,11 @@ class RedirectRuleInput extends BaseRedirectRuleInput {
     }
 
     get defaultTitle() {
-        return browser.i18n.getMessage("rule_title_redirect_to", [
-            super.defaultTitle,
-            encodeURIComponent(this.rule.redirectUrl),
-        ]);
+        return browser.i18n.getMessage("rule_title_redirect_to", [super.defaultTitle, this.rule.redirectUrl]);
     }
 
     get defaultDescription() {
-        return browser.i18n.getMessage("rule_description_redirect", encodeURIComponent(this.rule.redirectUrl));
+        return browser.i18n.getMessage("rule_description_redirect", this.rule.redirectUrl);
     }
 
     updateInputs() {
