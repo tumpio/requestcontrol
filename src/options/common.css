@@ -54,6 +54,7 @@ code {
 }
 
 .btn:disabled,
+.btn.disabled,
 a.disabled {
     opacity: 0.6;
     cursor: default;
