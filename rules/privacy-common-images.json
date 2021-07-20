@@ -393,6 +393,7 @@
       "scheme": "*",
       "host": [
         "*.imgix.net",
+        "attachment.outlook.live.net",
         "badge.dimensions.ai",
         "badges.altmetric.com",
         "chart.googleapis.com",
