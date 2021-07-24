@@ -162,6 +162,19 @@ document.addEventListener("rule-import-deleted", onImportSourceDeleted);
 
 document.addEventListener("rule-import-remove-imported", onRemoveImportedRules);
 
+document.addEventListener("rule-import-show-imported", (e) => {
+    const { uuids } = e.target.data.imported;
+    uuids.forEach((uuid) => {
+        const input = document.querySelector(`[data-uuid="${uuid}"`);
+        if (input) {
+            input.select();
+        }
+    });
+    window.location.hash = "#tab-rules";
+    document.body.scrollIntoView(false);
+    updateToolbar();
+});
+
 async function setupImportsTab() {
     const { imports } = await browser.storage.local.get("imports");
 

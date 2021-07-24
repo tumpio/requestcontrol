@@ -199,6 +199,10 @@ class RuleInput extends HTMLElement {
         this.notifyChanged();
     }
 
+    select() {
+        this.selected = true;
+    }
+
     set selected(isSelected) {
         this.classList.toggle("selected", isSelected);
         this.querySelector("#select").checked = isSelected;

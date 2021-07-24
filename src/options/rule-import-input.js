@@ -24,6 +24,15 @@ class RuleImportInput extends HTMLElement {
             );
         });
 
+        this.shadowRoot.getElementById("show-imported").addEventListener("click", () => {
+            this.dispatchEvent(
+                new CustomEvent("rule-import-show-imported", {
+                    bubbles: true,
+                    composed: true,
+                })
+            );
+        });
+
         this.shadowRoot.getElementById("remove-imported").addEventListener("click", () => {
             this.dispatchEvent(
                 new CustomEvent("rule-import-remove-imported", {
