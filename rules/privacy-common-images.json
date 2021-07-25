@@ -48,6 +48,8 @@
         "*styles",
         "*token",
         "auto",
+        "base_image",
+        "base_image_bucket_name",
         "bbox",
         "bboxsr",
         "bg",
