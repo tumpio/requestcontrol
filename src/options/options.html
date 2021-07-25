@@ -142,7 +142,7 @@
                     <summary data-i18n="my_lists"></summary>
                     <div id="my-import-sources"></div>
                     <form id="import-source-form">
-                        <input id="new-import-source" name="src" required type="url" data-i18n-placeholder="add_url_to_rules" autocomplete="off"></input>
+                        <input id="new-import-source" name="src" required type="url" data-i18n-placeholder="add_url_to_rules"></input>
                         <button class="btn">
                             <span data-i18n="add"></span>
                         </button>
@@ -625,7 +625,8 @@
                 <a id="url" target="_blank" data-i18n-title="view_list"><img src="/icons/ionicons/open-outline.svg" height="20" class="middle"></a>
                 <loading-dots id="loading"></loading-dots>
                 <span id="count" class="badge badge-info"></span>
-                <button id="show-imported" class="btn text"><span id="imported" class="badge badge-success" data-i18n="imported" hidden></span></button>
+                <button id="show-imported" class="btn text" data-i18n-title="show_imported_rules" hidden><span id="imported" class="badge badge-success" data-i18n="imported"></span></button>
+                <button id="update-imported" class="btn text" data-i18n-title="list_has_been_updated" hidden><span id="update" class="badge badge-notify" data-i18n="update"></span></button>
                 <button id="remove-imported" class="btn text" data-i18n-title="remove_imported_rules" hidden><img src="/icons/ionicons/backspace-outline.svg" height="20" class="middle"/></button>
                 <img id="error" src="/icons/ionicons/warning-outline.svg" height="20" class="middle" hidden/>
                 <button id="delete" class="btn text" data-i18n-title="delete" hidden><img src="/icons/ionicons/close-circle-outline.svg" height="20" class="middle"/></button>

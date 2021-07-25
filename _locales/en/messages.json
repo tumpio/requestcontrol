@@ -660,5 +660,14 @@
   },
   "duplicate_entry": {
     "message": "Duplicate entry"
+  },
+  "update": {
+    "message": "Update"
+  },
+  "list_has_been_updated": {
+    "message": "List has been updated after imported"
+  },
+  "show_imported_rules": {
+    "message": "Show imported rules"
   }
 }

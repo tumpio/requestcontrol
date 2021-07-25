@@ -175,6 +175,45 @@ document.addEventListener("rule-import-show-imported", (e) => {
     updateToolbar();
 });
 
+document.addEventListener("rule-import-update-imported", async (e) => {
+    const input = e.target;
+    let { imports } = await browser.storage.local.get("imports");
+    const src = input.getAttribute("src");
+    const rulesToImport = input.rules.filter((rule) => rule.uuid);
+    const uuids = rulesToImport.map((rule) => rule.uuid);
+
+    if (!imports) {
+        imports = {};
+    }
+
+    if (!(src in imports)) {
+        imports[src] = input.data;
+    }
+
+    const data = imports[src];
+
+    if (data.imported && data.imported.uuids) {
+        const { rules } = await browser.storage.local.get("rules");
+
+        if (rules) {
+            const removed = new Set(data.imported.uuids.filter((uuid) => !uuids.includes(uuid)));
+            await browser.storage.local.set({ rules: rules.filter((rule) => !removed.has(rule.uuid)) });
+        }
+    }
+
+    importRules(rulesToImport);
+
+    imports[src].imported = {
+        uuids,
+        etag: input.etag,
+        digest: input.digest,
+        timestamp: Date.now(),
+    };
+
+    await browser.storage.local.set({ imports });
+    input.data = imports[src];
+});
+
 async function setupImportsTab() {
     const { imports } = await browser.storage.local.get("imports");
 

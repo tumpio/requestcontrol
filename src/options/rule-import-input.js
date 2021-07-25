@@ -41,6 +41,15 @@ class RuleImportInput extends HTMLElement {
                 })
             );
         });
+
+        this.shadowRoot.getElementById("update-imported").addEventListener("click", () => {
+            this.dispatchEvent(
+                new CustomEvent("rule-import-update-imported", {
+                    bubbles: true,
+                    composed: true,
+                })
+            );
+        });
     }
 
     static get observedAttributes() {
@@ -88,10 +97,12 @@ class RuleImportInput extends HTMLElement {
     }
 
     set data(value = {}) {
-        const badge = this.shadowRoot.getElementById("imported");
+        const show = this.shadowRoot.getElementById("show-imported");
         const remove = this.shadowRoot.getElementById("remove-imported");
-        badge.hidden = !value.imported;
+        const update = this.shadowRoot.getElementById("update-imported");
+        show.hidden = !value.imported;
         remove.hidden = !value.imported;
+        update.hidden = !value.imported || !this.digest || value.imported.digest === this.digest;
         this._data = value;
     }
 
@@ -99,9 +110,11 @@ class RuleImportInput extends HTMLElement {
         const loading = this.shadowRoot.getElementById("loading");
         const error = this.shadowRoot.getElementById("error");
         const select = this.shadowRoot.getElementById("select");
+        const update = this.shadowRoot.getElementById("update-imported");
         loading.hidden = false;
         error.hidden = true;
         select.disabled = true;
+        update.hidden = true;
         this.disabled = true;
 
         try {
@@ -121,6 +134,7 @@ class RuleImportInput extends HTMLElement {
             );
             select.disabled = false;
             this.disabled = false;
+            update.hidden = !this.data.imported || this.data.imported.digest === this.digest;
         } catch (e) {
             error.title = e;
             error.hidden = false;

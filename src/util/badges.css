@@ -23,6 +23,11 @@
     background-color: #3ba03b;
 }
 
+.badge-notify {
+    color: #444;
+    background-color: #ffc049;
+}
+
 .badge:not(:empty):not(.d-none) {
     display: inline-block;
     padding: 0.25em 0.5em;
