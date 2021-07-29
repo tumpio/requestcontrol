@@ -172,6 +172,7 @@ document.addEventListener("rule-import-show-imported", (e) => {
     });
     window.location.hash = "#tab-rules";
     document.body.scrollIntoView(false);
+    updateLists();
     updateToolbar();
 });
 
