@@ -33,9 +33,9 @@ class RuleImportInput extends HTMLElement {
             );
         });
 
-        this.shadowRoot.getElementById("remove-imported").addEventListener("click", () => {
+        this.shadowRoot.getElementById("delete-imported").addEventListener("click", () => {
             this.dispatchEvent(
-                new CustomEvent("rule-import-remove-imported", {
+                new CustomEvent("rule-import-delete-imported", {
                     bubbles: true,
                     composed: true,
                 })
@@ -98,7 +98,7 @@ class RuleImportInput extends HTMLElement {
 
     set data(value = {}) {
         const show = this.shadowRoot.getElementById("show-imported");
-        const remove = this.shadowRoot.getElementById("remove-imported");
+        const remove = this.shadowRoot.getElementById("delete-imported");
         const update = this.shadowRoot.getElementById("update-imported");
         show.hidden = !value.imported;
         remove.hidden = !value.imported;

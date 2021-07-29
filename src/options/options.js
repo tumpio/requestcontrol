@@ -160,7 +160,7 @@ document.addEventListener("rule-import-selected", toggleImportSelectedButton);
 
 document.addEventListener("rule-import-deleted", onImportSourceDeleted);
 
-document.addEventListener("rule-import-remove-imported", onRemoveImportedRules);
+document.addEventListener("rule-import-delete-imported", onRemoveImportedRules);
 
 document.addEventListener("rule-import-show-imported", (e) => {
     const { uuids } = e.target.data.imported;

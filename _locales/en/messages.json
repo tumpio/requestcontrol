@@ -616,6 +616,9 @@
   "view_list": {
     "message": "View list"
   },
+  "remove_list": {
+    "message": "Remove list"
+  },
   "common_lists": {
     "message": "Common lists"
   },
@@ -631,6 +634,9 @@
   "add_url_to_rules": {
     "message": "Add URL to rule list"
   },
+  "duplicate_entry": {
+    "message": "Duplicate entry"
+  },
   "imports": {
     "message": "Imports"
   },
@@ -640,8 +646,17 @@
   "imported": {
     "message": "Imported"
   },
-  "remove_imported_rules": {
-    "message": "Remove imported rules"
+  "delete_imported_rules": {
+    "message": "Delete imported rules"
+  },
+  "update_imported_rules": {
+    "message": "Update imported rules"
+  },
+  "update": {
+    "message": "Update"
+  },
+  "show_imported_rules": {
+    "message": "Show imported rules"
   },
   "imports_skip_redirectors": {
     "message": "Skip common URL redirectors and dereferrers"
@@ -657,17 +672,5 @@
   },
   "imports_skip_image_downsamplers": {
     "message": "Skip image downsamplers"
-  },
-  "duplicate_entry": {
-    "message": "Duplicate entry"
-  },
-  "update": {
-    "message": "Update"
-  },
-  "list_has_been_updated": {
-    "message": "List has been updated after imported"
-  },
-  "show_imported_rules": {
-    "message": "Show imported rules"
   }
 }
