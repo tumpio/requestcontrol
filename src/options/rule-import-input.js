@@ -125,9 +125,10 @@ class RuleImportInput extends HTMLElement {
             }
 
             const data = await response.json();
-            this.digest = await digest(JSON.stringify(data));
+            const rules = (Array.isArray(data) ? data : [data]).filter((rule) => rule.uuid);
+            this.digest = await digest(JSON.stringify(rules));
             this.etag = response.headers.get("etag");
-            this.rules = Array.isArray(data) ? data : [data];
+            this.rules = rules;
             this.shadowRoot.getElementById("count").textContent = browser.i18n.getMessage(
                 "count_rules",
                 this.rules.length
