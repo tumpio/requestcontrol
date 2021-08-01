@@ -1,3 +1,7 @@
 * + * {
     margin: initial;
 }
+
+#delete {
+    margin-left: 0.3em;
+}

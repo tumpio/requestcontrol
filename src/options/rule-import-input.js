@@ -42,9 +42,9 @@ class RuleImportInput extends HTMLElement {
             );
         });
 
-        this.shadowRoot.getElementById("update-imported").addEventListener("click", () => {
+        this.shadowRoot.getElementById("import").addEventListener("click", () => {
             this.dispatchEvent(
-                new CustomEvent("rule-import-update-imported", {
+                new CustomEvent("rule-import-import-list", {
                     bubbles: true,
                     composed: true,
                 })
@@ -97,12 +97,16 @@ class RuleImportInput extends HTMLElement {
     }
 
     set data(value = {}) {
-        const show = this.shadowRoot.getElementById("show-imported");
-        const remove = this.shadowRoot.getElementById("delete-imported");
-        const update = this.shadowRoot.getElementById("update-imported");
-        show.hidden = !value.imported;
-        remove.hidden = !value.imported;
+        const imported = this.shadowRoot.getElementById("imported");
+        const update = this.shadowRoot.getElementById("update");
+        const importList = this.shadowRoot.getElementById("import");
+        const deleteImported = this.shadowRoot.getElementById("delete-imported");
+        const showImported = this.shadowRoot.getElementById("show-imported");
+        imported.hidden = !value.imported;
         update.hidden = !value.imported || !this.digest || value.imported.digest === this.digest;
+        importList.hidden = value.imported && update.hidden || !this.digest;
+        showImported.hidden = !value.imported;
+        deleteImported.hidden = !value.imported;
         this._data = value;
     }
 
@@ -110,11 +114,13 @@ class RuleImportInput extends HTMLElement {
         const loading = this.shadowRoot.getElementById("loading");
         const error = this.shadowRoot.getElementById("error");
         const select = this.shadowRoot.getElementById("select");
-        const update = this.shadowRoot.getElementById("update-imported");
+        const update = this.shadowRoot.getElementById("update");
+        const importList = this.shadowRoot.getElementById("import");
         loading.hidden = false;
         error.hidden = true;
         select.disabled = true;
         update.hidden = true;
+        importList.hidden = true;
         this.disabled = true;
 
         try {
@@ -136,6 +142,7 @@ class RuleImportInput extends HTMLElement {
             select.disabled = false;
             this.disabled = false;
             update.hidden = !this.data.imported || this.data.imported.digest === this.digest;
+            importList.hidden = this.data.imported && update.hidden;
         } catch (e) {
             error.title = e;
             error.hidden = false;

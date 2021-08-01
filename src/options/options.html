@@ -622,12 +622,14 @@
                     <input id="select" type="checkbox" autocomplete="off" disabled/>
                     <slot id="name"></slot>
                 </label>
-                <a id="url" target="_blank" data-i18n-title="view_list"><img src="/icons/ionicons/open-outline.svg" height="20" class="middle"></a>
                 <loading-dots id="loading"></loading-dots>
+                <a id="url" target="_blank" data-i18n-title="view_list"><img src="/icons/ionicons/open-outline.svg" height="20" class="middle"></a>
                 <span id="count" class="badge badge-info"></span>
-                <button id="show-imported" class="btn text" data-i18n-title="show_imported_rules" hidden><span id="imported" class="badge badge-success" data-i18n="imported"></span></button>
-                <button id="update-imported" class="btn text" data-i18n-title="update_imported_rules" hidden><span id="update" class="badge badge-notify" data-i18n="update"></span></button>
-                <button id="delete-imported" class="btn text" data-i18n-title="delete_imported_rules" hidden><img src="/icons/ionicons/backspace-outline.svg" height="20" class="middle"/></button>
+                <span id="imported" class="badge badge-success" data-i18n="imported" hidden></span>
+                <span id="update" class="badge badge-notify" data-i18n="update" hidden></span>
+                <button id="import" class="btn text" data-i18n-title="import_list" hidden><img src="/icons/ionicons/download-outline.svg" height="20" class="middle"/></button>
+                <button id="show-imported" class="btn text" data-i18n-title="show_imported_rules" hidden><img src="/icons/ionicons/list-outline.svg" height="20" class="middle"/></button>
+                <button id="delete-imported" class="btn text" data-i18n-title="delete_imported_rules" hidden><img src="/icons/ionicons/trash-bin-outline.svg" height="20" class="middle"/></button>
                 <img id="error" src="/icons/ionicons/warning-outline.svg" height="20" class="middle" hidden/>
                 <button id="delete" class="btn text" data-i18n-title="remove_list" hidden><img src="/icons/ionicons/close-circle-outline.svg" height="20" class="middle"/></button>
             </div>

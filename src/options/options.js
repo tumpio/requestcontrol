@@ -38,8 +38,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         exportObject(fileName, rules);
     });
 
-    document.getElementById("importRules").addEventListener("change", (e) => {
-        importFile(e.target.files[0]).then(importRules).catch(showAlertPopup);
+    document.getElementById("importRules").addEventListener("change", async (e) => {
+        try {
+            const rules = await importFile(e.target.files[0]);
+            await importRules(rules);
+            window.location.hash = "#tab-rules";
+            document.body.scrollIntoView(false);
+        } catch (error) {
+            showAlertPopup(error);
+        }
     });
 
     const optionShowCounter = document.getElementById("optionShowCounter");
@@ -176,7 +183,7 @@ document.addEventListener("rule-import-show-imported", (e) => {
     updateToolbar();
 });
 
-document.addEventListener("rule-import-update-imported", async (e) => {
+document.addEventListener("rule-import-import-list", async (e) => {
     const input = e.target;
     let { imports } = await browser.storage.local.get("imports");
     const src = input.getAttribute("src");
@@ -351,6 +358,9 @@ async function importSelected() {
         const src = input.getAttribute("src");
         input.data = imports[src];
     });
+
+    window.location.hash = "#tab-rules";
+    document.body.scrollIntoView(false);
 }
 
 function toggleImportSelectedButton() {
@@ -389,8 +399,6 @@ async function importRules(imported) {
         document.querySelectorAll("rule-list").forEach((list) => list.removeAll());
         createRuleInputs(rules);
         await browser.storage.local.set({ rules });
-        window.location.hash = "#tab-rules";
-        document.body.scrollIntoView(false);
 
         document.querySelectorAll("rule-list").forEach((list) => {
             list.mark(newRules, "new");
