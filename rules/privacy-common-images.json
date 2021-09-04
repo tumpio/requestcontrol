@@ -14,6 +14,7 @@
       ],
       "excludes": [
         ".maps.api.here.com/maptile/2.1/maptile/",
+        "/:\\/\\/[a-z0-9\\.]+\\.amazonaws\\.com\\//",
         "/:\\/\\/[a-z0-9]+\\.bing\\.com\\//",
         "/:\\/\\/[a-z]{3,4}[0123]?\\.(google|googleapis|ggpht)\\.com\\/(maps\\/vt|cbk|kh)\\?/",
         "/\\/(Satellite|BlobServer|StaticBS)(\\/[^\\/\\?]+)?\\?/",
@@ -402,11 +403,14 @@
         "external-preview.redd.it",
         "i.mycdn.me",
         "imagebank.osa.org",
+        "img.shields.io",
         "media-exp1.licdn.com",
         "media.gettyimages.com",
         "media.istockphoto.com",
         "pbs.twimg.com",
-        "preview.redd.it"
+        "preview.redd.it",
+        "raster.shields.io",
+        "shields.io"
       ],
       "path": [
         "*?*"
@@ -418,7 +422,7 @@
     "action": "whitelist",
     "active": true,
     "title": "Image providers",
-    "description": "Includes sites whose sole function is providing images for other web pages, and sites with a dedicated server for serving images. (Whitelisted from ALL domains)",
+    "description": "Includes sites whose sole function is providing images for other web pages, and sites with a dedicated server for serving images. (Whitelisted on ALL domains)",
     "tag": "privacy-images"
   },
   {
@@ -561,6 +565,7 @@
     "pattern": {
       "scheme": "*",
       "host": [
+        "core-renderer-tiles.maps.yandex.net",
         "vec01.maps.yandex.net",
         "vec02.maps.yandex.net",
         "vec03.maps.yandex.net",
@@ -662,5 +667,37 @@
       "title": "Signed Google Video requests",
       "description": "Removing any parameter from these requests will cause the video not to load. Enabled by default. (This sort of requests is used by Google Drive, and 3rd-party sites like Invidious instances.)",
       "tag": "privacy-images"
-}
+  },
+  {
+      "uuid": "12486ca3-b63d-49fa-ae64-25b83733d64c",
+      "pattern": {
+          "scheme": "*",
+          "host": [
+              "*.amazonaws.com"
+          ],
+          "path": [
+              "*"
+          ]
+      },
+      "types": [
+          "image"
+      ],
+      "action": "filter",
+      "active": true,
+      "title": "Amazon AWS filtered rules",
+      "description": "To ensure similar URLs load no unrecognized parameters",
+      "tag": "filter-amazon-aws",
+      "skipRedirectionFilter": true,
+      "paramsFilter": {
+          "values": [
+              "X-Amz-Algorithm",
+              "X-Amz-Credential",
+              "X-Amz-Date",
+              "X-Amz-Expires",
+              "X-Amz-Signature",
+              "X-Amz-SignedHeaders"
+        ],
+        "invert": true
+      }
+  }
 ]
