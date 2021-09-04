@@ -12,6 +12,7 @@
             "excludes": [
                 "/\\/checkpoint\\//",
                 "/\\/jobs\\/\\?/",
+                "/\\/jobs\\/search\\?/",
                 "/\\/login\\?/",
                 "/\\/oauth\\/v2\\//",
                 "/\\/search\\/\\?/",
