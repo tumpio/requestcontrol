@@ -89,10 +89,10 @@
             "scheme": "https",
             "host": [
                 "*.sharepoint.com",
-                "home.navigator-bs.gmx.com",
+                "*.navigator-bs.gmx.com",
                 "navigator-bs.gmx.com",
-                "trackbar.navigator-bs.gmx.com",
-                "www.signbank.org"
+                "www.signbank.org",
+                "slashdot.org"
             ],
             "path": [
                 "*share=*",
