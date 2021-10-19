@@ -15,6 +15,7 @@ class RuleInput extends HTMLElement {
         this.appendChild(template.content.cloneNode(true));
 
         this.hostsTagsInput = this.querySelector("#host");
+        this.methodsTagsInput = this.querySelector("#method");
         this.pathsTagsInput = this.querySelector("#path");
         this.tldsTagsInput = this.querySelector("#tlds");
         this.includesTagsInput = this.querySelector("#includes");
@@ -544,6 +545,7 @@ class RuleInput extends HTMLElement {
     updateInputs() {
         this.querySelector("#scheme").value = this.rule.pattern.scheme || "*";
         this.hostsTagsInput.tags = this.rule.pattern.host;
+        this.methodsTagsInput.tags = this.rule.pattern.method;
         this.pathsTagsInput.tags = this.rule.pattern.path;
 
         if (this.rule.action) {
@@ -591,6 +593,7 @@ class RuleInput extends HTMLElement {
         } else {
             this.rule.pattern.scheme = this.querySelector("#scheme").value;
             this.rule.pattern.host = this.hostsTagsInput.tags;
+            this.rule.pattern.method = this.methodsTagsInput.tags;
             this.rule.pattern.path = this.pathsTagsInput.tags;
             if (this.rule.pattern.host.some(isTLDHostPattern)) {
                 this.rule.pattern.topLevelDomains = this.tldsTagsInput.tags;
