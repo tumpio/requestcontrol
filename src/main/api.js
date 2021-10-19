@@ -8,6 +8,7 @@ import {
     ExcludeMatcher,
     HostnamesWithoutSuffixMatcher,
     IncludeMatcher,
+    MethodMatcher,
     OriginMatcher,
     RequestMatcher,
     ThirdPartyDomainMatcher,
@@ -71,6 +72,10 @@ export function createRequestMatcher(pattern, hostnamesWithoutSuffix = []) {
             matchers.push(ThirdPartyOriginMatcher);
             break;
         }
+    }
+
+    if (pattern.method && pattern.method.length > 0) {
+        matchers.push(new MethodMatcher(pattern.method));
     }
 
     if (hostnamesWithoutSuffix.length > 0) {

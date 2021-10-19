@@ -128,6 +128,16 @@ export class HostnameWithoutSuffixMatcher {
     }
 }
 
+export class MethodMatcher {
+    constructor(methods) {
+        this.methods = methods.map((method) => method.toUpperCase());
+    }
+
+    test(request) {
+        return this.methods.includes(request.method.toUpperCase());
+    }
+}
+
 export class HostnamesWithoutSuffixMatcher {
     constructor(hostnames) {
         this.matchers = hostnames.includes("*.*")

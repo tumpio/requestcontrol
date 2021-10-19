@@ -275,6 +275,9 @@
   "scheme": {
     "message": "Scheme"
   },
+  "method": {
+    "message": "Method"
+  },
   "host": {
     "message": "Host"
   },
@@ -295,6 +298,9 @@
   },
   "excludes": {
     "message": "Excludes"
+  },
+  "method_placeholder": {
+    "message": "List of methods"
   },
   "host_placeholder": {
     "message": "List of host patterns.."
