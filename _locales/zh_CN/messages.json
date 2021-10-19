@@ -260,6 +260,9 @@
   "scheme": {
     "message": "协议"
   },
+  "method": {
+    "message": "方法"
+  },
   "host": {
     "message": "主机"
   },
