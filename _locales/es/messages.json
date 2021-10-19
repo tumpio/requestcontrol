@@ -211,6 +211,9 @@
   "scheme": {
     "message": "esquema"
   },
+  "method": {
+    "message": "método"
+  },
   "host": {
     "message": "servidor"
   },
