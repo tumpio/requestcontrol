@@ -106,7 +106,7 @@ Filter matched requests by the type of request. The type indicates the requested
 | Indicates a ping request triggered by an &lt;a&gt; element using the ping attribute. Only in use if browser.send_pings is enabled.
 |-
 | Speculative
-| Indicates a predictive TCP and/or TLS handsake for a request that browser has determined to be coming soon. Only in use if network.http.speculative-parallel-limit is greater than 0.
+| Indicates a predictive TCP and/or TLS handshake for a request that browser has determined to be coming soon. Only in use if network.http.speculative-parallel-limit is greater than 0.
 |-
 | Beacon
 | Indicates a [https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API Beacon] request.
