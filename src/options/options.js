@@ -240,7 +240,6 @@ async function setupImportsTab() {
 
     document.getElementById("import-source-form").addEventListener("submit", onImportSourceAdded);
     document.getElementById("new-import-source").addEventListener("input", checkImportSourceValidity);
-    document.getElementById("importSelected").addEventListener("click", importSelected);
 }
 
 async function checkImportSourceValidity() {
@@ -320,47 +319,6 @@ function createImportInput(src, data) {
     input.setAttribute("deletable", true);
     input.data = data;
     inputs.append(input);
-}
-
-async function importSelected() {
-    const selected = document.querySelectorAll("rule-import-input[selected]:not([disabled])");
-    let { imports } = await browser.storage.local.get("imports");
-
-    if (!imports) {
-        imports = {};
-    }
-
-    let rulesToImport = [];
-
-    selected.forEach((input) => {
-        const src = input.getAttribute("src");
-        const rules = input.rules.filter((rule) => rule.uuid);
-        const uuids = rules.map((rule) => rule.uuid);
-
-        if (!(src in imports)) {
-            imports[src] = {};
-        }
-
-        imports[src].imported = {
-            uuids,
-            etag: input.etag,
-            digest: input.digest,
-            timestamp: Date.now(),
-        };
-        rulesToImport = rulesToImport.concat(rules);
-    });
-
-    importRules(rulesToImport);
-
-    await browser.storage.local.set({ imports });
-
-    selected.forEach((input) => {
-        const src = input.getAttribute("src");
-        input.data = imports[src];
-    });
-
-    window.location.hash = "#tab-rules";
-    document.body.scrollIntoView(false);
 }
 
 function toggleImportSelectedButton() {

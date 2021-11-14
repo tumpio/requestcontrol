@@ -10,20 +10,6 @@ class RuleImportInput extends HTMLElement {
         const template = document.getElementById("rule-import-input");
         this.attachShadow({ mode: "open" }).appendChild(template.content.cloneNode(true));
 
-        this.shadowRoot.getElementById("select").addEventListener("change", (e) => {
-            if (e.target.checked) {
-                this.setAttribute("selected", "selected");
-            } else {
-                this.removeAttribute("selected");
-            }
-            this.dispatchEvent(
-                new CustomEvent("rule-import-selected", {
-                    bubbles: true,
-                    composed: true,
-                })
-            );
-        });
-
         this.shadowRoot.getElementById("show-imported").addEventListener("click", () => {
             this.dispatchEvent(
                 new CustomEvent("rule-import-show-imported", {
@@ -113,12 +99,10 @@ class RuleImportInput extends HTMLElement {
     async fetchRules(src) {
         const loading = this.shadowRoot.getElementById("loading");
         const error = this.shadowRoot.getElementById("error");
-        const select = this.shadowRoot.getElementById("select");
         const update = this.shadowRoot.getElementById("update");
         const importList = this.shadowRoot.getElementById("import");
         loading.hidden = false;
         error.hidden = true;
-        select.disabled = true;
         update.hidden = true;
         importList.hidden = true;
         this.disabled = true;
@@ -139,14 +123,12 @@ class RuleImportInput extends HTMLElement {
                 "count_rules",
                 this.rules.length
             );
-            select.disabled = false;
             this.disabled = false;
             update.hidden = !this.data.imported || this.data.imported.digest === this.digest;
             importList.hidden = this.data.imported && update.hidden;
         } catch (e) {
             error.title = e;
             error.hidden = false;
-            select.disabled = true;
         }
 
         loading.hidden = true;

@@ -640,8 +640,8 @@
   "imports": {
     "message": "Imports"
   },
-  "import_selected": {
-    "message": "Import selected"
+  "import_list": {
+    "message": "Import list"
   },
   "imported": {
     "message": "Imported"
