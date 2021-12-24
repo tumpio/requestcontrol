@@ -7,7 +7,6 @@
         "pattern": {
             "allUrls": true,
             "excludes": [
-                "*/ucp.php?mode=logout&sid=*",
                 "https://www.fbsbx.com/captcha/recaptcha/iframe/*"
             ]
         },
@@ -65,7 +64,6 @@
                 "sc_medium",
                 "sc_outcome",
                 "share",
-                "sid",
                 "spJobID",
                 "spMailingID",
                 "spReportId",
@@ -82,32 +80,6 @@
                 "yclid"
             ]
         }
-    },
-    {
-        "uuid": "a6b8a3a1-5bba-46b1-81a5-8594e3e8b0a1",
-        "pattern": {
-            "scheme": "https",
-            "host": [
-                "*.sharepoint.com",
-                "*.navigator-bs.gmx.com",
-                "navigator-bs.gmx.com",
-                "www.signbank.org",
-                "slashdot.org"
-            ],
-            "path": [
-                "*share=*",
-                "*sid=*"
-            ]
-        },
-        "types": [
-            "main_frame",
-            "sub_frame"
-        ],
-        "action": "whitelist",
-        "active": true,
-        "title": "Exceptions to `sid` and `share` parameters",
-        "description": "These sites use the URL parameters `sid` and `share` to load different pages. This trips a general-purpose referrer remover.",
-        "tag": "privacy-tracking-params"
     },
     {
         "uuid": "1123f3fd-fde5-4992-af96-c580c0f69186",
