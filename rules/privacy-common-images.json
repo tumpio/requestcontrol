@@ -82,6 +82,7 @@
         "line",
         "mod",
         "output",
+        "path-prefix",
         "preview",
         "provider",
         "q",
