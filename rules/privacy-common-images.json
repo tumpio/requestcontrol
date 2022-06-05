@@ -284,7 +284,8 @@
       ],
       "path": [
         "*/styles/bannerBackgroundImage_*",
-        "*/styles/communityIcon_*"
+        "*/styles/communityIcon_*",
+        "*/styles/profileIcon_*"
       ]
     },
     "types": [
