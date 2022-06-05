@@ -656,13 +656,12 @@
   {
       "uuid": "89d698fb-1e90-4703-ad42-85e6fdf9d1bf",
       "pattern": {
-          "scheme": "*",
+          "scheme": "https",
           "host": [
-              "*.drive.google.com",
-              "*.googlevideo.com"
+              "*"
           ],
           "path": [
-              "videoplayback?*sig=*sig=*"
+              "videoplayback?*&sig=*&host=*.googlevideo.com"
           ]
       },
       "types": [
@@ -671,9 +670,9 @@
       ],
       "action": "whitelist",
       "active": true,
-      "title": "Signed Google Video requests",
+      "title": "Signed Google Video requests from third-party sites",
       "description": "Removing any parameter from these requests will cause the video not to load. Enabled by default. (This sort of requests is used by Google Drive, and 3rd-party sites like Invidious instances.)",
-      "tag": "privacy-images"
+      "tag": "whitelist-googlevideo"
   },
   {
       "uuid": "12486ca3-b63d-49fa-ae64-25b83733d64c",
