@@ -235,15 +235,19 @@
     "tag": "privacy-images-4",
     "paramsFilter": {
       "values": [
-        "ccb",
-        "_nc_cat",
         "_nc_ht",
         "_nc_oc",
         "_nc_ohc",
-        "_nc_sid",
+        "_nc_vs",
+        "edm",
+        "fb_obo",
         "oe",
         "oh",
-        "tp"
+        "stp",
+        "tp",
+        "url",
+        "utld",
+        "vs"
       ],
       "invert": true
     },
