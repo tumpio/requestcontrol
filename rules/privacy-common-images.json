@@ -363,6 +363,7 @@
         "*download/file.php?avatar=*",
         "/avatar.php?*",
         "/avatar/*",
+        "/avatarpic/*",
         "/avatars/*",
         "/data/avatars/*",
         "/user_avatar/*",
