@@ -106,7 +106,7 @@ Filter matched requests by the type of request. The type indicates the requested
 | Indicates a ping request triggered by an &lt;a&gt; element using the ping attribute. Only in use if browser.send_pings is enabled.
 |-
 | Speculative
-| Indicates a predictive TCP and/or TLS handsake for a request that browser has determined to be coming soon. Only in use if network.http.speculative-parallel-limit is greater than 0.
+| Indicates a predictive TCP and/or TLS handshake for a request that browser has determined to be coming soon. Only in use if network.http.speculative-parallel-limit is greater than 0.
 |-
 | Beacon
 | Indicates a [https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API Beacon] request.
@@ -317,7 +317,7 @@ Uses the hostname of the original request.
 Captures a part of the hostname of the original request.
 
 <pre>https://{hostname::-3|/\.co/\.com}/new/path</pre>
-Uses the hostname of the original request but manipulate its length by three cutting it from the end and replace &quot;.co&quot; with &quot;.com&quot;.
+Uses the hostname of the original request but manipulates its length by three cutting it from the end and replace &quot;.co&quot; with &quot;.com&quot;.
 
 <pre>{search.url|decodeURIComponent}</pre>
 Captures &quot;url&quot; search parameter and decodes it.

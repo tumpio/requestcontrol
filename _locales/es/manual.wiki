@@ -2,190 +2,213 @@
 
 == Regla de Request Control ==
 
-Una regla de Request Control consiste en [[#patrón|Patrón]], [[#tipos|Tipos]] y [[#acción|Acción]].
+Una regla de Request Control está formada por [[#patrón|Patrón]], [[#tipos|Tipos]] y [[#acción|Acción]].
 
-Las peticiones que coinciden con un patrón y los tipos de una regla activa serán interceptados tomando la acción de la regla.
+Toda petición que coincida con el patrón y los tipos de una regla activa se interceptará y seguirá la acción de la regla.
 
 === Patrón ===
 
-El patrón se compone de [[#esquema|Esquema]], [[#servidor|Servidor]] y [[#ruta|Ruta]]. La regla puede incluir de uno a muchos patrones.
+El patrón filtra las peticiones según su [[#esquema|Esquema]], [[#servidor|Servidor]] y [[#ruta|Ruta]].
 
 ==== Esquema ====
 
-Los esquemas soportados en los patrones son <code>http</code> y <code>https</code>.
+Los esquemas soportados son <code>http</code> y <code>https</code>.
 
 {|
 | <code>http</code>
-| Satisface un esquema http.
+| Coincide cuando se usa un esquema http.
 |-
 | <code>https</code>
-| Satisface un esquema https.
+| Coincide cuando se usa un esquema https.
 |-
 | <code>http/https</code>
-| Satisface esquemas http y https.
+| Coincide con los esquemas http y https.
 |}
 
 ==== Servidor ====
 
-El servidor puede coincidir con el de la URL de la petición de las siguentes maneras:
+Un patrón de servidor puede coincidir con el servidor de la URL de la petición de las siguientes maneras:
 
 {|
 | <code>www.ejemplo.com</code>
-| Satisface un servidor completo
+| Coincide con un servidor completo.
 |
 |-
 | <code>*.ejemplo.com</code>
-| Satisface el servidor dado y cualquiera de sus subdominios.
-| Satisfará cualquier subdominio de, p.e., ejemplo.com '''www'''.ejemplo.com , '''bien'''.ejemplo.com
+| Coincide con el servidor dado y cualquiera de sus subdominios.
+| Es coincidente con ejemplo.com y todos los subdominios de ejemplo.com, como '''www'''.ejemplo.com , '''bien'''.ejemplo.com
 |-
 | <code>www.ejemplo.*</code>
-| Satisface el servidor y todos los dominios de primer nivel (se puede combinar con la restricción de subdominio)
-| Escriba los dominios de primer nivel en la lista de dominios de primer nivel (p.e. ''com'', ''org'').
+| Coincide con el servidor dado y un dominio de primer nivel en una lista (se puede combinar con la restricción de subdominio)
+| Escriba los dominios de primer nivel en la lista de dominios de primer nivel (p.&nbsp;ej., ''com'', ''org'').
 |-
 | <code>*</code>
-| Satisface cualquier servidor.
+| Coincide con cualquier servidor.
 |
 |}
 
 ==== Ruta ====
 
-La ruta en el patrón subsecuentemente puede contener cualquier combinación del comodín &quot;*&quot; y cualquiera de los caracteres que están permitidos en la ruta de la URL. El comodín &quot;*&quot; satisface cualquier porción de la ruta, y puede aparecer más de una vez.
+Un patrón de ruta, por su parte, puede contener cualquier combinación del comodín &quot;*&quot; y cualquier número de caracteres permitidos en una URL. El comodín &quot;*&quot; coincide con cualquier porción de la ruta, y puede aparecer más de una vez.
 
-Debajo tiene ejemplos para usar ruta en los patrones.
+A continuación se pueden ver ejemplos del uso de patrones de ruta.
 
 {|
 | <code>*</code>
-| Satisface cualquier ruta.
+| Coincide con cualquier ruta.
 |-
 | <code>ruta/a/b/</code>
-| Satisface la ruta exacta &quot;ruta/a/b/&quot;.
+| Coincide solo con la ruta exacta &quot;ruta/a/b/&quot;.
 |-
 | <code>*b*</code>
-| Satisface cualquier ruta que contenga un componente &quot;b&quot; en en alguna posición intermedia.
+| Coincide con cualquier ruta que contenga un componente &quot;b&quot; en alguna posición intermedia.
 |-
 |
-| Satisface una ruta vacía.
-|}
-
-==== Includes and Excludes ====
-
-A list of patterns that request URL must or must not contain. Include and exclude pattern can be defined as a string with support for wildcards &quot;?&quot; and &quot;*&quot; (where &quot;?&quot; matches any single character and &quot;*&quot; matches zero or more characters), or as a regular expression pattern <code>/regexp/</code>.
-
-Include and exclude pattern matching is case insensitive as opposed to [[#host|Host]] and [[#path|Path]] which are case sensitive.
-
-Below is examples of using includes and excludes patterns:
-
-{|
-| <code>login</code>
-| Match urls containing &quot;login&quot;.
-|-
-| <code>log?n</code>
-| Matches for example urls containing &quot;login&quot; and &quot;logon&quot;.
-|-
-| <code>a*b</code>
-| Match urls where &quot;a&quot; is followed by &quot;b&quot;
-|-
-| <code>/[?&amp;]a=\d+(&amp;|$)/</code>
-| Match urls containing parameter &quot;a&quot; with digits as value.
+| Coincide con una ruta vacía.
 |}
 
 === Tipos ===
 
-Un tipo indica el recurso solicitado. Una regla se puede aplicar de uno a muchos tipos, o a cualquier tipo. Todos los tipos posibles están listados debajo.
+Filtros según el tipo de petición. El tipo indica el recurso solicitado. Todos los tipos disponibles están listados debajo.
 
 {|
 ! Tipo
 ! Detalles
 |-
-| Document
+| Documento
 | Indica un documento DOM en el nivel superior que es descargado directamente dentro de una pestaña del navegador (marco principal).
 |-
-| Sub document
-| Indica un documento DOM que es descargado dentro de otro documento DOM (sub marco).
+| Subdocumento
+| Indica un documento DOM que es descargado dentro de otro documento DOM (elementos &lt;iframe&gt; y &lt;frame&gt;).
 |-
-| Stylesheet
+| Hoja de estilo
 | Indica una hoja de estilo (por ejemplo, elementos &lt;style&gt;).
 |-
 | Script
-| Indica un script ejecutable (como JavaScript).
+| Indica un script ejecutable (como JavaScript) cargado mediante el elemento &lt;script&gt; o la API Worker.
 |-
-| Image
+| Imagen
 | Indica una imagen (por ejemplo, elementos &lt;img&gt;).
 |-
-| Object
-| Indica un objeto genérico.
+| Objeto
+| Indica un objeto genérico (elementos &lt;object&gt; y &lt;embed&gt;).
 |-
 | Plugin
 | Indica una petición realizada por un plugin (object_subrequest).
 |-
 | XMLHttpRequest
-| Indica una petición HTTP de XML. (XMLHttpRequest)
+| Indica una petición realizada por una XMLHttpRequest (xhr) o por la API Fetch.
 |-
 | XSLT
-| Indica una transformación de hoja de estilo
+| Indica una transformación de hoja de estilo XSLT para un documento XML.
 |-
 | Ping
-| Indica un ping inducido al pulsar sobre un elemento &lt;a&gt; que usa el atributo ping. Sólo en uso si browser.send_pings está activado (predeterminado: falso).
+| Indica un ping inducido al pulsar sobre un elemento &lt;a&gt; con el atributo ping. Solo se usa si browser.send_pings está activado.
+|-
+| Especulativa
+| Indica un apretón de manos TCP y/o TLS para una petición que el navegador haya determinado que se hará pronto. Solo se usa si network.http.speculative-parallel-limit es mayor que 0.
 |-
 | Beacon
-| Indica una petición [https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API Beacon] (de un elemento baliza).
+| Indica una petición [https://developer.mozilla.org/es-ES/docs/Web/API/Beacon_API Beacon] (baliza).
 |-
 | XML DTD
-| Indica una DTD (definición de tipo de documento) cargada por un documento XML.
+| Indica una DTD cargada por un documento XML.
 |-
-| Font
-| Indica una fuente cargada mediante una regla @font-face.
+| Fuente
+| Indica una tipografía cargada mediante una regla @font-face.
 |-
-| Media
-| Indica la carga de un vídeo o audio.
+| Multimedia
+| Indica la carga de un vídeo o audio (elementos &lt;video&gt; y &lt;audio&gt;).
 |-
 | WebSocket
-| Indica la carga de un [https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API WebSocket].
+| Indica la carga de un [https://developer.mozilla.org/es-ES/docs/Web/API/WebSockets_API WebSocket].
 |-
-| CSP Report
-| Indica un informe [https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP Content Security Policy] (política de seguridad de contenidos).
+| Informe CSP
+| Indica un informe [https://developer.mozilla.org/es-ES/docs/Web/HTTP/CSP Content Security Policy].
 |-
 | Imageset
-| Indica una petición para cargar una &lt;img&gt; (con el atributo srcset) o &lt;picture&gt;.
+| Indica una petición para cargar un elemento &lt;img&gt; (con el atributo srcset) o &lt;picture&gt;.
 |-
 | Web Manifest
-| Indica una petición para cargar un manifesto Web
+| Indica una petición para cargar un manifesto Web App.
 |-
 | Other
-| Indica una petición que no está clasificada como perteneciente a los tipos anteriores.
+| Indica una petición que no se puede clasificar en ninguno de los tipos anteriores.
 |}
 
 === Acción ===
 
-<dl>
-<dt>[[File:/icons/icon-filter.svg|16px]] Filtrado</dt>
-<dd><p>Cualquier petición que satisfaga una regla de filtrado será filtrada de acuerdo a la configuración de esta regla:</p>
-<p>- Con filtrado de redireccionamiento de URL la petición es guiada directamente a la URL de redireccionamiento contenida. - Con el recortado de parámetros de URL los parámetros de URL configurados se eliminarán de las peticiones.</p></dd>
-<dt>[[File:/icons/icon-block.svg|16px]] Bloqueo</dt>
-<dd><p>Cualquier petición que satisfaga una regla de bloqueo será cancelada antes de efectuarse.</p></dd>
-<dt>[[File:/icons/icon-redirect.svg|16px]] Redireccionamiento</dt>
-<dd><p>Cualquier petición que satisfaga una regla de redireccionamiento será redirigida a la URL de redireccionamiento configurada.</p></dd>
-<dt>[[File:/icons/icon-whitelist.svg|16px]] Lista blanca</dt>
-<dd><p>Cualquier petición que satisfaga una regla de lista blanca procederá normalmente sin que se tome ninguna acción de cualquiera de las otras reglas que también se satisfagan.</p></dd></dl>
+; [[File:/icons/icon-filter.svg|16px]] Filtra
+: Evita la redirección de URL y/o quitar parámetros de URL.
+; [[File:/icons/icon-redirect.svg|16px]] Redirige
+: Redirige peticiones a una URL de redirección configurada manualmente.
+; [[File:/icons/icon-secure.svg|16px]] Protege
+: Hace las peticiones inseguras (HTTP) seguras (HTTPS).
+; [[File:/icons/icon-block.svg|16px]] Bloquea
+: Cancela las peticiones antes de que sean realizadas.
+; [[File:/icons/icon-whitelist.svg|16px]] Permite
+: Permite y opcionalmente registra las peticiones.
+
+== Más condiciones ==
+
+Los condicionales a continuación extienden las capacidades de encontrar coincidencias de la [https://developer.mozilla.org/es-ES/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/RequestFilter API WebRequest].
+
+=== Inclusiones y exclusiones ===
+
+Filtros según patrones que se pueden definir como una cadena de caracteres que admite los comodines &quot;?&quot; y &quot;*&quot; (donde &quot;?&quot; coincide con un único carácter y &quot;*&quot; coincide con cero o más caracteres), o como un patrón de expresión regular.
+
+Las listas de inclusión y exclusión de coincidencias no distinguen mayúsculas de minúsculas, al contrario que las listas de [[#host|Servidor]] y [[#path|Ruta]] que discriminan por capitalización.
+
+Abajo hay ejemplos de patrones de inclusión y exclusión:
+
+{|
+| <code>login</code>
+| Coincide con URL que contengan &quot;login&quot;.
+|-
+| <code>log?n</code>
+| Coincide con, por ejemplo, URL que contengan &quot;login&quot; y &quot;logon&quot;.
+|-
+| <code>a*b</code>
+| Coincide con aquellas URL donde &quot;a&quot; ocurre antes que &quot;b&quot;
+|-
+| <code>/[?&]a=\d+(&|$)/</code>
+| Coincide con URL que contienen el parámetro &quot;a&quot; con dígitos como su valor.
+|}
+
+=== Coincidencia según origen ===
+
+Filtros según el origen de la petición.
+
+{|
+| Cualquiera
+| Coincide con peticiones de cualquier origen
+|-
+| Mismo dominio
+| Coincide con peticiones que provengan del mismo dominio
+|-
+| Mismo origen
+| Coincide con peticiones que provengan del mismo origen. Sigue la [https://developer.mozilla.org/es/docs/Web/Security/Same-origin_policy política de mismo origen].
+|-
+| Dominios de terceros
+| Coincide con peticiones hacia dominios de terceros
+|-
+| Orígenes de terceros
+| Coincide con peticiones hacia orígenes de terceros
+|}
 
 == Prioridades de las reglas ==
 
-# Regla de lista blanca
+# Regla de permiso
 # Regla de bloqueo
-# Regla de redireccionamiento
+# Regla de protección
+# Regla de redirección
 # Regla de filtrado
-
-Las reglas de lista blanca tienen la prioridad más alta y revocan todas las demás reglas. A continuación vienen las reglas de bloqueo que revocan las reglas de redireccionamiento y filtrado. Finalmente las reglas de redireccionamiento se aplicarán antes que las reglas de filtrado. Si más de una regla de redireccionamiento o filtrado satisface una petición única, todas se aplicarán de una en una.
-
-== Satisfacer con todas las URLs ==
-
-El patrón de petición se puede establecer a un patrón global que se satisfaga con todas las URLs bajo los esquemas soportados (&quot;http&quot; o &quot;https&quot;) marcando el botón Cualquier URL.
 
 == Recortar parámetros de URL ==
 
-La regla de filtrado soporta el recorte de parámetro de consulta de URL. Los parámetros de consulta de URL se usan comúnmente en la monitorización de redireccionamiento como un método para analizar el origen del tráfico. Los parámetros de URL recortados se definen bien como cadenas de texto literales con soporte para comodín &quot;*&quot;, o bien usando patrones en forma de expresiones regulares (regexp).
+La regla de filtrado soporta el recorte de parámetro de consulta de URL. Se pueden definir los parámetros de URL a recortar como cadenas de texto que admiten los comodines &quot;*&quot; y &quot;?&quot;, o como expresiones regulares (regexp).
 
-Debajo tiene ejemplos de patrones de recortado de parámetro.
+A continuación, ejemplos de patrones de recorte de parámetros.
 
 {|
 | <code>utm_source</code>
@@ -200,7 +223,7 @@ Debajo tiene ejemplos de patrones de recortado de parámetro.
 
 === Opción de recortado inverso ===
 
-Sólo mantiene los parámetros que están definidos en la lista de parámetros de recortado. Todos los demás parámetros serán eliminados.
+Sólo conserva los parámetros que están definidos en la lista de parámetros de recortado. Todos los demás parámetros serán eliminados.
 
 === Opción recortar todos ===
 
@@ -208,27 +231,34 @@ Elimina todos los parámetros de consulta de la URL en la petición filtrada.
 
 == Redireccionamiento usando captura de patrón ==
 
-La regla de redireccionamiento soporta redirigir peticiones a una URL configurada manualmente. La URL de redireccionamiento puede ser parametrizada usando expansión de parámetro e instrucciones de redireccionamiento. La expansión de parámetro permite acceder a un conjunto de parámetros nominados de la URL original. Las instrucciones de redireccionamiento se pueden usar para modificar la petición inicial cambiando las partes de la URL original (ej. instruyendo a las peticiones para que se redirijan a un puerto distinto).
+La regla de redireccionamiento permite redirigir las peticiones a una URL configurada manualmente. La URL de redireccionamiento puede ser parametrizada usando expansión de parámetros e instrucciones de redireccionamiento. La expansión de parámetros permite manipular parámetros con nombre de la URL original. Las instrucciones de redireccionamiento se pueden usar para reemplazar porciones de la URL original (ej. redirigiendo las peticiones a un puerto diferente).
 
-Ambos métodos se pueden usar juntos. Las instrucciones de redireccionamiento serán interpretadas y aplicadas a la URL de la petición primero, antes que la expansión de parámetro.
+Se pueden combinar ambos métodos. Las instrucciones de redireccionamiento serán interpretadas y aplicadas antes que la expansión de parámetro.
 
-La expansión de parámetro también se puede usar dentro de una instrucción de redireccionamiento permitiendo crear instrucciones de redireccionamiento basadas en la URL de la petición original.
+También se puede usar la expansión de parámetros dentro de una instrucción de redireccionamiento.
 
-=== Expansión de parámetro ===
+=== Expansión de parámetros ===
 
 <pre>{parámetro}</pre>
-Accede a un parámetro nominado de la URL de la petición original. Los parámetros nominados disponibles están listados al final de esta sección.
+Accede a un parámetro con nombre de la URL de la petición original. Los parámetros nominados disponibles están listados al final de esta sección.
 
 La expansión de parámetro soporta los siguientes formatos de manipulación de cadena de texto:
 
-==== Remplazado de subcadena ====
+==== Reemplazo de subcadena ====
 
-<pre>{parámetro/patrón/remplazo}</pre>
-Remplaza una subcadena de texto coincidente con el patrón en el parámetro extraído. El patrón está escrito en forma de expresión regular. Está soportada una variedad de argumentos de remplazo especiales, que se describen debajo, incluyendo el referenciado a grupos/ocurrencias de la subcadena capturada en el parámetro.
+<pre>{parámetro/patrón/reemplazo}</pre>
+
+Reemplaza la primera sub cadena de texto coincidente en el parámetro expandido.
+
+<pre>{parámetro//patrón/reemplazo}</pre>
+
+Reemplaza todas las subcadenas coincidentes en el parámetro expandido.
+
+El patrón está escrito en forma de expresión regular. Se soportan varios patrones de reemplazo; entre ellos, las referencias a grupos de captura descritas a continuación.
 
 {|
 | <code>$n</code>
-| Inserta el n-esimo grupo capturado contando desde 1.
+| Inserta el n-ésimo grupo capturado contando desde 1.
 |-
 | <code>$`</code>
 | Inserta la porción de la cadena de texto que precede a la subcadena coincidente.
@@ -248,73 +278,73 @@ Remplaza una subcadena de texto coincidente con el patrón en el parámetro extr
 <pre>{parámetro:compensación:tamaño}</pre>
 Extrae una parte del parámetro expandido. La compensación determina la posición inicial. Empieza desde 0 y puede ser un valor negativo contando desde el final de la cadena de texto.
 
-==== Decoding and encoding extracted patterns ====
+==== Decodificar y codificar ====
 
-<pre>{parameter|encodingRule}</pre>
-Decode or encode captured pattern.
+<pre>{parámetro|reglaDeCodificado}</pre>
+Descodifica o codifica el patrón capturado.
 
 {|
 | <code>encodeURI</code>
-| Encodes a pattern as URI. It does not encode the following characters: &quot;:&quot;, &quot;/&quot;, &quot;;&quot;, and &quot;?&quot;.
+| Codifica un patrón como una URI. No codifica los siguientes caracteres: &quot;:&quot;, &quot;/&quot;, &quot;;&quot;, ni &quot;?&quot;.
 |-
 | <code>decodeURI</code>
-| Decodes an encoded URI.
+| Decodifica una URI codificada.
 |-
 | <code>encodeURIComponent</code>
-| Encodes a pattern as a component of URI. Encodes all special characters reserved for URI.
+| Codifica un patrón como un componente de una URI. Codifica todos los caracteres especialres reservados para las URI.
 |-
 | <code>decodeURIComponent</code>
-| Decodes an encoded URI component.
+| Decodifica un componente de URI codificado.
 |-
 | <code>encodeBase64</code>
-| Encode a pattern as Base64 string.
+| Codifica un patrón como una cadena de caracteres en Base64.
 |-
 | <code>decodeBase64</code>
-| Decodes an encoded Base64 string.
+| Decodifica una cadena de caracteres codificada en Base64.
 |}
 
 ==== Combinar reglas de manipulación ====
 
 <pre>{parámetro(manipulación1)|(manipulación2)|...|(manipulaciónN)}</pre>
-Todas las reglas de manipulación de cadena de texto pueden concatenarse usando un caracter &quot;|&quot; (pleca/barra vertical/tubo/pipe). La salida es el resultado de las manipulaciones de la cadena.
+Se pueden concatenar reglas de manipulación de cadena de texto con la barra vertical &quot;|&quot;. La salida es el resultado de las manipulaciones aplicadas en cadena.
 
 ==== Ejemplos ====
 
-{|
-| https://{hostname}/nueva/ruta
-| Usa el nombre de servidor de la petición original.
-|-
-| https://{hostname/([a-z]{2}).*/$1}/nueva/ruta
-| Captura una parte del nombre de servidor de la petición original.
-|-
-| https://{hostname::-3|/.co/.com}/nueva/ruta
-| Usa el nombre de servidor de la petición original pero manipula su longitud acortándolo en 3 por el final, y remplaza &quot;.co&quot; con &quot;.com&quot;
-|}
+<pre>https://{hostname}/nueva/ruta</pre>
+Usa el nombre de servidor de la petición original.
+
+<pre>https://{hostname/([a-z]{2}).*/$1}/nueva/ruta</pre>
+Captura una parte del nombre de servidor de la petición original.
+
+<pre>https://{hostname::-3|/.co/.com}/nueva/ruta</pre>
+Usa el nombre de servidor de la petición original pero manipula su longitud recortando los últimos tres caracteres, y reemplaza &quot;.co&quot; con &quot;.com&quot;
+
+<pre>{search.url|decodeURIComponent}</pre>
+Captura el parámetro de búsqueda &quot;url&quot; y lo decodifica.
 
 === Instrucción de redireccionamiento ===
 
 <pre>[parámetro=valor]</pre>
-Remplaza una cierta parte de la petición original. Los parámetros nominados disponibles están listados al final de esta sección.
+Reemplaza una cierta parte de la petición original. Los parámetros nominados disponibles están listados al final de esta sección.
+
+<pre>[parámetro={parámetro<manipulaciones>}]</pre>
 
 El valor de una instrucción de redireccionamiento se puede parametrizar usando la expansión de parámetro descrita anteriormente.
 
-<pre>[parámetro={parámetro<manipulaciones>}]</pre>
 ==== Ejemplos ====
 
-{|
-| <code>[port=8080]</code>
-| Redirige la petición original al puerto 8080.
-|-
-| <code>[port=8080][hostname=localhost]</code>
-| Redirige la petición original al puerto 8080 de localhost.
-|-
-| <code>[port=8080][hostname=localhost][hash={pathname}]</code>
-| Redirige la petición original al puerto 8080 de localhost donde el hash es la ruta de la petición original.
-|}
+<pre>[port=8080]</pre>
+Redirige la petición original al puerto 8080.
+
+<pre>[port=8080][hostname=localhost]</pre>
+Redirige la petición original al puerto 8080 de localhost.
+
+<pre>[port=8080][hostname=localhost][hash={pathname}]</pre>
+Redirige la petición original al puerto 8080 de localhost donde el hash es la ruta de la petición original.
 
 === Lista de parámetros nominados ===
 
-Los nombres de los parámetros soportados y sus salidas de ejemplo están listados en la tabla de debajo.
+Los nombres de los parámetros soportados y ejemplos de su posibles salidas están listados en la tabla de debajo.
 
 Dirección de ejemplo usada como entrada:
 
@@ -353,7 +383,7 @@ Dirección de ejemplo usada como entrada:
 
 Esta página de manual está elaborada sobre el material de los siguientes documentos del wiki de MDN, y está licenciada bajo [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
 
-# [https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns Match patterns] por [https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Match_patterns$history Mozilla Contributors] licenciado bajo [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
-# [https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType webRequest.ResourceType] por [https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/ResourceType$history Mozilla Contributors] licenciado bajo [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
-# [https://developer.mozilla.org/en-US/docs/Web/API/URL URL] por [https://developer.mozilla.org/en-US/docs/Web/API/URL$history Mozilla Contributors] licenciado bajo [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
+# [https://developer.mozilla.org/es-ES/Add-ons/WebExtensions/Match_patterns Match patterns] por [https://developer.mozilla.org/es-ES/Add-ons/WebExtensions/Match_patterns$history Mozilla Contributors] licenciado bajo [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
+# [https://developer.mozilla.org/es-ES/Add-ons/WebExtensions/API/webRequest/ResourceType webRequest.ResourceType] por [https://developer.mozilla.org/es-ES/Add-ons/WebExtensions/API/webRequest/ResourceType$history Mozilla Contributors] licenciado bajo [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
+# [https://developer.mozilla.org/es-ES/docs/Web/API/URL URL] por [https://developer.mozilla.org/es-ES/docs/Web/API/URL$history Mozilla Contributors] licenciado bajo [http://creativecommons.org/licenses/by-sa/2.5/ CC-BY-SA 2.5].
 
