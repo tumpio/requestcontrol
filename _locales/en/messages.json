@@ -303,19 +303,19 @@
     "message": "List of methods"
   },
   "host_placeholder": {
-    "message": "List of host patterns.."
+    "message": "List of host patterns..."
   },
   "path_placeholder": {
-    "message": "List of path patterns.."
+    "message": "List of path patterns..."
   },
   "tlds_placeholder": {
-    "message": "List of TLDs.."
+    "message": "List of TLDs..."
   },
   "includes_placeholder": {
-    "message": "List of include patterns.."
+    "message": "List of include patterns..."
   },
   "excludes_placeholder": {
-    "message": "List of exclude patterns.."
+    "message": "List of exclude patterns..."
   },
   "any_tld": {
     "message": "Any TLD"
@@ -397,7 +397,7 @@
     "message": "Redirect URL"
   },
   "placeholder_trim_parameters": {
-    "message": "List of trimmed query parameters.."
+    "message": "List of trimmed query parameters..."
   },
   "timestamp": {
     "message": "Timestamp: $TIME$",

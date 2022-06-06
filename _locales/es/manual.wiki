@@ -64,7 +64,7 @@ A continuación se pueden ver ejemplos del uso de patrones de ruta.
 | Coincide con cualquier ruta que contenga un componente &quot;b&quot; en alguna posición intermedia.
 |-
 |
-| Acepta una ruta vacía.
+| Coincide con una ruta vacía.
 |}
 
 === Tipos ===
@@ -97,16 +97,16 @@ Filtros según el tipo de petición. El tipo indica el recurso solicitado. Todos
 | Indica una petición realizada por un plugin (object_subrequest).
 |-
 | XMLHttpRequest
-| Indica una petición realizada por un XMLHttpRequest (xhr) o por la API Fetch.
+| Indica una petición realizada por una XMLHttpRequest (xhr) o por la API Fetch.
 |-
 | XSLT
 | Indica una transformación de hoja de estilo XSLT para un documento XML.
 |-
 | Ping
-| Indica un ping inducido al pulsar sobre un elemento &lt;a&gt; que usa el atributo ping. Solo es usado si browser.send_pings está activado.
+| Indica un ping inducido al pulsar sobre un elemento &lt;a&gt; con el atributo ping. Solo se usa si browser.send_pings está activado.
 |-
 | Especulativa
-| Indica un apretón de manos TCP y/o TLS para una petición que el navegador haya determinado que se hará pronto. Solo es usado si network.http.speculative-parallel-limit es mayor que 0.
+| Indica un apretón de manos TCP y/o TLS para una petición que el navegador haya determinado que se hará pronto. Solo se usa si network.http.speculative-parallel-limit es mayor que 0.
 |-
 | Beacon
 | Indica una petición [https://developer.mozilla.org/es-ES/docs/Web/API/Beacon_API Beacon] (baliza).
@@ -133,7 +133,7 @@ Filtros según el tipo de petición. El tipo indica el recurso solicitado. Todos
 | Indica una petición para cargar un manifesto Web App.
 |-
 | Other
-| Indica una petición que no está clasificada como perteneciente a los tipos anteriores.
+| Indica una petición que no se puede clasificar en ninguno de los tipos anteriores.
 |}
 
 === Acción ===
@@ -155,7 +155,7 @@ Los condicionales a continuación extienden las capacidades de encontrar coincid
 
 === Inclusiones y exclusiones ===
 
-Filtros según patrones que se pueden definir como una cadena de caracteres, que admite comodines como &quot;?&quot; y &quot;*&quot; (donde &quot;?&quot; coincide con un único carácter y &quot;*&quot; coincide con cero o más caracteres), o como un patrón de expresión regular.
+Filtros según patrones que se pueden definir como una cadena de caracteres que admite los comodines &quot;?&quot; y &quot;*&quot; (donde &quot;?&quot; coincide con un único carácter y &quot;*&quot; coincide con cero o más caracteres), o como un patrón de expresión regular.
 
 Las listas de inclusión y exclusión de coincidencias no distinguen mayúsculas de minúsculas, al contrario que las listas de [[#host|Servidor]] y [[#path|Ruta]] que discriminan por capitalización.
 
@@ -201,14 +201,14 @@ Filtros según el origen de la petición.
 # Regla de permiso
 # Regla de bloqueo
 # Regla de protección
-# Regla de redireccionamiento
+# Regla de redirección
 # Regla de filtrado
 
 == Recortar parámetros de URL ==
 
 La regla de filtrado soporta el recorte de parámetro de consulta de URL. Se pueden definir los parámetros de URL a recortar como cadenas de texto que admiten los comodines &quot;*&quot; y &quot;?&quot;, o como expresiones regulares (regexp).
 
-A continuación, ejemplos de patrones de recortado de parámetros.
+A continuación, ejemplos de patrones de recorte de parámetros.
 
 {|
 | <code>utm_source</code>
@@ -231,7 +231,7 @@ Elimina todos los parámetros de consulta de la URL en la petición filtrada.
 
 == Redireccionamiento usando captura de patrón ==
 
-La regla de redireccionamiento permite redirigir las peticiones a una URL configurada manualmente. La URL de redireccionamiento puede ser parametrizada usando expansión de parámetros e instrucciones de redireccionamiento. La expansión de parámetros permite manipular parámetros nominados de la URL original. Las instrucciones de redireccionamiento se pueden usar para reemplazar porciones de la URL original (ej. redirigiendo las peticiones a un puerto diferente).
+La regla de redireccionamiento permite redirigir las peticiones a una URL configurada manualmente. La URL de redireccionamiento puede ser parametrizada usando expansión de parámetros e instrucciones de redireccionamiento. La expansión de parámetros permite manipular parámetros con nombre de la URL original. Las instrucciones de redireccionamiento se pueden usar para reemplazar porciones de la URL original (ej. redirigiendo las peticiones a un puerto diferente).
 
 Se pueden combinar ambos métodos. Las instrucciones de redireccionamiento serán interpretadas y aplicadas antes que la expansión de parámetro.
 
@@ -240,7 +240,7 @@ También se puede usar la expansión de parámetros dentro de una instrucción d
 === Expansión de parámetros ===
 
 <pre>{parámetro}</pre>
-Accede a un parámetro nominado de la URL de la petición original. Los parámetros nominados disponibles están listados al final de esta sección.
+Accede a un parámetro con nombre de la URL de la petición original. Los parámetros nominados disponibles están listados al final de esta sección.
 
 La expansión de parámetro soporta los siguientes formatos de manipulación de cadena de texto:
 
@@ -254,7 +254,7 @@ Reemplaza la primera sub cadena de texto coincidente en el parámetro expandido.
 
 Reemplaza todas las subcadenas coincidentes en el parámetro expandido.
 
-El patrón está escrito en forma de expresión regular. Está soportada una variedad de patrones de reemplazo, como las referencias a grupos de captura que se describe a continuación.
+El patrón está escrito en forma de expresión regular. Se soportan varios patrones de reemplazo; entre ellos, las referencias a grupos de captura descritas a continuación.
 
 {|
 | <code>$n</code>
@@ -278,7 +278,7 @@ El patrón está escrito en forma de expresión regular. Está soportada una var
 <pre>{parámetro:compensación:tamaño}</pre>
 Extrae una parte del parámetro expandido. La compensación determina la posición inicial. Empieza desde 0 y puede ser un valor negativo contando desde el final de la cadena de texto.
 
-==== Decodificar y codificar patrones extraídos ====
+==== Decodificar y codificar ====
 
 <pre>{parámetro|reglaDeCodificado}</pre>
 Descodifica o codifica el patrón capturado.

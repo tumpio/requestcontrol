@@ -102,7 +102,7 @@
     "message": "Evita la redirección o elimina parámetros de búsqueda"
   },
   "rule_description_block": {
-    "message": "Cancela las peticiones antes de que se efectúen."
+    "message": "Cancela las peticiones antes de que se emitan."
   },
   "rule_description_redirect": {
     "message": "Redirige peticiones a $URL$",
@@ -117,7 +117,7 @@
     "message": "Revoca otras reglas aplicables."
   },
   "rule_description_secure": {
-    "message": "Intercepta peticiones inseguras (HTTP) y las hace seguras (HTTPS)."
+    "message": "Hace las peticiones inseguras (HTTP) seguras (HTTPS)."
   },
   "all_urls": {
     "message": "Cualquier URL"
@@ -225,7 +225,7 @@
     "message": "Nueva regla"
   },
   "count_patterns": {
-    "message": "patrones: $COUNT$",
+    "message": "Patrones: $COUNT$",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -299,6 +299,9 @@
   "excludes": {
     "message": "Excluye"
   },
+  "method_placeholder": {
+    "message": "Lista de métodos"
+  },
   "host_placeholder": {
     "message": "Lista de patrones de servidores..."
   },
@@ -333,7 +336,7 @@
     "message": "Bloquear"
   },
   "redirect": {
-    "message": "Redireccionar"
+    "message": "Redirigir"
   },
   "whitelist": {
     "message": "Permitir"
@@ -373,7 +376,7 @@
     }
   },
   "manual_text_redirect": {
-    "message": "Interceptar según un patrón para decidir la redirección en base a la petición original."
+    "message": "Usar un patrón para interceptar y redirigir la petición."
   },
   "filter_url_redirection": {
     "message": "Filtrar redireccionamiento de URL"
@@ -391,7 +394,7 @@
     "message": "Nombres de dominio de primer nivel incluidos"
   },
   "redirect_url": {
-    "message": "URL de redireccionamiento"
+    "message": "URL de redirección"
   },
   "placeholder_trim_parameters": {
     "message": "Lista de parámetros recortados..."
@@ -619,6 +622,9 @@
   "view_list": {
     "message": "Ver lista"
   },
+  "remove_list": {
+    "message": "Eliminar lista"
+  },
   "common_lists": {
     "message": "Listas comunes"
   },
@@ -634,6 +640,9 @@
   "add_url_to_rules": {
     "message": "Añadir URL a la lista de reglas"
   },
+  "duplicate_entry": {
+    "message": "Entrada duplicada"
+  },
   "imports": {
     "message": "Importaciones"
   },
@@ -645,6 +654,15 @@
   },
   "remove_imported_rules": {
     "message": "Borrar reglas importadas"
+  },
+  "update_imported_rules": {
+    "message": "Actualizar reglas importadas"
+  },
+  "update": {
+    "message": "Actualizar"
+  },
+  "show_imported_rules": {
+    "message": "Ver reglas importadas"
   },
   "imports_skip_redirectors": {
     "message": "Saltar redirectores y dereferrers de URL típicos"
@@ -660,8 +678,5 @@
   },
   "imports_skip_image_downsamplers": {
     "message": "Evitar reducción de resolución en imágenes"
-  },
-  "duplicate_entry": {
-    "message": "Entrada duplicada"
   }
 }

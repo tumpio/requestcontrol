@@ -317,7 +317,7 @@ Uses the hostname of the original request.
 Captures a part of the hostname of the original request.
 
 <pre>https://{hostname::-3|/\.co/\.com}/new/path</pre>
-Uses the hostname of the original request but manipulate its length by three cutting it from the end and replace &quot;.co&quot; with &quot;.com&quot;.
+Uses the hostname of the original request but manipulates its length by three cutting it from the end and replace &quot;.co&quot; with &quot;.com&quot;.
 
 <pre>{search.url|decodeURIComponent}</pre>
 Captures &quot;url&quot; search parameter and decodes it.
