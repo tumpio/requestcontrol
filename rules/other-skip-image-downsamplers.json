@@ -9,7 +9,7 @@
             "*"
         ],
         "includes": [
-            "/\\/(ap_resize\\/ap_resize|image|imageproxy|resizer\\/resizer|safe_image)(.php)?\\?/"
+            "/\\/(ap_resize\\/ap_resize|image|imageproxy|proxy|videoproxy|resizer\\/resizer|safe_image)(.php)?\\?/"
         ]
     },
     "types": [

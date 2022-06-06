@@ -14,12 +14,13 @@
       ],
       "excludes": [
         ".maps.api.here.com/maptile/2.1/maptile/",
+        "/:\\/\\/[a-z0-9-]+\\.googlevideo\\.com\\//",
         "/:\\/\\/[a-z0-9\\.]+\\.amazonaws\\.com\\//",
         "/:\\/\\/[a-z0-9]+\\.bing\\.com\\//",
         "/:\\/\\/[a-z]{3,4}[0123]?\\.(google|googleapis|ggpht)\\.com\\/(maps\\/vt|cbk|kh)\\?/",
         "/\\/(Satellite|BlobServer|StaticBS)(\\/[^\\/\\?]+)?\\?/",
-        "/\\/(ap_resize\\/ap_resize|image|imageproxy|resizer\\/resizer|safe_image)(.php)?\\?/",
-        "/\\/(i|fetch|image_gallery|thumb|thumbnail)(\\.php|\\/)?\\?|\\?img_?[iI]d=/",
+        "/\\/(ap_resize\\/ap_resize|image|imageproxy|proxy|videoproxy|resizer\\/resizer|safe_image)(.php)?\\?/",
+        "/\\/(i|fetch|image_gallery|thumb|thumbnail|do-get)(\\.php|.xhtml|\\/)?\\?|\\?(img)?_?[iI]d=/",
         "/\\?.*\\&(_nc_[a-z]{1,3}|oh|oe)=./",
         "://c.disquscdn.com/get?url=",
         "://streetviewpixels-pa.googleapis.com/v1/tile",
@@ -72,6 +73,7 @@
         "hash",
         "height",
         "i10c",
+        "id",
         "image",
         "imagesr",
         "inputformat",
@@ -130,7 +132,7 @@
         "*"
       ],
       "includes": [
-        "/\\/(i|fetch|image_gallery|thumb|thumbnail)(\\.php|\\/)?\\?|\\?img_?[iI]d=/"
+        "/\\/(i|fetch|image_gallery|thumb|thumbnail|do-get)(\\.php|.xhtml|\\/)?\\?|\\?(img)?_?[iI]d=/"
       ]
     },
     "types": [
@@ -147,6 +149,7 @@
         "group_id",
         "groupid",
         "i",
+        "id",
         "image_path",
         "img_id",
         "imgid",
@@ -232,15 +235,19 @@
     "tag": "privacy-images-4",
     "paramsFilter": {
       "values": [
-        "ccb",
-        "_nc_cat",
         "_nc_ht",
         "_nc_oc",
         "_nc_ohc",
-        "_nc_sid",
+        "_nc_vs",
+        "edm",
+        "fb_obo",
         "oe",
         "oh",
-        "tp"
+        "stp",
+        "tp",
+        "url",
+        "utld",
+        "vs"
       ],
       "invert": true
     },
@@ -281,7 +288,8 @@
       ],
       "path": [
         "*/styles/bannerBackgroundImage_*",
-        "*/styles/communityIcon_*"
+        "*/styles/communityIcon_*",
+        "*/styles/profileIcon_*"
       ]
     },
     "types": [
@@ -323,6 +331,7 @@
         "external-content.duckduckgo.com",
         "gatherer.wizards.com",
         "img.dafont.com",
+        "lp2.hm.com",
         "outlook.office.com",
         "render.fontstruct.com",
         "render01.fontshop.com",
@@ -354,6 +363,7 @@
         "*download/file.php?avatar=*",
         "/avatar.php?*",
         "/avatar/*",
+        "/avatarpic/*",
         "/avatars/*",
         "/data/avatars/*",
         "/user_avatar/*",
@@ -401,6 +411,7 @@
         "badge.dimensions.ai",
         "badges.altmetric.com",
         "chart.googleapis.com",
+        "dms.licdn.com",
         "external-preview.redd.it",
         "i.mycdn.me",
         "imagebank.osa.org",
@@ -650,13 +661,12 @@
   {
       "uuid": "89d698fb-1e90-4703-ad42-85e6fdf9d1bf",
       "pattern": {
-          "scheme": "*",
+          "scheme": "https",
           "host": [
-              "*.drive.google.com",
-              "*.googlevideo.com"
+              "*"
           ],
           "path": [
-              "videoplayback?*sig=*sig=*"
+              "videoplayback?*&sig=*&host=*.googlevideo.com"
           ]
       },
       "types": [
@@ -665,9 +675,9 @@
       ],
       "action": "whitelist",
       "active": true,
-      "title": "Signed Google Video requests",
+      "title": "Signed Google Video requests from third-party sites",
       "description": "Removing any parameter from these requests will cause the video not to load. Enabled by default. (This sort of requests is used by Google Drive, and 3rd-party sites like Invidious instances.)",
-      "tag": "privacy-images"
+      "tag": "whitelist-googlevideo"
   },
   {
       "uuid": "12486ca3-b63d-49fa-ae64-25b83733d64c",
